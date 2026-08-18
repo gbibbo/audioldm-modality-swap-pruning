@@ -43,6 +43,40 @@ inference path of `LatentDiffusion.apply_model`:
 
 ---
 
+## A1 correction — `z_t` is a noised REAL latent (applied for M3 reuse)
+
+The original M2 `build_paired_slots` used `z_t = pure Gaussian noise`, which is
+defensible for M2's claims (determinism, pairing, wiring) but wrong for M3A, whose
+diagnostics (master plan §3) require the noisy latent of a real example. Corrected:
+
+    z_0 = scale_factor * VAE.encode(real_mel).mode()      # deterministic
+    z_t = sqrt(a_t) * z_0 + sqrt(1 - a_t) * eps           # DDPM q_sample
+
+Evidence log: `artifacts/m3_pilot/a1_latent_check.json`. Key points:
+
+* **`scale_factor = 0.9138255715370178`**, read from the `scale_factor` scalar
+  buffer inside `audioldm-m-full.ckpt` (config sets `scale_by_std: true`, so it is
+  stored in the checkpoint, ddpm.py:1032,1108). It is **not** recomputed.
+* **VAE weight source.** `LatentDiffusion` builds the first stage from the config's
+  `reload_from_ckpt` (`vae_mel_16k_64bins.ckpt`) but then loads the full checkpoint,
+  whose embedded `first_stage_model.*` **overrides** it. The two sources **differ**:
+  of 398 common tensors, **204 differ** (max|diff| ≈ 12.9; encoder/quant_conv/decoder
+  all differ), i.e. the embedded VAE was jointly retrained. `build_vae` therefore
+  loads the **embedded** `first_stage_model.*` — what inference actually uses.
+* **Encoder determinism.** `vae_encode` uses the posterior **`.mode()`** (mean), not
+  `LatentDiffusion`'s training-time `.sample()` (ddpm.py:1155). Rationale: a
+  pruning-damage diagnostic needs `z_0` fixed and reproducible; the mode is
+  deterministic and removes VAE sampling variance that is irrelevant to
+  `D_gen`/`D_mod`/`R_mod`. Verified bit-identical across two builds.
+* **Schedule.** `NoiseSchedule` reuses upstream `make_beta_schedule` and the exact
+  `register_schedule` arithmetic (ddpm.py:213-241); `q_sample` uses upstream
+  `extract_into_tensor`, so it is byte-identical to `DDPM.q_sample` (ddpm.py:430-436).
+* **Pairing preserved.** `z_0`, `eps`, `z_t`, `t` are shared bit-for-bit across the
+  audio and text paths; T3 and T4 still PASS on the real latent (`z_t ==
+  q_sample(z_0, t, noise)`, and `z_t ≠ pure noise`).
+
+---
+
 ## (a) How audio vs text is routed
 
 **`embed_mode` switch (inside the CLAP conditioner):**
@@ -85,17 +119,28 @@ The audio branch (`conditional_models.py:1280-1307`):
 3. `get_audio_features(audio_data, mel, 480000, data_truncating="fusion",
    data_filling="repeatpad", ...)` (`conditional_models.py:1298-1305`).
 
-**Mismatch (documented, not blocking):** `get_audio_features` asserts
-`audio_data.size(-1) > max_len` and then truncates to the first `max_len=480000`
-samples (`training/data.py:452,460`), i.e. **10.0 s @ 48 kHz**. Every AudioCaps
-clip is `10.24 s`, so the resampled signal is `491520` samples and the **last
-`11520` samples ≈ 0.24 s of every clip is dropped** before CLAP audio embedding.
-The text branch has no such truncation. This is consistent across all items (the
-`>` assertion holds because every clip exceeds 10 s after resampling); a clip
-shorter than 10 s at 48 kHz would trip the assertion, but none exist in this
-manifest. The 0.24 s truncation is a fixed, deterministic property of the audio
-path and is identical for the full and pruned models, so it does not confound the
-modality-swap diagnostic; it is recorded here for reproducibility.
+**A3 — the `data_truncating`/`data_filling` arguments are DEAD in this vendored
+copy.** The call passes `data_truncating="fusion"`, but this vendored
+`get_audio_features` (`clap/training/data.py:438-467`) **ignores both
+`data_truncating` and `data_filling` entirely**: its body unconditionally asserts
+`audio_data.size(-1) > max_len`, takes `audio_data[..., :max_len]`
+(`data.py:452,460`) and hardcodes `longer = torch.tensor([True])`. It therefore
+**diverges from upstream `laion_clap`**, where `data_truncating="fusion"` selects
+three chunks stochastically. Anyone reading the argument would wrongly assume
+random chunking. The practical consequence is *favourable and load-bearing*: the
+audio branch is fully **deterministic**, which is exactly what the paired
+diagnostic (T3/T4) requires — a stochastic fusion crop would break bit-identical
+pairing between repeated calls and between modalities.
+
+**Mismatch (documented, not blocking):** because it always keeps the first
+`max_len=480000` samples = **10.0 s @ 48 kHz**, and every AudioCaps clip is
+`10.24 s` (resampled to `491520` samples), the **last `11520` samples ≈ 0.24 s of
+every clip is dropped** before CLAP audio embedding. The text branch has no such
+truncation. The `>` assertion holds because every clip exceeds 10 s after
+resampling; a clip shorter than 10 s at 48 kHz would trip it, but none exist in
+this manifest. The 0.24 s truncation is fixed, deterministic, and identical for
+the full and pruned models, so it does not confound the modality-swap diagnostic;
+it is recorded here for reproducibility.
 
 ---
 
@@ -193,7 +238,14 @@ Log: `artifacts/m2_condition_swap/test_conditioning_paths.log`.
 | T2 DROPOUT-OFF | PASS | upstream default `unconditional_prob=0.1`; frozen config does **not** override it; diagnostic forces `0.0`; text & audio embeds bit-identical across calls |
 | T3 DETERMINISM | PASS | same seed → `z_t`, `t` identical; `max|Δ| eps_a = 0.0`, `eps_t = 0.0` |
 | T4 PAIRING | PASS | `hash(z_t) == hash(noise)` (`7c4ad16b…`); shared `z_t`,`t`; control: perturbing `z_t` changes hash and epsilon |
-| T5 NON-DEGENERATION | PASS | `mean|eps_a − eps_t| = 1.148e-02`, `max = 3.520e-01` → swap is real |
+| T5 NON-DEGENERATION | PASS | `mean|eps_a − eps_t| = 1.078e-02`, `mean|eps| = 7.070e-01`, **ratio = 0.0152** → swap is real and ~1.5% of the epsilon scale |
+
+**A2 — the swap magnitude is now reported with its scale.** `mean|eps_a − eps_t|`
+alone is uninterpretable; against `mean|eps| = 0.707` the swap is **1.52 %** of the
+epsilon scale. This matters because M3A's `D_mod`/`D_gen` statistics live at exactly
+this scale — the modality-swap signal is a small but non-zero fraction of the
+prediction, not a large effect. (Values are on the corrected real noised latent, so
+they differ slightly from the pre-A1 pure-noise run.)
 
 **Unconditional dropout (T2 detail):** `unconditional_prob` defaults to `0.1`
 (`conditional_models.py:1151`) and the frozen config's

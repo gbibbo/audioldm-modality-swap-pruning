@@ -30,12 +30,15 @@ import yaml
 
 from research_pruning.diagnostics.conditioning import (
     FROZEN_CONFIG,
+    NoiseSchedule,
     build_clap,
     build_paired_slots,
     build_unet,
+    build_vae,
     clap_embed,
     load_config,
     paired_eps,
+    read_scale_factor,
     tensor_hash,
 )
 from audioldm_train.utilities.data.dataset import AudioDataset
@@ -54,10 +57,17 @@ def context():
     config = load_config(FROZEN_CONFIG)
     clap = build_clap(config, unconditional_prob=0.0)
     unet = build_unet(config, BASE_CKPT, channel_mult=None)  # base [1,2,3,5]
+    vae = build_vae(config, BASE_CKPT)
+    schedule = NoiseSchedule(config)
+    scale_factor = read_scale_factor(BASE_CKPT)
     dataset = AudioDataset(config=config, split="test", waveform_only=False)
-    slots = build_paired_slots(dataset, INDICES, config, seed=SEED)
+    slots = build_paired_slots(
+        dataset, INDICES, config,
+        vae=vae, schedule=schedule, scale_factor=scale_factor, seed=SEED,
+    )
     _CTX.update(
-        config=config, clap=clap, unet=unet, dataset=dataset, slots=slots
+        config=config, clap=clap, unet=unet, vae=vae, schedule=schedule,
+        scale_factor=scale_factor, dataset=dataset, slots=slots,
     )
     return _CTX
 
@@ -148,11 +158,15 @@ def check_t2_dropout_off():
 def check_t3_determinism():
     ctx = context()
     config, clap, unet, dataset = ctx["config"], ctx["clap"], ctx["unet"], ctx["dataset"]
+    vae, schedule, sf = ctx["vae"], ctx["schedule"], ctx["scale_factor"]
 
-    slots1 = build_paired_slots(dataset, INDICES, config, seed=SEED)
-    slots2 = build_paired_slots(dataset, INDICES, config, seed=SEED)
+    kw = dict(vae=vae, schedule=schedule, scale_factor=sf, seed=SEED)
+    slots1 = build_paired_slots(dataset, INDICES, config, **kw)
+    slots2 = build_paired_slots(dataset, INDICES, config, **kw)
     same_zt = torch.equal(slots1.z_t, slots2.z_t)
     same_t = torch.equal(slots1.t, slots2.t)
+    same_z0 = torch.equal(slots1.z_0, slots2.z_0)
+    print(f"    T3 same-seed z_0 (VAE mode) identical: {same_z0}")
 
     eps_a1, eps_t1 = paired_eps(unet, clap, slots1)
     eps_a2, eps_t2 = paired_eps(unet, clap, slots2)
@@ -162,6 +176,7 @@ def check_t3_determinism():
     print(f"    T3 same-seed z_t identical: {same_zt}; t identical: {same_t}")
     print(f"    T3 max|diff| eps_a = {da:.3e}; eps_t = {dt:.3e}")
     checks = {
+        "same-seed z_0 (VAE mode) identical": same_z0,
         "same-seed z_t identical": same_zt,
         "same-seed t identical": same_t,
         "max|diff| eps_a == 0.0": da == 0.0,
@@ -175,7 +190,7 @@ def check_t3_determinism():
 
 def check_t4_pairing():
     ctx = context()
-    clap, unet, slots = ctx["clap"], ctx["unet"], ctx["slots"]
+    clap, unet, slots, schedule = ctx["clap"], ctx["unet"], ctx["slots"], ctx["schedule"]
 
     # The audio and text epsilon predictions are fed EXACTLY the same z_t and t.
     # Prove it by hashing the tensors that paired_eps consumes.
@@ -183,8 +198,10 @@ def check_t4_pairing():
     t_hash = tensor_hash(slots.t)
     noise_hash = tensor_hash(slots.noise)
 
-    # z_t was built from the noise realisation (z_t == noise for the fixed slot).
-    zt_from_noise = torch.equal(slots.z_t, slots.noise)
+    # z_t is the deterministic DDPM noising of the shared (z_0, t, noise):
+    # z_t == sqrt(a_t) z_0 + sqrt(1-a_t) noise. Recompute and require bit-identity.
+    zt_recomputed = schedule.q_sample(slots.z_0, slots.t, slots.noise)
+    zt_from_noise = torch.equal(slots.z_t, zt_recomputed)
 
     # Control: perturbing z_t changes the hash and the epsilon, confirming the hash
     # actually witnesses the shared input rather than being trivially constant.
@@ -202,7 +219,7 @@ def check_t4_pairing():
     print(f"    T4 t hash     = {t_hash[:16]}")
     print(f"    T4 noise hash = {noise_hash[:16]}")
     checks = {
-        "z_t == noise realisation (shared, reproducible)": zt_from_noise,
+        "z_t == q_sample(z_0, t, noise) (shared, reproducible)": zt_from_noise,
         "z_t and t are single shared tensors for both paths": (
             zt_hash == tensor_hash(slots.z_t) and t_hash == tensor_hash(slots.t)
         ),
@@ -220,7 +237,11 @@ def check_t5_non_degeneration():
     eps_a, eps_t = paired_eps(unet, clap, slots)
     mad = (eps_a - eps_t).abs().mean().item()
     max_abs = (eps_a - eps_t).abs().max().item()
+    # A2: the swap magnitude is uninterpretable without the scale of eps itself.
+    mean_abs_eps = 0.5 * (eps_a.abs().mean().item() + eps_t.abs().mean().item())
+    ratio = mad / mean_abs_eps
     print(f"    T5 mean|eps_a - eps_t| = {mad:.6e}; max = {max_abs:.6e}")
+    print(f"    T5 mean|eps| = {mean_abs_eps:.6e}; ratio mean|Δ|/mean|eps| = {ratio:.4f}")
     ok = mad > 0.0
     print(f"    T5 {'ok ' if ok else 'FAIL'} eps_a != eps_t (swap exists)")
     return ok

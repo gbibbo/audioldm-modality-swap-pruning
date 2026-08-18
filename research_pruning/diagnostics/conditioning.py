@@ -33,6 +33,11 @@ import yaml
 
 from audioldm_train.conditional_models import CLAPAudioEmbeddingClassifierFreev2
 from audioldm_train.modules.diffusionmodules.openaimodel import UNetModel
+from audioldm_train.modules.latent_encoder.autoencoder import AutoencoderKL
+from audioldm_train.utilities.diffusion_util import (
+    make_beta_schedule,
+    extract_into_tensor,
+)
 
 Modality = Literal["audio", "text"]
 
@@ -109,6 +114,111 @@ def build_unet(
 
 
 # --------------------------------------------------------------------------- #
+# VAE (first stage) and the diffusion noising schedule  (A1 correction)
+# --------------------------------------------------------------------------- #
+def read_scale_factor(ckpt_path: str) -> float:
+    """Read the DDPM latent `scale_factor` stored in the checkpoint.
+
+    The frozen config sets `scale_by_std: true`, so `scale_factor` is a scalar
+    buffer saved inside the checkpoint (ddpm.py:1032,1108) and MUST be read from
+    there, never recomputed from a data batch (which would change with the batch).
+    """
+    obj = _torch_load(ckpt_path)
+    state = obj.get("state_dict", obj) if isinstance(obj, dict) else obj
+    sf = state["scale_factor"]
+    return float(sf.item() if torch.is_tensor(sf) else sf)
+
+
+def build_vae(config: dict, ckpt_path: str) -> AutoencoderKL:
+    """Build the first-stage AutoencoderKL and load the encoder weights that
+    `LatentDiffusion` actually uses at inference: the `first_stage_model.*` tensors
+    embedded in `ckpt_path` (loaded last, so they override the standalone
+    `reload_from_ckpt` VAE — see `build_val`/report for the measured divergence).
+
+    Construction avoids two CPU-hostile side effects that never touch the encode
+    path: the LPIPS discriminator loss (network download) is replaced by
+    `torch.nn.Identity`, and the CUDA-pickled vocoder (built only when
+    `image_key == "fbank"`, autoencoder.py:65-66) is skipped by constructing with
+    `image_key="stft"`. Neither `encode` nor `.mode()` depends on either.
+    """
+    params = copy.deepcopy(config["model"]["params"]["first_stage_config"]["params"])
+    params["lossconfig"] = {"target": "torch.nn.Identity"}
+    params["reload_from_ckpt"] = None  # we load the embedded weights explicitly
+    params["image_key"] = "stft"  # skip the vocoder in __init__ (autoencoder.py:65)
+
+    vae = AutoencoderKL(**params)
+
+    obj = _torch_load(ckpt_path)
+    state = obj.get("state_dict", obj) if isinstance(obj, dict) else obj
+    prefix = "first_stage_model."
+    fs = {k[len(prefix):]: v for k, v in state.items() if k.startswith(prefix)}
+    # strict=False: the embedded first_stage carries vocoder/loss tensors this
+    # trimmed VAE does not define; every encoder/decoder/quant_conv key loads.
+    missing, _ = vae.load_state_dict(fs, strict=False)
+    encode_missing = [
+        k for k in missing
+        if k.startswith("encoder.") or k.startswith("quant_conv.")
+    ]
+    if encode_missing:
+        raise RuntimeError(f"encode-path weights missing from ckpt: {encode_missing}")
+    vae.eval()
+    return vae
+
+
+@torch.no_grad()
+def vae_encode(vae: AutoencoderKL, mel: torch.Tensor, scale_factor: float) -> torch.Tensor:
+    """Encode a real mel `[B,1,1024,64]` to the scaled latent `z_0`.
+
+    Uses the posterior **mode** (mean), not `.sample()`. `LatentDiffusion` uses
+    `.sample()` (ddpm.py:1155) for training-time regularisation, but a diagnostic
+    that isolates *pruning* damage needs `z_0` fixed and reproducible: the mode is
+    deterministic by construction, is the maximum-likelihood latent, and removes
+    VAE posterior-sampling variance that is irrelevant to (and would only add
+    noise to) the D_gen/D_mod/R_mod statistics. `z_0 = scale_factor * mode`
+    matches `get_first_stage_encoding` (ddpm.py:1153-1162) with `.sample()`
+    replaced by `.mode()`.
+    """
+    posterior = vae.encode(mel)
+    return scale_factor * posterior.mode()
+
+
+class NoiseSchedule:
+    """The DDPM forward schedule, reusing the upstream `make_beta_schedule`.
+
+    Reproduces `DDPM.register_schedule` (ddpm.py:201-241) exactly: same beta
+    function, `alphas_cumprod = cumprod(1 - betas)`, and the two sqrt buffers.
+    `q_sample` uses the upstream `extract_into_tensor` so the noising is
+    byte-identical to `DDPM.q_sample` (ddpm.py:430-436).
+    """
+
+    def __init__(self, config: dict):
+        p = config["model"]["params"]
+        self.timesteps = int(p["timesteps"])
+        self.linear_start = float(p["linear_start"])
+        self.linear_end = float(p["linear_end"])
+        betas = make_beta_schedule(
+            "linear",
+            self.timesteps,
+            linear_start=self.linear_start,
+            linear_end=self.linear_end,
+            cosine_s=8e-3,
+        )
+        alphas = 1.0 - betas
+        alphas_cumprod = torch.tensor(
+            __import__("numpy").cumprod(alphas, axis=0), dtype=torch.float32
+        )
+        self.alphas_cumprod = alphas_cumprod
+        self.sqrt_alphas_cumprod = torch.sqrt(alphas_cumprod)
+        self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - alphas_cumprod)
+
+    def q_sample(self, z_0: torch.Tensor, t: torch.Tensor, noise: torch.Tensor) -> torch.Tensor:
+        return (
+            extract_into_tensor(self.sqrt_alphas_cumprod, t, z_0.shape) * z_0
+            + extract_into_tensor(self.sqrt_one_minus_alphas_cumprod, t, z_0.shape) * noise
+        )
+
+
+# --------------------------------------------------------------------------- #
 # Paired diagnostic slots
 # --------------------------------------------------------------------------- #
 @dataclass
@@ -123,10 +233,11 @@ class PairedSlots:
     indices: list[int]
     waveforms: torch.Tensor  # [B, 1, T] real AudioCaps waveforms @ 16 kHz
     texts: list[str]  # real AudioCaps captions
-    z_t: torch.Tensor  # [B, C, H, W] noisy latent (fixed noise realisation)
+    z_t: torch.Tensor  # [B, C, H, W] noised REAL latent  sqrt(a_t) z0 + sqrt(1-a_t) eps
     t: torch.Tensor  # [B] long diffusion timesteps
     seed: int
     noise: torch.Tensor = field(repr=False)  # the noise realisation z_t is built from
+    z_0: torch.Tensor = field(default=None, repr=False)  # scaled VAE latent of the real mel
 
     def audio_items(self) -> torch.Tensor:
         return self.waveforms
@@ -139,25 +250,30 @@ def build_paired_slots(
     dataset,
     indices: list[int],
     config: dict,
+    *,
+    vae: AutoencoderKL,
+    schedule: "NoiseSchedule",
+    scale_factor: float,
     seed: int = 0,
     timesteps: int | None = None,
 ) -> PairedSlots:
     """Build fixed reproducible (example, noise, t) slots from real AudioCaps items.
 
-    The noisy latent ``z_t`` is drawn from a seeded generator with the latent
-    shape declared in the frozen config (channels x latent_t_size x latent_f_size).
-    For M2 the *content* of z_t is not a scientific quantity; what matters is that
-    it is identical across the audio and text paths and reproducible from ``seed``.
-    The waveforms and captions ARE real (no synthetic audio).
+    (A1 correction) ``z_t`` is a **noised real latent**, not pure Gaussian noise:
+
+        z_0 = scale_factor * VAE.encode(real_mel).mode()      # deterministic
+        z_t = sqrt(a_t) * z_0 + sqrt(1 - a_t) * eps            # DDPM q_sample
+
+    ``eps`` and ``t`` come from a seeded generator, so ``z_0``, ``eps``, ``z_t``
+    and ``t`` are all reproducible and, crucially, IDENTICAL across the audio and
+    text conditioning paths (the pairing invariants T3/T4). Waveforms, captions and
+    mels are all real (no synthetic audio, no random model weights).
     """
     params = config["model"]["params"]
-    channels = params["channels"]
-    latent_t = params["latent_t_size"]
-    latent_f = params["latent_f_size"]
     if timesteps is None:
-        timesteps = params["timesteps"]
+        timesteps = int(params["timesteps"])
 
-    waveforms, texts = [], []
+    waveforms, texts, mels = [], [], []
     for idx in indices:
         sample = dataset[idx]
         wav = sample["waveform"]  # [1, T]
@@ -165,13 +281,17 @@ def build_paired_slots(
             wav = wav.unsqueeze(0)
         waveforms.append(wav)
         texts.append(sample["text"])
+        mels.append(sample["log_mel_spec"])  # [1024, 64]
     waveforms = torch.stack(waveforms, dim=0)  # [B, 1, T]
+    fbank = torch.stack(mels, dim=0).unsqueeze(1).float()  # [B,1,1024,64]  (ddpm.py:540)
+
+    z_0 = vae_encode(vae, fbank, scale_factor)  # [B, C, H, W], deterministic (mode)
 
     gen = torch.Generator().manual_seed(seed)
     batch = len(indices)
-    noise = torch.randn(batch, channels, latent_t, latent_f, generator=gen)
-    z_t = noise.clone()
+    noise = torch.randn(z_0.shape, generator=gen)
     t = torch.randint(0, timesteps, (batch,), generator=gen, dtype=torch.long)
+    z_t = schedule.q_sample(z_0, t, noise)
 
     return PairedSlots(
         indices=list(indices),
@@ -181,6 +301,7 @@ def build_paired_slots(
         t=t,
         seed=seed,
         noise=noise,
+        z_0=z_0,
     )
 
 

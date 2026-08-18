@@ -16,6 +16,9 @@
 * **Reproducible environment BUILT and verified.** `.venv` on a `uv`-provisioned standalone CPython **3.10.20**, installed from the unmodified frozen `poetry.lock`: 155 packages, 0 errors, no pin relaxed (`torch 1.13.1+cu117`, `transformers 4.30.2`, `pytorch-lightning 2.1.1`, `librosa 0.9.2`, `numpy 1.23.5`, plus `audioldm_eval` and `hear21passt`). Lightning blocks `conda create` in every form and `/commands/python3.10` is a shim that runs 3.12; both are documented in `docs/environment_report.md`.
 * **Model-loading smoke test PASSES.** `UNetModel` rebuilt from the frozen config and loaded `strict=True` for both budgets: `[1,2,3,5]` 415.955 M and `[1,2,3,1]` 145.674 M, 690 tensors each, 0 missing / 0 unexpected. Import smoke tests 6/6 including `audioldm_eval`. The M0 criterion "base and pruned architectures can be reconstructed deterministically" is **met**.
 * **M2 conditioning-path validation COMPLETE (PASS), 100% CPU.** `research_pruning/diagnostics/conditioning.py` exposes the audio/text CLAP paths and FiLM epsilon prediction, faithful to `LatentDiffusion.apply_model` (proven by file:line in `docs/condition_swap_validation.md`). Tests `tests/research/test_conditioning_paths.py` **T1..T5 all PASS**: e_a/e_t are `[B,1,512]` into the same FiLM interface (`extra_film_condition_dim==512`, `film_emb 512→768`); determinism `max|Δ|==0.0`; pairing proven by tensor hash; non-degeneration `mean|eps_a−eps_t|=1.148e-2`. CLAP embeddings are **L2-normalized for both modalities** (‖e‖₂≈1.0, std ~4e-8, N=48); paired cosine 0.248 vs cross −0.079 (sanity PASS). **Two traps recorded:** (i) CLAP truncates the audio branch to 10.0 s (drops ~0.24 s of every 10.24 s clip, `data.py:452,460`); (ii) upstream `unconditional_prob=0.1` is **not** overridden by the config — the diagnostic forces 0.0, and M3 calibration must too. Report `docs/condition_swap_validation.md`; artifacts in `artifacts/m2_condition_swap/`. `git diff upstream-frozen -- audioldm_train/` still empty.
+* **M3A machinery COMPLETE (M3-000), 100% CPU, NO scientific result.** Resolves audit findings A1/A2/A3. `build_paired_slots` now returns a noised REAL latent (`z_0 = scale_factor·VAE.encode(mel).mode()`, `z_t = √ā·z_0 + √(1−ā)·eps`); **`scale_factor = 0.9138255715370178`** read from the checkpoint. **The VAE embedded in `audioldm-m-full.ckpt` differs from `vae_mel_16k_64bins.ckpt`** (204/398 tensors, max|diff| 12.89) — `build_vae` uses the embedded weights (what LatentDiffusion uses). Diagnostics `D_gen/D_mod/R_mod` in `research_pruning/diagnostics/modality_diagnostics.py` (L2 flattened per-example norm; epsilon 1e-12; §6 strata aggregation); `tests/research/test_diagnostics.py` **D1..D5 all PASS** on control models. M2 tests re-run on the real latent: **T1..T5 still PASS** (T5 now reports mean|eps|=0.707, ratio 1.52%). **The real pruned checkpoint `l1_audioldm-m-full_p1.ckpt` was NEVER loaded** — pre-registration uncontaminated. Evidence: `artifacts/m3_pilot/`.
+* **Disjoint validation split DEFINED (M0 9.1 resolved).** `configs/research/val_split_disjoint.json` = upstream AudioCaps val (495 items), proven disjoint by wav id from test (0) and train (0); sha256 `e540146d…`. `dataset_root.json` NOT modified.
+* **`docs/pilot_protocol.md` DRAFTED (not frozen).** Reasoned proposals (B=256, K=5 timestep strata, bootstrap unit/seed, prune-tail + weighted-overlap definitions), both M2 traps carried in; Freeze fields left blank pending review + GPU benchmark.
 * Structure created per master plan §13. `audioldm_peft/`, `research_pruning/{taylor,paired_modality}/`, remain **skeletons with no implementation**; no M1 code was written or reconstructed.
 * No GPU is attached. `docs/compute_budget.md` is entirely unmeasured, Compute Gate CG is unresolved, and M3 stays blocked.
 
@@ -27,7 +30,8 @@
 5. Verify the FAD/KL pipeline (`audioldm_eval`) and reproduce the PANNs top-k semantic pipeline.
 6. ~~Implement M2 audio/text conditioning instrumentation~~ **DONE (M2-001, PASS).** Still pending: prepare the single reproducible GPU benchmark recording all §7.2 variables.
 7. Resolve Compute Gate CG before M3.
-8. Carry the two M2 traps into `docs/pilot_protocol.md` before M3: set CLAP `unconditional_prob=0.0` in calibration, and account for the ~0.24 s audio-branch truncation.
+8. ~~Carry the two M2 traps into `docs/pilot_protocol.md`~~ **DONE (draft).** Review the pilot-protocol draft against the master plan, then freeze it (fill Freeze commit/timestamp) — only after the GPU benchmark populates `T_sal`/`T_fwd`. Do NOT inspect any saliency/diagnostic result on the real L1 checkpoint before that freeze.
+9. Run the M3A machinery on the real full/pruned models ONLY after CG is resolved and the protocol is frozen.
 
 ## RUN RECIPES
 
@@ -37,6 +41,9 @@
 * Model-loading smoke test: `.venv/bin/python scripts/research/smoke_load_unet.py`
 * M2 conditioning-path tests (CPU): `.venv/bin/python tests/research/test_conditioning_paths.py`
 * M2 evidence (norms, cosine, timing, figures): `.venv/bin/python scripts/research/m2_condition_swap.py --n 48`
+* M3A diagnostic machinery tests (CPU, control models): `.venv/bin/python tests/research/test_diagnostics.py`
+* A1 real-latent evidence (scale_factor, VAE divergence, schedule): `.venv/bin/python scripts/research/m3a_latent_check.py`
+* Build/verify disjoint val split: `.venv/bin/python scripts/research/build_val_split.py`
 * Dataset load smoke test: `.venv/bin/python scripts/research/smoke_load_dataset.py --split train --n 2`
 * Upstream dataset/checkpoint validation: `.venv/bin/python tests/validate_dataset_checkpoint.py`
 * Fetch + md5-verify public artifacts: `bash scripts/research/fetch_public_artifacts.sh`

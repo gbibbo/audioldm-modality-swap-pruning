@@ -227,3 +227,30 @@ Append every scientific run or gate decision, including failed and stopped runs.
 * **Additional fact recorded for M3:** `scale_factor = 0.9138` is stored **inside** `data/checkpoints/audioldm-m-full.ckpt` (scalar tensor, key `scale_factor`), because the config sets `scale_by_std: true`. M3 must read it from the checkpoint and must not recompute it from a data batch.
 * **Failure or uncertainty:** none in M2's own claims. A1 is a scope limitation of M2 that becomes a defect only when the code is reused.
 * **Notes:** `pytest` is absent from `.venv`; M2's tests are standalone executable scripts, which sidesteps the problem without any environment deviation. Keep that convention.
+
+### 2026-08-18 12:10 | M3-000 | M3A machinery (diagnostics, real latent, val split) — NO scientific result
+
+* **Status:** completed. Machinery + tests only. **No D_gen/D_mod/R_mod was computed on the real pruned checkpoint** (`l1_audioldm-m-full_p1.ckpt` was never loaded). Pre-registration is uncontaminated.
+* **Milestone / gate:** M3A machinery. Resolves audit findings A1, A2, A3. Does NOT resolve Gate A/B, Compute Gate CG, or freeze the pilot protocol.
+* **Git commit:** this commit. Builds on M2-001 (`9ea0272`) and audit AUDIT-M2-001.
+* **Resolved config:** `audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original_medium.yaml`, unmodified.
+* **Checkpoints (real):** `data/checkpoints/audioldm-m-full.ckpt` (base U-Net + embedded first_stage VAE + `scale_factor`), CLAP `clap_music_speech_audioset_epoch_15_esc_89.98.pt`. **Never** `l1_audioldm-m-full_p1.ckpt`.
+* **Seeds:** paired-slot seed 1234; control-model seeds in `test_diagnostics.py`; proposed master seed for the pilot 20260818.
+* **Commands:**
+  * `.venv/bin/python tests/research/test_conditioning_paths.py`  (M2 T1..T5, re-run on real latent)
+  * `.venv/bin/python tests/research/test_diagnostics.py`  (D1..D5)
+  * `.venv/bin/python scripts/research/m3a_latent_check.py`  (A1 evidence)
+  * `.venv/bin/python scripts/research/build_val_split.py`  (disjoint val split)
+* **GPU / runtime:** CPU only. **Peak VRAM:** n/a. **Wall time / GPU-hours:** 0 GPU-hours.
+* **Raw output path:** `artifacts/m3_pilot/{test_diagnostics.log,a1_latent_check.json,a1_latent_check.log,val_split_check.json}`; `artifacts/m2_condition_swap/test_conditioning_paths.log`. Report updated: `docs/condition_swap_validation.md`. Draft: `docs/pilot_protocol.md`.
+* **Primary result:**
+  1. **A1 fixed.** `build_paired_slots` now returns a noised REAL latent: `z_0 = scale_factor * VAE.encode(mel).mode()`, `z_t = sqrt(a_t) z_0 + sqrt(1-a_t) eps`. `scale_factor = 0.9138255715370178` read from the checkpoint (not recomputed). Encoder uses the posterior `.mode()` (deterministic; justified over `.sample()`). Schedule reuses upstream `make_beta_schedule` + `extract_into_tensor`; `q_sample` byte-identical to `DDPM.q_sample`. z_0/z_t bit-identical across builds; `z_t == q_sample(z_0,t,noise)`; `z_t != pure noise`. **M2 T1..T5 still PASS** on the real latent.
+  2. **VAE source divergence found.** The `first_stage_model.*` embedded in `audioldm-m-full.ckpt` differs from standalone `vae_mel_16k_64bins.ckpt`: 204/398 common tensors differ (max|diff| 12.89; encoder/decoder/quant_conv all differ). LatentDiffusion uses the embedded weights, so `build_vae` loads those.
+  3. **A2 fixed.** T5 now reports `mean|eps| = 0.707` and the ratio `mean|eps_a-eps_t|/mean|eps| = 0.0152` (1.52% of the epsilon scale).
+  4. **A3 fixed.** `docs/condition_swap_validation.md` records that the vendored `get_audio_features` (`clap/training/data.py:438-467`) ignores `data_truncating`/`data_filling` and hardcodes `longer=True`, diverging from `laion_clap`; the resulting determinism is load-bearing for pairing.
+  5. **Diagnostics implemented + tested.** `modality_diagnostics` (D_gen, D_mod, R_mod; L2 flattened per-example norm; epsilon 1e-12) + `aggregate_over_strata` (§6). `test_diagnostics.py` D1 IDENTITY / D2 BOUNDS / D3 MONOTONE / D4 SYMMETRY / D5 ISOLATION all PASS on control models.
+  6. **Disjoint val split defined.** `configs/research/val_split_disjoint.json` = upstream AudioCaps val (495 items), proven disjoint by wav id from test (0) and train (0). sha256 `e540146d62d01ca70ed92e8b1adc1991da8c967e3e5229241c13f78edc8ff45e`. `dataset_root.json` NOT modified.
+  7. **Pilot protocol drafted** (`docs/pilot_protocol.md`) as reasoned proposals (B=256, K=5 timestep strata, bootstrap unit/seed, prune-tail and weighted-overlap definitions), carrying both M2 traps; marked BORRADOR, Freeze fields left blank.
+* **Acceptance / gate decision:** machinery ready; **M3 remains blocked.** Not frozen, CG unresolved, no GPU benchmark. No scientific number produced.
+* **Failure or uncertainty:** schedule buffers were verified by construction (same upstream `make_beta_schedule` + identical `register_schedule` arithmetic and `extract_into_tensor`) rather than against a live DDPM buffer, because instantiating DDPM builds a CLAP+UNet just to read a buffer. Budget/strata numbers are provisional pending the GPU benchmark (`T_sal`, `T_fwd`).
+* **Notes:** no scientific code modified. `git diff upstream-frozen -- audioldm_train/` empty. New code only in `research_pruning/diagnostics/`, `tests/research/`, `scripts/research/`, `configs/research/`.
