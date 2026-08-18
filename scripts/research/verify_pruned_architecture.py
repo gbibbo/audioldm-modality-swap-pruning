@@ -6,7 +6,8 @@ Reads AudioLDM checkpoints on CPU and recovers `model_channels` and
 architectures are confirmed from the artifacts themselves rather than from a
 config file or a README claim.
 
-CPU only. Loads weights with `weights_only=True` and `mmap=True`; it never
+CPU only. Loads weights with `weights_only=True` (mmap when torch supports it);
+it never
 constructs or runs a model.
 
 Usage:
@@ -21,12 +22,24 @@ import sys
 
 import torch
 
+def torch_load(path: str):
+    """Load a checkpoint on CPU without executing pickled code.
+
+    `mmap=True` keeps memory flat but only exists in torch >= 2.1; the pinned
+    upstream environment is torch 1.13.1, so fall back to a normal load there.
+    """
+    try:
+        return torch.load(path, map_location="cpu", weights_only=True, mmap=True)
+    except TypeError:
+        return torch.load(path, map_location="cpu", weights_only=True)
+
+
 RESBLOCK_OUT = re.compile(r"(?:^|\.)input_blocks\.(\d+)\.0\.out_layers\.3\.weight$")
 STEM = re.compile(r"(?:^|\.)input_blocks\.0\.0\.weight$")
 
 
 def load_state_dict(path: str) -> dict:
-    obj = torch.load(path, map_location="cpu", weights_only=True, mmap=True)
+    obj = torch_load(path)
     if isinstance(obj, dict) and "state_dict" in obj:
         obj = obj["state_dict"]
     return obj

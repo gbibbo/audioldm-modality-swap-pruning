@@ -171,7 +171,7 @@ saliency results are inspected.
 * PANNs top-k semantic pipeline - described in section 5 of the reference
   README; not yet reproduced here.
 * FAD/KL pipeline (`audioldm_eval`) - not installed, not verified. Requires the
-  environment decision in `environment_report.md`.
+  environment decision in `docs/environment_report.md`.
 * AudioCaps preprocessed dataset - fetching; see `data/dataset.tar`.
 * Generation/model-loading smoke tests - require a GPU and the environment
   decision; both pending.
