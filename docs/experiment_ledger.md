@@ -363,3 +363,32 @@ Trivial-identity explanations were ruled out: `perm[:192] != range(192)` for bot
 * **Acceptance / gate decision:** materializer ACCEPTED (bit-exact). **M3 remains blocked** — protocol UNFROZEN, CG unresolved, no GPU benchmark. No scientific number produced.
 * **Failure or uncertainty:** the seam conventions are reproduced from the artifact, not explained; whether they are intentional is a question for Arshdeep. R4's strict-load/forward remains necessary but insufficient — only R5 bit-equality catches seam-convention errors.
 * **Notes:** no scientific code modified. `git diff upstream-frozen -- audioldm_train/` empty. New/changed code only in `research_pruning/diagnostics/`, `tests/research/`, `scripts/research/`.
+
+### 2026-08-18 14:03 | AUDIT-M3-002 | Independent audit of M3-002 — fix accepted; the master plan's Gate B is mathematically broken at this budget
+
+* **Status:** completed. **M3-002 verdict: ACCEPTED.** The audit then uncovered a defect in the *master plan itself* that requires Gabriel's decision before `pilot_protocol.md` can freeze.
+* **Git commit:** this commit. Audited commit: `926bf72`.
+
+**Re-verified independently (confirmed):**
+
+1. **R5 with the auditor's own script from AUDIT-M3-001, unchanged: 690/690 bit-identical, 0 missing, 0 extra.** The materializer now reproduces the published artifact exactly.
+2. R1..R5 and N1..N4 re-run: all PASS. R2 correctly restricted to the 12 ranking-driven layers.
+3. Seam conventions pre-registered in `pilot_protocol.md` (12 ranking-driven / 3 positional of the 15 selecting tensors) and propagated into the M3B overlap definition. Freeze fields still blank. New null sha256 `3e6666bc…`, L1 reference `9a2593c2…` recorded.
+
+**Finding G1 — blocking for the freeze, requires Gabriel: master plan Gate B is infeasible as written.** At the `(1,2,3,1)` budget the ranking-driven layers prune `p = 768` of `N = 960` channels (`k = 192` kept). For **prune-set** overlap — the plan's explicit object ("Jaccard of prune sets", M3B) — set algebra gives:
+
+* range `[0.75, 1.0]` — the pigeonhole floor is `(2·768−960)/768 = 0.75`;
+* chance level under independent selections = `768/960 = 0.80`.
+
+Therefore the plan's Gate B conditions read, at this budget: **condition 1** (`weighted overlap ≤ 0.80`) = "audio and text agree *no more than pure chance*" — an extreme demand, since any two magnitude-correlated saliencies will exceed chance; **condition 2** (`≥ 2 layers with overlap ≤ 0.70`) is **mathematically impossible** — 0.70 is below the 0.75 floor. Gate B as pre-registered can never PASS. The plan was evidently written without noticing that an 80 % prune fraction pushes prune-set overlap into a compressed `[0.75, 1]` range.
+
+**Finding G2 — internal contradiction in the draft protocol.** The M3B section currently defines overlap **both** ways: one bullet says "`overlap@k` uses the **kept sets** of size `k_l = 192`", the next defines `S_a^l, S_t^l` as "the **bottom-`p_l`** channels" with `overlap_l = |∩|/p_l` (prune sets, `p_l = 768`). These are different quantities (exact correspondence: `prune_overlap = (576 + kept_intersection)/768`; plan's 0.80 prune ⇔ 0.20 kept = chance; plan's 0.70 prune ⇔ negative kept = impossible). The draft must keep exactly one definition — after Gabriel amends the gate.
+
+**Options prepared for Gabriel (decision recorded here once made):**
+
+* **(a) Kept-set overlap with the plan's numerals transferred** (weighted ≤ 0.80, ≥2 layers ≤ 0.70): well-defined, lenient — passes unless modalities agree on ≥80 % of kept channels (chance is 20 %).
+* **(b) Kept-set overlap at midpoint calibration** (weighted ≤ 0.60, ≥2 layers ≤ 0.50): stricter, roughly halfway between chance (0.2) and identity (1.0).
+* **(c) Chance-adjusted overlap** `(obs − 0.2)/0.8` with thresholds ≤ 0.75 / ≤ 0.625 (equivalent to (a)/(b) but reported on a 0-at-chance scale).
+In every case report raw kept-set, prune-set, and chance-adjusted overlap; the gate decision uses the amended primary. Amendment must be recorded in this ledger *before* the protocol freezes, per the plan's own rule.
+
+* **Notes:** the implementer's honesty chain worked exactly as designed — M3-001 declared the unverified gap, AUDIT-M3-001 closed it and found the seam divergence, M3-002 fixed it to bit-exactness, and this audit confirmed the fix with independent code. `git diff upstream-frozen -- audioldm_train/` still empty. Pre-registration intact: no diagnostic has touched the L1 checkpoint.
