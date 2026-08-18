@@ -202,3 +202,28 @@ Append every scientific run or gate decision, including failed and stopped runs.
   * **Audio-branch 0.24 s truncation:** CLAP resamples 16k→48k then truncates to 480000 samples = 10.0 s (`training/data.py:452,460`); every 10.24 s AudioCaps clip loses its last ~0.24 s before audio embedding. Deterministic, identical for full/pruned models, does not confound the swap; recorded for reproducibility.
   * **Upstream unconditional dropout is 0.1 and the config does NOT override it** (`conditional_models.py:1151`); the raw conditioner would apply 10% stochastic unconditional-token replacement. The diagnostic forces `unconditional_prob=0.0`; downstream M3 calibration must set this explicitly too.
 * **Notes:** no scientific code modified. `git diff upstream-frozen -- audioldm_train/` still empty. New code only in `research_pruning/diagnostics/conditioning.py`, `tests/research/test_conditioning_paths.py`, `scripts/research/m2_condition_swap.py`. The `~0.24 s` audio truncation and the `unconditional_prob=0.0` requirement should be carried into `pilot_protocol.md` before M3.
+
+### 2026-08-18 12:05 | AUDIT-M2-001 | Independent audit of M2-001
+
+* **Status:** completed. **M2-001 verdict: PASS, confirmed independently.** Three corrections required before the M2 code is reused by M3.
+* **Milestone / gate:** audit of M2. No gate resolved, no new experiment run.
+* **Git commit:** this commit. Audited commit: `9ea0272`.
+* **Role:** auditor, not implementer. Every claim below was re-derived from source or re-executed, not read from `docs/condition_swap_validation.md`.
+
+**Re-verified independently (all confirmed):**
+
+1. `.venv/bin/python tests/research/test_conditioning_paths.py` re-run: **T1..T5 PASS**, reproducing the reported values exactly — `mean|eps_a−eps_t| = 1.148377e-02`, `max = 3.519993e-01`, `z_t` hash `7c4ad16b81ddc2fb`.
+2. All six `file:line` citations in the report's wiring table check out: `ddpm.py:1996-2000` (`y = cond_dict[key].squeeze(1)`), `ddpm.py:2039-2041` (`self.diffusion_model(xc, t, context_list=..., y=y, ...)`), `openaimodel.py:871-872` (`emb = th.cat([emb, self.film_emb(y)], dim=-1)`), `openaimodel.py:555`, `conditional_models.py:1321`.
+3. L2 normalisation confirmed in source for both heads: `F.normalize(text_embeds, dim=-1)` at `clap/open_clip/model.py:749` and `F.normalize(audio_embeds, dim=-1)` at `:777`.
+4. The 0.24 s audio truncation is real **and stronger than reported**: this vendored `get_audio_features` (`clap/training/data.py:438-466`) **ignores `data_truncating` and `data_filling` entirely** and always takes `audio_data[..., :max_len]` with `longer=True` hardcoded. It therefore diverges from upstream `laion_clap`, where `data_truncating="fusion"` selects chunks stochastically. The practical consequence is favourable — the audio branch is **deterministic** — but anyone reading `laion_clap` would wrongly assume random chunking.
+5. `git diff upstream-frozen -- audioldm_train/` is empty. All five declared artifacts exist under `artifacts/m2_condition_swap/`.
+
+**Findings requiring correction before M3 reuses this code:**
+
+* **A1 — blocking for M3, not for M2. `z_t` is pure Gaussian noise, not a noised real latent.** `build_paired_slots` sets `z_t = noise.clone()` (`research_pruning/diagnostics/conditioning.py`); there is no VAE encode and no `q_sample`. The docstring states this honestly and it is defensible for M2, whose claim is only about determinism, pairing and wiring. But master plan §3 defines the diagnostics "for the same example, noisy latent `z_t`, diffusion timestep `t`, and noise realization", and `build_paired_slots` is the exact function M3A will reuse. Under pure noise the latent carries no audio content, so at low `t` the model is evaluated in a region it never sees. Must be replaced by `z_t = sqrt(alphacumprod_t) * z_0 + sqrt(1 - alphacumprod_t) * eps` with `z_0` the scaled VAE encoding of the real item.
+* **A2 — reporting. T5's magnitude has no scale.** `mean|eps_a − eps_t| = 1.148e-02` is uninterpretable without `mean|eps|`. The ratio must be reported, because M3A's `D_mod`/`D_gen` statistics live at exactly this scale.
+* **A3 — precision.** The report cites the call as `data_truncating="fusion"` without noting that the argument is dead in this vendored copy (see item 4). Record the divergence explicitly, since the determinism it buys is load-bearing for paired diagnostics.
+
+* **Additional fact recorded for M3:** `scale_factor = 0.9138` is stored **inside** `data/checkpoints/audioldm-m-full.ckpt` (scalar tensor, key `scale_factor`), because the config sets `scale_by_std: true`. M3 must read it from the checkpoint and must not recompute it from a data batch.
+* **Failure or uncertainty:** none in M2's own claims. A1 is a scope limitation of M2 that becomes a defect only when the code is reused.
+* **Notes:** `pytest` is absent from `.venv`; M2's tests are standalone executable scripts, which sidesteps the problem without any environment deviation. Keep that convention.
