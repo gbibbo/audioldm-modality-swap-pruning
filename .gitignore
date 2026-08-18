@@ -1,3 +1,28 @@
+# ---------------------------------------------------------------------------
+# Upstream AudioLDM-training-finetuning ignores, kept verbatim from
+# upstream-frozen (702a638d023b008a2d9a45cdf1e1f4fcdc590dfc) so that
+# `git diff upstream-frozen` stays minimal and reviewable.
+# NOTE: this block ignores *.txt. Keep research inventories/manifests in
+# .md/.json/.yaml so they are never silently dropped.
+# ---------------------------------------------------------------------------
+__pycache__
+taming
+log
+esc50.zip
+ESC-50-master
+*.wav
+ckpt
+lightning_logs
+mlx_submit_*
+job_queue.sh
+*.txt
+*.cleaned
+audiocaps_train.json
+dataset
+checkpoints
+*.tar
+condor*
+wandb
 
 # agent-kit audioldm research ignores
 artifacts/
