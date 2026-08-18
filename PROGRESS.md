@@ -9,7 +9,9 @@
 * **Frozen references imported and verified in-repo.** `upstream-frozen` = `702a638d…` (full 35-commit upstream history merged into `main`); `pruning-reference-frozen` = `6f65f628…` (kept as reference branch, plus a working clone in `_external/`). `git diff upstream-frozen -- audioldm_train/` is **empty**.
 * **`(1,2,3,1)` verified from artifacts, not from documents.** Base `channel_mult=[1,2,3,5]`, pruned `l1_audioldm-m-full_p1.ckpt` `channel_mult=[1,2,3,1]`, `model_channels=192`. U-Net 415.955 M -> 145.674 M params (-65.0%).
 * **Full-FT checkpoint gate RESOLVED (deadline was today).** All 2061 same-shape tensors of the published pruned checkpoint are bit-identical to the base: it is pure prune-and-merge, **never finetuned**. The L1 `(1,2,3,1)` pre-recovery checkpoint is public and fetched; the **recovered full-FT `(1,2,3,1)` checkpoint is proven NOT public**. RQ3 is downgraded to a published-reference comparison until Arshdeep supplies it.
-* Public artifacts fetched and md5-verified into gitignored `data/`: `audioldm-m-full.ckpt`, `Unet_model-m.ckpt`, `l1_audioldm-m-full_p1.ckpt`, `sorted_indexes_dict.pkl`. `checkpoints.tar` and `dataset.tar` (preprocessed AudioCaps) were still downloading at commit time; re-run the fetch script to confirm.
+* **All public artifacts fetched, md5-verified and extracted** (`fetch rc=0`): base/pruned/U-Net checkpoints, `sorted_indexes_dict.pkl`, `checkpoints.tar` (7 aux checkpoints: CLAP, AudioMAE, VAE, HiFi-GAN 16k/48k) and `dataset.tar` (AudioCaps, 31 GB, 50 961 wav). Manifest: `docs/m0_baseline_reproduction/dataset_manifest.md`.
+* **Upstream `tests/validate_dataset_checkpoint.py` PASSES**: structure complete and all 50 466 referenced audio files (49 502 train + 964 test) resolve on disk. Dataset load smoke test passes on both splits with the expected shapes (10.24 s @ 16 kHz, 64 mel bins).
+* **Known trap:** `dataset_root.json` maps the **val split to the same file as test** (964 items). A disjoint validation split must be defined explicitly before any model-selection decision, or test contamination is structurally possible.
 * **Reproducible environment BUILT and verified.** `.venv` on a `uv`-provisioned standalone CPython **3.10.20**, installed from the unmodified frozen `poetry.lock`: 155 packages, 0 errors, no pin relaxed (`torch 1.13.1+cu117`, `transformers 4.30.2`, `pytorch-lightning 2.1.1`, `librosa 0.9.2`, `numpy 1.23.5`, plus `audioldm_eval` and `hear21passt`). Lightning blocks `conda create` in every form and `/commands/python3.10` is a shim that runs 3.12; both are documented in `docs/environment_report.md`.
 * **Model-loading smoke test PASSES.** `UNetModel` rebuilt from the frozen config and loaded `strict=True` for both budgets: `[1,2,3,5]` 415.955 M and `[1,2,3,1]` 145.674 M, 690 tensors each, 0 missing / 0 unexpected. Import smoke tests 6/6 including `audioldm_eval`. The M0 criterion "base and pruned architectures can be reconstructed deterministically" is **met**.
 * Structure created per master plan §13. `audioldm_peft/`, `research_pruning/{diagnostics,taylor,paired_modality}/`, `tests/research/` are **skeletons with no implementation**; no M1 code was written or reconstructed.
@@ -28,6 +30,8 @@
 
 * Environment: `.venv/bin/python` (CPython 3.10.20). Rebuild: see `docs/environment_report.md`.
 * Model-loading smoke test: `.venv/bin/python scripts/research/smoke_load_unet.py`
+* Dataset load smoke test: `.venv/bin/python scripts/research/smoke_load_dataset.py --split train --n 2`
+* Upstream dataset/checkpoint validation: `.venv/bin/python tests/validate_dataset_checkpoint.py`
 * Fetch + md5-verify public artifacts: `bash scripts/research/fetch_public_artifacts.sh`
 * Verify structural budget from checkpoints (CPU): `.venv/bin/python scripts/research/verify_pruned_architecture.py data/checkpoints/audioldm-m-full.ckpt data/checkpoints/l1_audioldm-m-full_p1.ckpt`
 * Review our patches to upstream: `git diff upstream-frozen -- audioldm_train/`
@@ -64,4 +68,12 @@
 * Added `scripts/research/smoke_load_unet.py`: both budgets rebuilt and strict-loaded with 0 missing / 0 unexpected keys, so the M0 deterministic-reconstruction criterion is met.
 * Fixed a `torch.load(mmap=True)` incompatibility in our own helper scripts (torch 1.13.1 predates `mmap`). No upstream or scientific code touched.
 * Logged as M0-003. `docs/compute_budget.md` untouched: no GPU, nothing measured.
+
+### 2026-08-18 | M0: AudioCaps fetched, upstream validation passes
+
+* All six public artifacts downloaded and md5-verified (`fetch rc=0`); `dataset.tar` extracted cleanly to 31 GB / 50 961 wav.
+* Upstream `tests/validate_dataset_checkpoint.py` passes on the first full run: structure complete, all 50 466 referenced audio files present. No fix was needed.
+* Added `scripts/research/smoke_load_dataset.py`; train and test splits both load with the expected preprocessing shapes.
+* Recorded the val == test trap in `docs/m0_baseline_reproduction/dataset_manifest.md` and `docs/pilot_protocol.md`.
+* Logged as M0-004. No scientific code modified; `git diff upstream-frozen -- audioldm_train/` still empty.
 

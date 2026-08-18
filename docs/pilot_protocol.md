@@ -20,6 +20,10 @@ Equal-weight mean across preregistered timestep strata, followed by averaging ac
 * `Krand = 20` structured random masks at the `(1,2,3,1)` budget.
 * Primary statistic: `Delta_swap = R_mod^L1 - E[R_mod^random | D_gen^L1]`.
 * Bootstrap unit and seed policy:
+* **Data split constraint (from M0):** upstream `dataset_root.json` maps val to the
+  same file as test (`audiocaps_test_nonrepeat_subset_0.json`, 964 items). Define a
+  validation split disjoint from the evaluation set before any tuning or model
+  selection, and record it here, or test contamination is structurally possible.
 * Gate A PASS requires 95% bootstrap CI above zero and standardized residual at least 0.5 random-control SD.
 
 ## M3B saliency disagreement
