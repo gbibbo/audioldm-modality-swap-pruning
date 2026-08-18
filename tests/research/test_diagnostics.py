@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 """Property tests for the modality-swap diagnostics D_gen / D_mod / R_mod (CPU).
 
-These tests validate the DIAGNOSTIC MACHINERY only, using CONTROL models and
-constructed error tensors. They NEVER touch the real pruned checkpoint
-`l1_audioldm-m-full_p1.ckpt`; computing any D_gen/D_mod/R_mod on it before the
-pilot protocol is frozen and Compute Gate CG is resolved would contaminate the
-pre-registration. All "pruned" models here are perturbed copies of a tiny,
-randomly-initialised control U-Net, and the algebraic properties (D2..D5) are
-checked on error tensors E_a, E_t — the exact quantities a control model
-produces.
+These tests validate the DIAGNOSTIC MACHINERY only. They NEVER touch the real
+pruned checkpoint `l1_audioldm-m-full_p1.ckpt`; computing any D_gen/D_mod/R_mod on
+it before the pilot protocol is frozen and Compute Gate CG is resolved would
+contaminate the pre-registration.
 
-    D1 IDENTITY    pruned == exact copy of full  → D_gen = D_mod = R_mod = 0 exact
-                   (end-to-end through eps_pred + the FiLM interface).
-    D2 BOUNDS      R_mod ∈ [0, 1] over >= 20 perturbations of varying magnitude.
-    D3 MONOTONE    perturbing ONLY the audio error → D_mod increases with magnitude.
-    D4 SYMMETRY    swapping audio<->text leaves D_mod and D_gen invariant.
-    D5 ISOLATION   an identical error in both modalities → D_mod ~ 0 while D_gen > 0
-                   (this is the property that lets D_mod separate modal from generic
-                   damage — the premise of RQ1).
+Two kinds of test, do not conflate them:
+
+* **D1 and D2 are MODEL-LEVEL tests** — they build a tiny, randomly-initialised
+  control U-Net and its (exact or perturbed) copy, run `eps_pred` end-to-end
+  through the FiLM interface, and feed the resulting epsilons to the diagnostics.
+* **D3, D4 and D5 are FORMULA tests** — they evaluate `modality_diagnostics` on
+  CONSTRUCTED error tensors E_a, E_t. D5 in particular is an algebraic identity of
+  the operator, **not** empirical evidence that pruning damage is modality-isolated;
+  do not cite it as such.
+
+    D1 IDENTITY    (model)   pruned == exact copy of full → D_gen=D_mod=R_mod=0 exact.
+    D2 BOUNDS      (model)   R_mod ∈ [0, 1] over >= 20 real-U-Net perturbations.
+    D3 MONOTONE    (formula) audio-only error → D_mod increases with magnitude.
+    D4 SYMMETRY    (formula) swapping audio<->text leaves D_mod and D_gen invariant.
+    D5 ISOLATION   (formula) identical error in both modalities → D_mod=0, D_gen>0
+                   (the algebraic property that lets D_mod separate modal from
+                   generic damage — the premise of RQ1, tested here as identity).
 
 Run: .venv/bin/python tests/research/test_diagnostics.py
 """

@@ -30,6 +30,21 @@ present in `data/checkpoints/`: `audiomae_16k_128bins.ckpt`,
 `hifigan_16k_64bins.ckpt` + `.json`, `hifigan_48k_256bins.ckpt` + `.json`,
 `vae_mel_16k_64bins.ckpt`.
 
+> **WARNING — `vae_mel_16k_64bins.ckpt` is NOT the first-stage VAE of
+> AudioLDM-M-Full.** Measured in M3-000: of the 398 first-stage tensors, **204
+> differ** between this standalone file and the `first_stage_model.*` embedded in
+> `audioldm-m-full.ckpt` (**max|diff| = 12.8866** at
+> `encoder.mid.block_2.norm2.weight`; the standalone file also carries 56 extra
+> keys). The embedded VAE is the one AudioLDM actually uses, because
+> `audioldm_train/train/latent_diffusion.py:195` calls
+> `latent_diffusion.load_state_dict(ckpt, strict=False)` with the full checkpoint
+> **after** `AutoencoderKL` has already loaded `reload_from_ckpt`, so the embedded
+> weights overwrite the standalone ones. **For any latent (z_0) computation, load
+> the VAE from the embedded `first_stage_model.*` of `audioldm-m-full.ckpt`** (see
+> `research_pruning/diagnostics/conditioning.py::build_vae`), never from this
+> standalone file, even though the upstream config's `reload_from_ckpt` points at
+> it. Evidence: `artifacts/m3_pilot/a1_latent_check.json`.
+
 ## AudioCaps (from `dataset.tar`)
 
 ```text

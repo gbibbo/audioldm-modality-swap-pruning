@@ -278,3 +278,28 @@ Append every scientific run or gate decision, including failed and stopped runs.
 * **B5 — minor.** Record in `docs/m0_baseline_reproduction/dataset_manifest.md` that `vae_mel_16k_64bins.ckpt` is **not** the VAE of AudioLDM-M-Full, so nobody reintroduces it by following the upstream config's `reload_from_ckpt`.
 
 * **Notes:** the pre-registration discipline held — no `D_gen`/`D_mod`/`R_mod` was computed on `l1_audioldm-m-full_p1.ckpt`, and `Freeze commit`/`Freeze timestamp` are correctly blank. `git diff upstream-frozen -- audioldm_train/` still empty.
+
+### 2026-08-18 12:46 | M3-001 | M3A random-null generator + matched-null statistic; protocol B1-B5 — NO scientific result
+
+* **Status:** completed. Machinery + tests only. **`l1_audioldm-m-full_p1.ckpt` never loaded; no D_gen/D_mod/R_mod computed on the real pruned model.** Pre-registration intact.
+* **Milestone / gate:** M3A machinery (random null + Gate A statistic). Resolves audit findings B1..B5. Does NOT resolve Gate A/B, Compute Gate CG, or freeze the protocol.
+* **Git commit:** this commit. Builds on M3-000 and AUDIT-M3-000.
+* **Resolved config:** `audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original_medium.yaml`, unmodified.
+* **Checkpoints (real):** base weights + rankings from `data/checkpoints/audioldm-m-full.ckpt` and `artifacts/m0_baseline_reproduction/sorted_indexes_dict.pkl`. **Never** `l1_audioldm-m-full_p1.ckpt`.
+* **Seeds:** random-null master 20260818, seeds 20260818..20260837; matched-null bootstrap seed 20260818.
+* **Commands:**
+  * `.venv/bin/python tests/research/test_random_masks.py`  (R1..R4)
+  * `.venv/bin/python tests/research/test_matched_null.py`  (N1..N4)
+  * `.venv/bin/python tests/research/test_diagnostics.py`  (D1..D5, docstring B4 fix)
+  * `.venv/bin/python scripts/research/build_random_null.py`  (persist seeds + sha256)
+* **GPU / runtime:** CPU only. **Peak VRAM:** n/a. **Wall time / GPU-hours:** 0 GPU-hours.
+* **Raw output path:** `artifacts/m3_pilot/{test_random_masks.log,test_matched_null.log,random_null_masks.json}`. Docs: `docs/pilot_protocol.md`, `docs/m0_baseline_reproduction/dataset_manifest.md`, `docs/condition_swap_validation.md` (unchanged this unit).
+* **Primary result:**
+  1. **Random-null generator** (`random_masks.py`): mechanic ported verbatim from `_external/PruningAudioLDM/scripts/pruned_unet_dict_creation.py` (`prune_with_indices` + 46-entry `LAYER_MAP`). Per-layer `k` derived from the pruned `[1,2,3,1]` target SHAPES, NOT from the pkl (which holds permutations) and NOT from the L1 ckpt. k-histogram: 15 layers 960→192, 12 keep 576, 1 keeps 384; 10 176 kept channels/mask. L1 and random masks materialise to **145.674 M params**, strict-load, and forward at `[B,8,256,16]`. Random-mask-set sha256 `90a05395…`; L1 reference-mask sha256 `5fef7d7f…`.
+  2. **R1..R4 PASS**: per-layer k respected; 20 masks pairwise distinct and distinct from L1 (at the 15 pruned layers); bit-identical from seed; materialised random model loads strict=True from the BASE ckpt and forwards.
+  3. **Matched-null statistic** (`matched_null.py`): linear OLS fit of `R_mod` vs `D_gen` across per-mask controls (justified; R²/resid_sd stored); `Delta_swap = R_mod^L1 - E[R_mod^random|D_gen^L1]`; standardized residual in control-SD units; bootstrap over wavs AND masks, **unit = wav** (raises on repeated wav ids).
+  4. **N1..N4 PASS** on synthetic data: on-curve → delta≈0, CI contains 0; +2 SD shift → CI excludes 0, standardized residual ≈1.97; bootstrap 95% CI coverage ≈0.96; wav-unit guard raises. Demonstrates Gate A cannot pass by construction.
+  5. **Protocol B1 resolved:** `B` counts SLOTS; `B = E·K`; proposal `E=256, K=5 ⇒ B=1280`; P1==P2==P3==2560 gradient evals; arithmetic table added. **B2:** P1 uses 2 draws per (example, stratum) to match P2/P3 per-stratum weights. **B3:** caption rule = first-in-file (setdefault) documented; bootstrap unit = wav documented + enforced. **B4:** `test_diagnostics.py` docstring corrected (D2 model-level; D3-D5 formula). **B5:** `dataset_manifest.md` warns `vae_mel_16k_64bins.ckpt` is NOT the AudioLDM-M-Full VAE (use the embedded first_stage; latent_diffusion.py:195 load order). M3B "per-layer counts from the pkl" phrasing corrected to "from target shapes".
+* **Acceptance / gate decision:** machinery ready; **M3 remains blocked.** Protocol still UNFROZEN (Freeze fields blank), CG unresolved, no GPU benchmark. No scientific number produced.
+* **Failure or uncertainty:** the random-null structural validity is guaranteed by construction (correct shapes → strict load), verified by materialising L1+random to the known 145.674 M architecture and forwarding; I did not re-derive the reference's exact published-weight reproduction. Matched-null tests use synthetic data with known response, not real diagnostics. Budget numbers (E, K, N_eval) provisional pending the GPU benchmark.
+* **Notes:** no scientific code modified. `git diff upstream-frozen -- audioldm_train/` empty. New code only in `research_pruning/diagnostics/`, `tests/research/`, `scripts/research/`.

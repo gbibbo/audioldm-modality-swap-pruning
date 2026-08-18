@@ -17,8 +17,11 @@ computed on `l1_audioldm-m-full_p1.ckpt`):
   scale_factor * VAE.encode(mel).mode()`, `scale_factor = 0.9138255715370178`
   read from the checkpoint. Code: `research_pruning/diagnostics/conditioning.py`.
 * Diagnostics `D_gen`, `D_mod`, `R_mod`: `research_pruning/diagnostics/modality_diagnostics.py`.
-* Tests `tests/research/test_diagnostics.py` D1..D5 PASS (identity, bounds,
-  monotonicity, symmetry, isolation).
+* Matched random null (20 masks) + Gate A statistic:
+  `research_pruning/diagnostics/random_masks.py`, `matched_null.py`.
+* Tests PASS (control models / synthetic data only, L1 ckpt never opened):
+  `test_diagnostics.py` D1..D5, `test_random_masks.py` R1..R4,
+  `test_matched_null.py` N1..N4.
 
 ## Frozen diagnostic conventions (proposed)
 
@@ -33,22 +36,52 @@ computed on `l1_audioldm-m-full_p1.ckpt`):
   pre-registered timestep strata, then mean across examples. Timestep-specific
   curves are secondary only.
 
-## Calibration budget (master plan §5)
+## Calibration budget (master plan §5) — B1 resolved
 
 One gradient-evaluation unit = one forward+backward saliency evaluation for one
-modality at one pre-specified `(example, noise, timestep)` slot.
+modality at one pre-specified `(example, noise, timestep)` **slot**.
 
-* **Base slots `B` (PROPOSAL): `B = 256`.** Rationale: enough examples to stabilise
-  per-layer saliency across the 28 ranked conv layers while keeping total gradient
-  evaluations affordable within the ~US$50 cloud budget. **Provisional** until
-  `T_sal` is measured on GPU; revise so total calibration GPU-hours fit the budget.
-* **P1 (text-only Taylor): `2B` text evaluations** — two pre-registered
-  `(noise, timestep)` draws per base example, to avoid giving P1 redundant
-  duplicate gradients (§5).
-* **P2/P3 (paired): `B` text + `B` audio** on the same `B` base slots; P2 and P3
-  share the same computed `S_a`, `S_t` (no duplicate calibration compute).
-* All criteria therefore consume `2B = 512` gradient evaluations. Report
-  calibration GPU-hours, peak VRAM, #forward/backward evals, wall time, examples.
+**`B` counts SLOTS, not examples** (the §5 unit is the slot). A slot is one
+`(example, noise, timestep)` triple. The number of base examples is `E` and the
+number of timestep strata is `K`, with one timestep drawn per stratum per example,
+so:
+
+    B (base slots) = E * K
+
+**PROPOSAL: `E = 256` base examples, `K = 5` strata ⇒ B = 1280 base slots.**
+Rationale: 256 examples stabilise per-layer saliency across the 28 ranked conv
+layers; 5 strata cover the noise range (see timestep section). **Provisional**
+until `T_sal` is measured on GPU; revise `E` so total calibration GPU-hours fit the
+~US$50 budget (keep `E` a multiple of nothing in particular, but keep `E·K` the
+same across P0–P3).
+
+Gradient-evaluation arithmetic (a reviewer can sum the last column):
+
+| Criterion | what is evaluated | per stratum (×K=5) | total gradient evals |
+|---|---|---|---|
+| P1 text-only Taylor | 2 text draws per (example, stratum) | 2·E = 512 text | **2B = 2560** |
+| P2 paired mean | 1 text + 1 audio per (example, stratum) | E text + E audio = 256+256 | **2B = 2560** |
+| P3 paired max | (shares P2's `S_a`, `S_t`) | — reuses P2 — | **2B = 2560** |
+
+* P1 == P2 == P3 == **2560** total gradient evaluations. ✔ matched budget.
+* P0 (L1) is data-free: **0** gradient evaluations (its cost advantage stays visible).
+* P2 and P3 share the same computed `S_a`, `S_t`; no duplicate calibration compute.
+* Report per criterion: calibration GPU-hours, peak VRAM, #forward/backward evals,
+  wall time, examples used.
+
+### P1 fairness under stratification — B2 resolved
+
+P1's `2B` text evaluations must cover the **same strata with the same weights** as
+P2/P3, or P1's timestep distribution could handicap the mandatory baseline and any
+cross-modal advantage would be a design artefact (RQ2 would collapse). Rule:
+
+* P2/P3 spend `2E` units per stratum (`E` text + `E` audio). P1 spends `2E` **text**
+  units per stratum — **two pre-registered `(noise, timestep)` draws per
+  (example, stratum)**, the timesteps drawn from that stratum.
+* Therefore every criterion spends exactly `2E = 512` units per stratum across all
+  `K = 5` strata, and P1's text-timestep distribution is proportional to P2/P3's.
+  The two P1 draws per (example, stratum) are the "two pre-registered draws per base
+  example" of §5, refined to fall inside the stratum.
 
 ## Slot construction (PROPOSAL)
 
@@ -56,8 +89,14 @@ modality at one pre-specified `(example, noise, timestep)` slot.
   (`datafiles/audiocaps_train_label.json`, 49 502 items), which is disjoint from
   the test set by wav id (verified: `train ∩ test = 0`). Calibration never draws
   from the test set or from the reserved validation split.
-* Draw `B` base examples deterministically (sort wav ids, seeded permutation,
+* Draw `E` base examples deterministically (sort wav ids, seeded permutation,
   master seed `20260818`).
+* **Caption-selection rule (B3):** where a wav has multiple captions, use the
+  **first caption in source-file order** (`dict.setdefault`, as in
+  `scripts/research/build_val_split.py:62`). Deterministic; text conditioning
+  depends on it, so it is stated here. Apply the SAME rule to the calibration pool
+  drawn from train. (The val manifest has 5 captions per wav = 2475 entries / 495
+  wavs; the calibration pool is de-duplicated to one caption per wav the same way.)
 * **`z_0`:** `scale_factor * VAE.encode(real_mel).mode()` (deterministic mode).
 * **Noise policy:** `eps ~ N(0, I)` per slot from the master seed; `z_t =
   q_sample(z_0, t, eps)`. Same `z_t`, `t`, `eps` shared across audio and text for
@@ -81,21 +120,45 @@ inspected.
 * **Strata (PROPOSAL): `K = 5` equal-width strata** over `[0, 1000)`:
   `[0,200), [200,400), [400,600), [600,800), [800,1000)`. Rationale: covers
   low/mid/high-noise regimes evenly and prevents post-hoc selection of a
-  favourable timestep. Sample the same number of timesteps per stratum per base
-  example (proposal: 1 per stratum for the pilot), seeded.
+  favourable timestep. For P2/P3, draw **1 timestep per stratum per example**
+  (so slots per example = K = 5); for P1, **2 timesteps per stratum per example**
+  (so P1's `2B` text units match P2/P3's per-stratum weights — see B2 above).
+  All draws seeded from the master seed.
 
-## M3A matched random null
+## M3A matched random null — machinery implemented (M3-001)
 
-* `Krand = 20` structured random masks at the `(1,2,3,1)` budget (same per-layer
-  channel counts as L1, over the 28 ranked layers).
-* Diagnostics per mask and for L1: aggregated `D_gen`, `D_mod`, `R_mod` using the
-  conventions above (forward-only; the real pruned/full epsilons feed
-  `modality_diagnostics`).
-* Primary statistic: `Delta_swap = R_mod^L1 - E[R_mod^random | D_gen^L1]`, from a
-  fit of `R_mod` vs `D_gen` across the random controls evaluated at L1's `D_gen`.
-* **Bootstrap unit and seed (PROPOSAL):** resample **evaluation examples** with
-  replacement AND resample the 20 random masks; `10 000` bootstrap resamples;
-  master seed `20260818`. Report the 95% CI of `Delta_swap`.
+* `Krand = 20` structured random masks at the `(1,2,3,1)` budget, with EXACTLY the
+  same per-layer `k` as L1, over the 28 ranked layers. Generator:
+  `research_pruning/diagnostics/random_masks.py` (mechanic ported verbatim from the
+  frozen reference `pruned_unet_dict_creation.py`). **The per-layer `k` come from
+  the pruned U-Net's target SHAPES (`channel_mult=[1,2,3,1]`), NOT from the pkl and
+  NOT from the L1 checkpoint** — `sorted_indexes_dict.pkl` holds full channel
+  *permutations*, not counts. Weights are materialised from the BASE checkpoint;
+  the L1 checkpoint is never opened.
+  * Per-layer `k`: 15 layers keep 192 of 960, 12 keep 576, 1 keeps 384;
+    total 10 176 kept channels/mask.
+  * Pre-registered seeds `20260818..20260837`; random-mask-set sha256
+    `90a05395c9de27da9b9af0670669b46aa4328e61f4c66dd0a8fadfca222ce53a`;
+    L1 reference-mask sha256
+    `5fef7d7ff17e73f15593b3f795b9ca161bc2689aa052fa5a7b297834acb0ba6f`.
+    Record: `artifacts/m3_pilot/random_null_masks.json`.
+* Diagnostics per mask and for L1: aggregated `D_gen`, `D_mod`, `R_mod` (forward-
+  only; real pruned/full epsilons feed `modality_diagnostics`).
+* Primary statistic: `Delta_swap = R_mod^L1 - E[R_mod^random | D_gen^L1]`.
+  Implementation: `research_pruning/diagnostics/matched_null.py`.
+  * **Fit functional form: LINEAR** (`R_mod = a + b·D_gen`) over the per-mask
+    control points, by OLS. Rationale: within the narrow `D_gen` band around L1 the
+    relationship is expected smooth/monotone; a line is the simplest defensible
+    model and its residual scatter is the control SD for the standardized-residual
+    gate. `R²` and residual SD are stored as fit diagnostics. Revisit the form
+    (isotonic/log) only if curvature appears, recording the change in the ledger.
+  * **Standardized residual** = `Delta_swap / (mask-level residual SD)`, in
+    random-control SD units.
+* **Bootstrap unit = WAV (never the caption-wav entry), seed `20260818`,
+  `10 000` resamples.** Resample wavs with replacement AND resample the 20 masks.
+  `bootstrap_delta_swap` **raises** if the pool has repeated wav ids
+  (pseudo-replication would narrow the CI and let Gate A pass by construction).
+  Report the 95% CI of `Delta_swap`.
 * **Evaluation examples (PROPOSAL): `N_eval = 200`** drawn from the disjoint
   validation split defined below (never the test set). Provisional; CPU plan-B
   cost at this size is ~3 CPU-hours per full pass (M2 timing), GPU cost TBD.
@@ -112,8 +175,12 @@ inspected.
 ## M3B saliency disagreement
 
 * **Target prune tail (PROPOSAL):** the channels actually removed at the
-  `(1,2,3,1)` budget, per layer, taken from `sorted_indexes_dict.pkl`'s per-layer
-  counts. `overlap@k` uses `k = p_l` = number of channels pruned in layer `l`.
+  `(1,2,3,1)` budget, per layer. The per-layer kept count `k_l` comes from the
+  pruned U-Net's target **shapes** (built from the frozen config with
+  `channel_mult=[1,2,3,1]`), **not** from `sorted_indexes_dict.pkl` — the pkl holds
+  full channel permutations, not counts. The number pruned is `p_l = full_l - k_l`
+  (non-zero only for the 15 layers that go 960→192). `overlap@k` uses the kept sets
+  of size `k_l` from the audio and text saliency rankings.
 * Targeted layers: **constrained by M0.** The public L1 baseline
   (`sorted_indexes_dict.pkl`, Zenodo 10.5281/zenodo.21376822) ranks exactly 28
   conv layers -- `input_blocks.7..11` (9), `middle_block` (4),
@@ -138,9 +205,13 @@ inspected.
 * Validation split manifest sha256: `e540146d62d01ca70ed92e8b1adc1991da8c967e3e5229241c13f78edc8ff45e`
 * Diagnostic norm: L2 (flattened per-example); `R_mod` epsilon: `1e-12`.
 * Master seed (proposed): `20260818`.
-* Calibration manifest SHA256: _pending (built at freeze time)_
+* Random-null seeds: `20260818..20260837`; random-mask-set sha256
+  `90a05395c9de27da9b9af0670669b46aa4328e61f4c66dd0a8fadfca222ce53a`;
+  L1 reference-mask sha256
+  `5fef7d7ff17e73f15593b3f795b9ca161bc2689aa052fa5a7b297834acb0ba6f`.
+* Matched-null fit form: LINEAR (OLS); bootstrap unit: WAV; `n_boot` 10 000.
+* Calibration manifest SHA256: _pending (built at freeze time; E, K, caption rule fixed)_
 * Timestep list/hash: _pending (built at freeze time)_
-* Random mask seed list/hash: _pending (built at freeze time)_
 * Code commit: _pending_
 * Resolved config: `audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original_medium.yaml`
 * Freeze commit: _left blank — reviewed before freezing_

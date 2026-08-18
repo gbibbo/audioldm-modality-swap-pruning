@@ -25,3 +25,21 @@ from research_pruning.diagnostics.modality_diagnostics import (  # noqa: F401
     aggregate_over_strata,
     modality_diagnostics,
 )
+from research_pruning.diagnostics.random_masks import (  # noqa: F401
+    LAYER_MAP,
+    PREREGISTERED_SEEDS,
+    build_random_null,
+    kept_counts,
+    kept_sets,
+    load_l1_ranking,
+    materialize,
+    random_ranking,
+)
+from research_pruning.diagnostics.matched_null import (  # noqa: F401
+    bootstrap_delta_swap,
+    delta_swap,
+    fit_null_curve,
+    point_estimate,
+    predict_null,
+    standardized_residual,
+)
