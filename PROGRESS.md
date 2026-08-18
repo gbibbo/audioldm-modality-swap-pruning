@@ -25,7 +25,7 @@
 
 ## OPEN ITEMS
 
-1. **Request the recovered full-FT `(1,2,3,1)` checkpoint from Arshdeep today** — the public search is finished and the artifact is proven absent. Also ask him to confirm the pre-recovery reading of `l1_audioldm-m-full_p1.ckpt`.
+1. **Request the recovered full-FT `(1,2,3,1)` checkpoint from Arshdeep today** — the public search is finished and the artifact is proven absent. Also ask him to confirm the pre-recovery reading of `l1_audioldm-m-full_p1.ckpt`, and (new, AUDIT-M3-001) whether the seam conventions found in the published pruned checkpoint are intentional: 4 tensors deviate from his public script, and the artifact is internally inconsistent at `output_blocks.0/1` (consumer selects by ranking, producer outputs positional channels) and at `output_blocks.2.0.in_layers.2` (weight positional, bias ranked).
 2. Recover the local-only M1 LoRA/PEFT CPU scaffold from the Windows machine, diff it against this repository, and re-run its tests here before touching it.
 4. Finish the fetch of `checkpoints.tar` / `dataset.tar` and extract into `data/checkpoints/` and `data/dataset/`; then run upstream `tests/validate_dataset_checkpoint.py`.
 5. Verify the FAD/KL pipeline (`audioldm_eval`) and reproduce the PANNs top-k semantic pipeline.

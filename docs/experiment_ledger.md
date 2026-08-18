@@ -303,3 +303,36 @@ Append every scientific run or gate decision, including failed and stopped runs.
 * **Acceptance / gate decision:** machinery ready; **M3 remains blocked.** Protocol still UNFROZEN (Freeze fields blank), CG unresolved, no GPU benchmark. No scientific number produced.
 * **Failure or uncertainty:** the random-null structural validity is guaranteed by construction (correct shapes → strict load), verified by materialising L1+random to the known 145.674 M architecture and forwarding; I did not re-derive the reference's exact published-weight reproduction. Matched-null tests use synthetic data with known response, not real diagnostics. Budget numbers (E, K, N_eval) provisional pending the GPU benchmark.
 * **Notes:** no scientific code modified. `git diff upstream-frozen -- audioldm_train/` empty. New code only in `research_pruning/diagnostics/`, `tests/research/`, `scripts/research/`.
+
+### 2026-08-18 13:30 | AUDIT-M3-001 | Independent audit of M3-001 — materialization does NOT reproduce the published L1 checkpoint
+
+* **Status:** completed. **M3-001 verdict: tests and statistic ACCEPTED; the mask MATERIALIZER is REJECTED until it reproduces the published artifact bit-exactly.** One major finding about the published baseline itself.
+* **Git commit:** this commit. Audited commit: `e72c1fe`.
+* **Golden-rule note:** this audit opened `l1_audioldm-m-full_p1.ckpt` for **structural tensor-equality comparison only** — the same class of check as M0's `prerecovery_check` (which already compared the two checkpoints tensor by tensor). No `D_gen`/`D_mod`/`R_mod`, saliency, or any diagnostic was computed on it. The pre-registration is intact.
+
+**Re-verified independently (confirmed):**
+
+1. R1..R4 and N1..N4 re-run: all PASS, values reproduce (mask-set sha256 `90a05395…`, N2 residual 1.97, N3 coverage 0.960).
+2. Per-layer `k` histogram re-derived from the `(1,2,3,1)` state-dict shapes without using his code: `{192: 15, 576: 12, 384: 1}`, 10 176 kept channels, exactly 15 selecting tensors — matches his report.
+3. Budget table (B1), stratum fairness (B2), caption/bootstrap rules (B3), docstring and manifest fixes (B4/B5): all present and arithmetically consistent (E=256, K=5, B=E·K=1280 slots, P1=P2=P3=2B=2560 evaluations).
+
+**Major finding — closing the gap he declared.** He wrote "no re-derivé que la referencia reproduzca los pesos publicados exactos". The audit did. Result: **materialize(base ckpt, L1 ranking) ≠ published `l1_audioldm-m-full_p1.ckpt`. 686/690 tensors bit-identical; 4 differ:**
+
+| Tensor | Published convention (proven bit-exact) | Our port (verbatim reference) |
+|---|---|---|
+| `input_blocks.10.0.in_layers.2.weight` | out = `perm[:192]`, **in = identity** (all 576) | in permuted by `input_blocks.9.0.op` ranking (per reference `layer_map`) |
+| `output_blocks.0.0.in_layers.2.weight` | **out = positional `[:192]`**, in = positional `[:384]` | out = `perm[:192]` (per reference `layer_map`) |
+| `output_blocks.1.0.in_layers.2.weight` | **out = positional `[:192]`**, in = positional `[:384]` | out = `perm[:192]` (per reference `layer_map`) |
+| `output_blocks.2.0.in_layers.2.bias` | **`base[perm[:192]]` (ranked)** | positional `[:192]` (reference comments this entry out) |
+
+Trivial-identity explanations were ruled out: `perm[:192] != range(192)` for both output_blocks rankings.
+
+**Consequences, in decreasing order of importance:**
+
+* **C1 — the public reference script does not reproduce the published artifact.** The divergence is upstream of us: sometimes the reference ranks where the artifact is positional/identity, sometimes it truncates where the artifact ranks. The implementer's port was faithful; the port target was not.
+* **C2 — the published L1 artifact is internally inconsistent at its seams.** Proven examples: (a) `output_blocks.0/1.0.out_layers.3.weight` select their **input** columns by the `in_layers` **ranking** (ours==pub) while the producing `in_layers.2` outputs **positional** first-192 channels — the consumer's column selection does not correspond to the producer's actual outputs; (b) in `output_blocks.2.0.in_layers.2`, the **weight** rows are positional while the **bias** entries are ranked — the bias values are attached to channels other than the ones whose weights were kept. These are properties of the *published baseline*, pre-recovery; they are part of what the paper compares against and belong in the M0 record and possibly in the questions for Arshdeep.
+* **C3 — the matched null as built is NOT matched to the artifact that will be diagnosed.** M3A will measure `R_mod^L1` on the published checkpoint. The random masks must therefore be produced by a materializer that, given the L1 ranking, reproduces the published checkpoint **690/690 bit-exactly**; random masks then reuse that exact materializer with random rankings, so they differ from L1 *only* where L1's construction was actually ranking-driven, and inherit the same seam conventions everywhere else.
+
+**Required fix (blocking for the null):** rewrite the materializer's per-layer conventions to match the published artifact; acceptance = `materialize(L1 ranking) == published ckpt` on all 690 tensors; regenerate the 20 masks + sha256 through the fixed materializer; document each deviation from the public reference script alongside the proof.
+
+**Not affected:** `matched_null.py` (statistic + bootstrap), the protocol arithmetic, split, captions, docstrings. R4's strict-load/forward criterion stays necessary but was proven insufficient — only artifact-level bit-equality catches seam-convention errors.
