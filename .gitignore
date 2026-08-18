@@ -1,0 +1,20 @@
+
+# agent-kit audioldm research ignores
+artifacts/
+_external/
+datasets/
+checkpoints/
+wandb/
+*.ckpt
+*.safetensors
+*.pt
+*.pth
+audioldm-agent-kit-minimal*.zip
+.env
+.env.*
+CLAUDE.local.md
+.claude/settings.local.json
+__pycache__/
+.pytest_cache/
+.venv/
+.agent-kit-backup-*/
