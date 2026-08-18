@@ -176,3 +176,29 @@ Append every scientific run or gate decision, including failed and stopped runs.
 * **Acceptance / gate decision:** no gate was resolved. M0 remains **open**, M1 remains **absent and blocked**, M3 remains **blocked**.
 * **Failure or uncertainty:** none introduced. The handoff asserts only state already verified and logged in BOOTSTRAP-000 and M0-001..M0-004.
 * **Notes:** M1 must not be reconstructed without Gabriel's explicit authorisation; he is searching his Windows machine for the local scaffold. `docs/compute_budget.md` deliberately left entirely `TBD_MEASURED`.
+
+### 2026-08-18 11:41 | M2-001 | Conditioning-path validation (audio vs text CLAP → FiLM)
+
+* **Status:** completed, PASS. M2 fail condition NOT triggered.
+* **Milestone / gate:** M2 (conditioning-path validation). Hard prerequisite of M3. 100% CPU.
+* **Git commit:** this commit
+* **Branch:** `main`
+* **Resolved config:** `audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original_medium.yaml` at `upstream-frozen`, unmodified.
+* **Base checkpoint:** `data/checkpoints/audioldm-m-full.ckpt` (base U-Net `[1,2,3,5]`, strict load); CLAP `data/checkpoints/clap_music_speech_audioset_epoch_15_esc_89.98.pt` (HTSAT-base).
+* **Dataset manifest:** AudioCaps `test` split (964 items); N=48 real items (indices 0..47) for norm/cosine stats; slots for the paired eps tests use indices [0,1,2,3], seed 1234.
+* **Seeds:** paired-slot seed 1234 (z_t noise realisation + timesteps). CLAP `unconditional_prob` forced to 0.0.
+* **Commands:**
+  * `.venv/bin/python tests/research/test_conditioning_paths.py`
+  * `.venv/bin/python scripts/research/m2_condition_swap.py --n 48`
+* **GPU / runtime:** CPU only. **Peak VRAM:** n/a. U-Net forward: 1.52 s/fwd @ batch 1, 4.94 s/fwd @ batch 4 (1.24 s/item). **Wall time / GPU-hours:** 0 GPU-hours.
+* **Raw output path:** `artifacts/m2_condition_swap/{test_conditioning_paths.log,condition_swap_metrics.json,condition_swap_metrics.log,embedding_norm_hist.png,paired_cosine_hist.png}`. Report: `docs/condition_swap_validation.md`.
+* **Primary result:**
+  1. **T1..T5 all PASS.** e_a, e_t are `[B,1,512]`; both enter the same FiLM interface (`film_emb` `512→768`, `openaimodel.py:871-872`); `extra_film_condition_dim==512`. Determinism `max|Δ|==0.0` for eps_a and eps_t; pairing proven by `hash(z_t)==hash(noise)`; non-degeneration `mean|eps_a−eps_t|=1.148e-02`.
+  2. **CLAP embeddings are L2-normalized in this checkpoint** for BOTH modalities (`F.normalize` at `model.py:749,777`): `||e||_2` mean 1.0000, std ~4e-8 over N=48. No cross-modality normalization mismatch.
+  3. **Paired cosine** (same item) mean 0.248 ± 0.102 vs **cross-item** mean −0.079; sanity same>cross PASS. Modest absolute value reflects the CLAP audio–text modality gap; clearly above the cross baseline.
+  4. FiLM wiring proven identical to `LatentDiffusion.apply_model` by file:line (see report table).
+* **Acceptance / gate decision:** M2 **PASS**. No unresolved normalization or code-path difference. M3 is not blocked by M2 (remaining M3 gates — GPU benchmark, Compute Gate CG, frozen `pilot_protocol.md`, disjoint val split — are independent and still open).
+* **Failure or uncertainty:**
+  * **Audio-branch 0.24 s truncation:** CLAP resamples 16k→48k then truncates to 480000 samples = 10.0 s (`training/data.py:452,460`); every 10.24 s AudioCaps clip loses its last ~0.24 s before audio embedding. Deterministic, identical for full/pruned models, does not confound the swap; recorded for reproducibility.
+  * **Upstream unconditional dropout is 0.1 and the config does NOT override it** (`conditional_models.py:1151`); the raw conditioner would apply 10% stochastic unconditional-token replacement. The diagnostic forces `unconditional_prob=0.0`; downstream M3 calibration must set this explicitly too.
+* **Notes:** no scientific code modified. `git diff upstream-frozen -- audioldm_train/` still empty. New code only in `research_pruning/diagnostics/conditioning.py`, `tests/research/test_conditioning_paths.py`, `scripts/research/m2_condition_swap.py`. The `~0.24 s` audio truncation and the `unconditional_prob=0.0` requirement should be carried into `pilot_protocol.md` before M3.

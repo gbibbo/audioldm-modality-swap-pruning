@@ -15,7 +15,8 @@
 * **Known trap:** `dataset_root.json` maps the **val split to the same file as test** (964 items). A disjoint validation split must be defined explicitly before any model-selection decision, or test contamination is structurally possible.
 * **Reproducible environment BUILT and verified.** `.venv` on a `uv`-provisioned standalone CPython **3.10.20**, installed from the unmodified frozen `poetry.lock`: 155 packages, 0 errors, no pin relaxed (`torch 1.13.1+cu117`, `transformers 4.30.2`, `pytorch-lightning 2.1.1`, `librosa 0.9.2`, `numpy 1.23.5`, plus `audioldm_eval` and `hear21passt`). Lightning blocks `conda create` in every form and `/commands/python3.10` is a shim that runs 3.12; both are documented in `docs/environment_report.md`.
 * **Model-loading smoke test PASSES.** `UNetModel` rebuilt from the frozen config and loaded `strict=True` for both budgets: `[1,2,3,5]` 415.955 M and `[1,2,3,1]` 145.674 M, 690 tensors each, 0 missing / 0 unexpected. Import smoke tests 6/6 including `audioldm_eval`. The M0 criterion "base and pruned architectures can be reconstructed deterministically" is **met**.
-* Structure created per master plan §13. `audioldm_peft/`, `research_pruning/{diagnostics,taylor,paired_modality}/`, `tests/research/` are **skeletons with no implementation**; no M1 code was written or reconstructed.
+* **M2 conditioning-path validation COMPLETE (PASS), 100% CPU.** `research_pruning/diagnostics/conditioning.py` exposes the audio/text CLAP paths and FiLM epsilon prediction, faithful to `LatentDiffusion.apply_model` (proven by file:line in `docs/condition_swap_validation.md`). Tests `tests/research/test_conditioning_paths.py` **T1..T5 all PASS**: e_a/e_t are `[B,1,512]` into the same FiLM interface (`extra_film_condition_dim==512`, `film_emb 512→768`); determinism `max|Δ|==0.0`; pairing proven by tensor hash; non-degeneration `mean|eps_a−eps_t|=1.148e-2`. CLAP embeddings are **L2-normalized for both modalities** (‖e‖₂≈1.0, std ~4e-8, N=48); paired cosine 0.248 vs cross −0.079 (sanity PASS). **Two traps recorded:** (i) CLAP truncates the audio branch to 10.0 s (drops ~0.24 s of every 10.24 s clip, `data.py:452,460`); (ii) upstream `unconditional_prob=0.1` is **not** overridden by the config — the diagnostic forces 0.0, and M3 calibration must too. Report `docs/condition_swap_validation.md`; artifacts in `artifacts/m2_condition_swap/`. `git diff upstream-frozen -- audioldm_train/` still empty.
+* Structure created per master plan §13. `audioldm_peft/`, `research_pruning/{taylor,paired_modality}/`, remain **skeletons with no implementation**; no M1 code was written or reconstructed.
 * No GPU is attached. `docs/compute_budget.md` is entirely unmeasured, Compute Gate CG is unresolved, and M3 stays blocked.
 
 ## OPEN ITEMS
@@ -24,8 +25,9 @@
 2. Recover the local-only M1 LoRA/PEFT CPU scaffold from the Windows machine, diff it against this repository, and re-run its tests here before touching it.
 4. Finish the fetch of `checkpoints.tar` / `dataset.tar` and extract into `data/checkpoints/` and `data/dataset/`; then run upstream `tests/validate_dataset_checkpoint.py`.
 5. Verify the FAD/KL pipeline (`audioldm_eval`) and reproduce the PANNs top-k semantic pipeline.
-6. Implement M2 audio/text conditioning instrumentation; prepare the single reproducible GPU benchmark recording all §7.2 variables.
+6. ~~Implement M2 audio/text conditioning instrumentation~~ **DONE (M2-001, PASS).** Still pending: prepare the single reproducible GPU benchmark recording all §7.2 variables.
 7. Resolve Compute Gate CG before M3.
+8. Carry the two M2 traps into `docs/pilot_protocol.md` before M3: set CLAP `unconditional_prob=0.0` in calibration, and account for the ~0.24 s audio-branch truncation.
 
 ## RUN RECIPES
 
@@ -33,6 +35,8 @@
 
 * Environment: `.venv/bin/python` (CPython 3.10.20). Rebuild: see `docs/environment_report.md`.
 * Model-loading smoke test: `.venv/bin/python scripts/research/smoke_load_unet.py`
+* M2 conditioning-path tests (CPU): `.venv/bin/python tests/research/test_conditioning_paths.py`
+* M2 evidence (norms, cosine, timing, figures): `.venv/bin/python scripts/research/m2_condition_swap.py --n 48`
 * Dataset load smoke test: `.venv/bin/python scripts/research/smoke_load_dataset.py --split train --n 2`
 * Upstream dataset/checkpoint validation: `.venv/bin/python tests/validate_dataset_checkpoint.py`
 * Fetch + md5-verify public artifacts: `bash scripts/research/fetch_public_artifacts.sh`
