@@ -161,3 +161,18 @@ Append every scientific run or gate decision, including failed and stopped runs.
   * `dataset_root.json` maps the **val split to the same file as test** (`audiocaps_test_nonrepeat_subset_0.json`, 964 items). Any protocol needing a validation split disjoint from the test set must define one explicitly. This must be settled before M3 and before any model-selection decision, or test contamination is structurally possible.
   * librosa 0.9.2 emits `FutureWarning`s from upstream `stft.py` and `dataset.py` about positional arguments. Upstream code, deliberately not modified.
 * **Notes:** no scientific code was modified to make any test pass. `git diff upstream-frozen -- audioldm_train/` is still empty.
+
+### 2026-08-18 02:20 | HANDOFF-001 | Session close (administrative, not an experiment)
+
+* **Status:** completed
+* **Milestone / gate:** none. This is a session-continuity record, **not a scientific run**, and resolves no gate.
+* **Git commit:** this commit
+* **Branch:** `main`
+* **Resolved config / dataset / checkpoints / seeds:** n/a — nothing was executed.
+* **Command:** none. No experiment, download, installation or GPU work was performed during this close-out.
+* **GPU / runtime:** none. **Peak VRAM:** n/a. **Wall time / GPU-hours:** 0.
+* **Raw output path:** n/a
+* **Primary result:** `docs/HANDOFF.md` written as the single resume point for a new session, covering repository/branch/HEAD, remotes, both frozen SHAs, verified M0 items with their evidence paths, the remaining M0 work, M1/M2 status, the gates blocking M3, environment and data locations, minimal re-run commands, the recorded findings, provenance-document status, the six recorded plan deviations, a prioritised work queue split into available vs blocked, and a "Do not assume" prohibition list.
+* **Acceptance / gate decision:** no gate was resolved. M0 remains **open**, M1 remains **absent and blocked**, M3 remains **blocked**.
+* **Failure or uncertainty:** none introduced. The handoff asserts only state already verified and logged in BOOTSTRAP-000 and M0-001..M0-004.
+* **Notes:** M1 must not be reconstructed without Gabriel's explicit authorisation; he is searching his Windows machine for the local scaffold. `docs/compute_budget.md` deliberately left entirely `TBD_MEASURED`.

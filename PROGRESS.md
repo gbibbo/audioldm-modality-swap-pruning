@@ -4,6 +4,7 @@
 
 ## CURRENT STATE
 
+* **Resume point: `docs/HANDOFF.md`.** A new session should read that file first; it is self-contained and does not depend on any chat history.
 * Repository: `/teamspace/studios/this_studio/audioldm-modality-swap-pruning`, branch `main`, remote `origin` = `gbibbo/audioldm-modality-swap-pruning` (public).
 * No prior research repository was recoverable anywhere (`gh` or filesystem). This history was started fresh. The M0/M1 work the master plan describes as done is local-only on the author's Windows machine and unpushed.
 * **Frozen references imported and verified in-repo.** `upstream-frozen` = `702a638d…` (full 35-commit upstream history merged into `main`); `pruning-reference-frozen` = `6f65f628…` (kept as reference branch, plus a working clone in `_external/`). `git diff upstream-frozen -- audioldm_train/` is **empty**.
@@ -27,6 +28,8 @@
 7. Resolve Compute Gate CG before M3.
 
 ## RUN RECIPES
+
+* Full resume context: `docs/HANDOFF.md`
 
 * Environment: `.venv/bin/python` (CPython 3.10.20). Rebuild: see `docs/environment_report.md`.
 * Model-loading smoke test: `.venv/bin/python scripts/research/smoke_load_unet.py`
@@ -76,4 +79,10 @@
 * Added `scripts/research/smoke_load_dataset.py`; train and test splits both load with the expected preprocessing shapes.
 * Recorded the val == test trap in `docs/m0_baseline_reproduction/dataset_manifest.md` and `docs/pilot_protocol.md`.
 * Logged as M0-004. No scientific code modified; `git diff upstream-frozen -- audioldm_train/` still empty.
+
+### 2026-08-18 | Session close: handoff written
+
+* Wrote `docs/HANDOFF.md` as the single self-contained resume point: repo/HEAD/remotes, frozen SHAs, verified M0 items with evidence paths, remaining M0 work, M1/M2 status, M3 gates, environment and data locations, re-run commands, findings, deviations, a prioritised available-vs-blocked work queue, and a "Do not assume" list.
+* Logged as HANDOFF-001 in `docs/experiment_ledger.md`, explicitly as administrative and not an experiment.
+* No experiment, download, installation or GPU work was performed during this close-out. No gate resolved: M0 open, M1 absent and blocked, M3 blocked.
 
