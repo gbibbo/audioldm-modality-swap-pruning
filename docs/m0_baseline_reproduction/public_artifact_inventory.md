@@ -134,6 +134,34 @@ the final recovered full-FT `(1,2,3,1)` checkpoint. Until it is obtained, **RQ3
 is downgraded to a published-reference comparison**, and no exact
 percentage-of-full-FT recovery may be claimed from cross-pipeline numbers.
 
+## L1 saliency manifest — `sorted_indexes_dict.pkl`
+
+Inspected statically first with `pickletools` (log:
+`artifacts/m0_baseline_reproduction/sorted_indexes_inspect.log`). The pickle
+contains **no `GLOBAL`/`REDUCE` opcodes**, i.e. it is pure data and executes no
+third-party code on load; only then was it loaded.
+
+Contents: `dict[str, list[int]]` over **28 conv layers**. Every value is a full
+permutation of `range(n_channels)`, so each entry is a complete L1 importance
+ranking of that layer's channels, not a pre-truncated keep-list.
+
+| block family | layers | channel widths present |
+|---|---|---|
+| `input_blocks.7…11` | 9 | 576, 960 |
+| `middle_block` | 4 | 960 |
+| `output_blocks.0…6` | 15 | 960, 576, 384 |
+
+The covered layers are those touched by B3/B4 pruning (`pruned_indexes/B3_B4/`),
+with one entry reaching into the 384-wide level (`output_blocks.6.0`). The whole
+U-Net is **not** covered.
+
+**Consequence for RQ2 (matched comparison).** P1 text-only Taylor, P2 paired
+mean and P3 paired max must produce rankings over **exactly this 28-layer set**,
+with the same per-layer channel counts, or the comparison against the L1
+baseline is not structure-matched. This layer set is therefore a fixed input to
+the M3 pilot protocol and must be frozen in `docs/pilot_protocol.md` before
+saliency results are inspected.
+
 ## Not yet available / still open
 
 * **Recovered full-FT `(1,2,3,1)` checkpoint** - not public, proven absent from
