@@ -28,10 +28,10 @@ def main() -> int:
     l1 = rm.load_l1_ranking(PKL)
     full = rm.ranking_full_lengths(l1)
     rankings, counts, sha = rm.build_random_null(config, l1)
+    driven = rm.ranking_driven_layers(config, l1)
 
-    # L1 kept-set fingerprint (so a reviewer can confirm the reference mask) —
-    # computed from the pkl + shapes, never from the L1 checkpoint.
-    l1_sig = hashlib.sha256(rm.mask_signature(l1, counts)).hexdigest()
+    # L1 fingerprint (full-ranking hash) — computed from the pkl, never from the ckpt.
+    l1_sig = rm.masks_sha256([l1])
 
     record = {
         "krand": len(rankings),
@@ -43,11 +43,17 @@ def main() -> int:
         "total_kept_channels_per_mask": sum(counts.values()),
         "k_histogram": {str(k): sum(1 for v in counts.values() if v == k)
                         for k in sorted(set(counts.values()))},
+        "ranking_driven_layers": driven,
+        "n_ranking_driven_layers": len(driven),
+        "positional_out_seams": sorted(rm.POSITIONAL_OUT_LAYERS),
+        "identity_input_seams": sorted(rm.IDENTITY_INPUT_LAYERS),
+        "ranked_bias_overrides": sorted(rm.RANKED_BIAS_OVERRIDES.keys()),
         "random_masks_sha256": sha,
         "l1_reference_mask_sha256": l1_sig,
         "pruned_channel_mult": rm.PRUNED_CHANNEL_MULT,
-        "weight_source": "data/checkpoints/audioldm-m-full.ckpt (base [1,2,3,5]); L1 ckpt NEVER opened",
-        "mechanic": "ported verbatim from _external/PruningAudioLDM/scripts/pruned_unet_dict_creation.py",
+        "weight_source": "data/checkpoints/audioldm-m-full.ckpt (base [1,2,3,5]); L1 ckpt opened only for R5 equality",
+        "mechanic": ("prune_with_indices ported from _external/PruningAudioLDM; "
+                     "LAYER_MAP corrected to reproduce the published artifact 690/690 (M3-002)"),
     }
     with open(OUT, "w") as fh:
         json.dump(record, fh, indent=2)

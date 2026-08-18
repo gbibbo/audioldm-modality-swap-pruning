@@ -138,10 +138,16 @@ inspected.
   * Per-layer `k`: 15 layers keep 192 of 960, 12 keep 576, 1 keeps 384;
     total 10 176 kept channels/mask.
   * Pre-registered seeds `20260818..20260837`; random-mask-set sha256
-    `90a05395c9de27da9b9af0670669b46aa4328e61f4c66dd0a8fadfca222ce53a`;
+    `3e6666bcdf0bab77568650732aaf9aab37241527903c6023031d01aac84e8f7e`;
     L1 reference-mask sha256
-    `5fef7d7ff17e73f15593b3f795b9ca161bc2689aa052fa5a7b297834acb0ba6f`.
+    `9a2593c20555d510d0edef76deb2075121f5e865f5f931d0c28584fa83524360`
+    (full-ranking fingerprints; regenerated in M3-002 after the materializer fix).
     Record: `artifacts/m3_pilot/random_null_masks.json`.
+  * **Materializer is bit-exact to the published artifact (M3-002):**
+    `materialize(base, L1 ranking)` == `l1_audioldm-m-full_p1.ckpt`, **690/690**
+    tensors (`artifacts/m3_pilot/l1_bitexact_check.json`, test R5). Random masks use
+    the SAME materializer, so they coincide with L1 at every positional/identity
+    seam and differ only in the **12 ranking-driven layers** (see below).
 * Diagnostics per mask and for L1: aggregated `D_gen`, `D_mod`, `R_mod` (forward-
   only; real pruned/full epsilons feed `modality_diagnostics`).
 * Primary statistic: `Delta_swap = R_mod^L1 - E[R_mod^random | D_gen^L1]`.
@@ -159,6 +165,42 @@ inspected.
   `bootstrap_delta_swap` **raises** if the pool has repeated wav ids
   (pseudo-replication would narrow the CI and let Gate A pass by construction).
   Report the 95% CI of `Delta_swap`.
+
+## Seam conventions of the published artifact (pre-registration for M3A/M3B)
+
+The published `l1_audioldm-m-full_p1.ckpt` is **internally inconsistent at its
+seams**, and the public reference script does not reproduce it. The materializer
+`research_pruning/diagnostics/random_masks.py` reproduces the artifact **690/690**
+bit-exact (test R5); the per-layer convention below IS that reproduction and is part
+of the pre-registration, because the random null inherits it and because **P1/P2/P3
+compete only on the ranking-driven layers**.
+
+Of the 15 tensors that reduce a 960-channel output to 192, **12 are ranking-driven
+in their output** (out = `perm[:192]`) and **3 are positional** (out = first-192,
+ranking ignored):
+
+* **Ranking-driven output (12) — where the null differs from L1 and where M3B
+  overlap competes:** `input_blocks.10.0.in_layers.2.weight`,
+  `input_blocks.10.0.out_layers.3.weight`, `input_blocks.11.0.in_layers.2.weight`,
+  `input_blocks.11.0.out_layers.3.weight`, `middle_block.0.in_layers.2.weight`,
+  `middle_block.0.out_layers.3.weight`, `middle_block.2.in_layers.2.weight`,
+  `middle_block.2.out_layers.3.weight`, `output_blocks.0.0.out_layers.3.weight`,
+  `output_blocks.1.0.out_layers.3.weight`, `output_blocks.2.0.out_layers.3.weight`,
+  `output_blocks.2.2.conv.weight`.
+* **Positional-output seams (3) — random == L1 by construction:**
+  `output_blocks.0.0.in_layers.2.weight`, `output_blocks.1.0.in_layers.2.weight`,
+  `output_blocks.2.0.in_layers.2.weight`.
+* **Identity-input seam (1):** `input_blocks.10.0.in_layers.2.weight` keeps its input
+  columns in identity order (the reference reorders them by the `input_blocks.9.0.op`
+  ranking).
+* **Bias anomaly:** `output_blocks.2.0.in_layers.2.bias` is kept **ranked**
+  (`base[perm[:192]]`) while its own **weight** is kept **positional** — the bias
+  values are attached to different channels than the weight rows. Reproduced exactly
+  because M3A diagnoses this exact checkpoint; flagged as a question for Arshdeep.
+
+Proof for each seam: `scripts/research/verify_l1_bitexact.py` →
+`artifacts/m3_pilot/l1_bitexact_check.json`. Full per-tensor derivation:
+`research_pruning/diagnostics/random_masks.py` docstring.
 * **Evaluation examples (PROPOSAL): `N_eval = 200`** drawn from the disjoint
   validation split defined below (never the test set). Provisional; CPU plan-B
   cost at this size is ~3 CPU-hours per full pass (M2 timing), GPU cost TBD.
@@ -178,9 +220,12 @@ inspected.
   `(1,2,3,1)` budget, per layer. The per-layer kept count `k_l` comes from the
   pruned U-Net's target **shapes** (built from the frozen config with
   `channel_mult=[1,2,3,1]`), **not** from `sorted_indexes_dict.pkl` — the pkl holds
-  full channel permutations, not counts. The number pruned is `p_l = full_l - k_l`
-  (non-zero only for the 15 layers that go 960→192). `overlap@k` uses the kept sets
-  of size `k_l` from the audio and text saliency rankings.
+  full channel permutations, not counts. **P1/P2/P3 compete only on the 12
+  ranking-driven layers** enumerated in "Seam conventions" above: the 3
+  positional-output seams have no ranking to disagree on (L1 itself is positional
+  there), so overlap is defined only where channel selection is ranking-driven.
+  `overlap@k` uses the kept sets of size `k_l = 192` from the audio and text
+  saliency rankings on those 12 layers.
 * Targeted layers: **constrained by M0.** The public L1 baseline
   (`sorted_indexes_dict.pkl`, Zenodo 10.5281/zenodo.21376822) ranks exactly 28
   conv layers -- `input_blocks.7..11` (9), `middle_block` (4),
@@ -206,9 +251,10 @@ inspected.
 * Diagnostic norm: L2 (flattened per-example); `R_mod` epsilon: `1e-12`.
 * Master seed (proposed): `20260818`.
 * Random-null seeds: `20260818..20260837`; random-mask-set sha256
-  `90a05395c9de27da9b9af0670669b46aa4328e61f4c66dd0a8fadfca222ce53a`;
+  `3e6666bcdf0bab77568650732aaf9aab37241527903c6023031d01aac84e8f7e`;
   L1 reference-mask sha256
-  `5fef7d7ff17e73f15593b3f795b9ca161bc2689aa052fa5a7b297834acb0ba6f`.
+  `9a2593c20555d510d0edef76deb2075121f5e865f5f931d0c28584fa83524360`
+  (full-ranking fingerprints, M3-002). Materializer bit-exact to published ckpt (690/690).
 * Matched-null fit form: LINEAR (OLS); bootstrap unit: WAV; `n_boot` 10 000.
 * Calibration manifest SHA256: _pending (built at freeze time; E, K, caption rule fixed)_
 * Timestep list/hash: _pending (built at freeze time)_

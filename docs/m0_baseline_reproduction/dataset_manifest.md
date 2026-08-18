@@ -22,6 +22,21 @@ Both from Zenodo 10.5281/zenodo.14342967. Fetch log:
 | `l1_audioldm-m-full_p1.ckpt` | 3.491 GB | `2666e6fc108a9c4fc0d19bbf26832905` | yes | 21376822 |
 | `sorted_indexes_dict.pkl` | 59 112 B | `a4cd11ff83438ee0f9aa5fe0917f39e3` | yes | 21376822 |
 
+> **The published `l1_audioldm-m-full_p1.ckpt` is internally INCONSISTENT at its
+> pruning seams, and the public reference script does not reproduce it (M3-002).**
+> `sorted_indexes_dict.pkl` holds full channel *permutations* (not counts); running
+> the reference `pruned_unet_dict_creation.py` reproduces only **686/690** U-Net
+> tensors. Four seams deviate; two are internally inconsistent:
+> (a) `output_blocks.0/1.0.out_layers.3.weight` select their input columns by the
+> `in_layers` **ranking**, while the producing `in_layers.2.weight` outputs the
+> **positional** first-192 channels — the consumer's columns do not correspond to the
+> producer's actual outputs; (b) `output_blocks.2.0.in_layers.2` keeps its **weight**
+> rows positional but its **bias** rows **ranked** — bias values attached to channels
+> other than the kept weight rows. A materializer reproducing the artifact 690/690
+> (proven bit-exact) lives in `research_pruning/diagnostics/random_masks.py`; per-seam
+> proof in `artifacts/m3_pilot/l1_bitexact_check.json` and `scripts/research/verify_l1_bitexact.py`.
+> Question logged for Arshdeep (see PROGRESS OPEN ITEMS): are these seams intentional?
+
 ## Auxiliary checkpoints (from `checkpoints.tar`)
 
 All seven files required by upstream `tests/validate_dataset_checkpoint.py` are

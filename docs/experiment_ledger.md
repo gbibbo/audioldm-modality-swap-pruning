@@ -336,3 +336,30 @@ Trivial-identity explanations were ruled out: `perm[:192] != range(192)` for bot
 **Required fix (blocking for the null):** rewrite the materializer's per-layer conventions to match the published artifact; acceptance = `materialize(L1 ranking) == published ckpt` on all 690 tensors; regenerate the 20 masks + sha256 through the fixed materializer; document each deviation from the public reference script alongside the proof.
 
 **Not affected:** `matched_null.py` (statistic + bootstrap), the protocol arithmetic, split, captions, docstrings. R4's strict-load/forward criterion stays necessary but was proven insufficient — only artifact-level bit-equality catches seam-convention errors.
+
+### 2026-08-18 13:42 | M3-002 | Materializer made bit-exact to the published L1 artifact — NO diagnostic
+
+* **Status:** completed. **Acceptance met: `materialize(base, L1 ranking) == l1_audioldm-m-full_p1.ckpt`, 690/690 bit-exact.** Resolves AUDIT-M3-001's rejection of the materializer.
+* **Golden-rule note:** the L1 checkpoint is opened for **tensor EQUALITY ONLY** (test R5 / `verify_l1_bitexact.py`), the same class of check as M0's `prerecovery_check`. **No `D_gen`/`D_mod`/`R_mod`, saliency, or any diagnostic** is computed on it. Pre-registration intact.
+* **Git commit:** this commit. Builds on M3-001 (`e72c1fe`) and AUDIT-M3-001.
+* **Resolved config:** `audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original_medium.yaml`, unmodified.
+* **Checkpoints (real):** base weights from `audioldm-m-full.ckpt`; ranking from `sorted_indexes_dict.pkl`; `l1_audioldm-m-full_p1.ckpt` opened only for equality (R5).
+* **Commands:**
+  * `.venv/bin/python scripts/research/verify_l1_bitexact.py`  (R5 evidence)
+  * `.venv/bin/python tests/research/test_random_masks.py`  (R1..R5)
+  * `.venv/bin/python tests/research/test_matched_null.py`  (N1..N4, unchanged, re-run PASS)
+  * `.venv/bin/python scripts/research/build_random_null.py`  (regenerate seeds+sha)
+* **GPU / runtime:** CPU only. **Peak VRAM:** n/a. **Wall time / GPU-hours:** 0 GPU-hours.
+* **Raw output path:** `artifacts/m3_pilot/{l1_bitexact_check.json,test_random_masks.log,random_null_masks.json}`. Docs: `docs/pilot_protocol.md` (+ "Seam conventions" section), `docs/m0_baseline_reproduction/dataset_manifest.md`.
+* **Primary result:**
+  1. **The public reference script does NOT reproduce the published artifact** (686/690). The 4 deviating tensors and their published conventions, each proven bit-exact:
+     * `input_blocks.10.0.in_layers.2.weight`: out=`perm[:192]`, **in=identity** (ref reorders input by `input_blocks.9.0.op` ranking). Fix: `idx2=None`.
+     * `output_blocks.0.0.in_layers.2.weight`, `output_blocks.1.0.in_layers.2.weight`: **fully positional** `[:192,:384]` (ref ranked output). Fix: removed from `LAYER_MAP` → positional fallback.
+     * `output_blocks.2.0.in_layers.2.bias`: **ranked** `base[perm[:192]]` (ref comments it out → positional). Fix: added ranked override. Its **weight** stays positional (artifact inconsistency, reproduced).
+  2. **`LAYER_MAP` corrected** = reference map minus the 2 positional-out seams, with `input_blocks.10.in` input set to identity and the ranked-bias override added. `materialize(L1)` → **690/690 bit-exact** (`l1_bitexact_check.json`). The corrected model still has 145.674 M params and strict-loads.
+  3. **Ranking-driven layers enumerated: 12 of the 15 selectors** are ranking-driven in output; 3 (`output_blocks.0/1/2.0.in_layers.2.weight`) are positional. Random masks (same materializer, random rankings) coincide with L1 at every positional/identity seam and differ **only** in those 12 layers — the null is matched exactly in the non-chosen channels. M3B prune-tail competes only on these 12.
+  4. **Tests:** R5 BIT-EXACT PASS (690/690); R1..R4 updated (R2 distinctness now measured over the 12 ranking-driven layers) PASS; N1..N4 re-run PASS. Regenerated fingerprints (full-ranking hashes): random-mask-set sha256 `3e6666bcdf0bab77568650732aaf9aab37241527903c6023031d01aac84e8f7e`; L1 reference-mask sha256 `9a2593c20555d510d0edef76deb2075121f5e865f5f931d0c28584fa83524360`.
+  5. **Artifact inconsistency recorded** in `docs/m0_baseline_reproduction/dataset_manifest.md`; question for Arshdeep logged in PROGRESS.
+* **Acceptance / gate decision:** materializer ACCEPTED (bit-exact). **M3 remains blocked** — protocol UNFROZEN, CG unresolved, no GPU benchmark. No scientific number produced.
+* **Failure or uncertainty:** the seam conventions are reproduced from the artifact, not explained; whether they are intentional is a question for Arshdeep. R4's strict-load/forward remains necessary but insufficient — only R5 bit-equality catches seam-convention errors.
+* **Notes:** no scientific code modified. `git diff upstream-frozen -- audioldm_train/` empty. New/changed code only in `research_pruning/diagnostics/`, `tests/research/`, `scripts/research/`.

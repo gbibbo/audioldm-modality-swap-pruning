@@ -26,14 +26,18 @@ from research_pruning.diagnostics.modality_diagnostics import (  # noqa: F401
     modality_diagnostics,
 )
 from research_pruning.diagnostics.random_masks import (  # noqa: F401
+    IDENTITY_INPUT_LAYERS,
     LAYER_MAP,
+    POSITIONAL_OUT_LAYERS,
     PREREGISTERED_SEEDS,
+    RANKED_BIAS_OVERRIDES,
     build_random_null,
     kept_counts,
     kept_sets,
     load_l1_ranking,
     materialize,
     random_ranking,
+    ranking_driven_layers,
 )
 from research_pruning.diagnostics.matched_null import (  # noqa: F401
     bootstrap_delta_swap,
