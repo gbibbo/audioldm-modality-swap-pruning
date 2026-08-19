@@ -17,9 +17,12 @@ evidence · [ ] not started. See `docs/experiment_ledger.md` M1-005+ and
 - [x] Full resume state: adapter + optimizer + scheduler + EMA + step (S3; F7).
 - [x] pytest-free runner (F1): `scripts/research/run_research_tests.py`.
 
-## Real pruned U-Net (F6 — CPU, next unit)
-- [ ] Inject on the real `(1,2,3,1)` U-Net; parameter decomposition recorded.
-- [ ] Merge/unmerge numerical equivalence on a real forward.
+## Real pruned U-Net (F6 — CPU, M1-006 DONE)
+- [x] Inject on the real `(1,2,3,1)` U-Net; 284 modules wrapped (185L+99C);
+      decomposition lora 3,718,784 / bias 108,680 / GroupNorm 48,768 /
+      LayerNorm 0 (default), trainable 3,876,232 of 149,392,648 (R6a).
+- [x] Merge/unmerge numerical equivalence on a real forward, max|Δ| 1.0e-7 (R6b).
+- [x] train_layernorm_affine=True adds exactly 35,712 params (R6c).
 
 ## Integration (F8 — code + CPU tests done; upstream patch deferred to GPU session)
 - [~] Inject only after the external base/pruned checkpoint has been loaded (`setup_peft`).

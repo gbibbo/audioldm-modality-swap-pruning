@@ -414,3 +414,18 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Acceptance / gate decision:** M1 **CPU dummy-model** checks PASS — L1/L2/L3 (merge/unmerge/factorisation), J1–J4 (inject/freeze/F2/F3/F4), S1–S3 (adapter roundtrip / trainable-only EMA / full resume). M1 CPU acceptance is **not yet complete**: F6 (tests on the real pruned U-Net) and F8 (upstream integration hooks) remain. M1 GPU acceptance stays blocked (no GPU).
 * **Failure or uncertainty:** F1 environment deviation — `pytest` is absent from the frozen lock and no pinned version was relaxed; tests run via the stdlib runner and each module's `__main__`. Numbers here are from dummy `nn.Sequential` models, not AudioLDM; the real-U-Net evidence is F6 (next unit). Two audit defects (F6, F8) remain open by design.
 * **Notes:** no scientific/upstream code modified; `git diff upstream-frozen -- audioldm_train/` still empty. New code only in `audioldm_peft/`, `tests/research/`, `scripts/research/`, `configs/research/`, `docs/`. The overlay's stale `docs/` copies were NOT adopted (would regress project state), per the audit's adoption constraint.
+
+### 2026-08-19 01:10 | M1-006 | PEFT tests on the REAL pruned U-Net (audit finding F6)
+
+* **Status:** completed (CPU).
+* **Milestone / gate:** M1. Closes audit defect F6 (dummy-only tests). Injection, parameter accounting and merge algebra now verified on the actual `(1,2,3,1)` diffusion U-Net.
+* **Git commit:** this commit.
+* **Branch:** main.
+* **Command:** `.venv/bin/python tests/research/test_peft_real_unet.py`.
+* **Resolved config:** UNet built from `audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original_medium.yaml` with `channel_mult=[1,2,3,1]`; PEFT `configs/research/peft_r8_full_unet.yaml` (rank 8, alpha 16). No checkpoint loaded — counts and merge algebra are weight-independent; random init.
+* **Random seed(s):** `torch.manual_seed(0)`.
+* **GPU / runtime:** CPU only, ~30 s (3 forwards on the full U-Net).
+* **Primary result:** on the real pruned U-Net, injection wraps **284 modules (185 Linear + 99 Conv2d)** — every eligible module — with decomposition **LoRA 3,718,784 · bias 108,680 · GroupNorm affine 48,768 · LayerNorm affine 0 (default) · other_trainable 0 · trainable 3,876,232 of 149,392,648 total** (base 145,673,864 + LoRA 3,718,784). This reproduces the audit's structural numbers except that the **F2 fix** removes the 17,856 LayerNorm biases from the bias bucket (audit reported bias 126,536 / trainable 3,894,088; now 108,680 / 3,876,232). Merge/unmerge on a real forward is numerically invariant: max|unmerged−merged| **1.04e-7**, unmerge restores to **6.52e-8**. `train_layernorm_affine=True` adds exactly **35,712** params (48 LayerNorms × weight+bias) under `layernorm_affine`.
+* **Acceptance / gate decision:** F6 tests **R6a/R6b/R6c PASS**. M1 CPU acceptance now covers dummy + real U-Net; only **F8** (upstream integration hooks) remains for the CPU portion. GPU acceptance still blocked.
+* **Failure or uncertainty:** none in the tested path. Numbers are from random weights; real-weight behaviour is identical for counts/merge (weight-independent) and only matters for the GPU training run. First test iteration miscounted `base_total` from post-injection `unet.parameters()` (a test bug, not a package bug); fixed to capture it pre-injection.
+* **Notes:** `git diff upstream-frozen -- audioldm_train/` still empty. Test is checkpoint-independent (config + import only), so it runs anywhere the environment builds.
