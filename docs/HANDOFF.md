@@ -7,81 +7,57 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
-> ## ⚠ READ FIRST — T4 SWITCH RETRIED AFTER TOP-UP (2026-08-19 ~19:01 Montevideo)
+> ## ⚠ READ FIRST — GPU RAN, TWO M1 BUGS FOUND, BACK ON CPU (2026-08-19 ~19:25 Montevideo)
 >
-> **Gabriel confirmed a top-up: the org `independentaudioresearch` now shows 10.00 credits.**
-> The `T4` switch was therefore re-authorised and re-attempted at ~19:01. This block was
-> written *before* the attempt, so it deliberately covers both outcomes — **check the
-> machine yourself, do not trust either branch on faith**:
+> **The T4 switch SUCCEEDED** (Tesla T4, 15360 MiB, driver 580.173.02) after Gabriel topped
+> the org balance to 10.00 credits. The GPU was used, two real M1 defects were found, and
+> **the Studio was then switched back to free CPU on purpose** — so if you are on `CPU`,
+> that is intended, not a failure. Verify with `nvidia-smi` either way.
+>
+> **COST DISCIPLINE (Gabriel's instruction, 2026-08-19 — follow it):** do NOT develop inside
+> a billed GPU Studio. The Studio stays on free CPU; GPU work is submitted as jobs:
 >
 > ```bash
-> nvidia-smi
-> .venv/bin/python -c "import torch; print(torch.cuda.is_available(), torch.version.cuda, torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)"
+> lightning job run --name <job> --studio gabriel-allgd-deploy-model-devbox \
+>     --machine T4 --command ".venv/bin/python scripts/research/gpu_benchmark.py ..."
 > ```
 >
-> * **If you see a `Tesla T4` and `True`** → the switch SUCCEEDED and restarted the Studio
->   (which is why the previous session ended). Nothing needs reinstalling; the CUDA wheels
->   were already in the `.venv`. Go straight to "The queue the moment a GPU exists" below,
->   starting with `gpu_benchmark.py`, and update `PROGRESS.md` to record that the GPU is
->   attached.
-> * **If the Studio is still on `CPU`** → the switch failed again. Do NOT retry blindly and
->   do NOT click through billing UI at random. The next thing to check is `Auto-reload
->   credits` on the teamspace (Lightning's docs describe a per-teamspace allocation model
->   that the current UI may no longer expose as a "Transfer" control), then report back to
->   Gabriel. The failure mode last time was the API error quoted below.
+> **UNVERIFIED and worth checking cheaply first:** whether such a job sees
+> `data/checkpoints/` and `data/dataset/`. Test it with a **CPU** job (near-free), not a GPU
+> one: `lightning job run --machine CPU --studio ... --command "ls data/checkpoints && du -sh data/dataset"`.
 >
-> Historical context — the refusal that made the top-up necessary (2026-08-19 ~18:45):
+> **`docs/compute_budget.md` is STILL 100% `TBD_MEASURED`.** The benchmark has never
+> completed — it crashed twice. **Do not quote any GPU number for this project; none
+> exists.** Compute Gate CG stays unresolved and M3 stays blocked.
 >
-> ```text
-> lightning studio switch --name gabriel-allgd-deploy-model-devbox \
->     --teamspace independentaudioresearch/general --machine T4
-> -> HTTP {"code":9, "message":"Insufficient balance to start the cloud space, top up and try again"}
-> ```
+> **Two defects (ledger M1-008):**
+> * **F9 — FIXED.** `LoRALinear`/`LoRAConv2d` created `lora_A`/`lora_B` on the default
+>   device, so injecting PEFT after the model was moved to CUDA gave a cuda/cpu mismatch.
+>   Now built with `device=base.weight.device, dtype=base.weight.dtype`.
+> * **F10 — OPEN, NEEDS GABRIEL'S DECISION.** Gradient checkpointing is incompatible with
+>   PEFT's frozen base weights: `CheckpointFunction.backward`
+>   (`audioldm_train/utilities/diffusion_util.py:161`) differentiates w.r.t.
+>   `input_tensors + input_params`, and the frozen base params do not require grad →
+>   `RuntimeError: One of the differentiated Tensors does not require grad`. **Reproduces on
+>   CPU — fix it there, for free.** Options: (a) `use_checkpoint=False` for PEFT training
+>   (no upstream patch, more VRAM, and the budget must then be measured in that same
+>   configuration); (b) a minimal reviewable upstream patch filtering `input_params` by
+>   `requires_grad` (AGENTS.md permits deliberate reviewed patches); (c) keep base params
+>   requiring grad and discard their grads (wasteful). **Until decided,
+>   `git diff upstream-frozen -- audioldm_train/` must stay empty.**
 >
-> The Studio never restarted (status still `Running` on `CPU`, `torch.cuda.is_available()`
-> still `False`), so nothing was lost and nothing was billed. **The blocker is the account
-> balance of the organization `independentaudioresearch`, which owns this teamspace.** The
-> free CPU machine keeps running; a GPU machine needs a positive balance.
+> **Test-coverage gap that let this through:** `tests/research/test_peft_real_unet.py`
+> (R6a-c) never performs a `backward` — no test ever ran an optimization step through the
+> real U-Net's checkpointed blocks. **Add that regression test on CPU before claiming M1 GPU
+> acceptance**, and before spending another GPU minute.
 >
-> **Do not retry the switch until Gabriel says the balance is topped up** — it will just
-> fail the same way. Retrying costs nothing but proves nothing.
+> **Order of work from here (all CPU, all free):** decide F10 with Gabriel -> implement it ->
+> add the backward regression test -> re-run the full suite -> only THEN submit the
+> benchmark as a GPU job -> populate `compute_budget.md` with measured values -> resolve CG
+> -> freeze `pilot_protocol.md`.
 >
-> Two paths, Gabriel's call:
-> 1. **Top up / add billing on the org `independentaudioresearch`** (lightning.ai → Billing).
->    Then the command above works as-is and everything is already in place here.
-> 2. **Use the personal teamspace `gabriel-allgd/general`** — it exists but is **completely
->    empty** (no studios, no jobs; verified with `lightning studio list --teamspace
->    gabriel-allgd/general`). If it has its own credit allowance, a GPU Studio there would
->    work, but the whole environment has to be rebuilt: repo from GitHub, artifacts via
->    `scripts/research/fetch_public_artifacts.sh` (md5-verified and resumable), `.venv` per
->    `docs/environment_report.md`. That is ~125 GB and several hours, but it is fully
->    scripted — the project was built to be reproducible from scratch.
->
-> **GPU CHOICE IS CONSTRAINED whichever path is taken — do not pick an L4/L40S/H100.** The
-> frozen `poetry.lock` pins `torch 1.13.1+cu117`, whose binary in this `.venv` compiles SASS
-> for **sm_70 / sm_75 / sm_80 only** (PTX `compute_86`), with cuBLAS 11.10 and cuDNN 8.5.
-> **Only `T4` and `A100` are usable**; sm_89 (L4/L40S/RTXP_6000) and sm_90 (H100/H200) are
-> not, and relaxing the pin is forbidden by `AGENTS.md`. Full derivation, machine table and
-> CLI commands: `docs/environment_report.md` § "GPU selection is CONSTRAINED by the frozen
-> torch pin". No reinstall is needed on a machine switch — the CUDA wheels are already in
-> the `.venv`.
->
-> **The queue the moment a GPU exists, in order:**
-> 1. `.venv/bin/python scripts/research/gpu_benchmark.py` (M0-005; written, never run, and
->    it refuses without CUDA). Records every §7.2 variable including `GPU_MODEL`/`VRAM_GB`.
-> 2. Populate `docs/compute_budget.md` with **measured** values (currently 100%
->    `TBD_MEASURED`). Never estimate. The numbers are valid only for the machine that
->    produced them.
-> 3. Resolve **Compute Gate CG** explicitly and record it in `docs/experiment_ledger.md`.
-> 4. **Freeze `docs/pilot_protocol.md`** — it is complete and reviewed; `T_sal`/`T_fwd` plus
->    CG were its only remaining prerequisites. No saliency may be inspected before the
->    freeze lands in a commit.
-> 5. Then M1 GPU acceptance and the M3B scientific run (P1 is scientifically load-bearing —
->    it must pass `/auditar` before any real use).
->
-> **If T4 is the machine: 16 GB may be tight** for base-model `(1,2,3,5)` saliency
-> (415.955 M params + gate gradients) and M4 generation. Fallback is `A100`, never an L4 —
-> and re-run the benchmark there before reusing any budget number.
+> GPU choice stays constrained to **T4 or A100** (`torch 1.13.1+cu117` compiles sm_70/75/80
+> only); see `docs/environment_report.md`.
 >
 > ## ⚠ READ FIRST — M3B-002 FINDING + DECISION (2026-08-19)
 >
