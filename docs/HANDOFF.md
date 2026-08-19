@@ -7,6 +7,46 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
+> ## ⚠ READ FIRST — LIGHTNING JOB RECIPE, VERIFIED (2026-08-19 ~20:45)
+>
+> **OPERATING POLICY (Gabriel, frozen 2026-08-19) — not negotiable:**
+> all development, debugging, tests and preparation happen on the **free CPU Studio**;
+> the GPU is used **ONLY** through Lightning Jobs; **the interactive Studio is never
+> switched to T4 again**; and any GPU failure that reproduces on CPU goes straight back to
+> the CPU Studio. **The T4 is not a debugger.** The working pattern is: CPU leaves the
+> payload fully validated -> one GPU Job answers only GPU-only questions -> any bug
+> returns to CPU.
+>
+> **The exact working invocation** (`gpu-benchmark-1` failed purely because the `cd` was
+> missing — the job starts in `$HOME`, not in the repo; that cost 0.107 credits):
+>
+> ```bash
+> lightning job run --name <unique-name> --machine T4 \
+>     --studio gabriel-allgd-deploy-model-devbox \
+>     --teamspace general --org independentaudioresearch \
+>     --command "cd audioldm-modality-swap-pruning && .venv/bin/python scripts/research/gpu_benchmark.py \
+>                --stage all --expect-gpu T4 --expect-commit <SHA> --out artifacts/m3_pilot/xxx.json"
+> ```
+>
+> * **Flag syntax differs per subcommand.** `job run` takes `--teamspace general --org
+>   independentaudioresearch` (separate); `job list` and `studio switch` take
+>   `--teamspace independentaudioresearch/general` (combined). `job list` has no `--org`.
+> * **Job names must be unique** in the teamspace — bump the suffix rather than reusing.
+> * **There is no `lightning job logs`.** Read them through the SDK:
+>   `Job(name=..., teamspace="general", org="independentaudioresearch").logs`
+>   (also `.status`, `.total_cost`, `.artifact_path`, `.snapshot_path`).
+>
+> **Job filesystem, verified by direct inspection (not assumed):** a Job snapshots the whole
+> Studio. From the Studio you can read `/teamspace/jobs/<name>/snapshot/` (what the job saw)
+> and `/teamspace/jobs/<name>/artifacts/` (what it wrote — writes sync back here, mirroring
+> the home layout). The snapshot of `gpu-benchmark-1` contained `.venv/bin/python`, the
+> 3.49 GB `l1_audioldm-m-full_p1.ckpt`, the 30 GB dataset, and a `.git` whose HEAD was
+> exactly the expected commit. **So checkpoints, dataset and git provenance are all
+> available inside jobs** — that question is closed, and it can be re-checked for free by
+> reading the snapshot path rather than by running anything.
+> **Results do NOT appear in the Studio's own `artifacts/`** — `gpu_benchmark.py` therefore
+> also prints its JSON to stdout so the numbers always survive in the job log.
+>
 > ## ⚠ READ FIRST — F9/F10 CLOSED ON CPU; NEXT GPU WORK GOES THROUGH A JOB (2026-08-19 ~20:10)
 >
 > **State: Studio on free CPU. Suite 13/13 PASS. `docs/compute_budget.md` is STILL 100%
