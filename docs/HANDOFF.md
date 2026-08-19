@@ -27,11 +27,17 @@ to continue from this file alone, without any prior chat history.
 > **Autonomous night run (2026-08-19, ~00:30→08:30 Montevideo).** Gabriel asked
 > for autonomous completion across the 05:28 token-window renewal. A detached
 > resume daemon (`artifacts/auto_resume/launcher.sh` + `resume_prompt.txt`,
-> gitignored) relaunches headless `claude` at 05:30 Montevideo. **Priority queue,
-> highest first:** (A) M1 adopt scaffold + fix F1..F8 to CPU acceptance; (B) M0
-> remainder — FAD/KL end-to-end, PANNs top-k; (C) prepare (do NOT run) the GPU
-> benchmark, review pilot_protocol. Guardrails unchanged: no GPU numbers invented,
-> no M3 scientific run, no saliency on the real L1 ckpt, upstream stays unpatched.
+> gitignored) relaunches headless `claude` at 05:30 Montevideo. **Priority queue:**
+> * **(A) M1 adopt scaffold + fix F1..F8 to CPU acceptance — DONE** (M1-005/006/007,
+>   commits 23ac4f2/200fbcc/317aea3). `audioldm_peft/` is a working, tested package;
+>   full CPU suite 17/17 across 5 modules; all 8 audit defects addressed. Only M1
+>   **GPU** acceptance remains (blocked on GPU + Compute Gate CG).
+> * **(B) M0 remainder — IN PROGRESS/NEXT:** FAD/KL `audioldm_eval` end-to-end on a
+>   tiny real folder pair; PANNs top-k semantics (section 5 of
+>   `_external/PruningAudioLDM/README.md`).
+> * **(C) prepare (do NOT run) the GPU benchmark; review `docs/pilot_protocol.md`.**
+> Guardrails unchanged: no GPU numbers invented, no M3 scientific run, no saliency
+> on the real L1 ckpt, `audioldm_train/` stays byte-identical to upstream-frozen.
 
 ---
 
