@@ -118,3 +118,10 @@
 * Exercised both M0 evaluation pipelines end-to-end on CPU (**M0-006**): PANNs top-10 fully reproduced (20/20 clips, coherent labels); FAD/KL runs after resolving the PANNs Cnn14 16k checkpoint dependency + CPU sanitize + a path-keyed cache trap, and working around a genuine `audioldm_eval` FAD bug (documented, F-eval-3). Findings + invocations in `docs/m0_baseline_reproduction/eval_pipeline_closure.md`.
 * FAD/KL numeric KL/IS/FID values captured in a follow-up commit once the CPU run finishes. `git diff upstream-frozen -- audioldm_train/` still empty.
 
+
+### 2026-08-19 | Evidence-first audit pass (05:30 resume run by hand; VM had slept)
+
+* The detached auto-resume daemon (pid 5102) never fired: the Lightning Studio VM slept during the idle window and killed it before the 05:28 token-window renewed (`resume.log` shows only "daemon armed"; the VM cold-booted 12:09 UTC). `setsid` survives the Claude process dying but NOT the VM sleeping — a real gap in the resume design. Gabriel re-ran the pass manually while present.
+* Ran the safe pass the resume prompt scheduled: **full research suite 11/11 modules PASS** (exit 0); `git diff upstream-frozen -- audioldm_train/` = 0 lines; evidence-first `/auditar` of the night's machinery. **No bug found; no code changed.**
+* **M3B-002 independently re-derived and CONFIRMED** (both sides of the reference code + `verify_l1_direction.py`: Spearman −1 on 28 layers, 15/15 kept-set-lower-L1). Refutation attempts failed. **Not acted on** — the P0-convention choice is Gabriel's. P0-P3 Taylor machinery, LoRA F5 factorised conv (exact), and eval findings F-eval-1..6 all re-derived correct. See ledger AUDIT-NIGHT2.
+* Everything still open is a decision or GPU-gated, not a bug. Daemon NOT re-armed (Gabriel present, CPU queue exhausted).
