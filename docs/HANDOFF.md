@@ -7,43 +7,46 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
-> ## STATUS UPDATE — 2026-08-19 (supersedes stale sections below)
+> ## STATUS UPDATE — 2026-08-19 autonomous night run (supersedes stale sections below)
 >
-> This banner reflects the current repository state; sections §5 (M1), §6 (M2)
-> and §12 below were written on 2026-08-18 and are **partly stale**. Trust the
-> bounded state block at the top of `PROGRESS.md` and `docs/experiment_ledger.md`
-> for live status. Concretely, since this file was first written:
+> Sections §5 (M1), §6 (M2), §12 below were written 2026-08-18 and are **stale**.
+> Trust the bounded state block at the top of `PROGRESS.md` and
+> `docs/experiment_ledger.md`. Prior context: M2 COMPLETE; M3A machinery COMPLETE
+> (M3-000/001/002); M3B Gate B "infeasible as written" (ledger AUDIT-M3-002, finding
+> G1 needs Gabriel); M1 scaffold recovered+audited (`docs/m1_scaffold_audit.md`).
 >
-> * **M2 is COMPLETE (PASS)** — conditioning-path validation, CPU. See PROGRESS.
-> * **M3A machinery is COMPLETE** (M3-000/001/002), CPU, no scientific result on
->   the real L1 checkpoint. M3B (Gate B) is "infeasible as written" (see ledger).
-> * **M1 is RECOVERED, AUDITED, adoption PENDING — no longer blocked.** Gabriel
->   supplied the local scaffold; it is audited in `docs/m1_scaffold_audit.md`
->   (verdict: "adopt and fix, do not rebuild") with defect list F1..F8. The
->   pristine overlay is at `_external/m1_scaffold_recovered/` (gitignored).
->   `audioldm_peft/` in-repo is still only a skeleton `__init__.py`; adoption is
->   the current work.
+> **This night run (Gabriel authorised autonomous work ~00:30→08:30 Montevideo, across
+> the 05:28 token-window renewal; a detached daemon `artifacts/auto_resume/` relaunches
+> headless `claude` at 05:30). ALL FOUR CPU QUEUE ITEMS DONE + one extra, all pushed:**
 >
-> **Autonomous night run (2026-08-19, ~00:30→08:30 Montevideo).** Gabriel asked
-> for autonomous completion across the 05:28 token-window renewal. A detached
-> resume daemon (`artifacts/auto_resume/launcher.sh` + `resume_prompt.txt`,
-> gitignored) relaunches headless `claude` at 05:30 Montevideo. **Priority queue:**
-> * **(A) M1 adopt scaffold + fix F1..F8 to CPU acceptance — DONE** (M1-005/006/007,
->   commits 23ac4f2/200fbcc/317aea3). `audioldm_peft/` is a working, tested package;
->   full CPU suite 17/17 across 5 modules; all 8 audit defects addressed. Only M1
->   **GPU** acceptance remains (blocked on GPU + Compute Gate CG).
-> * **(B) M0 remainder — DONE (M0-006):** PANNs top-10 fully reproduced; FAD/KL
->   pipeline runs end-to-end (deps resolved; audioldm_eval FAD bug worked around —
->   see `docs/m0_baseline_reproduction/eval_pipeline_closure.md`). KL/IS/FID numeric
->   values were being captured from the CPU run at handoff time; if
->   `artifacts/m0_baseline_reproduction/fad_kl_smoke/fad_kl_smoke_metrics.json`
->   exists, fold the numbers into the closure doc.
-> * **(C) GPU benchmark PREPARED (M0-005), write-only** (`scripts/research/gpu_benchmark.py`,
->   refuses without CUDA). `docs/pilot_protocol.md` cannot be frozen tonight: it needs
->   the GPU benchmark's T_sal/T_fwd AND Gabriel's decision on the Gate-B amendment
->   (ledger AUDIT-M3-002 finding G1). Next real work needs a GPU.
-> Guardrails unchanged: no GPU numbers invented, no M3 scientific run, no saliency
-> on the real L1 ckpt, `audioldm_train/` stays byte-identical to upstream-frozen.
+> | Unit | What | Evidence |
+> |---|---|---|
+> | **M1-005/006/007** | M1 PEFT: adopt scaffold, fix all 8 audit defects F1–F8; real-U-Net tests; integration hooks. **M1 CPU acceptance COMPLETE.** | `audioldm_peft/`, tests L1-3/J1-4/S1-3/R6a-c/I1-4 (17/17) |
+> | **M0-005** | GPU benchmark `scripts/research/gpu_benchmark.py` (write-only, refuses w/o CUDA) | compute_budget stays TBD_MEASURED |
+> | **M0-006 (+follow-up)** | FAD/KL + PANNs top-k eval pipelines end-to-end; 6 library findings; IS=6.23, KL=-1(needs pairing), Frechet-2048(real-part fix)=15.36, FAD=NaN | `docs/m0_baseline_reproduction/eval_pipeline_closure.md` |
+> | **M3B-000** | P0-P3 channel-gate Taylor saliency machinery + control tests | `research_pruning/taylor,paired_modality/`, C1-C7 |
+> | **M3B-001** | 28 L1 prunable conv layers verified on real base U-Net; gates attach bit-identically | `test_prunable_layer_set.py` V1/V2 |
+>
+> **Full research suite: 10/10 modules PASS.** `git diff upstream-frozen -- audioldm_train/`
+> stays empty. Run everything: `.venv/bin/python scripts/research/run_research_tests.py --all`.
+>
+> **WHAT REMAINS — all BLOCKED (do NOT do autonomously):**
+> * **M1 GPU acceptance / GPU benchmark run / M3 pilot / M4 gen / M5 recovery** — need a GPU
+>   (none attached). Run `gpu_benchmark.py` first, populate `compute_budget.md`, resolve CG.
+> * **Real P0-P3 saliency on the base model** — this IS the M3B/M4 scientific run: blocked
+>   until `pilot_protocol.md` is frozen (needs GPU T_sal/T_fwd) AND Gabriel decides the
+>   Gate-B amendment (finding G1). P1 is scientifically load-bearing → **must pass `/auditar`
+>   before any real use.** Machinery + layer set are ready; only the slot construction,
+>   real audio/text loss closures, and the run itself remain.
+> * **pilot_protocol freeze** — needs the GPU benchmark numbers + Gabriel's Gate-B decision.
+>
+> **If you are the 05:30 resume:** the CPU-implementable queue is EXHAUSTED. Do NOT start any
+> blocked item above. Do a genuinely useful, safe pass instead: re-run the full suite, verify
+> the upstream invariant, and run an evidence-first `/auditar` of the night's NEW machinery
+> (M1 PEFT correctness, esp. the load-bearing P0-P3/P1 Taylor saliency; the eval findings).
+> Fix any real bug you find, commit it, then write the final status and create
+> `artifacts/auto_resume/DONE` to stop the daemon. Never fabricate GPU numbers or run saliency
+> on the real L1 ckpt.
 
 ---
 
