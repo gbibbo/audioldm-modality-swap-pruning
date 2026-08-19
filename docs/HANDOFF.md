@@ -7,6 +7,42 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
+> ## ⚠ READ FIRST — GPU ATTACHED (2026-08-19 ~18:40 Montevideo)
+>
+> Gabriel switched this Studio from `CPU` to **`T4` (16 GB, sm_75)** via
+> `lightning studio switch --machine T4`. That restart killed the previous agent session;
+> this file is why you can continue. **First thing to do: confirm the GPU is really there**
+> — `nvidia-smi` and
+> `.venv/bin/python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))"`.
+> Nothing needs reinstalling: the CUDA wheels were already in the `.venv`.
+>
+> **GPU CHOICE IS CONSTRAINED — do not switch to an L4/L40S/H100.** The frozen
+> `poetry.lock` pins `torch 1.13.1+cu117`, whose binary in this `.venv` compiles SASS for
+> **sm_70 / sm_75 / sm_80 only** (PTX `compute_86`), with cuBLAS 11.10 and cuDNN 8.5.
+> **Only `T4` and `A100` are usable**; sm_89 (L4/L40S/RTXP_6000) and sm_90 (H100/H200) are
+> not, and relaxing the pin is forbidden by `AGENTS.md`. Full derivation and the exact
+> commands: `docs/environment_report.md` § "GPU selection is CONSTRAINED by the frozen
+> torch pin".
+>
+> **The unblocked queue, in order:**
+> 1. **Run the GPU benchmark** — `.venv/bin/python scripts/research/gpu_benchmark.py`
+>    (M0-005, written but never run; it refuses without CUDA). It records every master-plan
+>    §7.2 variable including `GPU_MODEL` and `VRAM_GB`.
+> 2. **Populate `docs/compute_budget.md`** with the MEASURED values (it is currently 100%
+>    `TBD_MEASURED`). Never estimate. The projections are valid only for the T4 that
+>    produced them — re-benchmark if the machine changes.
+> 3. **Resolve Compute Gate CG explicitly** and record it in `docs/experiment_ledger.md`.
+> 4. **Freeze `docs/pilot_protocol.md`** (fill Freeze commit/timestamp) — it is reviewed and
+>    complete; `T_sal`/`T_fwd` from step 1 plus CG were its only remaining prerequisites.
+>    Do NOT inspect any saliency result before the freeze lands in a commit.
+> 5. Then, and only then: M1 GPU acceptance, and the M3B scientific run (P1 is
+>    scientifically load-bearing — it must pass `/auditar` before any real use).
+>
+> **T4 VRAM caveat:** 16 GB should be fine for the benchmark and for M1 PEFT on the pruned
+> `(1,2,3,1)` model, but may be tight for base-model `(1,2,3,5)` saliency (415.955 M params
+> + gate gradients) and M4 generation. If something OOMs, the fallback is **`A100`**, not an
+> L4 — and re-run the benchmark there before reusing the budget numbers.
+>
 > ## ⚠ READ FIRST — M3B-002 FINDING + DECISION (2026-08-19)
 >
 > The published PruningAudioLDM **L1 checkpoint keeps the LOWEST-magnitude conv filters**

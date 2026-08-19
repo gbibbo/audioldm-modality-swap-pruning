@@ -22,6 +22,78 @@ disk_avail      300G of 387G
 gpu             none attached; torch.cuda.is_available() == False
 ```
 
+## GPU selection is CONSTRAINED by the frozen torch pin (verified 2026-08-19)
+
+The frozen `poetry.lock` pins `torch 1.13.1+cu117`, and `AGENTS.md` forbids relaxing
+any pin. That decides which Lightning machine types this project may use — this is a
+hard constraint, not a preference.
+
+Extracted from the actual binary in this `.venv`
+(`torch/lib/libtorch_cuda_cu.so`, 763 MB, via `strings | grep -oE 'compute_[0-9]+|sm_[0-9]+'`):
+
+```text
+SASS compiled : sm_70 (V100), sm_75 (T4), sm_80 (A100)
+PTX only      : compute_86
+bundled libs  : nvidia-cublas-cu11 11.10.3.66, nvidia-cudnn-cu11 8.5.0.96
+```
+
+`torch.cuda.get_arch_list()` returns `[]` on a CPU-only machine (CUDA never
+initialises), so it cannot be used for this check — read the binary instead.
+
+| Lightning machine | Arch | Usable with this environment |
+|---|---|---|
+| `T4`, `T4_SMALL`, `T4_X_*` (16 GB) | sm_75 | **YES** — native SASS |
+| `A100`, `A100_80GB`, `A100_X_*` (40/80 GB) | sm_80 | **YES** — native SASS |
+| `L4`, `L40S`, `RTXP_6000` (24-48 GB) | sm_89 | **NO** — no SASS; cuBLAS 11.10 and cuDNN 8.5 predate Ada, and they ship precompiled kernels (they do not JIT) |
+| `H100`, `H200` | sm_90 | **NO** |
+| `B200_X_8` | sm_100 | **NO** |
+
+Do **not** pick an L4 because it looks like the cheap modern default: it would boot,
+bill, and then fail or fall back to unusable paths. Only T4 and A100 are valid.
+
+**No reinstall is needed when switching to a GPU machine.** The CUDA wheels are
+already present in the `.venv` (torch is 1.8 GB and ships `libtorch_cuda*.so` plus the
+`nvidia-*-cu11` runtime wheels), so `torch.cuda.is_available()` flips to `True` on its
+own once the machine has a device.
+
+**VRAM caveat for T4 (16 GB).** The base `(1,2,3,5)` U-Net is 415.955 M params
+(~1.66 GB fp32) and M3B saliency backpropagates through channel gates on top of the
+VAE/CLAP/HiFi-GAN stack. T4 is expected to be adequate for `gpu_benchmark.py` and for
+M1 PEFT acceptance on the pruned `(1,2,3,1)` model (149.4 M params, 3.88 M trainable),
+but it may be tight for the base-model saliency and for M4 generation. If a run OOMs,
+the fallback is `A100` (also native sm_80), not an L4.
+
+**Whatever machine the benchmark runs on becomes part of the record:**
+`scripts/research/gpu_benchmark.py` writes `GPU_MODEL` and `VRAM_GB`
+(`torch.cuda.get_device_name(0)` / `get_device_properties(0).total_memory`), so
+`docs/compute_budget.md` is always traceable to the hardware that produced it. The
+projections in it are only valid for that machine — re-benchmark before moving the
+scientific runs to a different one.
+
+### Changing the machine on Lightning
+
+The Studio is `gabriel-allgd-deploy-model-devbox` in teamspace
+`independentaudioresearch/general`, cluster `lightning-public-prod` (us-east-1). The
+`lightning` CLI (2026.06.08) is installed and already authenticated.
+
+```bash
+lightning studio switch --machine T4      # or A100; RESTARTS the Studio
+lightning machine list                    # available types
+lightning job run --studio <name> --machine A100 --command "..."   # GPU job, Studio untouched
+```
+
+`lightning studio switch` **restarts the Studio and kills every running process**,
+including any agent session. The persistent filesystem
+(`/teamspace/studios/this_studio`, 387 G) survives untouched — repo, `.venv`,
+checkpoints and the 31 GB AudioCaps dataset are all still there afterwards. Machine
+prices are shown in credits/hour in the Studio's machine selector; the SDK does not
+expose them offline (`Machine.cost` is `None`).
+
+The `lightning job run --studio` route leaves the Studio (and any running session)
+alone, but **it is unverified here whether such a job mounts `data/checkpoints/` and
+the dataset** — no job has ever run in this teamspace (`lightning job list` is empty).
+Verify that before relying on it.
+
 ## Platform deviations that were forced on us
 
 Recording these because they are the only differences from the upstream recipe.
