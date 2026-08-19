@@ -63,6 +63,19 @@ def main() -> int:
         return r if isinstance(r, dict) else {"frechet_distance": float("nan")}
     helper.frechet.score = _safe_score
 
+    # The Cnn14-2048 FID (calculate_fid) uses the same scipy sqrtm and ALSO raises an
+    # AssertionError on a non-negligible imaginary component (a 2048-dim covariance is
+    # rank-deficient for small N). Left unhandled it aborts main() *after* KL and IS are
+    # computed, discarding them. Wrap it so a failed FID yields NaN and KL/IS survive.
+    import audioldm_eval.eval as _evalmod
+    _orig_fid = _evalmod.calculate_fid
+    def _safe_fid(*a, **k):
+        try:
+            return _orig_fid(*a, **k)
+        except Exception:  # noqa: BLE001
+            return {"frechet_inception_distance": float("nan")}
+    _evalmod.calculate_fid = _safe_fid
+
     print(f"Running main(gen={args.gen}, gt={args.gt}, limit_num={args.limit})")
     try:
         metrics = helper.main(args.gen, args.gt, limit_num=args.limit)

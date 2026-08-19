@@ -57,13 +57,35 @@ values are not meaningful comparisons and must not be cited as results.
   `eval.py` (no visible load), the Cnn14 loads `state_dict["model"]` from the
   checkpoint inside its own `__init__`; KL/IS/FID therefore use the genuine
   PANNs 16 kHz weights.
+* **F-eval-5 — both Frechet metrics fail the same way, and mid-`main` FID crash
+  discards KL/IS.** The Cnn14-2048 **FID** (`calculate_fid`) uses the same `sqrtm`
+  and raises `AssertionError: Imaginary component 1.95e+287` at N=256 (a 2048-dim
+  covariance is hopelessly rank-deficient below ~2048 samples). Because it runs
+  *after* KL and IS inside `calculate_metrics`, the crash discards the KL/IS that
+  were already computed. Robust closure: compute KL/IS directly from the cached
+  classifier features (`scripts/research/fad_kl_from_cache.py`), and compute the
+  Frechet distance with the standard `covmean.real` fix — which is finite where the
+  library asserts.
+* **F-eval-6 — KL needs same-name pairing.** `calculate_kl` with `same_name=False`
+  (disjoint filenames) returns the sentinel **-1**; it computes a per-item KL only
+  when generated and reference clips share filenames (i.e. same caption). A real
+  evaluation must pair generated clips to their reference by caption/filename.
 
 ### Outputs (smoke; NOT a scientific comparison)
 
-<!-- METRICS: filled from artifacts/m0_baseline_reproduction/fad_kl_smoke/fad_kl_smoke_metrics.json -->
-_See `fad_kl_smoke_metrics.json`. FAD = NaN by the workaround above; KL/IS/FID are
-computed from the pretrained Cnn14 over two arbitrary disjoint 256-clip AudioCaps
-subsets and are recorded only to prove the metrics execute end-to-end._
+Computed from the cached PANNs classifier features over two arbitrary disjoint
+256-clip AudioCaps subsets (`fad_kl_smoke_metrics.json`) — values are non-scientific:
+
+| Metric | Value | Note |
+|---|---|---|
+| Inception Score (mean ± std) | **6.230 ± 1.531** | computed from the generated set's logits |
+| KL (sigmoid / softmax) | **-1 / -1** | sentinel — needs same-name pairing (F-eval-6) |
+| Frechet distance (2048, real-part fix) | **15.361** | finite via the standard fix; audioldm_eval asserts here (F-eval-5) |
+| FAD (VGGish) | NaN | audioldm_eval sqrtm assertion (F-eval-3); use standard real-part FAD |
+
+The KL sentinel and the two Frechet failures are library behaviour, not properties
+of the audio; they define exactly what a real M4/M5 evaluation must fix (pair by
+caption; use a real-part Frechet). IS is the only metric that runs unmodified.
 
 ## 2. PANNs Top-K semantic pipeline (PruningAudioLDM README §5)
 
