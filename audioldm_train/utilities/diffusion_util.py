@@ -158,11 +158,25 @@ class CheckpointFunction(torch.autograd.Function):
             # Tensors.
             shallow_copies = [x.view_as(x) for x in ctx.input_tensors]
             output_tensors = ctx.run_function(*shallow_copies)
-        input_grads = torch.autograd.grad(
+        # PROJECT DEVIATION (ledger DECISION-F10, 2026-08-19) — the only patch this
+        # project makes to upstream. Parameter-efficient recovery freezes the base
+        # weights, so ctx.input_params can contain tensors with requires_grad=False.
+        # torch.autograd.grad raises "One of the differentiated Tensors does not require
+        # grad" on those; allow_unused=True only covers tensors that are *unused*, not
+        # ones that do not *require grad*. Differentiate w.r.t. the params that require
+        # grad, then re-expand with None in the frozen slots so the returned tuple keeps
+        # the arity of CheckpointFunction.forward's argument list.
+        grad_params = [p for p in ctx.input_params if p.requires_grad]
+        computed = torch.autograd.grad(
             output_tensors,
-            ctx.input_tensors + ctx.input_params,
+            ctx.input_tensors + grad_params,
             output_grads,
             allow_unused=True,
+        )
+        computed_param_grads = iter(computed[len(ctx.input_tensors):])
+        input_grads = tuple(computed[: len(ctx.input_tensors)]) + tuple(
+            next(computed_param_grads) if p.requires_grad else None
+            for p in ctx.input_params
         )
         del ctx.input_tensors
         del ctx.input_params

@@ -7,59 +7,63 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
-> ## ⚠ READ FIRST — GPU RAN, TWO M1 BUGS FOUND, BACK ON CPU (2026-08-19 ~19:25 Montevideo)
+> ## ⚠ READ FIRST — F9/F10 CLOSED ON CPU; NEXT GPU WORK GOES THROUGH A JOB (2026-08-19 ~20:10)
 >
-> **The T4 switch SUCCEEDED** (Tesla T4, 15360 MiB, driver 580.173.02) after Gabriel topped
-> the org balance to 10.00 credits. The GPU was used, two real M1 defects were found, and
-> **the Studio was then switched back to free CPU on purpose** — so if you are on `CPU`,
-> that is intended, not a failure. Verify with `nvidia-smi` either way.
+> **State: Studio on free CPU. Suite 13/13 PASS. `docs/compute_budget.md` is STILL 100%
+> `TBD_MEASURED` — no GPU number exists for this project; do not quote one.** Compute Gate
+> CG unresolved, M3 blocked, **M1 GPU acceptance NOT claimed** (no optimization step has
+> ever run on a GPU).
 >
-> **COST DISCIPLINE (Gabriel's instruction, 2026-08-19 — follow it):** do NOT develop inside
-> a billed GPU Studio. The Studio stays on free CPU; GPU work is submitted as jobs:
+> **THE UPSTREAM INVARIANT HAS INTENTIONALLY CHANGED.** `git diff upstream-frozen --
+> audioldm_train/` is **no longer empty**: 1 file, 16 insertions / 2 deletions in
+> `audioldm_train/utilities/diffusion_util.py` (`CheckpointFunction.backward`), 8 of those
+> lines being the comment that justifies it. This is DECISION-F10, the project's first
+> deliberate patch, permitted by `AGENTS.md` and recorded in the ledger (M1-009). **Do not
+> "restore" it, and do not let the diff grow.**
+>
+> **What the GPU session found and what was done (ledger M1-008 / DECISION-F10 / M1-009):**
+> * **F9 — FIXED.** LoRA adapters were created on the default device; now built with
+>   `device=base.weight.device, dtype=base.weight.dtype`, so injection order is irrelevant.
+> * **F10 — FIXED.** `CheckpointFunction.backward` differentiated w.r.t. frozen base
+>   params. Now filters `ctx.input_params` by `requires_grad` and re-expands with `None` to
+>   keep the return arity. **Note the root cause is broader than first recorded:**
+>   `attention.py:379` defaults `BasicTransformerBlock.checkpoint=True` regardless of the
+>   U-Net's `use_checkpoint` flag (absent from the config, hence `False`) — so the
+>   `use_checkpoint=False` workaround would **not** have fixed it.
+> * **Regression test added** — `tests/research/test_peft_backward_real_unet.py` R7a–R7d.
+>   R7a: 284/284 adapters get non-zero gradients, 0 frozen params get any. R7b: checkpointed
+>   vs non-checkpointed gradients agree to **max|Δ| = 0.0** over 568 tensors.
+> * **R5 bit-exactness re-verified at 690/690** — the patch changes no numerical result.
+>
+> **TRAP — `zero_module` makes random-init backward tests vacuous.** On a freshly
+> initialised U-Net the final conv `out.2` is zero (`sum|W| = 0.0`), so gradient reaches
+> only **1 of 284** adapters. With the real published weights it is `sum|W| = 174.98` and
+> all 284 receive gradient. **Any backward-based test or diagnostic must load real
+> weights**, or it silently tests almost nothing. R7c asserts both halves.
+>
+> **COST DISCIPLINE (Gabriel's standing instruction) — do NOT develop inside a billed GPU
+> Studio.** Leave the Studio on free CPU and submit GPU work as jobs:
 >
 > ```bash
 > lightning job run --name <job> --studio gabriel-allgd-deploy-model-devbox \
->     --machine T4 --command ".venv/bin/python scripts/research/gpu_benchmark.py ..."
+>     --machine T4 --command ".venv/bin/python scripts/research/gpu_benchmark.py --steps 30 --batch 8 --out artifacts/m3_pilot/compute_budget_measured.json"
 > ```
 >
-> **UNVERIFIED and worth checking cheaply first:** whether such a job sees
-> `data/checkpoints/` and `data/dataset/`. Test it with a **CPU** job (near-free), not a GPU
-> one: `lightning job run --machine CPU --studio ... --command "ls data/checkpoints && du -sh data/dataset"`.
+> **Verify the cheap thing first:** whether such a job even sees `data/checkpoints/` and
+> `data/dataset/` is UNVERIFIED (no job has ever run in this teamspace). Test it with a
+> **CPU** job, near-free — never burn a GPU job to answer it:
+> `lightning job run --machine CPU --studio ... --command "ls data/checkpoints && du -sh data/dataset"`.
 >
-> **`docs/compute_budget.md` is STILL 100% `TBD_MEASURED`.** The benchmark has never
-> completed — it crashed twice. **Do not quote any GPU number for this project; none
-> exists.** Compute Gate CG stays unresolved and M3 stays blocked.
->
-> **Two defects (ledger M1-008):**
-> * **F9 — FIXED.** `LoRALinear`/`LoRAConv2d` created `lora_A`/`lora_B` on the default
->   device, so injecting PEFT after the model was moved to CUDA gave a cuda/cpu mismatch.
->   Now built with `device=base.weight.device, dtype=base.weight.dtype`.
-> * **F10 — OPEN, NEEDS GABRIEL'S DECISION.** Gradient checkpointing is incompatible with
->   PEFT's frozen base weights: `CheckpointFunction.backward`
->   (`audioldm_train/utilities/diffusion_util.py:161`) differentiates w.r.t.
->   `input_tensors + input_params`, and the frozen base params do not require grad →
->   `RuntimeError: One of the differentiated Tensors does not require grad`. **Reproduces on
->   CPU — fix it there, for free.** Options: (a) `use_checkpoint=False` for PEFT training
->   (no upstream patch, more VRAM, and the budget must then be measured in that same
->   configuration); (b) a minimal reviewable upstream patch filtering `input_params` by
->   `requires_grad` (AGENTS.md permits deliberate reviewed patches); (c) keep base params
->   requiring grad and discard their grads (wasteful).
->   **DECIDED (Gabriel, 2026-08-19 — DECISION-F10): take the minimal upstream patch**,
->   filtering `ctx.input_params` by `requires_grad` before the `torch.autograd.grad` call.
->   This will be the project's **first deliberate upstream patch**, so
->   `git diff upstream-frozen -- audioldm_train/` becomes non-empty: keep the diff as small
->   as possible, record it as a deviation, and review it. It was deliberately NOT applied in
->   the GPU session because the regression test that validates it does not exist yet.
->
-> **Test-coverage gap that let this through:** `tests/research/test_peft_real_unet.py`
-> (R6a-c) never performs a `backward` — no test ever ran an optimization step through the
-> real U-Net's checkpointed blocks. **Add that regression test on CPU before claiming M1 GPU
-> acceptance**, and before spending another GPU minute.
->
-> **Order of work from here (all CPU, all free):** decide F10 with Gabriel -> implement it ->
-> add the backward regression test -> re-run the full suite -> only THEN submit the
-> benchmark as a GPU job -> populate `compute_budget.md` with measured values -> resolve CG
-> -> freeze `pilot_protocol.md`.
+> **Ordered queue from here:**
+> 1. CPU job to verify the job filesystem semantics (above).
+> 2. GPU job running `gpu_benchmark.py`; it refuses without CUDA and never invents numbers.
+> 3. Populate `docs/compute_budget.md` with **measured** values only.
+> 4. Resolve **Compute Gate CG** explicitly in `docs/experiment_ledger.md`.
+> 5. **Freeze `docs/pilot_protocol.md`** (fill Freeze commit/timestamp). It is otherwise
+>    complete: Gate B was amended (DECISION-M3B-003) and P0's convention pre-registered
+>    (DECISION-M3B-002). No saliency may be inspected before the freeze lands in a commit.
+> 6. M1 GPU acceptance (several hundred real steps, VRAM, sec/step, resume), then the M3B
+>    scientific run — P1 is scientifically load-bearing and must pass `/auditar` first.
 >
 > GPU choice stays constrained to **T4 or A100** (`torch 1.13.1+cu117` compiles sm_70/75/80
 > only); see `docs/environment_report.md`.
@@ -186,7 +190,8 @@ Live state is `PROGRESS.md`. This file is the resume point.
 | `Arshdeep-Singh-Boparai/PruningAudioLDM` (MIT) | `6f65f628fabc4ad27770753698fc81944e820f9f` | 2026-07-16 | branch `pruning-reference-frozen`; read-only clone in `_external/` (gitignored) |
 
 ```bash
-git diff upstream-frozen -- audioldm_train/     # currently EMPTY — no upstream patch yet
+git diff upstream-frozen -- audioldm_train/     # ONE deliberate patch (DECISION-F10);
+                                               # 1 file, 16+/2-. Keep it minimal.
 ```
 
 Files on `main` that differ from `upstream-frozen`: only `.gitignore` (union of
@@ -395,6 +400,7 @@ redistributed in this repository.
 
 All already logged in `docs/experiment_ledger.md`; do not "fix" them silently.
 
+0. **Upstream patched, deliberately (DECISION-F10, 2026-08-19).** `audioldm_train/utilities/diffusion_util.py` `CheckpointFunction.backward` filters `ctx.input_params` by `requires_grad`. Required for PEFT: frozen base weights are not valid differentiation targets. 1 file, 16+/2-, 8 lines of it comment. Validated by `test_peft_backward_real_unet.py` R7b (max|Δ| = 0.0 vs the non-checkpointed path) and `verify_l1_bitexact.py` (690/690 unchanged). This is the ONLY upstream patch; keep it minimal.
 1. Small text provenance documents live in `docs/m0_baseline_reproduction/` so
    they are version-controlled; `artifacts/m0_baseline_reproduction/` is
    gitignored and holds raw logs and binaries only. The plan names only the
@@ -453,8 +459,9 @@ Long GPU training and any M4/M5 work sit behind both of the above.
   `docs/compute_budget.md` must stay `TBD_MEASURED` until it is measured.
 * **Do not modify upstream code to hide an incompatibility.** Fix the
   environment, the paths, or our own scripts instead, and record the problem.
-  `git diff upstream-frozen -- audioldm_train/` must stay empty until a patch is
-  deliberately made and reviewed.
+  `git diff upstream-frozen -- audioldm_train/` carries exactly ONE deliberate,
+  reviewed patch (DECISION-F10). Nothing else may be added to it without the same
+  ledger-recorded process.
 * **Do not use the account's MCP connectors** (Atlassian/Jira, Gmail, Google
   Calendar, Google Drive, Slack) unless Gabriel explicitly asks. They are
   account-level and reachable from any session, but are out of scope here.
