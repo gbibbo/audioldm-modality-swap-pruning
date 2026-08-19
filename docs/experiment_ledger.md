@@ -494,3 +494,15 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Acceptance / gate decision:** the P0-P3 criteria now have a verified, structure-matched real-model layer set. Computing actual saliency over it remains the M3B/M4 scientific run — blocked until the pilot protocol is frozen and CG resolved.
 * **Failure or uncertainty:** none in the tested structural path; no scientific value produced by design. Saliency is computed on the base (unpruned) model, which this test uses.
 * **Notes:** reads only architecture + the public ranking. `git diff upstream-frozen -- audioldm_train/` empty.
+
+### 2026-08-19 04:05 | M3B-002 / FINDING | Published L1 baseline keeps the LOWEST-magnitude filters (inverted L1)
+
+* **Status:** completed — high-severity finding, rigorously verified (4-way); interpretation open for Gabriel/`/auditar`. **No gate changed.** Surfaced while validating the P0 machinery on the real base weights.
+* **Milestone / gate:** M0/M3B baseline integrity. Affects RQ2 (P0/L1 baseline) and RQ3 (recovery starting point).
+* **Git commit:** this commit.
+* **Command:** `.venv/bin/python scripts/research/verify_l1_direction.py` (exit 0 = CONFIRMED).
+* **Base checkpoint:** `audioldm-m-full.ckpt` (base weights loaded strict); public ranking `sorted_indexes_dict.pkl`; reference `_external/PruningAudioLDM/scripts/layerwise_sorted_index_generation.py`.
+* **Primary result:** the published pruned checkpoint keeps, per pruned layer, the `k` conv filters of **lowest** output-channel L1 magnitude and removes the highest — inverted from standard L1 magnitude pruning. Evidence: (1) P0 (my per-filter L1, descending) vs the published ranking has **Spearman = -1.000000 on all 28 layers** (exact reversal); (2) published ranking lists low-L1 filters first, high-L1 last; (3) the reference's own `l1_imp_index` = per-filter sum(|w|) (== my P0) and `sorted_idx = np.argsort(scores)` is **ascending**, and the bit-exact materializer (M3-002) keeps `[:k]` → keeps lowest; (4) on **15/15** actually-pruned layers the kept set has lower mean L1 than the pruned set. Because the materializer is bit-exact to the artifact, this is a property of the **checkpoint itself**. Full write-up: `docs/m0_baseline_reproduction/l1_pruning_direction_finding.md`.
+* **Acceptance / gate decision:** **no gate changed.** This reframes what the published L1/P0 baseline is. The project's own `p0_l1_magnitude` implements STANDARD L1 (highest-kept) and is correct (C6 + this validation) — so it will DIFFER from the published checkpoint. Whether the project's P0 should be standard L1 or reproduce the published inverted convention is a Gabriel decision to record before M3B/M4.
+* **Failure or uncertainty:** the *interpretation* — intentional design vs. a direction bug in the reference — is NOT decided here; it is a question for Arshdeep (via Gabriel) and for `/auditar`. Do not act on this beyond surfacing it.
+* **Notes:** data-free P0 on base weights + public-ranking comparison only; NO diagnostics, NO calibration slots, NO saliency on the L1 checkpoint. `git diff upstream-frozen -- audioldm_train/` empty.

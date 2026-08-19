@@ -7,6 +7,18 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
+> ## ⚠ READ FIRST — HIGH-SEVERITY FINDING (2026-08-19, M3B-002)
+>
+> The published PruningAudioLDM **L1 checkpoint keeps the LOWEST-magnitude conv filters**
+> per pruned layer — inverted from standard L1 magnitude pruning. Verified 4 ways
+> (Spearman -1 vs our P0 on all 28 layers; reference code `np.argsort` ascending + the
+> bit-exact materializer keeps `[:k]`; 15/15 pruned layers keep the lower-L1 set). It is a
+> property of the **artifact itself**. Bears on RQ2 (the L1/P0 baseline) and RQ3 (recovery
+> starting point). **No gate changed.** Reproduce: `scripts/research/verify_l1_direction.py`.
+> Full write-up: `docs/m0_baseline_reproduction/l1_pruning_direction_finding.md`. Needs
+> `/auditar` and a Gabriel/Arshdeep decision (intentional? which P0 convention does the
+> project adopt?) before M3B/M4.
+>
 > ## STATUS UPDATE — 2026-08-19 autonomous night run (supersedes stale sections below)
 >
 > Sections §5 (M1), §6 (M2), §12 below were written 2026-08-18 and are **stale**.
