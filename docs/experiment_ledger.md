@@ -392,3 +392,25 @@ Therefore the plan's Gate B conditions read, at this budget: **condition 1** (`w
 In every case report raw kept-set, prune-set, and chance-adjusted overlap; the gate decision uses the amended primary. Amendment must be recorded in this ledger *before* the protocol freezes, per the plan's own rule.
 
 * **Notes:** the implementer's honesty chain worked exactly as designed — M3-001 declared the unverified gap, AUDIT-M3-001 closed it and found the seam divergence, M3-002 fixed it to bit-exactness, and this audit confirmed the fix with independent code. `git diff upstream-frozen -- audioldm_train/` still empty. Pre-registration intact: no diagnostic has touched the L1 checkpoint.
+
+### 2026-08-19 00:45 | M1-005 | Adopt recovered PEFT scaffold into the repo; fix audit defects F2–F5, F7; CPU dummy-model tests
+
+* **Status:** completed (CPU dummy-model portion of M1; F6 real-U-Net and F8 upstream integration are separate follow-up units).
+* **Milestone / gate:** M1 parameter-efficient recovery. Moves `audioldm_peft/` from skeleton to a working, tested package. GPU acceptance still pending (no GPU attached).
+* **Git commit:** this commit.
+* **Branch:** main.
+* **Resolved config:** `configs/research/peft_r8_full_unet.yaml` (rank 8, alpha 16, dropout 0, full-U-Net scope, train_bias/train_groupnorm_affine true, train_layernorm_affine **false**).
+* **Command:** `.venv/bin/python scripts/research/run_research_tests.py` (M1 suite); `.venv/bin/python scripts/research/cpu_smoke_peft.py`.
+* **Random seed(s):** per-test `torch.manual_seed` (0/1); no data seeds (dummy tensors).
+* **GPU / runtime:** CPU only, CPython 3.10.20, torch 1.13.1+cu117 (CPU path).
+* **Raw output path:** test stdout (self-checking, exit 0). Pristine overlay preserved at `_external/m1_scaffold_recovered/` (gitignored).
+* **Primary result:** adopted `audioldm_peft/{config,layers,inject,report,state,optimizer,ema,__init__}.py` from the audited overlay and fixed five of the eight audit defects:
+  * **F2 (scientific):** LayerNorm affine no longer half-trained. New explicit `train_layernorm_affine` flag (default false); GroupNorm **and** LayerNorm are excluded from the generic bias sweep; LayerNorm is trained weight+bias together only under the flag and reported as its own `layernorm_affine` category in `report.py` / `build_parameter_groups`.
+  * **F3 (correctness):** `configure_auxiliary_trainables` counts unconditionally → identical nonzero counts on repeated calls, independent of call order (was zeros on the second call).
+  * **F4 (correctness):** `freeze_for_peft` preserves LoRA adapter params, so a late/mis-ordered call can no longer silently disable training; `assert_peft_ready` guard added and regression-tested (adversarial freeze-after-inject).
+  * **F5 (efficiency):** `LoRAConv2d.forward` factorised into `conv2d(x,A)->conv2d(.,B_1x1)`; numerically identical to the materialised-delta path (max|Δ| 1.19e-7) with `delta_weight()`/merge unchanged.
+  * **F7 (gap):** `training_state_dict` / `load_training_state_dict` bundle adapter+optimizer+scheduler+EMA+global_step and round-trip through `torch.save`; verified restoring into a fresh model/optimizer/EMA (adapter, AdamW moments, EMA shadows and step all match).
+  * Also adopted: `configs/research/peft_r8_full_unet.yaml`, `scripts/research/cpu_smoke_peft.py`, `docs/integration_notes.md`, `docs/M1_CHECKLIST.md`; added `scripts/research/run_research_tests.py` (stdlib runner).
+* **Acceptance / gate decision:** M1 **CPU dummy-model** checks PASS — L1/L2/L3 (merge/unmerge/factorisation), J1–J4 (inject/freeze/F2/F3/F4), S1–S3 (adapter roundtrip / trainable-only EMA / full resume). M1 CPU acceptance is **not yet complete**: F6 (tests on the real pruned U-Net) and F8 (upstream integration hooks) remain. M1 GPU acceptance stays blocked (no GPU).
+* **Failure or uncertainty:** F1 environment deviation — `pytest` is absent from the frozen lock and no pinned version was relaxed; tests run via the stdlib runner and each module's `__main__`. Numbers here are from dummy `nn.Sequential` models, not AudioLDM; the real-U-Net evidence is F6 (next unit). Two audit defects (F6, F8) remain open by design.
+* **Notes:** no scientific/upstream code modified; `git diff upstream-frozen -- audioldm_train/` still empty. New code only in `audioldm_peft/`, `tests/research/`, `scripts/research/`, `configs/research/`, `docs/`. The overlay's stale `docs/` copies were NOT adopted (would regress project state), per the audit's adoption constraint.

@@ -1,0 +1,24 @@
+research_peft:
+  enabled: true
+  backend: native_v1
+  root_path: model.diffusion_model
+  rank: 8
+  alpha: 16
+  dropout: 0.0
+  target_linear: true
+  target_conv2d: true
+  train_bias: true
+  train_groupnorm_affine: true
+  # F2: LayerNorm affine is explicit and off by default, matching the master-plan
+  # recovery description ("biases and GroupNorm affine parameters"). When true,
+  # LayerNorm weight and bias train together and are reported as layernorm_affine.
+  train_layernorm_affine: false
+  optimizer:
+    name: AdamW
+    lora_lr: 1.0e-4
+    auxiliary_lr: 1.0e-4
+    lora_weight_decay: 0.01
+    auxiliary_weight_decay: 0.0
+  ema:
+    policy: trainable_only
+    decay: 0.9999
