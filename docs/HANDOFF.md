@@ -7,41 +7,61 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
-> ## ⚠ READ FIRST — GPU ATTACHED (2026-08-19 ~18:40 Montevideo)
+> ## ⚠ READ FIRST — GPU BLOCKED ON BILLING, NOT ON TECHNOLOGY (2026-08-19 ~18:45 Montevideo)
 >
-> Gabriel switched this Studio from `CPU` to **`T4` (16 GB, sm_75)** via
-> `lightning studio switch --machine T4`. That restart killed the previous agent session;
-> this file is why you can continue. **First thing to do: confirm the GPU is really there**
-> — `nvidia-smi` and
-> `.venv/bin/python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))"`.
-> Nothing needs reinstalling: the CUDA wheels were already in the `.venv`.
+> **There is still NO GPU attached.** A switch to `T4` was attempted from the terminal and
+> the Lightning API **refused it**:
 >
-> **GPU CHOICE IS CONSTRAINED — do not switch to an L4/L40S/H100.** The frozen
-> `poetry.lock` pins `torch 1.13.1+cu117`, whose binary in this `.venv` compiles SASS for
-> **sm_70 / sm_75 / sm_80 only** (PTX `compute_86`), with cuBLAS 11.10 and cuDNN 8.5.
+> ```text
+> lightning studio switch --name gabriel-allgd-deploy-model-devbox \
+>     --teamspace independentaudioresearch/general --machine T4
+> -> HTTP {"code":9, "message":"Insufficient balance to start the cloud space, top up and try again"}
+> ```
+>
+> The Studio never restarted (status still `Running` on `CPU`, `torch.cuda.is_available()`
+> still `False`), so nothing was lost and nothing was billed. **The blocker is the account
+> balance of the organization `independentaudioresearch`, which owns this teamspace.** The
+> free CPU machine keeps running; a GPU machine needs a positive balance.
+>
+> **Do not retry the switch until Gabriel says the balance is topped up** — it will just
+> fail the same way. Retrying costs nothing but proves nothing.
+>
+> Two paths, Gabriel's call:
+> 1. **Top up / add billing on the org `independentaudioresearch`** (lightning.ai → Billing).
+>    Then the command above works as-is and everything is already in place here.
+> 2. **Use the personal teamspace `gabriel-allgd/general`** — it exists but is **completely
+>    empty** (no studios, no jobs; verified with `lightning studio list --teamspace
+>    gabriel-allgd/general`). If it has its own credit allowance, a GPU Studio there would
+>    work, but the whole environment has to be rebuilt: repo from GitHub, artifacts via
+>    `scripts/research/fetch_public_artifacts.sh` (md5-verified and resumable), `.venv` per
+>    `docs/environment_report.md`. That is ~125 GB and several hours, but it is fully
+>    scripted — the project was built to be reproducible from scratch.
+>
+> **GPU CHOICE IS CONSTRAINED whichever path is taken — do not pick an L4/L40S/H100.** The
+> frozen `poetry.lock` pins `torch 1.13.1+cu117`, whose binary in this `.venv` compiles SASS
+> for **sm_70 / sm_75 / sm_80 only** (PTX `compute_86`), with cuBLAS 11.10 and cuDNN 8.5.
 > **Only `T4` and `A100` are usable**; sm_89 (L4/L40S/RTXP_6000) and sm_90 (H100/H200) are
-> not, and relaxing the pin is forbidden by `AGENTS.md`. Full derivation and the exact
-> commands: `docs/environment_report.md` § "GPU selection is CONSTRAINED by the frozen
-> torch pin".
+> not, and relaxing the pin is forbidden by `AGENTS.md`. Full derivation, machine table and
+> CLI commands: `docs/environment_report.md` § "GPU selection is CONSTRAINED by the frozen
+> torch pin". No reinstall is needed on a machine switch — the CUDA wheels are already in
+> the `.venv`.
 >
-> **The unblocked queue, in order:**
-> 1. **Run the GPU benchmark** — `.venv/bin/python scripts/research/gpu_benchmark.py`
->    (M0-005, written but never run; it refuses without CUDA). It records every master-plan
->    §7.2 variable including `GPU_MODEL` and `VRAM_GB`.
-> 2. **Populate `docs/compute_budget.md`** with the MEASURED values (it is currently 100%
->    `TBD_MEASURED`). Never estimate. The projections are valid only for the T4 that
->    produced them — re-benchmark if the machine changes.
-> 3. **Resolve Compute Gate CG explicitly** and record it in `docs/experiment_ledger.md`.
-> 4. **Freeze `docs/pilot_protocol.md`** (fill Freeze commit/timestamp) — it is reviewed and
->    complete; `T_sal`/`T_fwd` from step 1 plus CG were its only remaining prerequisites.
->    Do NOT inspect any saliency result before the freeze lands in a commit.
-> 5. Then, and only then: M1 GPU acceptance, and the M3B scientific run (P1 is
->    scientifically load-bearing — it must pass `/auditar` before any real use).
+> **The queue the moment a GPU exists, in order:**
+> 1. `.venv/bin/python scripts/research/gpu_benchmark.py` (M0-005; written, never run, and
+>    it refuses without CUDA). Records every §7.2 variable including `GPU_MODEL`/`VRAM_GB`.
+> 2. Populate `docs/compute_budget.md` with **measured** values (currently 100%
+>    `TBD_MEASURED`). Never estimate. The numbers are valid only for the machine that
+>    produced them.
+> 3. Resolve **Compute Gate CG** explicitly and record it in `docs/experiment_ledger.md`.
+> 4. **Freeze `docs/pilot_protocol.md`** — it is complete and reviewed; `T_sal`/`T_fwd` plus
+>    CG were its only remaining prerequisites. No saliency may be inspected before the
+>    freeze lands in a commit.
+> 5. Then M1 GPU acceptance and the M3B scientific run (P1 is scientifically load-bearing —
+>    it must pass `/auditar` before any real use).
 >
-> **T4 VRAM caveat:** 16 GB should be fine for the benchmark and for M1 PEFT on the pruned
-> `(1,2,3,1)` model, but may be tight for base-model `(1,2,3,5)` saliency (415.955 M params
-> + gate gradients) and M4 generation. If something OOMs, the fallback is **`A100`**, not an
-> L4 — and re-run the benchmark there before reusing the budget numbers.
+> **If T4 is the machine: 16 GB may be tight** for base-model `(1,2,3,5)` saliency
+> (415.955 M params + gate gradients) and M4 generation. Fallback is `A100`, never an L4 —
+> and re-run the benchmark there before reusing any budget number.
 >
 > ## ⚠ READ FIRST — M3B-002 FINDING + DECISION (2026-08-19)
 >

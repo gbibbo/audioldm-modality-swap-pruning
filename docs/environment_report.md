@@ -94,6 +94,30 @@ alone, but **it is unverified here whether such a job mounts `data/checkpoints/`
 the dataset** — no job has ever run in this teamspace (`lightning job list` is empty).
 Verify that before relying on it.
 
+### Attempted 2026-08-19: refused for insufficient balance
+
+The switch to `T4` was attempted from this terminal and the API refused it:
+
+```text
+$ lightning studio switch --name gabriel-allgd-deploy-model-devbox \
+      --teamspace independentaudioresearch/general --machine T4
+HTTP {"code":9, "message":"Insufficient balance to start the cloud space, top up and try again"}
+```
+
+The Studio never restarted — verified afterwards: status `Running`, machine `CPU`,
+`torch.cuda.is_available() == False`. Nothing was billed and nothing was lost. **The
+blocker is the account balance of the organization `independentaudioresearch` that owns
+this teamspace**, not anything technical: the free CPU machine keeps running, while a GPU
+machine requires a positive balance.
+
+The personal teamspace `gabriel-allgd/general` also exists and is **completely empty** —
+no studios, no jobs (`lightning studio list --teamspace gabriel-allgd/general`). Using it
+would mean rebuilding this environment there from scratch: repo from GitHub, artifacts via
+`scripts/research/fetch_public_artifacts.sh` (md5-verified, resumable), `.venv` per this
+document. That is ~125 GB and several hours, but every step is scripted.
+
+Do not retry the switch until a top-up is confirmed; it will fail identically.
+
 ## Platform deviations that were forced on us
 
 Recording these because they are the only differences from the upstream recipe.
