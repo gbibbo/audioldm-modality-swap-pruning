@@ -32,10 +32,16 @@ to continue from this file alone, without any prior chat history.
 >   commits 23ac4f2/200fbcc/317aea3). `audioldm_peft/` is a working, tested package;
 >   full CPU suite 17/17 across 5 modules; all 8 audit defects addressed. Only M1
 >   **GPU** acceptance remains (blocked on GPU + Compute Gate CG).
-> * **(B) M0 remainder — IN PROGRESS/NEXT:** FAD/KL `audioldm_eval` end-to-end on a
->   tiny real folder pair; PANNs top-k semantics (section 5 of
->   `_external/PruningAudioLDM/README.md`).
-> * **(C) prepare (do NOT run) the GPU benchmark; review `docs/pilot_protocol.md`.**
+> * **(B) M0 remainder — DONE (M0-006):** PANNs top-10 fully reproduced; FAD/KL
+>   pipeline runs end-to-end (deps resolved; audioldm_eval FAD bug worked around —
+>   see `docs/m0_baseline_reproduction/eval_pipeline_closure.md`). KL/IS/FID numeric
+>   values were being captured from the CPU run at handoff time; if
+>   `artifacts/m0_baseline_reproduction/fad_kl_smoke/fad_kl_smoke_metrics.json`
+>   exists, fold the numbers into the closure doc.
+> * **(C) GPU benchmark PREPARED (M0-005), write-only** (`scripts/research/gpu_benchmark.py`,
+>   refuses without CUDA). `docs/pilot_protocol.md` cannot be frozen tonight: it needs
+>   the GPU benchmark's T_sal/T_fwd AND Gabriel's decision on the Gate-B amendment
+>   (ledger AUDIT-M3-002 finding G1). Next real work needs a GPU.
 > Guardrails unchanged: no GPU numbers invented, no M3 scientific run, no saliency
 > on the real L1 ckpt, `audioldm_train/` stays byte-identical to upstream-frozen.
 

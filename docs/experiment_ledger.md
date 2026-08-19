@@ -453,3 +453,17 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Acceptance / gate decision:** **the script REFUSES to run without CUDA** (verified on CPU: exits non-zero with an explicit message) so no value is ever fabricated. Syntax verified. CG remains UNRESOLVED; compute_budget untouched (still 100% TBD_MEASURED).
 * **Failure or uncertainty:** the timing loops cannot be executed here (no GPU), so they are unverified beyond syntax + the shared, already-tested build path (M1 F6). Generation timing is not implemented.
 * **Notes:** invariant intact — no GPU numbers invented; `git diff upstream-frozen -- audioldm_train/` empty.
+
+### 2026-08-19 02:35 | M0-006 | FAD/KL and PANNs top-k evaluation pipelines exercised end-to-end (CPU)
+
+* **Status:** completed for PANNs top-k; FAD/KL pipeline proven to run end-to-end (FAD library bug worked around), numeric KL/IS/FID values captured in a follow-up when the CPU run finishes. Pipeline SMOKE only — arbitrary disjoint AudioCaps subsets, values are not scientific.
+* **Milestone / gate:** M0 remaining items 1 (FAD/KL) and 2 (PANNs top-k). Both were previously only proven to import.
+* **Git commit:** this commit (+ a follow-up for the KL/IS/FID numbers).
+* **Command:** `scripts/research/fad_kl_smoke.py --gen ... --gt ... --sr 16000 --fresh`; `scripts/research/panns_topk.py --dir ... --k 10 --limit 20`.
+* **Dataset manifest / hash:** two disjoint 256-clip symlink folders (gt = AudioCaps items 1..256 sorted, gen = 257..512) under `artifacts/m0_baseline_reproduction/fad_kl_smoke/` (gitignored).
+* **Base checkpoint / SHA256:** PANNs Cnn14 16 kHz `ckpt/Cnn14_16k_mAP=0.438.pth` (Zenodo 3987831), CPU-sanitised; 32 kHz `Cnn14_mAP=0.431.pth` (Zenodo 3576403) auto-fetched by the library; both gitignored. VGGish via torch.hub.
+* **GPU / runtime:** CPU only.
+* **Primary result:** documented in `docs/m0_baseline_reproduction/eval_pipeline_closure.md`. PANNs top-10: 20/20 real clips classified with semantically coherent events (Train/Rail, Waterfall/Stream, Neigh/Horse, Bee/Insect, Applause). FAD/KL: full dependency chain resolved; pipeline runs through VGGish FAD (returns NaN via workaround), Cnn14 classifier feature extraction, and KL/IS/FID.
+* **Acceptance / gate decision:** both M0 eval pipelines now execute end-to-end with recorded invocations — M0 items 1 and 2 satisfied at the pipeline level.
+* **Failure or uncertainty:** four library findings recorded (F-eval-1 CPU-deserialize without map_location → checkpoint CPU-sanitised; F-eval-2 path-keyed feature cache → `--fresh`; F-eval-3 FAD `sqrtm` imaginary component exceeds tolerance and `eval.py` mishandles the sentinel → NaN workaround, real eval must use standard-FAD real-part behaviour; F-eval-4 Cnn14 IS pretrained). Values are non-scientific smokes on arbitrary subsets. FAD unusable as-is in audioldm_eval 0.0.5.
+* **Notes:** no scientific/upstream code modified; `git diff upstream-frozen -- audioldm_train/` empty. New tracked code in `scripts/research/{fad_kl_smoke,panns_topk}.py` and `docs/m0_baseline_reproduction/eval_pipeline_closure.md`; checkpoints/label CSV/eval folders gitignored.
