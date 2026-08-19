@@ -43,8 +43,13 @@ to continue from this file alone, without any prior chat history.
 >   (no upstream patch, more VRAM, and the budget must then be measured in that same
 >   configuration); (b) a minimal reviewable upstream patch filtering `input_params` by
 >   `requires_grad` (AGENTS.md permits deliberate reviewed patches); (c) keep base params
->   requiring grad and discard their grads (wasteful). **Until decided,
->   `git diff upstream-frozen -- audioldm_train/` must stay empty.**
+>   requiring grad and discard their grads (wasteful).
+>   **DECIDED (Gabriel, 2026-08-19 — DECISION-F10): take the minimal upstream patch**,
+>   filtering `ctx.input_params` by `requires_grad` before the `torch.autograd.grad` call.
+>   This will be the project's **first deliberate upstream patch**, so
+>   `git diff upstream-frozen -- audioldm_train/` becomes non-empty: keep the diff as small
+>   as possible, record it as a deviation, and review it. It was deliberately NOT applied in
+>   the GPU session because the regression test that validates it does not exist yet.
 >
 > **Test-coverage gap that let this through:** `tests/research/test_peft_real_unet.py`
 > (R6a-c) never performs a `backward` — no test ever ran an optimization step through the
