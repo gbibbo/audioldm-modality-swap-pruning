@@ -467,3 +467,19 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Acceptance / gate decision:** both M0 eval pipelines now execute end-to-end with recorded invocations — M0 items 1 and 2 satisfied at the pipeline level.
 * **Failure or uncertainty:** four library findings recorded (F-eval-1 CPU-deserialize without map_location → checkpoint CPU-sanitised; F-eval-2 path-keyed feature cache → `--fresh`; F-eval-3 FAD `sqrtm` imaginary component exceeds tolerance and `eval.py` mishandles the sentinel → NaN workaround, real eval must use standard-FAD real-part behaviour; F-eval-4 Cnn14 IS pretrained). Values are non-scientific smokes on arbitrary subsets. FAD unusable as-is in audioldm_eval 0.0.5.
 * **Notes:** no scientific/upstream code modified; `git diff upstream-frozen -- audioldm_train/` empty. New tracked code in `scripts/research/{fad_kl_smoke,panns_topk}.py` and `docs/m0_baseline_reproduction/eval_pipeline_closure.md`; checkpoints/label CSV/eval folders gitignored.
+
+### 2026-08-19 03:15 | M3B-000 | P0-P3 pruning-criteria machinery (channel-gate Taylor) — NO scientific result
+
+* **Status:** completed (machinery + control-model tests). **No saliency computed on the real pruned/L1 checkpoint.** Serves M3B (Gate B saliency disagreement) and M4 (matched pruning experiment).
+* **Milestone / gate:** master plan §4-5. Moves `research_pruning/taylor/` and `research_pruning/paired_modality/` from skeletons to a working, tested criteria package.
+* **Git commit:** this commit.
+* **Branch:** main.
+* **Command:** `.venv/bin/python tests/research/test_taylor_saliency.py`.
+* **GPU / runtime:** CPU only, control models.
+* **Primary result:** implemented the channel-gate first-order Taylor saliency machinery:
+  * `research_pruning/taylor/gates.py` — `ChannelGate` (per-output-channel gate g_c=1 on a Conv2d; `out = conv(x)·g`), `attach_gates`/`remove_gates` (in-place, fail loudly on non-Conv2d), `conv_modules`.
+  * `research_pruning/taylor/saliency.py` — `accumulate_taylor` (S_c = mean_slots |g_c·∂L/∂g_c|), `normalize_within_layer` (sum/max/l2), `p0_l1_magnitude` (data-free), `combine_mean` (P2), `combine_max` (P3), `prune_order`/`keep_topk`, `assert_matched_budget` (§5: P1 2B == P2/P3 B+B, audio==text).
+  * `research_pruning/paired_modality/criteria.py` — `compute_criteria` orchestration producing P1/P2/P3 at the matched 2B budget, sharing S_a/S_t between P2 and P3 (no duplicate compute), with real-model wiring notes (reuse `conditioning.build_paired_slots`/`paired_eps`, gate the 28 L1 conv layers).
+* **Acceptance / gate decision:** control tests **C1–C7 PASS** — gate gradients (dead channel scores ~0 and is pruned first; C1), audio≠text swap is real with max≥mean (C2), exact mean/max combine (C3), sum/max/l2 normalization (C4), matched-budget enforcement incl. rejection of mismatches (C5), P0 L1 equals the manual per-channel weight norm (C6), and the full P1/P2/P3 orchestration at 2B with a budget-mismatch rejection (C7).
+* **Failure or uncertainty:** tested on control `nn.Conv2d` nets, NOT the real U-Net. The real prunable-layer→module-path mapping (the 28 L1 conv layers) and the exact slot/timestep construction are NOT wired/frozen here — they belong to the M3B/M4 run behind the unfrozen pilot protocol. Within-layer normalization mode is a protocol parameter (default "sum"); the choice must be frozen. **P1 is scientifically load-bearing (any cross-modal claim depends on a correct P1) — this path must pass `/auditar` before any real use.**
+* **Notes:** follows the M3-000 "build machinery, run no scientific experiment" precedent. `git diff upstream-frozen -- audioldm_train/` empty. New code only in `research_pruning/taylor/`, `research_pruning/paired_modality/`, `tests/research/`.

@@ -1,7 +1,21 @@
-"""Taylor saliency criteria, including the faithful text-only P1 baseline.
+"""Taylor saliency criteria: the faithful text-only P1 baseline and the shared
+channel-gate machinery used by P2/P3.
 
-STATUS: skeleton only. No implementation is present in this repository yet.
-Nothing here has been ported from the pre-Lightning local M1 scaffold; that
-code has not been recovered. Do not treat the absence of an error here as
-evidence that a component exists.
+STATUS: machinery implemented and CONTROL-MODEL tested (see
+tests/research/test_taylor_saliency.py). It computes NO saliency on the real
+pruned/L1 checkpoint — that is an M3B/M4 scientific run, blocked until the pilot
+protocol is frozen. P1 is scientifically load-bearing (the master plan makes any
+cross-modal claim depend on a correctly implemented P1); this code must pass
+`/auditar` review before any real use.
 """
+from .gates import ChannelGate, attach_gates, remove_gates, conv_modules, zero_gate_grads
+from .saliency import (
+    accumulate_taylor, normalize_within_layer, p0_l1_magnitude,
+    combine_mean, combine_max, prune_order, keep_topk, assert_matched_budget,
+)
+
+__all__ = [
+    "ChannelGate", "attach_gates", "remove_gates", "conv_modules", "zero_gate_grads",
+    "accumulate_taylor", "normalize_within_layer", "p0_l1_magnitude",
+    "combine_mean", "combine_max", "prune_order", "keep_topk", "assert_matched_budget",
+]
