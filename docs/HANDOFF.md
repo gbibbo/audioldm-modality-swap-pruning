@@ -7,6 +7,34 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
+> ## STATUS UPDATE — 2026-08-19 (supersedes stale sections below)
+>
+> This banner reflects the current repository state; sections §5 (M1), §6 (M2)
+> and §12 below were written on 2026-08-18 and are **partly stale**. Trust the
+> bounded state block at the top of `PROGRESS.md` and `docs/experiment_ledger.md`
+> for live status. Concretely, since this file was first written:
+>
+> * **M2 is COMPLETE (PASS)** — conditioning-path validation, CPU. See PROGRESS.
+> * **M3A machinery is COMPLETE** (M3-000/001/002), CPU, no scientific result on
+>   the real L1 checkpoint. M3B (Gate B) is "infeasible as written" (see ledger).
+> * **M1 is RECOVERED, AUDITED, adoption PENDING — no longer blocked.** Gabriel
+>   supplied the local scaffold; it is audited in `docs/m1_scaffold_audit.md`
+>   (verdict: "adopt and fix, do not rebuild") with defect list F1..F8. The
+>   pristine overlay is at `_external/m1_scaffold_recovered/` (gitignored).
+>   `audioldm_peft/` in-repo is still only a skeleton `__init__.py`; adoption is
+>   the current work.
+>
+> **Autonomous night run (2026-08-19, ~00:30→08:30 Montevideo).** Gabriel asked
+> for autonomous completion across the 05:28 token-window renewal. A detached
+> resume daemon (`artifacts/auto_resume/launcher.sh` + `resume_prompt.txt`,
+> gitignored) relaunches headless `claude` at 05:30 Montevideo. **Priority queue,
+> highest first:** (A) M1 adopt scaffold + fix F1..F8 to CPU acceptance; (B) M0
+> remainder — FAD/KL end-to-end, PANNs top-k; (C) prepare (do NOT run) the GPU
+> benchmark, review pilot_protocol. Guardrails unchanged: no GPU numbers invented,
+> no M3 scientific run, no saliency on the real L1 ckpt, upstream stays unpatched.
+
+---
+
 ## 1. Repository
 
 ```text
