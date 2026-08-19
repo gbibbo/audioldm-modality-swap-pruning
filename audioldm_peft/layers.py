@@ -47,8 +47,13 @@ class LoRALinear(_LoRABase):
     def __init__(self, base: nn.Linear, rank: int = 8, alpha: float = 16.0, dropout: float = 0.0):
         super().__init__(rank, alpha, dropout)
         self.base = base
-        self.lora_A = nn.Parameter(torch.empty(rank, base.in_features))
-        self.lora_B = nn.Parameter(torch.zeros(base.out_features, rank))
+        # Create the adapters on the base layer's device/dtype (F9). Injection happens
+        # AFTER the checkpoint load (integration_notes I4), by which point the model may
+        # already live on the GPU; defaulting to CPU would silently produce a
+        # cuda/cpu mismatch at the first forward.
+        factory = {"device": base.weight.device, "dtype": base.weight.dtype}
+        self.lora_A = nn.Parameter(torch.empty(rank, base.in_features, **factory))
+        self.lora_B = nn.Parameter(torch.zeros(base.out_features, rank, **factory))
         nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
         self.base.weight.requires_grad = False
 
@@ -79,8 +84,9 @@ class LoRAConv2d(_LoRABase):
         self.base = base
         kh, kw = base.kernel_size
         flat_in = base.in_channels * kh * kw
-        self.lora_A = nn.Parameter(torch.empty(rank, flat_in))
-        self.lora_B = nn.Parameter(torch.zeros(base.out_channels, rank))
+        factory = {"device": base.weight.device, "dtype": base.weight.dtype}   # F9, see LoRALinear
+        self.lora_A = nn.Parameter(torch.empty(rank, flat_in, **factory))
+        self.lora_B = nn.Parameter(torch.zeros(base.out_channels, rank, **factory))
         nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
         self.base.weight.requires_grad = False
 
