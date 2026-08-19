@@ -25,6 +25,9 @@ from .state import (
 )
 from .optimizer import build_parameter_groups
 from .ema import TrainableOnlyEMA
+from .integrate import (
+    setup_peft, build_peft_optimizer, build_trainable_only_ema, peft_config_from_yaml,
+)
 
 __all__ = [
     "PeftConfig", "inject_lora", "freeze_for_peft", "configure_auxiliary_trainables",
@@ -35,4 +38,5 @@ __all__ = [
     "adaptation_state_dict", "load_adaptation_state_dict",
     "training_state_dict", "load_training_state_dict",
     "build_parameter_groups", "TrainableOnlyEMA",
+    "setup_peft", "build_peft_optimizer", "build_trainable_only_ema", "peft_config_from_yaml",
 ]

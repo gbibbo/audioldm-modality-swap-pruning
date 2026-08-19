@@ -24,13 +24,14 @@ evidence · [ ] not started. See `docs/experiment_ledger.md` M1-005+ and
 - [x] Merge/unmerge numerical equivalence on a real forward, max|Δ| 1.0e-7 (R6b).
 - [x] train_layernorm_affine=True adds exactly 35,712 params (R6c).
 
-## Integration (F8 — code + CPU tests done; upstream patch deferred to GPU session)
-- [~] Inject only after the external base/pruned checkpoint has been loaded (`setup_peft`).
-- [~] `LatentDiffusion.configure_optimizers()` uses PEFT parameter groups (`build_peft_optimizer`).
-- [~] Resolve upstream EMA initialization order (construct `TrainableOnlyEMA` post-setup).
-- [~] Validation EMA store/copy/restore trainable-only (`TrainableOnlyEMA.scope`).
-- [~] Preserve Lightning resume state (`training_state_dict`/`load_training_state_dict`).
-- [ ] Apply the minimal upstream patch in `audioldm_train/` (deferred; keeps diff empty until deliberately made and reviewed).
+## Integration (F8 — hooks + CPU tests DONE, M1-007; upstream patch deferred to GPU session)
+- [x] Inject only after checkpoint load (`setup_peft`); post-load-order proven (I4).
+- [x] PEFT-only optimizer groups (`build_peft_optimizer`), AdamW, per-group LRs (I2).
+- [x] EMA constructed post-setup, trainable-only (`build_trainable_only_ema`; S2/S3).
+- [x] Validation EMA store/copy/restore trainable-only (`TrainableOnlyEMA.scope`; S3).
+- [x] Full resume state (`training_state_dict`/`load_training_state_dict`; S3).
+- [x] Config parse from the research yaml (`peft_config_from_yaml`; I3).
+- [ ] Apply the minimal upstream patch in `audioldm_train/` (deferred; keeps diff empty until deliberately made and reviewed on a GPU-enabled session).
 
 ## GPU benchmark (blocked — no GPU attached)
 - [ ] 500 real optimization steps.
