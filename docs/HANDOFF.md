@@ -7,10 +7,30 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
-> ## ⚠ READ FIRST — GPU BLOCKED ON BILLING, NOT ON TECHNOLOGY (2026-08-19 ~18:45 Montevideo)
+> ## ⚠ READ FIRST — T4 SWITCH RETRIED AFTER TOP-UP (2026-08-19 ~19:01 Montevideo)
 >
-> **There is still NO GPU attached.** A switch to `T4` was attempted from the terminal and
-> the Lightning API **refused it**:
+> **Gabriel confirmed a top-up: the org `independentaudioresearch` now shows 10.00 credits.**
+> The `T4` switch was therefore re-authorised and re-attempted at ~19:01. This block was
+> written *before* the attempt, so it deliberately covers both outcomes — **check the
+> machine yourself, do not trust either branch on faith**:
+>
+> ```bash
+> nvidia-smi
+> .venv/bin/python -c "import torch; print(torch.cuda.is_available(), torch.version.cuda, torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)"
+> ```
+>
+> * **If you see a `Tesla T4` and `True`** → the switch SUCCEEDED and restarted the Studio
+>   (which is why the previous session ended). Nothing needs reinstalling; the CUDA wheels
+>   were already in the `.venv`. Go straight to "The queue the moment a GPU exists" below,
+>   starting with `gpu_benchmark.py`, and update `PROGRESS.md` to record that the GPU is
+>   attached.
+> * **If the Studio is still on `CPU`** → the switch failed again. Do NOT retry blindly and
+>   do NOT click through billing UI at random. The next thing to check is `Auto-reload
+>   credits` on the teamspace (Lightning's docs describe a per-teamspace allocation model
+>   that the current UI may no longer expose as a "Transfer" control), then report back to
+>   Gabriel. The failure mode last time was the API error quoted below.
+>
+> Historical context — the refusal that made the top-up necessary (2026-08-19 ~18:45):
 >
 > ```text
 > lightning studio switch --name gabriel-allgd-deploy-model-devbox \
