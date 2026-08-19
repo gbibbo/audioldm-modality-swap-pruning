@@ -483,3 +483,14 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Acceptance / gate decision:** control tests **C1–C7 PASS** — gate gradients (dead channel scores ~0 and is pruned first; C1), audio≠text swap is real with max≥mean (C2), exact mean/max combine (C3), sum/max/l2 normalization (C4), matched-budget enforcement incl. rejection of mismatches (C5), P0 L1 equals the manual per-channel weight norm (C6), and the full P1/P2/P3 orchestration at 2B with a budget-mismatch rejection (C7).
 * **Failure or uncertainty:** tested on control `nn.Conv2d` nets, NOT the real U-Net. The real prunable-layer→module-path mapping (the 28 L1 conv layers) and the exact slot/timestep construction are NOT wired/frozen here — they belong to the M3B/M4 run behind the unfrozen pilot protocol. Within-layer normalization mode is a protocol parameter (default "sum"); the choice must be frozen. **P1 is scientifically load-bearing (any cross-modal claim depends on a correct P1) — this path must pass `/auditar` before any real use.**
 * **Notes:** follows the M3-000 "build machinery, run no scientific experiment" precedent. `git diff upstream-frozen -- audioldm_train/` empty. New code only in `research_pruning/taylor/`, `research_pruning/paired_modality/`, `tests/research/`.
+
+### 2026-08-19 03:40 | M3B-001 | Prunable layer set verified + gates attach on the real base U-Net — NO saliency
+
+* **Status:** completed (structural/plumbing). **NO saliency or P0-P3 ranking computed on the real model.**
+* **Milestone / gate:** master plan §4, finding 9.4. Wires the P0-P3 machinery to the structure-matched L1 layer set.
+* **Git commit:** this commit.
+* **Command:** `.venv/bin/python tests/research/test_prunable_layer_set.py`.
+* **Primary result:** `research_pruning/taylor/layer_set.py` — `l1_prunable_layer_names`/`verify_prunable_layers`/`load_and_verify` derive the 28 prunable Conv2d module paths from the public `sorted_indexes_dict.pkl` and check them against the real base `(1,2,3,5)` U-Net. Test **V1/V2 PASS**: all 28 L1 keys resolve to Conv2d with out_channels == the ranking full length (widths 384/576/960); attaching channel gates (init 1.0) to those 28 layers leaves the U-Net output **bit-identical** (max|Δ| = 0.0) and `remove_gates` restores the bare convs.
+* **Acceptance / gate decision:** the P0-P3 criteria now have a verified, structure-matched real-model layer set. Computing actual saliency over it remains the M3B/M4 scientific run — blocked until the pilot protocol is frozen and CG resolved.
+* **Failure or uncertainty:** none in the tested structural path; no scientific value produced by design. Saliency is computed on the base (unpruned) model, which this test uses.
+* **Notes:** reads only architecture + the public ranking. `git diff upstream-frozen -- audioldm_train/` empty.

@@ -13,9 +13,11 @@ from .saliency import (
     accumulate_taylor, normalize_within_layer, p0_l1_magnitude,
     combine_mean, combine_max, prune_order, keep_topk, assert_matched_budget,
 )
+from .layer_set import l1_prunable_layer_names, verify_prunable_layers, load_and_verify
 
 __all__ = [
     "ChannelGate", "attach_gates", "remove_gates", "conv_modules", "zero_gate_grads",
     "accumulate_taylor", "normalize_within_layer", "p0_l1_magnitude",
     "combine_mean", "combine_max", "prune_order", "keep_topk", "assert_matched_budget",
+    "l1_prunable_layer_names", "verify_prunable_layers", "load_and_verify",
 ]
