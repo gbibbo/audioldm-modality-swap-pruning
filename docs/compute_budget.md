@@ -2,6 +2,13 @@
 
 Do not invent GPU-hour estimates before the first measured benchmark.
 
+**To populate this file:** on a GPU studio run
+`.venv/bin/python scripts/research/gpu_benchmark.py --steps 30 --batch 8 --out docs/compute_budget_measured.json`
+(add `--with-generation` once the generation stack is wired). The script measures
+every §7.2 variable on the real pruned `(1,2,3,1)` U-Net via the tested M1 PEFT
+setup, and **refuses to run without CUDA** so no value here is ever fabricated.
+Every field below stays `TBD_MEASURED` until that benchmark writes real numbers.
+
 ## First benchmark
 
 * **GPU_MODEL:** TBD_MEASURED
