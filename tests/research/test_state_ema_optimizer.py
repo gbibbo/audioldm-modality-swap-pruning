@@ -9,6 +9,12 @@
                           EMA + global_step, pickles through torch.save, and
                           reloads into a fresh model/optimizer/EMA so that adapter
                           params, optimizer moments, EMA shadows and step all match.
+    S4 SNAPSHOT-IMMUTABLE training_state_dict() must return a true point-in-time
+                          snapshot: continuing to train after taking it must not
+                          change it (F11). S3 could not catch this because it
+                          round-trips through torch.save, and serialising silently
+                          breaks the aliasing; the bug only bites when the dict is
+                          held in memory, which is what a resume test does.
 
 Run directly:
 
@@ -124,10 +130,42 @@ def check_s3_full_resume() -> bool:
     return bool(adapter_ok and opt_ok and ema_ok and step_ok)
 
 
+def check_s4_snapshot_immutable() -> bool:
+    """F11: the snapshot must be immune to training that happens after it is taken."""
+    torch.manual_seed(0)
+    model = nn.Linear(8, 8)
+    opt = torch.optim.AdamW(model.parameters(), lr=1e-3)
+
+    def step():
+        opt.zero_grad(set_to_none=True)
+        model(torch.randn(4, 8)).sum().backward()
+        opt.step()
+
+    step()
+    snap = training_state_dict(model, optimizer=opt, global_step=1)
+    adapter_before = {k: v.clone() for k, v in snap["adapter"].items()}
+    moments_before = {i: {k: v.clone() for k, v in st.items() if torch.is_tensor(v)}
+                      for i, st in snap["optimizer"]["state"].items()}
+
+    for _ in range(5):
+        step()                      # keep training while holding the snapshot
+
+    adapter_ok = all(torch.equal(adapter_before[k], snap["adapter"][k])
+                     for k in adapter_before)
+    deltas = [(mb[k] - snap["optimizer"]["state"][i][k]).abs().max().item()
+              for i, mb in moments_before.items() for k in mb]
+    opt_ok = all(d == 0.0 for d in deltas)
+    print(f"  adapter unchanged: {adapter_ok}")
+    print(f"  optimizer moments unchanged: {opt_ok} (max drift {max(deltas):.3e})")
+    print(f"  global_step preserved: {snap['global_step'] == 1}")
+    return adapter_ok and opt_ok and snap["global_step"] == 1
+
+
 TESTS = [
     ("S1 ADAPTER-ROUNDTRIP", check_s1_adapter_roundtrip),
     ("S2 EMA-TRAINABLE-ONLY", check_s2_ema_trainable_only),
     ("S3 F7-FULL-RESUME", check_s3_full_resume),
+    ("S4 SNAPSHOT-IMMUTABLE", check_s4_snapshot_immutable),
 ]
 
 

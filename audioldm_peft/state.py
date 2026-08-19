@@ -40,6 +40,27 @@ def load_adaptation_state_dict(model: nn.Module, state: Mapping[str, torch.Tenso
     return missing
 
 
+def _deep_clone(obj):
+    """Detach+clone every tensor inside a nested state payload (F11).
+
+    ``optimizer.state_dict()`` and ``Module.state_dict()`` return tensors that ALIAS the
+    live training state: Adam's ``exp_avg``/``exp_avg_sq`` and the EMA shadow buffers are
+    the actual objects the next ``step()`` mutates in place. Holding such a dict in memory
+    and continuing to train therefore silently rewrites the "snapshot" — a resume from it
+    replays with the WRONG moments and diverges. Normal use hides this because the dict is
+    usually handed straight to ``torch.save``; the bug only appears when the snapshot is
+    kept in memory, which is exactly what a resume test does. Found by
+    ``m1_gpu_acceptance.py`` (ledger M1-010).
+    """
+    if torch.is_tensor(obj):
+        return obj.detach().cpu().clone()
+    if isinstance(obj, dict):
+        return {k: _deep_clone(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return type(obj)(_deep_clone(v) for v in obj)
+    return obj
+
+
 def training_state_dict(model: nn.Module,
                         optimizer: Optional[torch.optim.Optimizer] = None,
                         scheduler: Optional[Any] = None,
@@ -51,12 +72,17 @@ def training_state_dict(model: nn.Module,
     ``adapter`` is the trainable-parameter state (CPU tensors). ``optimizer`` /
     ``scheduler`` / ``ema`` are ``state_dict()`` payloads when supplied. ``extra``
     carries anything the caller needs (e.g. RNG state, config hash).
+
+    Every tensor in the returned dict is detached, moved to CPU and cloned, so the result
+    is a true point-in-time snapshot that continued training cannot mutate (F11). Without
+    that, keeping the dict in memory while training proceeds would silently corrupt it.
     """
     return {
         "adapter": adaptation_state_dict(model),
-        "optimizer": optimizer.state_dict() if optimizer is not None else None,
-        "scheduler": scheduler.state_dict() if scheduler is not None else None,
-        "ema": ema.state_dict() if ema is not None else None,
+        # Deep-cloned: these payloads otherwise alias live training state (F11).
+        "optimizer": _deep_clone(optimizer.state_dict()) if optimizer is not None else None,
+        "scheduler": _deep_clone(scheduler.state_dict()) if scheduler is not None else None,
+        "ema": _deep_clone(ema.state_dict()) if ema is not None else None,
         "global_step": int(global_step),
         "extra": dict(extra) if extra else {},
     }
