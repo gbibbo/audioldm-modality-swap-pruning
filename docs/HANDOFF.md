@@ -7,17 +7,25 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
-> ## ⚠ READ FIRST — HIGH-SEVERITY FINDING (2026-08-19, M3B-002)
+> ## ⚠ READ FIRST — M3B-002 FINDING + DECISION (2026-08-19)
 >
 > The published PruningAudioLDM **L1 checkpoint keeps the LOWEST-magnitude conv filters**
 > per pruned layer — inverted from standard L1 magnitude pruning. Verified 4 ways
-> (Spearman -1 vs our P0 on all 28 layers; reference code `np.argsort` ascending + the
-> bit-exact materializer keeps `[:k]`; 15/15 pruned layers keep the lower-L1 set). It is a
-> property of the **artifact itself**. Bears on RQ2 (the L1/P0 baseline) and RQ3 (recovery
-> starting point). **No gate changed.** Reproduce: `scripts/research/verify_l1_direction.py`.
-> Full write-up: `docs/m0_baseline_reproduction/l1_pruning_direction_finding.md`. Needs
-> `/auditar` and a Gabriel/Arshdeep decision (intentional? which P0 convention does the
-> project adopt?) before M3B/M4.
+> (Spearman -1 vs P0 on all 28 layers; reference code `np.argsort` ascending + the
+> bit-exact materializer keeps `[:k]`; 15/15 pruned layers keep the lower-L1 set) and
+> independently re-derived (ledger AUDIT-NIGHT2). It is a property of **Arshdeep's official
+> artifact itself**.
+> **DECIDED (Gabriel, DECISION-M3B-002):** since RQ2's L1 baseline IS Arshdeep's published
+> pruning artifact (Zenodo 21376822; reference README "Official implementation"), the project
+> **adopts the published inverted convention — P0 keeps LOWEST-L1**
+> (`research_pruning.taylor.p0_importance(convention="published")`, default
+> `P0_CONVENTION="published"`; `"standard"` kept only for a non-Arshdeep baseline). Verified to
+> reproduce the published kept-set **exactly 12/12 ranking-driven layers**
+> (`scripts/research/verify_p0_convention.py`; control test C8). RQ3's inverted-starting-point
+> caveat stands. Finding write-up + reproduction:
+> `docs/m0_baseline_reproduction/l1_pruning_direction_finding.md` /
+> `scripts/research/verify_l1_direction.py`. Open for Arshdeep only: confirm intentionality
+> for paper wording (non-gating).
 >
 > ## STATUS UPDATE — 2026-08-19 autonomous night run (supersedes stale sections below)
 >

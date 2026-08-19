@@ -16,6 +16,8 @@ on small controlled networks, exactly like the M3A diagnostic tests.
     C5 BUDGET          assert_matched_budget accepts 2B == B+B and rejects mismatches.
     C6 P0-L1           data-free L1 magnitude equals the manual per-channel weight norm;
                        a zero-weight channel scores 0.
+    C8 P0-CONVENTION   adopted P0 keeps LOWEST-L1 (Arshdeep's published convention,
+                       finding M3B-002); 'standard' keeps highest-L1; they are opposites.
 
 Run directly:
 
@@ -147,6 +149,35 @@ def check_c6_p0_l1() -> bool:
     return bool(ok)
 
 
+def check_c8_p0_convention() -> bool:
+    """P0 convention (finding M3B-002): 'published' keeps LOWEST-L1 channels, 'standard'
+    keeps HIGHEST-L1. keep_topk(p0_importance('published'), k) is the low-L1 set; the two
+    conventions are exact opposites, and the project default is 'published'."""
+    from research_pruning.taylor import p0_importance, P0_CONVENTION
+    m, gates = _make_gated(dead_channel=2)
+    convs = conv_modules(gates)
+    l1 = p0_l1_magnitude(convs)["conv1"]
+    n = l1.numel()
+    k = max(1, n // 3)
+    imp_pub = p0_importance(convs, "published")["conv1"]
+    imp_std = p0_importance(convs, "standard")["conv1"]
+    keep_pub = set(keep_topk({"c": imp_pub}, {"c": k})["c"].tolist())
+    keep_std = set(keep_topk({"c": imp_std}, {"c": k})["c"].tolist())
+    lowest = set(torch.argsort(l1, descending=False)[:k].tolist())    # k smallest L1
+    highest = set(torch.argsort(l1, descending=True)[:k].tolist())    # k largest L1
+    ok = (
+        P0_CONVENTION == "published"
+        and torch.equal(imp_std, l1)
+        and torch.allclose(imp_pub, -l1)
+        and keep_pub == lowest
+        and keep_std == highest
+        and keep_pub.isdisjoint(keep_std)   # k<=n/3 => disjoint
+    )
+    print(f"  default={P0_CONVENTION!r} published==lowest-L1={keep_pub == lowest} "
+          f"standard==highest-L1={keep_std == highest} disjoint={keep_pub.isdisjoint(keep_std)}")
+    return bool(ok)
+
+
 def check_c7_orchestration() -> bool:
     """compute_criteria produces P1/P2/P3 at the matched 2B budget on a control model."""
     m, gates = _make_gated()
@@ -188,6 +219,7 @@ TESTS = [
     ("C5 BUDGET", check_c5_budget),
     ("C6 P0-L1", check_c6_p0_l1),
     ("C7 ORCHESTRATION", check_c7_orchestration),
+    ("C8 P0-CONVENTION", check_c8_p0_convention),
 ]
 
 

@@ -76,6 +76,48 @@ def p0_l1_magnitude(convs: Dict[str, torch.nn.Conv2d]) -> LayerSaliency:
     return {name: conv.weight.detach().abs().sum(dim=(1, 2, 3)) for name, conv in convs.items()}
 
 
+# --- P0 keep/prune convention (finding M3B-002; Gabriel's decision 2026-08-19) ------
+#
+# The published PruningAudioLDM L1 checkpoint keeps, per pruned layer, the k conv
+# filters of LOWEST output-channel L1 magnitude (inverted from the standard L1 rule
+# of Li et al. 2017, which keeps the HIGHEST). Verified four ways and confirmed to be
+# a property of the artifact itself (ledger M3B-002 / AUDIT-NIGHT2).
+#
+# DECISION: RQ2's L1 baseline IS Arshdeep's OFFICIAL published pruning artifact
+# (`Arshdeep-Singh-Boparai/PruningAudioLDM`, Zenodo 21376822 — the reference README
+# states "Official implementation"). Because the baseline the project compares P1/P2/P3
+# against is that exact artifact, the project's P0 must REPRODUCE its convention. So the
+# adopted P0 convention is "published" (keep LOWEST-L1). "standard" (keep highest-L1) is
+# retained only for a hypothetical non-Arshdeep baseline and must not be used for RQ2.
+P0_CONVENTION = "published"
+
+
+def p0_importance(convs: Dict[str, torch.nn.Conv2d],
+                  convention: str = P0_CONVENTION) -> LayerSaliency:
+    """Per-output-channel P0 *importance* for ``keep_topk`` / ``prune_order``.
+
+    ``keep_topk`` keeps the highest-importance channels, so the sign of the score
+    encodes the pruning direction:
+
+    * ``"published"`` -> importance = -L1: ``keep_topk`` keeps the LOWEST-L1 filters,
+      reproducing Arshdeep's published PruningAudioLDM L1 checkpoint (the project
+      default; finding M3B-002).
+    * ``"standard"``  -> importance = +L1: ``keep_topk`` keeps the HIGHEST-L1 filters
+      (Li et al. 2017). NOT the project's RQ2 baseline.
+
+    ``p0_l1_magnitude`` (the raw physical per-channel L1) is unchanged; this only
+    chooses the ordering direction. Do NOT feed the "published" (negative) scores to
+    ``normalize_within_layer`` — normalization is for combining modalities (P2/P3),
+    while P0 is a standalone baseline that is ranked directly.
+    """
+    l1 = p0_l1_magnitude(convs)
+    if convention == "published":
+        return {name: -v for name, v in l1.items()}
+    if convention == "standard":
+        return l1
+    raise ValueError(f"unknown P0 convention {convention!r} (use 'published' or 'standard')")
+
+
 def combine_mean(sa: LayerSaliency, st: LayerSaliency) -> LayerSaliency:
     """P2 paired-mean: (S~_a + S~_t) / 2."""
     _assert_same_layers(sa, st)

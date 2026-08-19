@@ -5,7 +5,7 @@
 ## CURRENT STATE
 
 * **Resume point: `docs/HANDOFF.md`.** A new session should read that file first; it is self-contained and does not depend on any chat history.
-* **⚠ HIGH-SEVERITY FINDING (2026-08-19, M3B-002) — read `docs/m0_baseline_reproduction/l1_pruning_direction_finding.md`.** The published PruningAudioLDM L1 checkpoint keeps the **lowest**-magnitude conv filters per pruned layer (inverted from standard L1), verified 4 ways incl. the reference's own code (`np.argsort` ascending + bit-exact materializer keeps `[:k]`) and 15/15 pruned layers; Spearman -1 vs our P0 on all 28 layers. **A property of the artifact itself.** Affects the RQ2 L1/P0 baseline and RQ3 recovery starting point. **No gate changed** — reproduce with `scripts/research/verify_l1_direction.py`; needs `/auditar` + a Gabriel/Arshdeep decision on whether it is intentional and which P0 convention the project uses.
+* **M3B-002 FINDING + DECISION (2026-08-19) — `docs/m0_baseline_reproduction/l1_pruning_direction_finding.md`.** The published PruningAudioLDM L1 checkpoint keeps the **lowest**-magnitude conv filters per pruned layer (inverted from standard L1), verified 4 ways (reference's own `np.argsort` ascending + bit-exact materializer keeps `[:k]`; 15/15 pruned layers; Spearman -1 vs P0 on all 28 layers) and re-derived independently (AUDIT-NIGHT2). **A property of Arshdeep's official artifact itself. DECIDED (Gabriel, DECISION-M3B-002):** because RQ2's L1 baseline IS Arshdeep's published pruning artifact (Zenodo 21376822), the project's P0 **adopts the published inverted convention: keep LOWEST-L1** (`p0_importance(convention='published')`, default `P0_CONVENTION='published'`). Verified to reproduce the published kept-set **exactly 12/12 ranking-driven layers** (`scripts/research/verify_p0_convention.py`; control test C8). `'standard'` L1 retained for non-Arshdeep baselines only. RQ3's inverted-starting-point caveat stands. Reproduce the finding: `scripts/research/verify_l1_direction.py`.
 * Repository: `/teamspace/studios/this_studio/audioldm-modality-swap-pruning`, branch `main`, remote `origin` = `gbibbo/audioldm-modality-swap-pruning` (public).
 * No prior research repository was recoverable anywhere (`gh` or filesystem). This history was started fresh. The M0/M1 work the master plan describes as done is local-only on the author's Windows machine and unpushed.
 * **Frozen references imported and verified in-repo.** `upstream-frozen` = `702a638d…` (full 35-commit upstream history merged into `main`); `pruning-reference-frozen` = `6f65f628…` (kept as reference branch, plus a working clone in `_external/`). `git diff upstream-frozen -- audioldm_train/` is **empty**.
@@ -57,6 +57,8 @@
 * Upstream dataset/checkpoint validation: `.venv/bin/python tests/validate_dataset_checkpoint.py`
 * Fetch + md5-verify public artifacts: `bash scripts/research/fetch_public_artifacts.sh`
 * Verify structural budget from checkpoints (CPU): `.venv/bin/python scripts/research/verify_pruned_architecture.py data/checkpoints/audioldm-m-full.ckpt data/checkpoints/l1_audioldm-m-full_p1.ckpt`
+* Verify adopted P0 convention reproduces the published L1 kept-set: `.venv/bin/python scripts/research/verify_p0_convention.py`
+* Verify the L1 pruning direction finding (Spearman -1): `.venv/bin/python scripts/research/verify_l1_direction.py`
 * Review our patches to upstream: `git diff upstream-frozen -- audioldm_train/`
 * Agent kit verification: `python3 .claude/verify_agent_kit.py .`
 * Progress structure: `python3 .claude/hooks/check_progress.py PROGRESS.md`
@@ -125,3 +127,9 @@
 * Ran the safe pass the resume prompt scheduled: **full research suite 11/11 modules PASS** (exit 0); `git diff upstream-frozen -- audioldm_train/` = 0 lines; evidence-first `/auditar` of the night's machinery. **No bug found; no code changed.**
 * **M3B-002 independently re-derived and CONFIRMED** (both sides of the reference code + `verify_l1_direction.py`: Spearman −1 on 28 layers, 15/15 kept-set-lower-L1). Refutation attempts failed. **Not acted on** — the P0-convention choice is Gabriel's. P0-P3 Taylor machinery, LoRA F5 factorised conv (exact), and eval findings F-eval-1..6 all re-derived correct. See ledger AUDIT-NIGHT2.
 * Everything still open is a decision or GPU-gated, not a bug. Daemon NOT re-armed (Gabriel present, CPU queue exhausted).
+
+### 2026-08-19 | DECISION-M3B-002: P0 baseline adopts Arshdeep's published inverted-L1 convention
+
+* Gabriel's rule: inverted convention iff the published pruning work is Arshdeep's, else standard L1. Provenance confirmed Arshdeep's official artifact (Zenodo 21376822; reference README "Official implementation") → **adopted the published inverted convention: P0 keeps LOWEST-L1 filters.**
+* Implemented `p0_importance(convs, convention)` + `P0_CONVENTION='published'` (default) in `research_pruning/taylor/saliency.py` (`'published'`=-L1 so keep_topk keeps low-L1; `'standard'`=+L1 for non-Arshdeep baselines only). `p0_l1_magnitude` unchanged.
+* Verified: `verify_p0_convention.py` reproduces the published kept-set **exactly 12/12 ranking-driven layers** on the real base U-Net; control test **C8 PASS** (Taylor suite now C1–C8). No saliency on the real L1 ckpt; upstream diff empty. See ledger DECISION-M3B-002.

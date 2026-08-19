@@ -60,18 +60,41 @@ assumption on our side.
 ## What is NOT claimed
 
 * This is **not** a claim that the project's own code is wrong: `p0_l1_magnitude` implements
-  standard L1 (highest-kept) correctly and is control-tested (M3B-000, C6) and validated here.
+  the raw per-channel L1 correctly and is control-tested (M3B-000, C6) and validated here. The
+  *direction* in which those magnitudes are used for keep/prune is the P0 convention, decided
+  below.
 * Whether the reference's ascending-argsort-then-keep-`[:k]` is a deliberate design choice or
-  an off-by-direction bug is **not** decided here — that is for Gabriel to raise with Arshdeep
-  and for `/auditar` to review. Do not change any gate or baseline definition on the strength
-  of this document alone.
+  an off-by-direction bug in Arshdeep's code is still not asserted; it does not change the
+  decision, because the decision is anchored to *what the published artifact is*, not to why.
 
-## Suggested next steps (for Gabriel / an audit session)
+## DECISION — 2026-08-19 (Gabriel): adopt the published inverted convention for P0
 
-1. `/auditar` this finding (re-run the script, re-read the reference source and the M3-002
-   materializer independently).
-2. Ask Arshdeep whether the published L1 checkpoint intentionally keeps the lowest-magnitude
-   filters, or whether the intended baseline keeps the highest.
-3. Decide the project's P0 convention: standard L1 (highest-kept) for a correct baseline, vs.
-   the published inverted convention for artifact parity — and record the decision in the
-   experiment ledger before M3B/M4.
+**Rule Gabriel set:** use the published inverted convention **iff** the published pruning work
+is Arshdeep's; otherwise use standard L1.
+
+**It is Arshdeep's.** `_external/PruningAudioLDM/README.md` states *"Official implementation of
+our pruning framework for compressing AudioLDM-M-Full"* (`Arshdeep-Singh-Boparai/PruningAudioLDM`,
+arXiv 2607.13330). The checkpoint `l1_audioldm-m-full_p1.ckpt` and `sorted_indexes_dict.pkl` are
+from **Zenodo record 21376822 (Arshdeep Singh, 2026-07-15)**, md5-verified (`dataset_manifest.md`),
+and the finding is derived from Arshdeep's own scripts. So RQ2's L1 baseline **is** that official
+artifact.
+
+**Therefore the project's P0 adopts the "published" convention: keep the LOWEST-L1 filters.**
+Implemented as `research_pruning.taylor.p0_importance(convs, convention="published")` = `-L1`, so
+`keep_topk` keeps the low-L1 channels; `P0_CONVENTION = "published"` is the default. `"standard"`
+(keep highest-L1, Li et al. 2017) is retained only for a hypothetical non-Arshdeep baseline and
+must not be used for RQ2. `p0_l1_magnitude` (raw magnitudes) is unchanged.
+
+**Verified:** `scripts/research/verify_p0_convention.py` — on the real base `(1,2,3,5)` U-Net,
+`keep_topk(p0_importance("published"), k)` reproduces the published kept-set **exactly on 12/12
+ranking-driven pruned layers**, and `"standard"` is disjoint from it. Control-model coverage:
+`tests/research/test_taylor_saliency.py::C8`. Recorded in the ledger (DECISION-M3B-002).
+
+## Reproduce
+
+1. `.venv/bin/python scripts/research/verify_l1_direction.py` (the finding: Spearman −1, 15/15).
+2. `.venv/bin/python scripts/research/verify_p0_convention.py` (the adopted convention reproduces
+   the published kept-set 12/12).
+
+Still open for Arshdeep (informational, does not gate the project): confirm whether the inverted
+direction was intentional, so the paper can describe the baseline accurately.
