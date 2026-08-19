@@ -9,5 +9,15 @@ is the M3B/M4 scientific run, blocked until the pilot protocol is frozen. P1 is
 scientifically load-bearing; this path must pass `/auditar` before any real use.
 """
 from .criteria import Criteria, compute_criteria
+from .overlap import (
+    LayerOverlap, GateBResult, kept_set_overlap, weighted_overlap,
+    weighted_adjusted, evaluate_gate_b,
+    GATE_B_WEIGHTED_MAX, GATE_B_LAYER_MAX, GATE_B_MIN_LAYERS,
+)
 
-__all__ = ["Criteria", "compute_criteria"]
+__all__ = [
+    "Criteria", "compute_criteria",
+    "LayerOverlap", "GateBResult", "kept_set_overlap", "weighted_overlap",
+    "weighted_adjusted", "evaluate_gate_b",
+    "GATE_B_WEIGHTED_MAX", "GATE_B_LAYER_MAX", "GATE_B_MIN_LAYERS",
+]

@@ -27,13 +27,35 @@ to continue from this file alone, without any prior chat history.
 > `scripts/research/verify_l1_direction.py`. Open for Arshdeep only: confirm intentionality
 > for paper wording (non-gating).
 >
+> ## ⚠ GATE B AMENDED — 2026-08-19 (DECISION-M3B-003 / M3B-003)
+>
+> The master plan's Gate B was **infeasible as written** (audit finding G1): at the
+> `(1,2,3,1)` budget each ranking-driven layer prunes 768 of 960 channels, so prune-set
+> overlap is confined to `[0.75, 1.0]` with chance at `0.80` — its `<= 0.70` condition was
+> mathematically impossible, and the draft protocol carried two contradictory overlap
+> definitions (finding G2). **DECIDED (Gabriel, option (a)):** the single definition is the
+> **KEPT set**, and the plan's numerals transfer verbatim — **Gate B PASS = weighted
+> kept-set overlap `<= 0.80` AND `>= 2` ranking-driven layers `<= 0.70`** (chance `0.20`,
+> full `[0,1]` range). Prune-set overlap is reported only, never the gate. Geometry
+> re-derived from the real artifact: `scripts/research/verify_gate_b_geometry.py` (12
+> ranking-driven layers, all N=960/k=192/p=768, floor 0.75 on every one).
+> **Also decided:** `p0_importance('standard')` is reported as a **secondary reference**
+> beside the primary published/inverted P0, because P1/P2/P3 keep the highest-saliency
+> channels while P0 keeps the lowest-L1 ones; comparisons must be worded "vs the published
+> L1 pruning artifact", never "vs standard L1".
+> **Statistic implemented:** `research_pruning/paired_modality/overlap.py`
+> (`evaluate_gate_b`), control-tested O1–O6 in `tests/research/test_overlap_gate_b.py`.
+> Suite now **12/12 modules PASS**. Nothing evaluated on real saliencies.
+> **Consequence: the pilot protocol's only remaining freeze prerequisite is the GPU
+> benchmark (`T_sal`/`T_fwd`) plus Compute Gate CG.** Every decision blocker is cleared.
+>
 > ## STATUS UPDATE — 2026-08-19 autonomous night run (supersedes stale sections below)
 >
 > Sections §5 (M1), §6 (M2), §12 below were written 2026-08-18 and are **stale**.
 > Trust the bounded state block at the top of `PROGRESS.md` and
 > `docs/experiment_ledger.md`. Prior context: M2 COMPLETE; M3A machinery COMPLETE
 > (M3-000/001/002); M3B Gate B "infeasible as written" (ledger AUDIT-M3-002, finding
-> G1 needs Gabriel); M1 scaffold recovered+audited (`docs/m1_scaffold_audit.md`).
+> G1 — RESOLVED 2026-08-19 by DECISION-M3B-003, see the block above); M1 scaffold recovered+audited (`docs/m1_scaffold_audit.md`).
 >
 > **This night run (Gabriel authorised autonomous work ~00:30→08:30 Montevideo, across
 > the 05:28 token-window renewal; a detached daemon `artifacts/auto_resume/` relaunches
@@ -54,11 +76,12 @@ to continue from this file alone, without any prior chat history.
 > * **M1 GPU acceptance / GPU benchmark run / M3 pilot / M4 gen / M5 recovery** — need a GPU
 >   (none attached). Run `gpu_benchmark.py` first, populate `compute_budget.md`, resolve CG.
 > * **Real P0-P3 saliency on the base model** — this IS the M3B/M4 scientific run: blocked
->   until `pilot_protocol.md` is frozen (needs GPU T_sal/T_fwd) AND Gabriel decides the
->   Gate-B amendment (finding G1). P1 is scientifically load-bearing → **must pass `/auditar`
+>   until `pilot_protocol.md` is frozen (needs GPU T_sal/T_fwd; the Gate-B amendment is no
+>   longer pending — DECISION-M3B-003). P1 is scientifically load-bearing → **must pass `/auditar`
 >   before any real use.** Machinery + layer set are ready; only the slot construction,
 >   real audio/text loss closures, and the run itself remain.
-> * **pilot_protocol freeze** — needs the GPU benchmark numbers + Gabriel's Gate-B decision.
+> * **pilot_protocol freeze** — now needs ONLY the GPU benchmark numbers (+ Compute Gate CG);
+>   the Gate-B decision was made and implemented on 2026-08-19 (DECISION-M3B-003).
 >
 > **If you are the 05:30 resume:** the CPU-implementable queue is EXHAUSTED. Do NOT start any
 > blocked item above. Do a genuinely useful, safe pass instead: re-run the full suite, verify

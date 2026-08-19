@@ -216,6 +216,36 @@ Proof for each seam: `scripts/research/verify_l1_bitexact.py` →
 
 ## M3B saliency disagreement
 
+* **P0 / L1 baseline convention (DECIDED and pre-registered — DECISION-M3B-002,
+  2026-08-19).** RQ2's L1 baseline **is** Arshdeep's official published pruning
+  artifact (Zenodo 21376822), and that artifact keeps, per pruned layer, the
+  **LOWEST**-L1 conv filters — inverted from standard L1 magnitude pruning
+  (verified 4 ways; write-up
+  `docs/m0_baseline_reproduction/l1_pruning_direction_finding.md`). The project
+  therefore adopts the published inverted convention: **P0 keeps the lowest-L1
+  channels**, via `research_pruning.taylor.p0_importance(convs,
+  convention="published")` (= `-L1`, so `keep_topk` keeps the low-L1 set); module
+  default `P0_CONVENTION = "published"`. Verified on the real base `(1,2,3,5)`
+  U-Net to reproduce the published kept-set **exactly on 12/12 ranking-driven
+  layers** (`scripts/research/verify_p0_convention.py`; control test
+  `test_taylor_saliency.py::C8`). `"standard"` (keep-highest-L1, Li et al. 2017)
+  is retained in code for non-Arshdeep baselines and is **not** the RQ2 baseline.
+* **P0-standard as a SECONDARY reference (DECIDED, Gabriel 2026-08-19).** In addition
+  to the primary P0-published baseline, the run also computes and reports
+  `p0_importance(convs, convention="standard")` (keep-highest-L1) as a **secondary
+  reference point**, so RQ2 can separate "beats the published artifact" from "beats a
+  competently-directed L1 criterion". This does not change the pre-registered primary
+  baseline and costs no extra compute (same per-channel L1, opposite sign). Both
+  numbers are reported side by side; the gate decision uses the primary.
+* **Direction asymmetry — mandatory reporting constraint.** P1/P2/P3 keep the
+  channels of **highest** Taylor saliency (most important by their own criterion),
+  while P0 as pre-registered above keeps the channels of **lowest** L1 magnitude.
+  A P1/P2/P3-vs-P0 margin therefore confounds criterion *direction* with criterion
+  *quality*. Every reported comparison must be worded "vs the published L1 pruning
+  artifact", never "vs standard L1 magnitude pruning", and must carry this
+  asymmetry in the caption/caveat. This constrains RQ2 wording in
+  `docs/claims_matrix.md`; it does not change the pre-registered baseline.
+
 * **Target prune tail (PROPOSAL):** the channels actually removed at the
   `(1,2,3,1)` budget, per layer. The per-layer kept count `k_l` comes from the
   pruned U-Net's target **shapes** (built from the frozen config with
@@ -233,13 +263,37 @@ Proof for each seam: `scripts/research/verify_l1_bitexact.py` →
   over this same layer set with the same per-layer channel counts, or the
   comparison against L1 is not structure-matched. Evidence:
   `docs/m0_baseline_reproduction/public_artifact_inventory.md`.
-* **Weighted overlap calculation (PROPOSAL):** for each targeted layer `l` with
-  `p_l` pruned channels, let `S_a^l`, `S_t^l` be the bottom-`p_l` channels by
-  audio/text saliency. `overlap_l = |S_a^l ∩ S_t^l| / p_l`. Weighted overlap =
-  `sum_l p_l * overlap_l / sum_l p_l`. Report per-layer overlaps and the weighted
-  aggregate; global Spearman is secondary.
-* Gate B PASS requires weighted prune-set overlap `<= 0.80` and at least two key
-  prunable layers with overlap `<= 0.70`.
+* **Weighted overlap calculation (AMENDED and pre-registered — DECISION-M3B-003,
+  2026-08-19; resolves audit findings G1 and G2).** There is now exactly ONE overlap
+  definition: the **KEPT set**. For each ranking-driven layer `l` with `k_l` kept
+  channels out of `N_l`, let `K_a^l`, `K_t^l` be the top-`k_l` channels by audio and
+  text saliency. Then
+
+  ```text
+  overlap_l        = |K_a^l ∩ K_t^l| / k_l                    in [0, 1]
+  weighted overlap = sum_l k_l * overlap_l / sum_l k_l
+  chance_l         = k_l / N_l                                (= 0.20 at 192/960)
+  adjusted_l       = (overlap_l - chance_l) / (1 - chance_l)  (0 at chance, 1 at identity)
+  ```
+
+  Report per-layer overlaps, the weighted aggregate, and the chance-adjusted values;
+  global Spearman is secondary. The equivalent prune-set number may be reported for
+  transparency via the exact identity `prune_overlap_l = (N_l - 2*k_l + |K_a ∩ K_t|) / p_l`
+  (at 960/192/768: `(576 + I)/768`), but it is **never** the gate.
+* **Gate B PASS (AMENDED — DECISION-M3B-003) requires weighted KEPT-set overlap
+  `<= 0.80` AND at least two ranking-driven layers with kept-set overlap `<= 0.70`.**
+
+  *Why amended.* The master plan states these two numerals against the **prune-set**
+  overlap. At the `(1,2,3,1)` budget each ranking-driven layer prunes `p = 768` of
+  `N = 960` channels, so prune-set overlap is confined to `[0.75, 1.0]` by pigeonhole
+  (`(2p - N)/p = 0.75`) with chance at `p/N = 0.80`. Under that reading condition 1
+  demanded "no more agreement than pure chance" and condition 2 (`<= 0.70`) was
+  **mathematically impossible** — Gate B could never PASS. Full derivation: ledger
+  `AUDIT-M3-002`, finding G1. Gabriel's amendment (option (a), 2026-08-19) transfers the
+  plan's numerals verbatim onto the kept-set definition, where the range is the full
+  `[0, 1]` and chance is `0.20`; the gate then fails only if the two modalities agree on
+  `>= 80%` of the kept channels. The draft previously carried BOTH definitions in
+  adjacent bullets (finding G2); the prune-set one is now deleted as a gate object.
 
 ## Frozen identifiers
 
