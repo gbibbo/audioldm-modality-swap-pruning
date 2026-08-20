@@ -117,7 +117,7 @@ def build_eval_slots(config, W, K, device, vae, clap, scale_factor, schedule):
             e_ts.append(clap_embed(clap, [chosen[i]["caption"]], "text").squeeze(0).cpu())
 
     tgen = np.random.default_rng(MASTER_SEED + 2)  # eval timesteps (distinct sub-seed)
-    z_t, t_list, e_a_list, e_t_list, wav_idx = [], [], [], [], []
+    z_t, t_list, e_a_list, e_t_list, wav_idx, stratum_idx = [], [], [], [], [], []
     for w in range(len(chosen)):
         z0 = z0s[w]
         for k, (lo, hi) in enumerate(STRATA[:K]):
@@ -129,11 +129,14 @@ def build_eval_slots(config, W, K, device, vae, clap, scale_factor, schedule):
             e_a_list.append(e_as[w])
             e_t_list.append(e_ts[w])
             wav_idx.append(w)
+            stratum_idx.append(k)
     return {
         "z_t": torch.stack(z_t), "t": torch.tensor(t_list, dtype=torch.long),
         "e_a": torch.stack(e_a_list), "e_t": torch.stack(e_t_list),
-        "wav_idx": np.array(wav_idx), "W": len(chosen), "K": K,
+        "wav_idx": np.array(wav_idx), "stratum_idx": np.array(stratum_idx),
+        "W": len(chosen), "K": K,
         "wav_ids": [c["wav"] for c in chosen],
+        "captions": [c["caption"] for c in chosen],
     }
 
 
@@ -161,6 +164,148 @@ def per_wav_diag(eps_Fa, eps_Ft, eps_Pa, eps_Pt, wav_idx, W, K):
     return dgen_w / cnt, rmod_w / cnt
 
 
+def d1_signed_per_stratum(eps_Fa, eps_Ft, eps_Pa, eps_Pt, stratum_idx, K):
+    """D1: SIGNED modality asymmetry, overall and per timestep stratum.
+
+    `signed = ||E_a|| - ||E_t||` (positive = the audio-conditioned prediction is damaged
+    more than the text-conditioned one). Reported with `norm_E_a`, `norm_E_t`, `R_mod`
+    per stratum, so DECISION-V4-05's D1 can say 'not supported' (signed ≈ 0 everywhere)
+    vs 'not detectable at this budget' (large stratum variance / wide CI).
+    """
+    d = modality_diagnostics(eps_Fa, eps_Ft, eps_Pa, eps_Pt)
+    na = d["norm_E_a"].numpy(); nt = d["norm_E_t"].numpy(); rmod = d["R_mod"].numpy()
+    signed = na - nt
+    out = {"overall": {"norm_E_a": float(na.mean()), "norm_E_t": float(nt.mean()),
+                       "signed_a_minus_t": float(signed.mean()), "R_mod": float(rmod.mean())},
+           "per_stratum": {}}
+    stratum_idx = np.asarray(stratum_idx)
+    for k in range(K):
+        m = stratum_idx == k
+        if not m.any():
+            continue
+        out["per_stratum"][int(k)] = {
+            "norm_E_a": float(na[m].mean()), "norm_E_t": float(nt[m].mean()),
+            "signed_a_minus_t": float(signed[m].mean()), "R_mod": float(rmod[m].mean()),
+            "n_slots": int(m.sum()),
+        }
+    return out
+
+
+# ---------------------------------------------------------------- H-guidance conditioning
+def template_text(alias: str) -> str:
+    """Canonical H-guidance template c_tmpl(e) = 'a sound of [alias]' (plan §3)."""
+    return f"a sound of {alias}"
+
+
+def only_event_text(alias: str) -> str:
+    """c_only_e = the alias phrase alone (plan §3, second contrast)."""
+    return alias
+
+
+def counterfactual_without(caption: str, aliases) -> str:
+    """c_without_e = caption with the strict-map span(s) of the event deleted.
+
+    Frozen deletion rule: remove every whole-word match of any alias (case-insensitive),
+    then collapse the whitespace and strip. For single-requested-event captions this
+    tends toward the unconditional (plan §3: c_without_e ≡ unconditional there).
+    """
+    import re
+    out = caption
+    for a in sorted(aliases, key=len, reverse=True):
+        out = re.sub(r"\b" + re.escape(a) + r"\b", " ", out, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", out).strip()
+
+
+@torch.no_grad()
+def eps_under_text(unet, slots, device, batch, text_emb):
+    """eps_pred for every slot under ONE fixed text embedding [1,512] (broadcast)."""
+    S = slots["z_t"].shape[0]
+    y1 = text_emb.reshape(1, 1, 512)
+    out = []
+    for i in range(0, S, batch):
+        z = slots["z_t"][i:i+batch].to(device)
+        t = slots["t"][i:i+batch].to(device)
+        b = z.shape[0]
+        y = y1.expand(b, 1, 512).to(device)
+        out.append(eps_pred(unet, z, t, y).cpu())
+    return torch.cat(out, dim=0)
+
+
+def guidance_norm(eps_cond, eps_uncond):
+    """Per-slot ||eps(cond) - eps(uncond)|| (the guidance direction magnitude) -> [S]."""
+    return (eps_cond - eps_uncond).reshape(eps_cond.shape[0], -1).norm(p=2, dim=1)
+
+
+SYNONYMS_STRICT = "configs/research/event_synonyms_strict.json"
+
+
+def _find_requested_event(caption, strict_map):
+    """First event whose strict alias appears (whole-word) in the caption -> (name, aliases)."""
+    import re
+    cap = caption.lower()
+    for mid, rec in strict_map["events"].items():
+        for a in rec["aliases"]:
+            if re.search(r"\b" + re.escape(a) + r"\b", cap):
+                return rec["display_name"].split(",")[0].strip(), rec["aliases"]
+    return None, None
+
+
+@torch.no_grad()
+def guidance_probe(full, slots, clap, device, batch):
+    """Validate the §3 H-guidance conditioning paths on the FULL model.
+
+    Uses the first eval caption that contains a strictly-requested event. Computes, over
+    all slots, the guidance-direction norms for the template, the alias-only, and the
+    event-specific counterfactual contrasts vs the unconditional (empty-string). This is
+    a path-validation probe (broadcast one text over all slots); the real Tier-1 covariate
+    is per-occurrence and adds the pruned model's ΔG_P.
+    """
+    import os
+    if not os.path.exists(SYNONYMS_STRICT):
+        return {"error": f"missing {SYNONYMS_STRICT} (run build_v4_manifests.py / Q2)"}
+    strict_map = json.load(open(SYNONYMS_STRICT))
+
+    event, aliases, caption = None, None, None
+    for cap in slots["captions"]:
+        event, aliases = _find_requested_event(cap, strict_map)
+        if event:
+            caption = cap
+            break
+    fallback = event is None
+    if fallback:
+        # no requested event in this (small) subset: still exercise every conditioning
+        # path with a generic template so the dry-run validates them; the counterfactual
+        # deletes nothing (c_without == caption).
+        caption = slots["captions"][0]
+        aliases = ["sound"]
+        event = "(fallback: none requested)"
+
+    alias = aliases[0]
+    c_tmpl = template_text(alias)
+    c_only = only_event_text(alias)
+    c_without = counterfactual_without(caption, aliases)
+
+    def emb(text):
+        return clap_embed(clap, [text], "text").reshape(1, 512).cpu()
+
+    e_uncond = emb("")
+    eps_uncond = eps_under_text(full, slots, device, batch, e_uncond)
+    eps_tmpl = eps_under_text(full, slots, device, batch, emb(c_tmpl))
+    eps_only = eps_under_text(full, slots, device, batch, emb(c_only))
+    eps_full_cap = eps_under_text(full, slots, device, batch, emb(caption))
+    eps_without = eps_under_text(full, slots, device, batch, emb(c_without))
+
+    return {
+        "event": event, "alias": alias, "caption": caption, "fallback": fallback,
+        "c_tmpl": c_tmpl, "c_only": c_only, "c_without_e": c_without,
+        "G_tmpl_F": float(guidance_norm(eps_tmpl, eps_uncond).mean()),
+        "G_only_F": float(guidance_norm(eps_only, eps_uncond).mean()),
+        "G_event_F": float(guidance_norm(eps_full_cap, eps_without).mean()),
+        "G_caption_F": float(guidance_norm(eps_full_cap, eps_uncond).mean()),
+        "n_slots": int(slots["z_t"].shape[0]),
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n-eval", type=int, default=200)
@@ -172,6 +317,9 @@ def main() -> int:
     ap.add_argument("--expect-gpu", default=None)
     ap.add_argument("--allow-dirty", action="store_true")
     ap.add_argument("--dry-run-cpu", action="store_true")
+    ap.add_argument("--guidance-probe", action="store_true",
+                    help="also compute H-guidance template/counterfactual norms on the full "
+                         "model (validates the §3 conditioning paths; always on in dry-run)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     if args.dry_run_cpu and args.out:
@@ -205,6 +353,13 @@ def main() -> int:
     eps_Fa = eps_for_model(full, slots, device, args.batch, slots["e_a"])
     eps_Ft = eps_for_model(full, slots, device, args.batch, slots["e_t"])
     result["eps_full_s"] = time.perf_counter() - t1
+
+    # H-guidance conditioning probe (template + counterfactual) on the full model
+    if args.guidance_probe or args.dry_run_cpu:
+        tg = time.perf_counter()
+        result["guidance_probe"] = guidance_probe(full, slots, clap, device, args.batch)
+        result["guidance_probe_s"] = time.perf_counter() - tg
+
     del full
     if device.type == "cuda":
         torch.cuda.empty_cache()
@@ -216,18 +371,22 @@ def main() -> int:
     base_unet_sd = {k[len("model.diffusion_model."):]: v for k, v in base_sd.items()
                     if k.startswith("model.diffusion_model.")}
 
-    def diag_for_ranking(rk):
+    def diag_for_ranking(rk, return_eps=False):
         m = materialize(base_unet_sd, rk, config).to(device).eval()
         pa = eps_for_model(m, slots, device, args.batch, slots["e_a"])
         pt = eps_for_model(m, slots, device, args.batch, slots["e_t"])
         del m
         if device.type == "cuda":
             torch.cuda.empty_cache()
-        return per_wav_diag(eps_Fa, eps_Ft, pa, pt, slots["wav_idx"], W, K)
+        dgen, rmod = per_wav_diag(eps_Fa, eps_Ft, pa, pt, slots["wav_idx"], W, K)
+        if return_eps:
+            return dgen, rmod, pa, pt
+        return dgen, rmod
 
-    # L1 (published pruning artifact)
+    # L1 (published pruning artifact) — also compute the D1 signed asymmetry
     t2 = time.perf_counter()
-    l1_dgen, l1_rmod = diag_for_ranking(ranking)
+    l1_dgen, l1_rmod, l1_pa, l1_pt = diag_for_ranking(ranking, return_eps=True)
+    result["D1"] = d1_signed_per_stratum(eps_Fa, eps_Ft, l1_pa, l1_pt, slots["stratum_idx"], K)
     # 20 pre-registered random masks
     rand_dgen, rand_rmod = [], []
     seeds = PREREGISTERED_SEEDS[:args.n_masks]
