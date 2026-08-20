@@ -25,7 +25,12 @@ class ChannelGate(nn.Module):
         if not isinstance(base, nn.Conv2d):
             raise TypeError("ChannelGate wraps nn.Conv2d only")
         self.base = base
-        self.gate = nn.Parameter(torch.ones(base.out_channels))
+        # Create the gate on the SAME device/dtype as the wrapped conv. If the model is
+        # already on CUDA when gates are attached, a default-device (CPU) parameter would
+        # make `self.base(x) * self.gate` a cross-device op (the same failure class as the
+        # F9 LoRA-adapter bug). A CPU dry-run cannot catch this — both sides are CPU there.
+        self.gate = nn.Parameter(torch.ones(
+            base.out_channels, device=base.weight.device, dtype=base.weight.dtype))
 
     def forward(self, x):
         return self.base(x) * self.gate.view(1, -1, 1, 1)
