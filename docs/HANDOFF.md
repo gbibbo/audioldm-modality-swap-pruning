@@ -9,6 +9,9 @@ to continue from this file alone, without any prior chat history.
 
 > ## ⚠ READ FIRST — PLAN V4 REFRAMING PENDING GABRIEL'S DECISIONS (2026-08-20 14:00)
 >
+> **Start with `docs/NEXT_SESSION.md`** (reading order, decision sheet
+> `docs/decisions/DECISION-V4_pending.md` with recommended defaults, CPU queue Q1–Q7).
+>
 > **Everything below this block is historical context (2026-08-18/19). The current state
 > is:**
 >
