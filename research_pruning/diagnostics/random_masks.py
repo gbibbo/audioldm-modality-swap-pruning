@@ -194,11 +194,25 @@ def prune_with_indices(old_sd, new_sd, idx_dict, layer_map):
     return pruned_sd
 
 
-def build_pruned_unet(config: dict) -> UNetModel:
-    """UNetModel at the (1,2,3,1) budget, from the frozen config."""
+def build_pruned_unet(config: dict, channel_mult=None) -> UNetModel:
+    """UNetModel at a pruned budget, from the frozen config.
+
+    `channel_mult` defaults to the published `(1,2,3,1)` budget (so every existing
+    caller, and the R5 bit-exact golden path, is unchanged). Pass e.g. `[1,2,3,4]` for
+    the mild-budget saturation control (317.308 M params, DECISION-V4-04). NOTE: the
+    artifact-faithful LAYER_MAP seam corrections reproduce the published `(1,2,3,1)`
+    checkpoint only; at other budgets `materialize` still produces a valid strict-loading
+    structured-pruned model, but there is no published artifact to match bit-for-bit.
+    """
     params = copy.deepcopy(config["model"]["params"]["unet_config"]["params"])
-    params["channel_mult"] = list(PRUNED_CHANNEL_MULT)
+    params["channel_mult"] = list(PRUNED_CHANNEL_MULT if channel_mult is None else channel_mult)
     return UNetModel(**params)
+
+
+def count_pruned_params(config: dict, channel_mult=None) -> int:
+    """Total parameter count of the U-Net at the given budget (145.673.864 at (1,2,3,1);
+    317.308.040 at (1,2,3,4))."""
+    return sum(p.numel() for p in build_pruned_unet(config, channel_mult).parameters())
 
 
 def base_unet_state_dict(base_ckpt: str) -> dict:
@@ -221,13 +235,13 @@ def ranking_full_lengths(l1_ranking: dict) -> dict:
     return {k: len(v) for k, v in l1_ranking.items()}
 
 
-def kept_counts(config: dict, ranked_layers) -> dict:
+def kept_counts(config: dict, ranked_layers, channel_mult=None) -> dict:
     """Per-layer k (channels kept in the OUTPUT dim), from the pruned target shapes."""
-    tsd = build_pruned_unet(config).state_dict()
+    tsd = build_pruned_unet(config, channel_mult).state_dict()
     return {k: int(tsd[k].shape[0]) for k in ranked_layers if k in tsd}
 
 
-def ranking_driven_layers(config: dict, l1_ranking: dict) -> list[str]:
+def ranking_driven_layers(config: dict, l1_ranking: dict, channel_mult=None) -> list[str]:
     """The layers whose OUTPUT rows are actually selected by the ranking (out=perm[:k]
     with k<full) under the artifact-faithful LAYER_MAP.
 
@@ -236,7 +250,7 @@ def ranking_driven_layers(config: dict, l1_ranking: dict) -> list[str]:
     This is also the set over which M3B's prune-tail overlap competes. Excludes the
     3 positional-out seams (output_blocks.0/1/2.0.in_layers.2.weight).
     """
-    counts = kept_counts(config, list(l1_ranking.keys()))
+    counts = kept_counts(config, list(l1_ranking.keys()), channel_mult)
     full = ranking_full_lengths(l1_ranking)
     out = []
     for k in l1_ranking:
@@ -255,9 +269,11 @@ def random_ranking(seed: int, full_lengths: dict) -> dict:
     return {k: torch.randperm(n, generator=g).tolist() for k, n in full_lengths.items()}
 
 
-def materialize(base_sd: dict, ranking: dict, config: dict) -> UNetModel:
-    """Build the (1,2,3,1) U-Net and load the structurally-pruned base weights."""
-    model = build_pruned_unet(config)
+def materialize(base_sd: dict, ranking: dict, config: dict, channel_mult=None) -> UNetModel:
+    """Build the pruned U-Net (default (1,2,3,1)) and load the structurally-pruned base
+    weights. At non-default budgets the same LAYER_MAP + positional-fallback rules apply;
+    the model strict-loads but matches no published artifact (none exists)."""
+    model = build_pruned_unet(config, channel_mult)
     target_sd = model.state_dict()
     pruned_sd = prune_with_indices(base_sd, target_sd, ranking, LAYER_MAP)
     model.load_state_dict(pruned_sd, strict=True)  # raises if any key missing/misshaped
@@ -293,10 +309,10 @@ def masks_sha256(rankings: list[dict]) -> str:
     return h.hexdigest()
 
 
-def build_random_null(config: dict, l1_ranking: dict, seeds=PREREGISTERED_SEEDS):
+def build_random_null(config: dict, l1_ranking: dict, seeds=PREREGISTERED_SEEDS, channel_mult=None):
     """Return (list of 20 random rankings, kept_counts, sha256 of the mask set)."""
     full = ranking_full_lengths(l1_ranking)
-    counts = kept_counts(config, list(l1_ranking.keys()))
+    counts = kept_counts(config, list(l1_ranking.keys()), channel_mult)
     rankings = [random_ranking(s, full) for s in seeds]
     sha = masks_sha256(rankings)
     return rankings, counts, sha
