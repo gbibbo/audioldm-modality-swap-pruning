@@ -161,8 +161,11 @@ def precompute_per_example(dataset, manifest_slots, clap, vae, scale_factor, dev
         wav = sample["waveform"]
         if wav.dim() == 1:
             wav = wav.unsqueeze(0)
-        wav = wav.unsqueeze(0).float()  # [1,1,T]
-        mel = sample["log_mel_spec"].unsqueeze(0).unsqueeze(0).float()  # [1,1,1024,64]
+        # Data comes off the dataloader on CPU; vae/clap are on `device`. Move the inputs
+        # to `device` before encoding (a CPU dry-run cannot catch this mismatch — both
+        # sides are CPU there — so it must be handled explicitly for the GPU run).
+        wav = wav.unsqueeze(0).float().to(device)  # [1,1,T]
+        mel = sample["log_mel_spec"].unsqueeze(0).unsqueeze(0).float().to(device)  # [1,1,1024,64]
         z0 = vae_encode(vae, mel, scale_factor)  # [1,C,H,W]
         e_a = clap_embed(clap, wav, "audio")  # [1,1,T] -> [1,1,512]
         e_t = clap_embed(clap, [slot["caption"]], "text")
@@ -297,16 +300,24 @@ def main() -> int:
     result["saliency_s"] = time.perf_counter() - t2
     result["budget_grad_evals"] = crit.budget_grad_evals
 
+    # Move every saliency to CPU before the downstream Gate B / keep_topk / save logic,
+    # which was only ever exercised on CPU (topk/set-overlap on device tensors is an
+    # untested path). Do this on the raw Criteria fields so everything below is CPU.
+    def _cpu(d):
+        return {k: v.detach().cpu() for k, v in d.items()}
+    p1_c, p2_c, p3_c = _cpu(crit.p1), _cpu(crit.p2), _cpu(crit.p3)
+    s_a_c, s_t_c = _cpu(crit.s_audio_norm), _cpu(crit.s_text_norm)
+
     # --- P0 (data-free) ---
-    p0_pub = normalize_within_layer(p0_importance(convs, convention="published"), NORM_MODE)
-    p0_l1 = normalize_within_layer(p0_importance(convs, convention="standard"), NORM_MODE)
+    p0_pub = _cpu(normalize_within_layer(p0_importance(convs, convention="published"), NORM_MODE))
+    p0_l1 = _cpu(normalize_within_layer(p0_importance(convs, convention="standard"), NORM_MODE))
 
     # --- Gate B on S_a vs S_t over the 12 ranking-driven layers ---
     rd_layers = ranking_driven_layers(config, ranking)
     kcounts = kept_counts(config, rd_layers)
     fulllen = {k: ranking_full_lengths(ranking)[k] for k in rd_layers}
     gate_b = evaluate_gate_b(
-        to_weightkey(crit.s_audio_norm), to_weightkey(crit.s_text_norm),
+        to_weightkey(s_a_c), to_weightkey(s_t_c),
         k_per_layer=kcounts, n_per_layer=fulllen, layers=rd_layers,
     )
     result["gate_b"] = {
@@ -324,18 +335,19 @@ def main() -> int:
 
     # --- persist saliency tensors + kept-sets for M4 materialization ---
     if args.save_saliency:
+        kc_all = kept_counts(config, list(ranking))
         ksets = {
-            "P0_published": keep_topk(to_weightkey(p0_pub), kept_counts(config, list(ranking))),
-            "P1": keep_topk(to_weightkey(crit.p1), kept_counts(config, list(ranking))),
-            "P2": keep_topk(to_weightkey(crit.p2), kept_counts(config, list(ranking))),
-            "P3": keep_topk(to_weightkey(crit.p3), kept_counts(config, list(ranking))),
+            "P0_published": keep_topk(to_weightkey(p0_pub), kc_all),
+            "P1": keep_topk(to_weightkey(p1_c), kc_all),
+            "P2": keep_topk(to_weightkey(p2_c), kc_all),
+            "P3": keep_topk(to_weightkey(p3_c), kc_all),
         }
         torch.save({
             "saliency": {
                 "P0_published": to_weightkey(p0_pub), "P0_L1": to_weightkey(p0_l1),
-                "P1": to_weightkey(crit.p1), "P2": to_weightkey(crit.p2), "P3": to_weightkey(crit.p3),
-                "S_audio_norm": to_weightkey(crit.s_audio_norm),
-                "S_text_norm": to_weightkey(crit.s_text_norm),
+                "P1": to_weightkey(p1_c), "P2": to_weightkey(p2_c), "P3": to_weightkey(p3_c),
+                "S_audio_norm": to_weightkey(s_a_c),
+                "S_text_norm": to_weightkey(s_t_c),
             },
             "kept_sets": ksets,
             "provenance": {k: result.get(k) for k in ("git", "manifest_sha256", "master_seed", "E", "K")},

@@ -33,7 +33,8 @@ def accumulate_taylor(gates: Dict[str, ChannelGate],
     `loss_fn(slot)` must run the gated model and return a scalar loss whose graph
     reaches the gates. Gate grads are zeroed before each slot's backward.
     """
-    accum: LayerSaliency = {name: torch.zeros(g.gate.numel()) for name, g in gates.items()}
+    accum: LayerSaliency = {name: torch.zeros(g.gate.numel(), device=g.gate.device)
+                            for name, g in gates.items()}
     n = 0
     for slot in slots:
         zero_gate_grads(gates)
