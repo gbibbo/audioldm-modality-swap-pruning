@@ -1,4 +1,4 @@
-# Master plan v4 — DRAFT rc2 (2026-08-20)
+# Master plan v4 — DRAFT rc3 (2026-08-20)
 
 **Status: DRAFT. `docs/master_plan_v3.md` remains the execution contract until Gabriel
 records DECISION-V4-00 (adopt v4) in `docs/experiment_ledger.md`.** Everything v3 says
@@ -6,7 +6,9 @@ about provenance, Git discipline, the CPU-Studio/GPU-Job policy, frozen SHAs, an
 "negative results are valid" carries over unchanged. This draft replaces v3 §1–§2
 (framing, RQs), §4–§6 (criteria, budget contract, timestep protocol — kept as machinery,
 re-purposed), and M3–M7; it is the product of the two-reviewer audit recorded in
-`docs/review/2026-08-20_reframing_round{1,2,3}.md`.
+`docs/review/2026-08-20_reframing_round{1,2,3,4}.md`.
+
+**rc2 → rc3 changelog (round 4 — identification layer):** H-guidance becomes an event-specific counterfactual (`c_full` vs `c_without_e`), not a whole-caption guidance norm; H-acoustic descriptors become event-specific (FineLAP-masked, fallback = single-label-clip subset, never whole-clip descriptors on multi-event clips); H-tail split into audio exposure vs calibration-caption exposure (P0 vs P1 contrast); Gate E needs `K_rand = 20` minimum (exact test, p_min = 1/(K+1)), a balanced sentinel panel, and a CPU power simulation as a Tier-1 prerequisite; RQ3′ gets a **P1-placebo** control; mechanism set and intervention holdout are disjoint at source-wav level; Gate I gets non-inferiority margins, a mechanism-general target-set rule, and rules for zero/multiple winning mechanisms; Tier 1 honestly re-costed (≈45 credits). Measured this round: 61 events have ≥200 strictly-requested captions; 22 697 train clips have exactly one requested event; 9 637 (19.5 %) have a single AudioSet label; strict aliases under-count "Speech" (1 882 requested vs 20 561 labelled).
 
 **rc1 → rc2 changelog (round 3):** Gate E moved out of Tier 0 (Tier 0 generates no RAND audio, so it cannot be evaluated there); Gate E null needs `K_rand ≥ 10` masks, not 2; Gate M re-specified as nested block likelihood-ratio tests; temporal occupancy measured with an evaluator independent of the outcome detector; two-level pre-registered synonym protocol derived from official AudioSet aliases; mild budget fixed from measured geometry `(1,2,3,4)` = −23.7 %; FAD/FD rule restated; seed-robustness check reuses the FAD 3-seed audio; Music-drift observation demoted to exploratory with an independent-evaluator control.
 
@@ -70,9 +72,9 @@ negative, reported in one paragraph).
 
 | Hypothesis | Prediction | Covariate (pre-registered, computed before any generation is inspected) |
 |---|---|---|
-| H-tail | per-event loss ↓ with exposure | primary: `log n_AudioCaps(event)` from `audiocaps_train_label.json` (49 502 clips; Speech 41.5 %, Siren 1.81 %, Gunshot 1.69 %, Drill 1.51 %, Explosion 0.47 %); secondary: `log n_AudioSet-unbalanced(event)` |
-| H-guidance | per-event loss ↑ with the event's guidance dependence and with pruning error in the guidance direction | `G_F(event) = E‖ε_F,c − ε_F,∅‖` on slots whose source clip contains the event; `ΔG_P(event) = E‖(ε_P,c−ε_P,∅) − (ε_F,c−ε_F,∅)‖`; both forward-only on the frozen slots |
-| H-acoustic | per-event loss tracks acoustic structure | onset strength, temporal occupancy, spectral flatness, spectral flux on the **reference** clip — fixed list, no post-hoc additions. **Occupancy must not be measured with the outcome detector (PANNs)** — circularity: an event PANNs handles poorly would look both low-occupancy and poorly captured. Primary estimator: frame-level text-audio grounding with an independent model (candidate **FineLAP**, arXiv 2604.01155, EAT + RoBERTa, code github.com/xiquan-li/FineLAP; public checkpoint **unconfirmed**), with the score→duration rule frozen before use; sensitivity: PANNs `Cnn14_DecisionLevelMax` framewise output. **If FineLAP fails a CPU validity smoke on known events, occupancy is dropped from the block rather than replaced at the last minute.** |
+| H-tail | per-event loss ↓ with exposure | **Two exposures, pre-registered separately:** (a) *audio exposure* = `log n_labelled(event)` in AudioCaps-train (`audiocaps_train_label.json`, 49 502 clips; Speech 41.5 %, Siren 1.81 %, Gunshot 1.69 %, Drill 1.51 %, Explosion 0.47 %) — what the model learned; (b) *calibration-caption exposure* = `log n_requested(event)` within the calibration pool under the strict map — what Taylor calibration protects. **Identification:** P0 uses no calibration, P1 does; a dependence on (b) that appears only in P1 is a calibration-sampling mechanism, a dependence on (a) shared by P0 and P1 is learned-representation forgetting. Sensitivity: `log n_AudioSet-unbalanced(event)`. Strict-map caveat: "Speech" has 1 882 strictly requested captions vs 20 561 labelled (captions say *talks/talking*); the expanded map must cover this family or it is excluded from the tail block. |
+| H-guidance | per-event loss ↑ with the event's *own* conditional contribution and with pruning error in that contribution | **Event-specific counterfactual, not the whole-caption guidance norm** (a caption "a dog barks while a siren sounds" must not credit the same `‖ε_c−ε_∅‖` to dog and siren). For occurrence `(p,e)`: `c_without_e` = caption with the strict-map span of `e` deleted by a frozen deletion rule; for single-requested-event captions (22 697 in train) `c_without_e` ≡ unconditional. `G_event,F(p,e) = ‖ε_F(c_full) − ε_F(c_without_e)‖`, `ΔG_event,P(p,e) = ‖[ε_P(c_full)−ε_P(c_without_e)] − [ε_F(c_full)−ε_F(c_without_e)]‖`, plus the relative form `ΔG/G_F`; second contrast `G_only,F = ‖ε_F(c_only_e) − ε_F(∅)‖` with `c_only_e` = the alias phrase alone. Same `z_t`, `t`, noise for every term; forward-only; text path already accepts arbitrary strings (`modality="text"`, `list[str]`). The whole-caption `G_F`/`ΔG_P` of rc2 are reported as secondary only. |
+| H-acoustic | per-event loss tracks acoustic structure | onset strength, temporal occupancy, spectral flatness, spectral flux — **computed event-specifically**: inside the FineLAP frame mask for `e` on the reference clip (mask rule frozen), or, if FineLAP fails its smoke, **only on the single-AudioSet-label clip subset** (9 637 train clips, 19.5 %), where whole-clip descriptors are event-specific by construction. Whole-clip descriptors on multi-event clips are never attributed to an event. Fixed list, no post-hoc additions. **Occupancy must not be measured with the outcome detector (PANNs)** — circularity: an event PANNs handles poorly would look both low-occupancy and poorly captured. Primary estimator: frame-level text-audio grounding with an independent model (candidate **FineLAP**, arXiv 2604.01155, EAT + RoBERTa, code github.com/xiquan-li/FineLAP; public checkpoint **unconfirmed**), with the score→duration rule frozen before use; sensitivity: PANNs `Cnn14_DecisionLevelMax` framewise output. **If FineLAP fails a CPU validity smoke on known events, occupancy is dropped from the block rather than replaced at the last minute.** |
 
 Descriptors and exposures are frozen in a manifest (`configs/research/event_covariates.json`, sha256 in the ledger) **before** any pruned-model generation is evaluated.
 
@@ -102,6 +104,12 @@ Descriptors and exposures are frozen in a manifest (`configs/research/event_cova
   grouping level for reporting, never the regression unit.
 * **Generic damage match.** As v3: random masks at the same architecture, `D_gen`
   matched by interpolation; `K_rand` per tier.
+* **Data partition (frozen at source-wav level, hashes in the ledger).** (1) *Calibration
+  pool* (natural + tail-enriched; train). (2) *Mechanism set*: prompts for Gate E / Gate M
+  (train clips disjoint from the calibration pool). (3) *Intervention holdout*: prompts and
+  source wavs disjoint from (1) and (2), **not inspected until the intervention criterion is
+  frozen**; Gate I runs only there. All train captions were seen by the generator during
+  pretraining — equally for every system, stated in the paper.
 * **Matched gradient budget.** As v3 §5; every calibration variant uses the same number
   of gradient evaluations.
 
@@ -146,10 +154,24 @@ P2/P3 are dropped (resolved negative; one sentence in the paper).
 * **Gate B′ (intervention changes the mask).** Kept-set overlap(P1-nat, P1-variant) falls
   below the 5th percentile of the null distribution of overlap(P1-half_i, P1-half_j)
   over ≥ 1000 natural splits of matched size and budget, computed from stored per-slot
-  saliency contributions. FAIL ⇒ RQ3′ dead before any generation (same discipline that
-  killed P2/P3).
-* **Gate I (intervention helps).** Tail-event recall improves (CI excludes 0) with no
-  significant head-event degradation and FAD/KL guardrails within a pre-set tolerance.
+  saliency contributions. Applied to **both** P1-mechanism and P1-placebo. FAIL ⇒ RQ3′
+  dead before any generation (same discipline that killed P2/P3).
+* **Mechanism → intervention rules (frozen).** No block wins ⇒ RQ3′ is not run. One block
+  wins ⇒ its variant. Several win ⇒ each variant must pass Gate B′; the variant of the
+  block with the larger LRT statistic goes to generation first; a combined variant only if
+  pre-specified here before Gate M is read.
+* **P1-placebo (mandatory control for novelty).** Same calibration-pool size, same
+  reweighting magnitude, same gradient budget, targeted at a set of events of the same
+  cardinality that the winning mechanism predicts **non-vulnerable**. Importance-Aware OBS
+  §4.4 already shows targeted calibration protects the targeted category; only
+  `P1-mech > P1-placebo` shows the *mechanism* carries information about what to protect.
+* **Gate I (intervention helps) — on the intervention holdout only.** Target set `T` =
+  events predicted vulnerable by the winning mechanism under a rule frozen before the
+  holdout is unblinded. PASS iff (i) target recall gain ≥ `δ_target` with 95 % CI excluding
+  0; (ii) **non-inferiority** on non-target events: CI lower bound of the recall change
+  > `−δ_harm`; (iii) FAD/FD/KL within pre-set margins vs P1-nat; (iv) `P1-mech − P1-placebo`
+  on `T` > 0 with CI excluding 0. Proposed values (to be fixed in DECISION-V4-07 before
+  unblinding): `δ_target = +5 pp`, `δ_harm = 2 pp`, FAD/FD relative +5 %, KL +0.05.
 
 ## 7. Compute — measured units and credit tiers
 
@@ -161,9 +183,10 @@ S=50**; saliency **0.222 s/backward**; diagnostic forward **≈0.059 s/sample**;
 | Tier | Content | Est. credits |
 |---|---|---|
 | **0 — closes v3 + screens v4** (fits current balance) | D1+D2 in one job: {base, P0-std, P0-pub, P1-nat, RAND×5} × 500 slots × {audio-cond, text-cond, uncond} forward (~0.35); Gate B′ saliency on enriched pool 512 ex × K=5 × 2 draws with per-slot storage (~0.5); event-level screening: 200 stratified prompts × {base, P0-std, P1-nat}, 1 seed (~1.5); smokes (~0.3) | **≈2.7** |
-| **1a — RQ1′/RQ2′ confirmatory** | 50 events × 20 prompts × {base, P0-std, P0-pub, P1-nat, mild P0-std, mild P1} (6 000 clips, 1 seed) + **RAND×10 × 300 prompts** (3 000 clips) for Gate E; FAD guardrail 3 seeds × 300 clips × 3 systems — **those seeds' audio is also scored for event recall as the seed-robustness check** (no extra cost) | ≈23 |
-| **1b — H-guidance CFG grid** | 3 CFG × {base, P0-std} × 300 prompts | ≈4.5 |
-| **1c — RQ3′ generation** | {P1-nat, P1-variant} × 1000 prompts (only if Gate B′ passes) | ≈5 |
+| **1a — RQ1′/RQ2′ confirmatory** | mechanism set: 50 events × 20 prompts × {base, P0-std, P0-pub, P1-nat, mild P0-std, mild P1} (6 000 clips, 1 seed); **Gate E sentinel panel** 20 events × 15 prompts (stratified by exposure × family) × **RAND×20** (6 000 clips); FAD guardrail 3 seeds × 300 clips × 3 systems (1 800 clips) — that audio is also scored for event recall as the seed-robustness check; counterfactual ε forwards for H-guidance are negligible | ≈33 |
+| **1b — H-guidance CFG grid** | 3 CFG × {base, P0-std} × 300 prompts (one CFG value coincides with 1a) | ≈3 |
+| **1c — RQ3′ generation** | intervention holdout 500 prompts × {base, P1-nat, P1-mech, P1-placebo} (2 000 clips; only if Gate B′ passes for P1-mech) | ≈5 |
+| **Tier 1 total** | **≈41 + smokes/builds ≈ 45 credits.** Lever if unaffordable: sentinel panel 20 × 10 prompts (saves ≈5). **Tier 0 is screening only and cannot yield the paper; a positive Tier 0 is not to be stretched into an underpowered submission.** | |
 | **2 — RQ4′ PEFT recovery** | 2 models × 25k steps + eval; optional unpruned-PEFT control | ≈25–35 |
 
 Hard rules: no tier starts without Gabriel's written authorization in the ledger; the
@@ -176,9 +199,10 @@ in practice it is fixed first because it is CPU work).
 
 | Milestone | Content | Target |
 |---|---|---|
-| M4-0 | Gabriel decisions (§10); fix FAD/FD; freeze event set, synonym map, covariate manifest, stratified prompt manifest (hashes in ledger) | 08-22 |
+| M4-0 | Gabriel decisions (§10); fix FAD/FD; freeze event set, synonym maps, covariate manifest, data partition (calibration / mechanism / holdout), sentinel panel, prompt manifests (hashes in ledger) | 08-22 |
 | M4-1 (Tier 0) | D1+D2 job; Gate B′ saliency job; screening generation; **heterogeneity screen read-out (not Gate E)**; Gate B′ verdict; FineLAP validity smoke (CPU) | 08-25 |
-| M4-2 | Tier decision on evidence; if Tier 1 funded: 1a (incl. RAND×10 → Gate E) / 1b / 1c | 08-26 → 09-05 |
+| M4-1b | **CPU power simulation** from Tier-0 rates: Gate E design must reach ≥ 80 % power at the pre-set minimum effect, else resize the sentinel panel before any Tier-1 spend | 08-26 |
+| M4-2 | Tier decision on evidence; if Tier 1 funded: 1a (RAND×20 → Gate E; Gate M) / 1b / Gate B′ for mech + placebo / 1c on the holdout | 08-27 → 09-06 |
 | M4-3 | Gate M model comparison; claims matrix; RQ-swap wording from D1 | 09-07 |
 | M4-4 (optional Tier 2) | PEFT recovery of 2 models | 09-08 → 09-12 |
 | M8′ | paper; coauthor review | 09-12 → 09-16 |
@@ -204,7 +228,11 @@ EFF unchanged.
 * **DECISION-V4-05** keep RQ-swap in the paper as a one-paragraph negative result (yes /
   no).
 * **DECISION-V4-06** occupancy estimator: FineLAP (conditional on a CPU validity smoke) or
-  drop occupancy from the acoustic block.
+  drop occupancy from the acoustic block; if FineLAP fails, H-acoustic is restricted to the
+  single-label-clip subset.
+* **DECISION-V4-07** partition sizes (calibration pool / mechanism set / holdout), sentinel
+  panel composition, minimum detectable effect for the power simulation, and the Gate I
+  margins (`δ_target`, `δ_harm`, FAD/FD/KL) — all frozen before the holdout is unblinded.
 
 ## 10b. Exploratory observations (never in the claims matrix unless promoted by a decision)
 

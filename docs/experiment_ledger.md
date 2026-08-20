@@ -830,3 +830,11 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Verified:** `class_labels_indices.csv` carries official comma aliases (basis of the strict synonym map). FineLAP (2604.01155) code public; checkpoint/API unconfirmed → occupancy estimator conditional on a CPU smoke (DECISION-V4-06).
 * **Other rc2 changes:** Gate M as nested block LRTs; occupancy not measured with the outcome detector; FAD/FD rule = before any scientifically-used generation; seed-robustness from the FAD 3-seed audio; Music drift → exploratory §10b.
 * **Outputs:** `docs/review/2026-08-20_reframing_round3.md`, `docs/master_plan_v4_draft.md` rc2. Both reviewers vote adopt; **v3 remains the contract until DECISION-V4-00.**
+
+### 2026-08-20 13:03 | REVIEW-004 / PLAN-V4-rc3 | Hostile review round 4: identification layer (event-specific counterfactual guidance, event-specific acoustics, K_rand=20 + power sim, P1-placebo, disjoint holdout, Gate I margins, exposure split); draft rc3 proposed for adoption
+
+* **Status:** documentation + CPU counts only; no gate changed, no GPU spent.
+* **Accepted all seven of Reviewer A's round-4 modifications** (see `docs/review/2026-08-20_reframing_round4.md`) and added the `c_only_e` contrast for multi-event captions.
+* **Measured (CPU, `audiocaps_train_label.json` + strict alias map from `class_labels_indices.csv`):** requested events per clip 0/1/2/3 = 20 143 / 22 697 / 5 805 / 747; events with ≥200 strictly requested captions = 61 (≥100: 81; ≥50: 97); single-AudioSet-label clips = 9 637 (19.5 %); "Speech" requested 1 882 vs labelled 20 561; Siren 858/897; Gunshot 415/836; Drill 319/749; Explosion 147/231.
+* **Cost:** Tier 1 re-costed ≈45 credits (RAND×20 sentinel = 6 000 clips is the largest item); Tier 0 unchanged ≈2.7. Tier 0 = screening only.
+* **Outputs:** `docs/master_plan_v4_draft.md` rc3; `docs/review/2026-08-20_reframing_round4.md`. Both reviewers vote adopt. **v3 remains the contract until DECISION-V4-00.** Decisions V4-00..07 pending.
