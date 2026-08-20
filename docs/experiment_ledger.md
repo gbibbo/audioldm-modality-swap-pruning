@@ -838,3 +838,10 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Measured (CPU, `audiocaps_train_label.json` + strict alias map from `class_labels_indices.csv`):** requested events per clip 0/1/2/3 = 20 143 / 22 697 / 5 805 / 747; events with ≥200 strictly requested captions = 61 (≥100: 81; ≥50: 97); single-AudioSet-label clips = 9 637 (19.5 %); "Speech" requested 1 882 vs labelled 20 561; Siren 858/897; Gunshot 415/836; Drill 319/749; Explosion 147/231.
 * **Cost:** Tier 1 re-costed ≈45 credits (RAND×20 sentinel = 6 000 clips is the largest item); Tier 0 unchanged ≈2.7. Tier 0 = screening only.
 * **Outputs:** `docs/master_plan_v4_draft.md` rc3; `docs/review/2026-08-20_reframing_round4.md`. Both reviewers vote adopt. **v3 remains the contract until DECISION-V4-00.** Decisions V4-00..07 pending.
+
+### 2026-08-20 13:13 | REVIEW-005 / PLAN-V4-rc4 | Hostile review round 5: pre-registration consistency pass; rc4 is the proposed freeze candidate (NOT adopted)
+
+* **Status:** documentation only; no gate changed, no GPU spent. Both reviewers: YES to DECISION-V4-00 (direction); rc4 proposed as the frozen protocol.
+* **Six residues fixed (rc3 → rc4):** `K_rand = 20` everywhere + exact rank test for Gate E; Gate M blocks rewritten with the event-specific covariates and the P1-vs-P0 calibration-exposure slope contrast; tie-break by cross-validated predictive gain; placebo matched on baseline capture / eligible prompts / exposure / family; one mechanism-general intervention recipe (acoustic variant only if FineLAP passed); FineLAP fallback (H-acoustic leaves primary Gate M) and seed pairing specified; H-guidance primary = canonical template vs unconditional.
+* **Verified:** FineLAP weights public on Hugging Face (`AndreasXi/FineLAP`, MIT, `get_frame_level_score → (B,N,T)`); `torch 1.13.1` compatibility still to be smoked.
+* **Outputs:** `docs/master_plan_v4_draft.md` rc4; `docs/review/2026-08-20_reframing_round5.md`. **v3 remains the contract until DECISION-V4-00..07 are recorded.**
