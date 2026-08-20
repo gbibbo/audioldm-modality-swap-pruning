@@ -240,6 +240,58 @@ with a `torch_load()` helper that attempts `mmap=True` and falls back. Both
 scripts now run under torch 1.13.1 and torch 2.8. **No upstream or scientific
 code was changed**; `git diff upstream-frozen -- audioldm_train/` is still empty.
 
+## E-BLAS — numpy's bundled OpenBLAS silently returns WRONG results (found 2026-08-20, FIXED)
+
+**Severity: high. Any CPU numpy computation using matmul / eigh / svd / cov on matrices
+larger than ~64 dims was silently wrong until this fix.** Discovered while fixing the
+FAD/FD NaN of the M4 screening (CPU queue Q1): both Frechet paths returned garbage
+(negative self-distances) not because of the sqrtm real-part guard alone (F-eval-3) but
+because the underlying linear algebra was corrupt.
+
+**Root cause.** numpy 1.23.5 bundles **OpenBLAS 0.3.20 ILP64**
+(`.venv/.../numpy.libs/libopenblas64_p-r0-...3.20.so`). On this Studio's CPU —
+**Intel Xeon Platinum 8488C (Sapphire Rapids, AVX-512)** — OpenBLAS 0.3.20 auto-selects a
+SapphireRapids/AVX-512 kernel that produces WRONG results, with no error raised:
+
+* `A @ B` (128×64 · 64×128) disagreed with `einsum` by ‖·‖ ≈ 1.2e3.
+* `np.linalg.eigh` of a 128×128 SPD matrix returned non-orthonormal eigenvectors
+  (`‖VᵀV − I‖ ≈ 700`); `np.linalg.svd` reconstruction error ≈ 4e5.
+* The corruption has a size threshold: correct at n ≤ 64, broken at n ≥ 96.
+
+scipy is **unaffected** — it bundles OpenBLAS 0.3.18 (`scipy.libs/libopenblasp-...3.18.so`),
+which predates the broken kernel. That is why `scipy.linalg.eigh` was correct while
+`np.linalg.eigh` was not, in the same process.
+
+**Fix (non-invasive, no pin relaxed).** Force OpenBLAS to a correct kernel by setting
+`OPENBLAS_CORETYPE=Haswell` **before numpy imports/loads OpenBLAS**. Verified: matmul
+error → 0, eigh `‖VᵀV − I‖ → 2e-14`. Haswell (AVX2) is correct and fast on this CPU;
+Nehalem/SandyBridge/Prescott/ZEN also work. This changes no package version — it only
+selects a correct kernel inside the already-pinned OpenBLAS.
+
+**How it is applied (two layers, defence in depth):**
+
+1. **Process-wide, reproducible:** `scripts/research/install_blas_fix.sh` writes a one-line
+   `.pth` (`aaa_openblas_coretype_fix.pth`) into the venv `site-packages` that runs
+   `os.environ.setdefault("OPENBLAS_CORETYPE", "Haswell")` at interpreter startup, **before
+   any user script imports numpy**. `.venv` is gitignored, so **re-run this script after any
+   `.venv` rebuild** (it is idempotent and verifies numpy afterwards). Run it now:
+
+   ```bash
+   bash scripts/research/install_blas_fix.sh
+   ```
+
+2. **Point-of-use guard:** `research_pruning/eval/_blas.py` sets the same env var on import
+   and exposes `assert_numpy_linalg_sane()`, which the Frechet code calls before returning
+   any number — so if the kernel is ever still wrong (e.g. numpy was imported before the
+   guard on a machine without the `.pth`), it **raises instead of returning garbage**.
+
+**Scope / what to re-check.** GPU model math runs on torch/CUDA and is unaffected. Pure
+counting/set/rank results (AudioCaps exposure, Gate-B overlap geometry, param counts,
+Spearman) do not use large numpy BLAS and are unaffected. The one class to re-verify is any
+**CPU numpy `matmul`/`eigh`/`svd`/`lstsq`/`cov` on > 64-dim matrices** in prior analysis
+(e.g. the M3A OLS `matched_null` design matrices — expected safe because they are tiny/
+single-predictor, but confirm). Tracked as a follow-up audit item.
+
 ## Not done, deliberately
 
 * No GPU work. `torch 1.13.1+cu117` is installed and will use CUDA when a GPU is

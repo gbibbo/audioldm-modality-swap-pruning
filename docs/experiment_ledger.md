@@ -894,3 +894,34 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13.
 * **Decision (verbatim):** *Proposed: calibration pool 256 natural + 256 tail-enriched; mechanism set 50 events × 20 prompts; intervention holdout 500 prompts, disjoint at source-wav level; sentinel panel 20 events × 15 prompts stratified by exposure × family; MDE for Gate E fixed from Tier-0 rates by the power simulation (≥ 80 % power); Gate I `δ_target = +5 pp`, `δ_harm = 2 pp` (non-inferiority), FAD/FD +5 % relative, KL +0.05.*
 * **Note:** these may stay open until immediately before the holdout is unblinded; while open, the holdout stays blinded. Recorded here as adopted defaults; the power simulation (Q7) fixes the MDE from Tier-0 rates.
+
+### 2026-08-20 15:30 | E-BLAS / ENVIRONMENT FINDING | numpy's bundled OpenBLAS silently returns WRONG results on this CPU — fixed
+
+* **Status:** completed (environment defect found + fixed + guarded). No scientific result; a correctness prerequisite for all CPU numpy analysis.
+* **Milestone / gate:** none directly; unblocks CPU queue Q1 (FAD/FD) and protects every future CPU numpy computation.
+* **Git commit:** this commit. **Discovered while executing Q1** (FAD/FD were NaN not only from F-eval-3 but because the linear-algebra stack was corrupt).
+* **Root cause.** numpy 1.23.5 bundles **OpenBLAS 0.3.20 ILP64** (`numpy.libs/libopenblas64_p-r0-...3.20.so`). On this Studio's **Intel Xeon Platinum 8488C (Sapphire Rapids, AVX-512)** it auto-selects a SapphireRapids/AVX-512 kernel that returns WRONG results with **no error raised**: `A@B` (128×64·64×128) vs `einsum` ‖·‖≈1.2e3; `np.linalg.eigh` of a 128×128 SPD matrix gave `‖VᵀV−I‖≈700`; `svd` reconstruction err ≈4e5. Correct at n≤64, broken at n≥96. scipy is unaffected (bundles OpenBLAS 0.3.18).
+* **Fix (no pin relaxed).** Force `OPENBLAS_CORETYPE=Haswell` before numpy loads → matmul err→0, eigh `‖VᵀV−I‖→2e-14`. Applied two ways: (1) `scripts/research/install_blas_fix.sh` writes a startup `.pth` into the (gitignored) venv site-packages — **re-run after any `.venv` rebuild**; (2) `research_pruning/eval/_blas.py` sets the same var on import and `assert_numpy_linalg_sane()` **raises rather than return garbage** if the kernel is ever still wrong (called inside the Frechet path).
+* **Verified:** `bash scripts/research/install_blas_fix.sh` → `OK: numpy BLAS/LAPACK is sane`; `tests/research/test_frechet.py` T1–T6 PASS (self-distance exactly 0).
+* **Scope / follow-up.** GPU model math (torch/CUDA) unaffected; counting/set/rank results (AudioCaps exposure, Gate-B geometry, param counts, Spearman) unaffected. **Follow-up audit item:** re-verify any prior CPU numpy `matmul`/`eigh`/`svd`/`lstsq`/`cov` on >64-dim matrices (notably M3A `matched_null` OLS — expected safe, single-predictor tiny matrices — confirm). Recorded in `docs/environment_report.md` (E-BLAS).
+
+### 2026-08-20 15:35 | Q1 / M4-SCREEN-RESCORE | FAD/FD NaN fixed (F-eval-3 + E-BLAS); 6 screening systems re-scored, screening-only
+
+* **Status:** completed (CPU, no credits, no re-generation). **Screening-only numbers — NOT promotable to a paper claim.** CPU queue item Q1 of `docs/NEXT_SESSION.md`.
+* **Milestone / gate:** M4 screening evaluation repair (plan §7 FAD/FD rule). No gate changed; `docs/claims_matrix.md` NOT updated with these values.
+* **Git commit:** this commit. Scored from the feature caches the screening eval already wrote (audio unchanged), i.e. re-scores the M4-SCREEN-FOUND generation (`m4-screening-1`, commit `9349bce`).
+* **What was fixed.** F-eval-3 (`audioldm_eval` raises on the sqrtm imaginary component and aborts FAD/FD to NaN) **and** the deeper E-BLAS corruption. Replaced the fragile path with a tracked, real-part, eigenvalue-based Frechet: `research_pruning/eval/frechet.py` (`frechet_distance`, `gaussian_frechet`), `audioldm_eval`-free (numpy+scipy). `tr((C1 C2)^½)=Σ√λ_i` over the real, clamped eigenvalues of `C1@C2` — numerically stable, exact 0 self-distance.
+* **Command:** `.venv/bin/python scripts/research/rescore_m4_screening.py` → `artifacts/m4_screening/rescore_frechet.json` (gitignored).
+* **Correctness controls:** self-distance FAD(ref,ref)=**0.000**, FD(ref,ref)=**−9.9e-6** (≈0); provenance — recomputed IS reproduces the recorded M4-SCREEN-FOUND IS to 5 decimals for all 6 systems (same audio confirmed).
+* **Primary result (finite FAD/FD, 100 gen vs 100 ref clips, 1 seed):**
+  | system | FAD (VGGish, 128-d) | FD (Cnn14, 2048-d) | IS |
+  |---|---|---|---|
+  | base | **0.945** | **73.8** | 3.644 |
+  | P0_published | 1.623 | 82.1 | 2.776 |
+  | P0_L1 | 1.348 | 81.4 | 2.790 |
+  | P1 | 1.312 | 82.3 | 2.604 |
+  | P2 | 1.564 | 84.7 | 2.617 |
+  | P3 | 1.561 | 86.6 | 2.561 |
+* **Interpretation (screening only).** base is closest to the reference on both metrics; all five pruned systems sit in a band well above it, P3 nominally worst — consistent with the recorded KL band and with M3B (P1≈P2≈P3). **FAD is meaningful (VGGish covariance well-conditioned, 990 frames/128 dims); Cnn14-FD is finite but rank-deficient** (cov rank ≤99 ≪ 2048, N=100), so FD is screening-quality, not a scientific value. No confidence intervals (1 seed).
+* **Acceptance / gate decision:** no gate changed; not promotable. Promotable to a real FAD/FD only with ≥3 seeds, screening-phase n per plan, and the Tier-1 design. `docs/claims_matrix.md` unchanged.
+* **Failure or uncertainty:** single seed; Cnn14-FD rank-deficient; KL not recomputed here (the plain cache API returns a −1 sentinel without caption pairing — the validly-paired KL is already in M4-SCREEN-FOUND).
