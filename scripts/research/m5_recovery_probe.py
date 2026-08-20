@@ -72,9 +72,12 @@ def batch_to_inputs(batch, clap, vae, scale_factor, schedule, device, gen):
     z0 = vae_encode(vae, mel, scale_factor)             # [B,C,H,W]
     e_audio = clap_embed(clap, wav, "audio").squeeze(1)  # [B,512]
     b = z0.shape[0]
+    # CPU generator for reproducibility, then move to the model device. The schedule
+    # buffers are moved to `device` once in main(), so q_sample stays on-device (a CPU
+    # dry-run cannot catch a device mismatch here — both sides are CPU there).
     t = torch.randint(0, schedule.timesteps, (b,), generator=gen).to(device)
     noise = torch.randn(z0.shape, generator=gen).to(device)
-    z_t = schedule.q_sample(z0, t.cpu(), noise.cpu()).to(device) if device.type == "cuda" else schedule.q_sample(z0, t, noise)
+    z_t = schedule.q_sample(z0, t, noise)
     return z_t, t, e_audio, noise
 
 
@@ -127,6 +130,9 @@ def main() -> int:
     vae = build_vae(config, BASE_CKPT).to(device)
     scale_factor = read_scale_factor(BASE_CKPT)
     schedule = NoiseSchedule(config)
+    # Move the schedule buffers to the model device so q_sample stays on-device.
+    schedule.sqrt_alphas_cumprod = schedule.sqrt_alphas_cumprod.to(device)
+    schedule.sqrt_one_minus_alphas_cumprod = schedule.sqrt_one_minus_alphas_cumprod.to(device)
     result["build_s"] = time.perf_counter() - t0
 
     loader = build_train_loader(config, args.batch, args.num_workers)
