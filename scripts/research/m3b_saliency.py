@@ -108,13 +108,16 @@ def preflight(args, result):
         raise SystemExit(f"PREFLIGHT FAIL: commit {prov['commit']} != {args.expect_commit}")
     if prov["dirty"] and not args.allow_dirty and not args.dry_run_cpu:
         raise SystemExit("PREFLIGHT FAIL: dirty tree (use --allow-dirty only for CPU dev)")
-    for p in (BASE_CKPT, RANKING_PKL, MANIFEST):
+    manifest_path = getattr(args, "manifest", MANIFEST)
+    expect_sha = getattr(args, "expect_manifest_sha", FROZEN_MANIFEST_SHA)
+    for p in (BASE_CKPT, RANKING_PKL, manifest_path):
         if not os.path.exists(p):
             raise SystemExit(f"PREFLIGHT FAIL: missing {p}")
-    sha = sha256_file(MANIFEST)
+    sha = sha256_file(manifest_path)
     result["manifest_sha256"] = sha
-    if sha != FROZEN_MANIFEST_SHA:
-        raise SystemExit(f"PREFLIGHT FAIL: calibration manifest sha256 {sha} != frozen {FROZEN_MANIFEST_SHA}")
+    result["manifest_path"] = manifest_path
+    if sha != expect_sha:
+        raise SystemExit(f"PREFLIGHT FAIL: calibration manifest sha256 {sha} != expected {expect_sha}")
     if not args.dry_run_cpu:
         if not torch.cuda.is_available():
             raise SystemExit("PREFLIGHT FAIL: no CUDA and not --dry-run-cpu (refusing to invent saliency)")
@@ -235,6 +238,14 @@ def main() -> int:
                     help="path to save P1 PER-SLOT saliency contributions (.pt) for Gate B' "
                          "(plan §7 Tier 0: 'per-slot storage'); enables the null-split "
                          "overlap distribution to be computed later on CPU")
+    ap.add_argument("--per-slot-only", action="store_true",
+                    help="compute ONLY the P1 per-slot storage (skip P0-P3 compute_criteria + "
+                         "Gate B); the budget-lean Gate B' saliency job")
+    ap.add_argument("--manifest", default=MANIFEST,
+                    help="calibration manifest (default: the frozen 256; the enriched 512 is "
+                         "configs/research/calibration_manifest_enriched.json)")
+    ap.add_argument("--expect-manifest-sha", default=FROZEN_MANIFEST_SHA,
+                    help="required sha256 of --manifest (pre-registration guard)")
     args = ap.parse_args()
 
     if args.dry_run_cpu and args.out:
@@ -250,7 +261,7 @@ def main() -> int:
     device = torch.device("cpu" if args.dry_run_cpu else "cuda")
     config = load_config()
 
-    manifest = json.load(open(MANIFEST))
+    manifest = json.load(open(args.manifest))
     slots_meta = manifest["slots"]
     if args.limit_examples:
         slots_meta = slots_meta[:args.limit_examples]
@@ -293,53 +304,51 @@ def main() -> int:
     result["n_text_p2p3_slots"] = len(text_p2p3)
     result["n_text_p1_slots"] = len(text_p1)
 
-    # --- saliency (the expensive part) ---
     loss_fn = make_loss_fn(unet, device)
-    with torch.enable_grad():
-        t2 = time.perf_counter()
-        crit = compute_criteria(
-            gates, loss_fn, loss_fn,
-            audio_slots=audio_slots, text_slots_p2p3=text_p2p3, text_slots_p1=text_p1,
-            norm_mode=NORM_MODE,
-        )
-    result["saliency_s"] = time.perf_counter() - t2
-    result["budget_grad_evals"] = crit.budget_grad_evals
-
-    # Move every saliency to CPU before the downstream Gate B / keep_topk / save logic,
-    # which was only ever exercised on CPU (topk/set-overlap on device tensors is an
-    # untested path). Do this on the raw Criteria fields so everything below is CPU.
-    def _cpu(d):
-        return {k: v.detach().cpu() for k, v in d.items()}
-    p1_c, p2_c, p3_c = _cpu(crit.p1), _cpu(crit.p2), _cpu(crit.p3)
-    s_a_c, s_t_c = _cpu(crit.s_audio_norm), _cpu(crit.s_text_norm)
-
-    # --- P0 (data-free) ---
-    p0_pub = _cpu(normalize_within_layer(p0_importance(convs, convention="published"), NORM_MODE))
-    p0_l1 = _cpu(normalize_within_layer(p0_importance(convs, convention="standard"), NORM_MODE))
-
-    # --- Gate B on S_a vs S_t over the 12 ranking-driven layers ---
+    # ranking-driven layer geometry (cheap, CPU; needed by Gate B and the per-slot store)
     rd_layers = ranking_driven_layers(config, ranking)
     kcounts = kept_counts(config, rd_layers)
     fulllen = {k: ranking_full_lengths(ranking)[k] for k in rd_layers}
-    gate_b = evaluate_gate_b(
-        to_weightkey(s_a_c), to_weightkey(s_t_c),
-        k_per_layer=kcounts, n_per_layer=fulllen, layers=rd_layers,
-    )
-    result["gate_b"] = {
-        "pass": bool(gate_b.passed),
-        "weighted_overlap": float(gate_b.weighted_overlap),
-        "n_layers_at_or_below_layer_max": len(gate_b.layers_at_or_below_layer_max),
-        "layers_at_or_below_layer_max": list(gate_b.layers_at_or_below_layer_max),
-        "per_layer": {r.name: {"overlap": float(r.overlap), "chance": float(r.chance),
-                               "adjusted": float(r.adjusted), "intersection": int(r.intersection),
-                               "k": int(r.k_kept), "n": int(r.n_channels)}
-                      for r in gate_b.per_layer},
-        "thresholds": {"weighted_max": gate_b.weighted_max,
-                       "layer_max": gate_b.layer_max, "min_layers": gate_b.min_layers},
-    }
+
+    def _cpu(d):
+        return {k: v.detach().cpu() for k, v in d.items()}
+
+    # --- full P0-P3 criteria + Gate B (skipped in the budget-lean --per-slot-only mode) ---
+    p1_c = p2_c = p3_c = s_a_c = s_t_c = p0_pub = p0_l1 = None
+    if not args.per_slot_only:
+        with torch.enable_grad():
+            t2 = time.perf_counter()
+            crit = compute_criteria(
+                gates, loss_fn, loss_fn,
+                audio_slots=audio_slots, text_slots_p2p3=text_p2p3, text_slots_p1=text_p1,
+                norm_mode=NORM_MODE,
+            )
+        result["saliency_s"] = time.perf_counter() - t2
+        result["budget_grad_evals"] = crit.budget_grad_evals
+        p1_c, p2_c, p3_c = _cpu(crit.p1), _cpu(crit.p2), _cpu(crit.p3)
+        s_a_c, s_t_c = _cpu(crit.s_audio_norm), _cpu(crit.s_text_norm)
+        p0_pub = _cpu(normalize_within_layer(p0_importance(convs, convention="published"), NORM_MODE))
+        p0_l1 = _cpu(normalize_within_layer(p0_importance(convs, convention="standard"), NORM_MODE))
+
+        gate_b = evaluate_gate_b(
+            to_weightkey(s_a_c), to_weightkey(s_t_c),
+            k_per_layer=kcounts, n_per_layer=fulllen, layers=rd_layers,
+        )
+        result["gate_b"] = {
+            "pass": bool(gate_b.passed),
+            "weighted_overlap": float(gate_b.weighted_overlap),
+            "n_layers_at_or_below_layer_max": len(gate_b.layers_at_or_below_layer_max),
+            "layers_at_or_below_layer_max": list(gate_b.layers_at_or_below_layer_max),
+            "per_layer": {r.name: {"overlap": float(r.overlap), "chance": float(r.chance),
+                                   "adjusted": float(r.adjusted), "intersection": int(r.intersection),
+                                   "k": int(r.k_kept), "n": int(r.n_channels)}
+                          for r in gate_b.per_layer},
+            "thresholds": {"weighted_max": gate_b.weighted_max,
+                           "layer_max": gate_b.layer_max, "min_layers": gate_b.min_layers},
+        }
 
     # --- persist saliency tensors + kept-sets for M4 materialization ---
-    if args.save_saliency:
+    if args.save_saliency and not args.per_slot_only:
         kc_all = kept_counts(config, list(ranking))
         ksets = {
             "P0_published": keep_topk(to_weightkey(p0_pub), kc_all),
