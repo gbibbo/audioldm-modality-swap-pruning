@@ -1,6 +1,6 @@
 # M3 Pilot Protocol
 
-**Status: BORRADOR — PENDIENTE DE REVISIÓN. NOT FROZEN.** M3 is blocked until this
+**Status: DRAFT — PENDING REVIEW. NOT FROZEN.** M3 is blocked until this
 file is reviewed against `docs/master_plan_v3.md`, completed, and committed
 **before any saliency or D_gen/D_mod/R_mod result on the real pruned checkpoint is
 inspected**. Every numeric value below is a **reasoned proposal**, provisional until
