@@ -7,6 +7,41 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
+> ## ⚠ READ FIRST — PLAN V4 REFRAMING PENDING GABRIEL'S DECISIONS (2026-08-20 14:00)
+>
+> **Everything below this block is historical context (2026-08-18/19). The current state
+> is:**
+>
+> 1. **v3's two scientific gates FAILED cleanly and are audited negatives.** M3B Gate B
+>    (ledger `M3B-SALIENCY-RUN`): audio/text Taylor saliencies agree (kept-set overlap
+>    0.9475, ρ=0.98; P1≈P2≈P3). M3A Gate A (`M3A-DIAG-RUN`): Δ_swap=0.0007, CI ⊃ 0. An
+>    M4 generation screening also ran (`M4-SCREEN-FOUND`, 6 systems × 100 clips, 1 seed,
+>    **FAD/FD NaN**) — recorded, not promotable.
+> 2. **A five-round two-reviewer hostile audit (2026-08-20) concluded the instruments were
+>    insensitive to the modality-swap hypothesis by construction and the 2026 literature
+>    narrowed the gap.** Read `docs/review/2026-08-20_reframing_round1.md` … `round5.md`
+>    in order (ledger `REVIEW-001..005`).
+> 3. **`docs/master_plan_v4_draft.md` rc4 is the proposed replacement plan** (event-level
+>    semantic forgetting under TTA pruning → mechanism: exposure / guidance / acoustics →
+>    mechanism-informed calibration with placebo + holdout → PEFT as cost baseline).
+>    **It is NOT adopted. `docs/master_plan_v3.md` remains the contract until Gabriel
+>    records DECISION-V4-00..07 in `docs/experiment_ledger.md`** (list in the draft, §10).
+> 4. **Credits:** 4.205 spent on 14 Lightning jobs (SDK-summed); ≈3–5 spendable under
+>    DECISION-CG-001's 2.0 reserve. v4 Tier 0 ≈2.7 cr (screening only); Tier 1 ≈45 cr.
+>    **Do not launch any GPU job until V4-00 and V4-02 are recorded.**
+> 5. **Once V4-00 is recorded, the work queue is CPU-only and credit-free** (round-5 doc,
+>    "execution hygiene"): fix FAD/FD NaN (F-eval-3); freeze manifests with sha256 in the
+>    ledger (event set `E*`, strict/expanded synonym maps from `class_labels_indices.csv`
+>    aliases, covariate manifest, calibration/mechanism/holdout partition at source-wav
+>    level, sentinel panel, prompt manifests, seed table); FineLAP smoke under
+>    `torch 1.13.1` (`AndreasXi/FineLAP`); parameterize `build_pruned_unet`/`materialize`
+>    for `(1,2,3,4)` with a bit-exact test at `(1,2,3,1)`; per-slot saliency storage in
+>    the M3B runner; counterfactual/template text conditioning in the diagnostics runner;
+>    CPU power simulation (milestone M4-1b).
+> 6. Standing rules unchanged: CPU Studio for all development, GPU only via Lightning
+>    Jobs from a clean pushed commit after a CPU dry-run and a GPU smoke; `/auditar` before
+>    any scientific claim; P0 wording "vs the published L1 artefact".
+>
 > ## ⚠ READ FIRST — GPU MEASURED; CG IS NOW A DECISION FOR GABRIEL (2026-08-19 ~21:55)
 >
 > **`docs/compute_budget.md` IS POPULATED with real measured values.** Lightning Job
