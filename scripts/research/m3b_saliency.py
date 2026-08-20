@@ -125,9 +125,30 @@ def preflight(args, result):
 
 # --------------------------------------------------------------------------- build
 def build_dataset(config, items):
+    """Build an AudioDataset over the manifest wavs.
+
+    CRITICAL: a custom `dataset_json` bypasses `_relative_path_to_absolute_path`, so
+    `feature_extraction` calls `read_audio_file(datum["wav"])` on the RAW relative path
+    (`zip_audios/...`), which does not exist relative to cwd — the dataset then silently
+    substitutes an EMPTY waveform (dataset.py:422-430). That would make the audio-branch
+    CLAP embedding and z_0 come from silence, invalidating S_a / P2 / P3. So we resolve
+    each wav to an absolute path with the SAME root the built-in split uses
+    (`metadata_root["audiocaps"]`, i.e. `os.path.join(root, wav)`), and assert the files
+    exist before building.
+    """
+    import os
+    import json as _json
     from audioldm_train.utilities.data.dataset import AudioDataset
-    ds_json = {"data": [{"wav": it["wav"], "caption": it["caption"]} for it in items]}
-    return AudioDataset(config=config, split="test", waveform_only=False, dataset_json=ds_json)
+    metadata_root = _json.load(open(config["metadata_root"]))
+    root = metadata_root["audiocaps"]
+    data = []
+    for it in items:
+        abs_wav = os.path.join(root, it["wav"])
+        if not os.path.exists(abs_wav):
+            raise SystemExit(f"BUILD FAIL: calibration wav does not resolve on disk: {abs_wav}")
+        data.append({"wav": abs_wav, "caption": it["caption"]})
+    return AudioDataset(config=config, split="test", waveform_only=False,
+                        dataset_json={"data": data})
 
 
 @torch.no_grad()
