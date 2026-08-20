@@ -7,6 +7,43 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
+> ## ⚠ READ FIRST — GPU MEASURED; CG IS NOW A DECISION FOR GABRIEL (2026-08-19 ~21:55)
+>
+> **`docs/compute_budget.md` IS POPULATED with real measured values.** Lightning Job
+> `gpu-benchmark-3`, Tesla T4 14.562 GB, Completed, 0.1372 credits, at clean commit
+> `e6f50f4`. Raw JSON: `artifacts/m3_pilot/compute_budget_measured.json`
+> (md5 `12f8fef8577bfbff8b053e9ae90dd81e`). **Read `docs/compute_budget.md` before
+> planning any GPU work.**
+>
+> Measured at batch 8 on the real pruned U-Net with real weights:
+> `Ttrain = 1.672427 s` (peak 4.177 GB), `Tsal = 1.596534 s` (peak 4.152 GB),
+> `Tfwd = 0.465546 s` (peak 1.540 GB). **`Tgen` was NOT measured** — the generation stack
+> is not wired, which is what blocks the M4 projection.
+>
+> **THE ONE THING THAT MATTERS FOR PLANNING:** M1 + M2 + M3A + M3B — the whole RQ1/RQ2
+> modality-swap and paired-saliency programme — is **0.82 GPU-hours total**. **M5 recovery
+> is 46.46 GPU-hours PER MODEL** (185.8 for four criteria), ~50× everything else. The
+> budget problem is entirely in **M5 (RQ3)** and the unmeasured **M4 generation**; the core
+> scientific contribution is affordable right now.
+>
+> **Compute Gate CG: UNRESOLVED, escalated to Gabriel.** §7.4 conditions 1 and 2 are
+> SATISFIED; condition 3 cannot be satisfied as specified; condition 4 is undecidable until
+> 3 resolves. Per §7.4 this is a **schedule** decision, not a scientific failure.
+> **Do not start M5, and do not freeze the pilot protocol, until Gabriel decides.**
+> `T_sal`/`T_fwd` are now measured, so the protocol's compute inputs are otherwise ready.
+>
+> **Two corrections to earlier assumptions in this file — believe the measurement:**
+> * A 16 GB T4 is **not** tight for this workload. PEFT training peaks at **4.18 GB (~29 %
+>   of the card)** and no rung of the 1/2/4/8 ladder OOM'd.
+> * **`MAX_STABLE_BATCH = 8` is the largest TESTED, not the largest that fits** — the
+>   ladder ended by configuration with **10.385 GB free** and per-sample cost still falling
+>   (0.3897 → 0.2051 s/sample). Extend to 16/32 before costing any long run.
+>
+> **Next GPU jobs, in order:** (1) wire the generation stack and measure `Tgen`
+> (`--with-generation`) so M4 can be costed; (2) extend the batch ladder; (3) M1 GPU
+> acceptance via `scripts/research/m1_gpu_acceptance.py` (written and CPU-validated,
+> **never run on CUDA — M1 GPU acceptance is NOT claimed**).
+>
 > ## ⚠ READ FIRST — LIGHTNING JOB RECIPE, VERIFIED (2026-08-19 ~20:45)
 >
 > **OPERATING POLICY (Gabriel, frozen 2026-08-19) — not negotiable:**
