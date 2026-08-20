@@ -14,10 +14,16 @@ from .overlap import (
     weighted_adjusted, evaluate_gate_b,
     GATE_B_WEIGHTED_MAX, GATE_B_LAYER_MAX, GATE_B_MIN_LAYERS,
 )
+from .gate_b_prime import (
+    per_slot_saliency, recompose_mean, overlap_between_saliencies,
+    null_split_overlaps, gate_b_prime, save_per_slot, load_per_slot,
+)
 
 __all__ = [
     "Criteria", "compute_criteria",
     "LayerOverlap", "GateBResult", "kept_set_overlap", "weighted_overlap",
     "weighted_adjusted", "evaluate_gate_b",
     "GATE_B_WEIGHTED_MAX", "GATE_B_LAYER_MAX", "GATE_B_MIN_LAYERS",
+    "per_slot_saliency", "recompose_mean", "overlap_between_saliencies",
+    "null_split_overlaps", "gate_b_prime", "save_per_slot", "load_per_slot",
 ]

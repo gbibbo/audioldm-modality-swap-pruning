@@ -57,6 +57,7 @@ from research_pruning.taylor import (
 from research_pruning.taylor.layer_set import l1_prunable_layer_names, verify_prunable_layers
 from research_pruning.paired_modality.criteria import compute_criteria
 from research_pruning.paired_modality.overlap import evaluate_gate_b
+from research_pruning.paired_modality.gate_b_prime import per_slot_saliency, save_per_slot
 
 BASE_CKPT = "data/checkpoints/audioldm-m-full.ckpt"
 RANKING_PKL = "artifacts/m0_baseline_reproduction/sorted_indexes_dict.pkl"
@@ -230,6 +231,10 @@ def main() -> int:
     ap.add_argument("--dry-run-cpu", action="store_true")
     ap.add_argument("--out", default=None)
     ap.add_argument("--save-saliency", default=None, help="path to save the saliency tensors (.pt)")
+    ap.add_argument("--per-slot-store", default=None,
+                    help="path to save P1 PER-SLOT saliency contributions (.pt) for Gate B' "
+                         "(plan §7 Tier 0: 'per-slot storage'); enables the null-split "
+                         "overlap distribution to be computed later on CPU")
     args = ap.parse_args()
 
     if args.dry_run_cpu and args.out:
@@ -353,6 +358,22 @@ def main() -> int:
             "provenance": {k: result.get(k) for k in ("git", "manifest_sha256", "master_seed", "E", "K")},
         }, args.save_saliency)
         result["saved_saliency"] = args.save_saliency
+
+    # --- per-slot P1 saliency contributions for Gate B' (null-split overlap) ---
+    if args.per_slot_store:
+        with torch.enable_grad():
+            per = per_slot_saliency(gates, loss_fn, text_p1)     # {module: (n_slots, n_ch)}
+        per_wk = to_weightkey({k: v.detach().cpu() for k, v in per.items()})
+        save_per_slot(per_wk, args.per_slot_store, meta={
+            "purpose": "P1 per-slot Taylor contributions for Gate B' null-split",
+            "n_slots": len(text_p1),
+            "ranking_driven_layers": rd_layers,
+            "kept_counts": kcounts, "full_lengths": fulllen,
+            "norm_mode": NORM_MODE, "master_seed": args.master_seed,
+            "git": result.get("git"), "manifest_sha256": result.get("manifest_sha256"),
+        })
+        result["per_slot_store"] = args.per_slot_store
+        result["per_slot_n_slots"] = len(text_p1)
 
     result["measured"] = not args.dry_run_cpu
     out = json.dumps(result, indent=2)
