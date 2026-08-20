@@ -1,0 +1,986 @@
+{
+  "calibration_pool_size": 512,
+  "events": {
+    "/m/012ndj": {
+      "display_name": "Fire engine, fire truck (siren)",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.877735781779639,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 357,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 25
+    },
+    "/m/014zdl": {
+      "display_name": "Explosion",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.442417710521793,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 231,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 147
+    },
+    "/m/015p6": {
+      "display_name": "Bird",
+      "family": "Animal",
+      "log_audio_exposure": 7.5406215286571525,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 1883,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 1270
+    },
+    "/m/019jd": {
+      "display_name": "Boat, Water vehicle",
+      "family": "Sounds of things",
+      "log_audio_exposure": 7.068172000388041,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.6931471805599453,
+      "n_labelled": 1174,
+      "n_requested_in_calibration_pool": 1,
+      "n_requested_total": 290
+    },
+    "/m/01b82r": {
+      "display_name": "Sawing",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.323009979138408,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 205,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 64
+    },
+    "/m/01bjv": {
+      "display_name": "Bus",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.799055862058796,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 897,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 220
+    },
+    "/m/01d380": {
+      "display_name": "Drill",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.618738983517219,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 749,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 319
+    },
+    "/m/01d3sd": {
+      "display_name": "Snoring",
+      "family": "Human sounds",
+      "log_audio_exposure": 6.831953565565855,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 927,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 640
+    },
+    "/m/01h3n": {
+      "display_name": "Bee, wasp, etc.",
+      "family": "Animal",
+      "log_audio_exposure": 6.598509028614515,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 734,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 200
+    },
+    "/m/01hsr_": {
+      "display_name": "Sneeze",
+      "family": "Human sounds",
+      "log_audio_exposure": 5.955837369464831,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 386,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 232
+    },
+    "/m/01j3sz": {
+      "display_name": "Laughter",
+      "family": "Human sounds",
+      "log_audio_exposure": 6.771935555839602,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 873,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 114
+    },
+    "/m/01jt3m": {
+      "display_name": "Toilet flush",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.693323668269948,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.6931471805599453,
+      "n_labelled": 807,
+      "n_requested_in_calibration_pool": 1,
+      "n_requested_total": 35
+    },
+    "/m/01jwx6": {
+      "display_name": "Vibration",
+      "family": "Channel, environment and background",
+      "log_audio_exposure": 6.595780513961311,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 732,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 125
+    },
+    "/m/01m2v": {
+      "display_name": "Computer keyboard",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.253828811575473,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 520,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 131
+    },
+    "/m/01w250": {
+      "display_name": "Whistling",
+      "family": "Human sounds",
+      "log_audio_exposure": 6.406879986069314,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 606,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 367
+    },
+    "/m/01yrx": {
+      "display_name": "Cat",
+      "family": "Animal",
+      "log_audio_exposure": 6.656726524178391,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.6094379124341003,
+      "n_labelled": 778,
+      "n_requested_in_calibration_pool": 4,
+      "n_requested_total": 663
+    },
+    "/m/023pjk": {
+      "display_name": "Cutlery, silverware",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.4510384535657,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 233,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 50
+    },
+    "/m/0284vy3": {
+      "display_name": "Train horn",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.661854740545311,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.6931471805599453,
+      "n_labelled": 782,
+      "n_requested_in_calibration_pool": 1,
+      "n_requested_total": 306
+    },
+    "/m/028ght": {
+      "display_name": "Applause",
+      "family": "Human sounds",
+      "log_audio_exposure": 6.285998094508864,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 537,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 179
+    },
+    "/m/02dgv": {
+      "display_name": "Door",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.962243464266207,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.6931471805599453,
+      "n_labelled": 1056,
+      "n_requested_in_calibration_pool": 1,
+      "n_requested_total": 505
+    },
+    "/m/02fs_r": {
+      "display_name": "Beep, bleep",
+      "family": "Source-ambiguous sounds",
+      "log_audio_exposure": 6.248042874508429,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 517,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 295
+    },
+    "/m/02jz0l": {
+      "display_name": "Water tap, faucet",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.763884908562435,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.3862943611198906,
+      "n_labelled": 866,
+      "n_requested_in_calibration_pool": 3,
+      "n_requested_total": 213
+    },
+    "/m/02mk9": {
+      "display_name": "Engine",
+      "family": "Sounds of things",
+      "log_audio_exposure": 7.145196134997171,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 1268,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 1061
+    },
+    "/m/02qldy": {
+      "display_name": "Narration, monologue",
+      "family": "Human sounds",
+      "log_audio_exposure": 7.778630147325809,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 2389,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 89
+    },
+    "/m/02rlv9": {
+      "display_name": "Motorboat, speedboat",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.938284484016959,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 1031,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 265
+    },
+    "/m/02zsn": {
+      "display_name": "Female speech, woman speaking",
+      "family": "Human sounds",
+      "log_audio_exposure": 7.229113877793302,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.6931471805599453,
+      "n_labelled": 1379,
+      "n_requested_in_calibration_pool": 1,
+      "n_requested_total": 228
+    },
+    "/m/0316dw": {
+      "display_name": "Typing",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.664409020350408,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 784,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 450
+    },
+    "/m/032s66": {
+      "display_name": "Gunshot, gunfire",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.728628613084702,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.6931471805599453,
+      "n_labelled": 836,
+      "n_requested_in_calibration_pool": 1,
+      "n_requested_total": 415
+    },
+    "/m/034srq": {
+      "display_name": "Waves, surf",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.405228458030841,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.4849066497880004,
+      "n_labelled": 605,
+      "n_requested_in_calibration_pool": 11,
+      "n_requested_total": 329
+    },
+    "/m/0395lw": {
+      "display_name": "Bell",
+      "family": "Music",
+      "log_audio_exposure": 5.924255797414531,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 374,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 361
+    },
+    "/m/03fwl": {
+      "display_name": "Goat",
+      "family": "Animal",
+      "log_audio_exposure": 6.573680166960646,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.3025850929940455,
+      "n_labelled": 716,
+      "n_requested_in_calibration_pool": 9,
+      "n_requested_total": 401
+    },
+    "/m/03j1ly": {
+      "display_name": "Emergency vehicle",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.79794041297493,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 896,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 189
+    },
+    "/m/03k3r": {
+      "display_name": "Horse",
+      "family": "Animal",
+      "log_audio_exposure": 6.948897222313312,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.6094379124341003,
+      "n_labelled": 1042,
+      "n_requested_in_calibration_pool": 4,
+      "n_requested_total": 612
+    },
+    "/m/03kmc9": {
+      "display_name": "Siren",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.799055862058796,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 897,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 858
+    },
+    "/m/03m9d0z": {
+      "display_name": "Wind",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.809039306042979,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.3978952727983707,
+      "n_labelled": 906,
+      "n_requested_in_calibration_pool": 10,
+      "n_requested_total": 629
+    },
+    "/m/03q5_w": {
+      "display_name": "Burping, eructation",
+      "family": "Human sounds",
+      "log_audio_exposure": 6.059123195581797,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 428,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 160
+    },
+    "/m/03vt0": {
+      "display_name": "Insect",
+      "family": "Animal",
+      "log_audio_exposure": 6.612041034833092,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.4849066497880004,
+      "n_labelled": 744,
+      "n_requested_in_calibration_pool": 11,
+      "n_requested_total": 354
+    },
+    "/m/0463cq4": {
+      "display_name": "Crying, sobbing",
+      "family": "Human sounds",
+      "log_audio_exposure": 6.144185634125646,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 466,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 253
+    },
+    "/m/04_sv": {
+      "display_name": "Motorcycle",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.781057625936179,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 881,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 416
+    },
+    "/m/04brg2": {
+      "display_name": "Dishes, pots, and pans",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.490723534502507,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 659,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 173
+    },
+    "/m/04zjc": {
+      "display_name": "Machine gun",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.356586274672012,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 212,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 51
+    },
+    "/m/05kq4": {
+      "display_name": "Ocean",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.295266001439646,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 542,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 94
+    },
+    "/m/05tny_": {
+      "display_name": "Bark",
+      "family": "Animal",
+      "log_audio_exposure": 5.484796933490655,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 241,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 104
+    },
+    "/m/05zppz": {
+      "display_name": "Male speech, man speaking",
+      "family": "Human sounds",
+      "log_audio_exposure": 7.259819610363186,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.3862943611198906,
+      "n_labelled": 1422,
+      "n_requested_in_calibration_pool": 3,
+      "n_requested_total": 261
+    },
+    "/m/06mb1": {
+      "display_name": "Rain",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.816735880594968,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.3978952727983707,
+      "n_labelled": 913,
+      "n_requested_in_calibration_pool": 10,
+      "n_requested_total": 687
+    },
+    "/m/06wzb": {
+      "display_name": "Steam",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.242223265455165,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 514,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 221
+    },
+    "/m/07bgp": {
+      "display_name": "Sheep",
+      "family": "Animal",
+      "log_audio_exposure": 6.419994928147142,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.3025850929940455,
+      "n_labelled": 614,
+      "n_requested_in_calibration_pool": 9,
+      "n_requested_total": 364
+    },
+    "/m/07cx4": {
+      "display_name": "Telephone",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.988961416889863,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 399,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 160
+    },
+    "/m/07jdr": {
+      "display_name": "Train",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.895682697747867,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 988,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 805
+    },
+    "/m/07k1x": {
+      "display_name": "Tools",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.278521424165844,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 533,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 28
+    },
+    "/m/07p9k1k": {
+      "display_name": "Sizzle",
+      "family": "Source-ambiguous sounds",
+      "log_audio_exposure": 6.20455776256869,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 495,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 119
+    },
+    "/m/07pb8fc": {
+      "display_name": "Idling",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.866933284461882,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.6094379124341003,
+      "n_labelled": 960,
+      "n_requested_in_calibration_pool": 4,
+      "n_requested_total": 374
+    },
+    "/m/07pdjhy": {
+      "display_name": "Rub",
+      "family": "Source-ambiguous sounds",
+      "log_audio_exposure": 6.416732282512326,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 612,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 26
+    },
+    "/m/07pggtn": {
+      "display_name": "Chirp, tweet",
+      "family": "Animal",
+      "log_audio_exposure": 6.672032945461067,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 790,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 260
+    },
+    "/m/07pqc89": {
+      "display_name": "Trickle, dribble",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.100318952020064,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 446,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 60
+    },
+    "/m/07q0h5t": {
+      "display_name": "Bleat",
+      "family": "Animal",
+      "log_audio_exposure": 5.937536205082426,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 379,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 142
+    },
+    "/m/07q2z82": {
+      "display_name": "Accelerating, revving, vroom",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.983789965258135,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 1079,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 498
+    },
+    "/m/07qdb04": {
+      "display_name": "Quack",
+      "family": "Animal",
+      "log_audio_exposure": 6.025865973825314,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 414,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 141
+    },
+    "/m/07qjznt": {
+      "display_name": "Tick",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.793013608384143,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 328,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 71
+    },
+    "/m/07qlf79": {
+      "display_name": "Spray",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.784457062637643,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 884,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 253
+    },
+    "/m/07qrkrw": {
+      "display_name": "Meow",
+      "family": "Animal",
+      "log_audio_exposure": 6.754604099487962,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 858,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 401
+    },
+    "/m/07qsvvw": {
+      "display_name": "Burst, pop",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.343880434126331,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 569,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 179
+    },
+    "/m/07r04": {
+      "display_name": "Truck",
+      "family": "Sounds of things",
+      "log_audio_exposure": 7.02108396428914,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 1120,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 300
+    },
+    "/m/07r_k2n": {
+      "display_name": "Yip",
+      "family": "Animal",
+      "log_audio_exposure": 6.361302477572995,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 579,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 25
+    },
+    "/m/07rjwbb": {
+      "display_name": "Hiss",
+      "family": "Animal",
+      "log_audio_exposure": 6.835184586147301,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 930,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 209
+    },
+    "/m/07rknqz": {
+      "display_name": "Skidding",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.568344503761097,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 262,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 55
+    },
+    "/m/07rqsjt": {
+      "display_name": "Whoosh, swoosh, swish",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.163314804034641,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 475,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 128
+    },
+    "/m/07rv9rh": {
+      "display_name": "Clip-clop",
+      "family": "Animal",
+      "log_audio_exposure": 6.7912214627261855,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 890,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 110
+    },
+    "/m/07swgks": {
+      "display_name": "Gurgling",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.827629234502852,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 923,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 181
+    },
+    "/m/07yv9": {
+      "display_name": "Vehicle",
+      "family": "Sounds of things",
+      "log_audio_exposure": 9.19917830726999,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.772588722239781,
+      "n_labelled": 9889,
+      "n_requested_in_calibration_pool": 15,
+      "n_requested_total": 2307
+    },
+    "/m/0838f": {
+      "display_name": "Water",
+      "family": "Natural sounds",
+      "log_audio_exposure": 7.027314514039776,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 1127,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 833
+    },
+    "/m/083vt": {
+      "display_name": "Wood",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.807934943699926,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 905,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 334
+    },
+    "/m/0912c9": {
+      "display_name": "Vehicle horn, car horn, honking",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.620073206530356,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 750,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 293
+    },
+    "/m/09ct_": {
+      "display_name": "Helicopter",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.810142450115136,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.6094379124341003,
+      "n_labelled": 907,
+      "n_requested_in_calibration_pool": 4,
+      "n_requested_total": 575
+    },
+    "/m/09ddx": {
+      "display_name": "Duck",
+      "family": "Animal",
+      "log_audio_exposure": 6.773080375655535,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.4849066497880004,
+      "n_labelled": 874,
+      "n_requested_in_calibration_pool": 11,
+      "n_requested_total": 567
+    },
+    "/m/09ld4": {
+      "display_name": "Frog",
+      "family": "Animal",
+      "log_audio_exposure": 6.066108090103747,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 431,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 322
+    },
+    "/m/09t49": {
+      "display_name": "Rustling leaves",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.473890696352274,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 648,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 27
+    },
+    "/m/09x0r": {
+      "display_name": "Speech",
+      "family": "Human sounds",
+      "log_audio_exposure": 9.931151356518601,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 3.2188758248682006,
+      "n_labelled": 20561,
+      "n_requested_in_calibration_pool": 24,
+      "n_requested_total": 1938
+    },
+    "/m/0_ksk": {
+      "display_name": "Power tool",
+      "family": "Sounds of things",
+      "log_audio_exposure": 5.53338948872752,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 253,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 91
+    },
+    "/m/0bt9lr": {
+      "display_name": "Dog",
+      "family": "Animal",
+      "log_audio_exposure": 7.598900456871409,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.833213344056216,
+      "n_labelled": 1996,
+      "n_requested_in_calibration_pool": 16,
+      "n_requested_total": 1709
+    },
+    "/m/0ch8v": {
+      "display_name": "Livestock, farm animals, working animals",
+      "family": "Animal",
+      "log_audio_exposure": 6.20050917404269,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 493,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 29
+    },
+    "/m/0cmf2": {
+      "display_name": "Fixed-wing aircraft, airplane",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.063785208687608,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 430,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 81
+    },
+    "/m/0h0rv": {
+      "display_name": "Pigeon, dove",
+      "family": "Animal",
+      "log_audio_exposure": 6.75110146893676,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.0986122886681096,
+      "n_labelled": 855,
+      "n_requested_in_calibration_pool": 2,
+      "n_requested_total": 393
+    },
+    "/m/0h2mp": {
+      "display_name": "Fly, housefly",
+      "family": "Animal",
+      "log_audio_exposure": 6.295266001439646,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.197224577336219,
+      "n_labelled": 542,
+      "n_requested_in_calibration_pool": 8,
+      "n_requested_total": 73
+    },
+    "/m/0j6m2": {
+      "display_name": "Stream",
+      "family": "Natural sounds",
+      "log_audio_exposure": 7.044032897274684,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 1146,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 267
+    },
+    "/m/0jb2l": {
+      "display_name": "Thunderstorm",
+      "family": "Natural sounds",
+      "log_audio_exposure": 5.886104031450156,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 360,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 41
+    },
+    "/m/0jbk": {
+      "display_name": "Animal",
+      "family": "Animal",
+      "log_audio_exposure": 8.568076401730806,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 5261,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 368
+    },
+    "/m/0k4j": {
+      "display_name": "Car",
+      "family": "Sounds of things",
+      "log_audio_exposure": 8.155649270366,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 3483,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 1203
+    },
+    "/m/0k5j": {
+      "display_name": "Aircraft",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.771935555839602,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 873,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 267
+    },
+    "/m/0llzx": {
+      "display_name": "Sewing machine",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.5722825426940075,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.0794415416798357,
+      "n_labelled": 715,
+      "n_requested_in_calibration_pool": 7,
+      "n_requested_total": 507
+    },
+    "/m/0ltv": {
+      "display_name": "Race car, auto racing",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.784457062637643,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.6094379124341003,
+      "n_labelled": 884,
+      "n_requested_in_calibration_pool": 4,
+      "n_requested_total": 134
+    },
+    "/m/0ngt1": {
+      "display_name": "Thunder",
+      "family": "Natural sounds",
+      "log_audio_exposure": 6.148468295917646,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.3025850929940455,
+      "n_labelled": 468,
+      "n_requested_in_calibration_pool": 9,
+      "n_requested_total": 328
+    },
+    "/t/dd00018": {
+      "display_name": "Oink",
+      "family": "Animal",
+      "log_audio_exposure": 6.220590170099739,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.9459101490553132,
+      "n_labelled": 503,
+      "n_requested_in_calibration_pool": 6,
+      "n_requested_total": 163
+    },
+    "/t/dd00112": {
+      "display_name": "Crumpling, crinkling",
+      "family": "Source-ambiguous sounds",
+      "log_audio_exposure": 6.45833828334479,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 2.3025850929940455,
+      "n_labelled": 638,
+      "n_requested_in_calibration_pool": 9,
+      "n_requested_total": 374
+    },
+    "/t/dd00128": {
+      "display_name": "Outside, urban or manmade",
+      "family": "Channel, environment and background",
+      "log_audio_exposure": 7.188412736496954,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 1324,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 31
+    },
+    "/t/dd00129": {
+      "display_name": "Outside, rural or natural",
+      "family": "Channel, environment and background",
+      "log_audio_exposure": 7.059617628291383,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 1164,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 35
+    },
+    "/t/dd00130": {
+      "display_name": "Engine starting",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.432940092739179,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 1.791759469228055,
+      "n_labelled": 622,
+      "n_requested_in_calibration_pool": 5,
+      "n_requested_total": 76
+    },
+    "/t/dd00134": {
+      "display_name": "Car passing by",
+      "family": "Sounds of things",
+      "log_audio_exposure": 6.980075940561763,
+      "log_audioset_unbalanced_exposure": null,
+      "log_calibration_caption_exposure": 0.0,
+      "n_labelled": 1075,
+      "n_requested_in_calibration_pool": 0,
+      "n_requested_total": 23
+    }
+  },
+  "note": "Exposures only (CPU-derivable). Acoustic + guidance covariates are added by later jobs per plan \u00a73; frozen spec lives in the plan. AudioSet-unbalanced exposure not fetched -> null (sensitivity only)."
+}

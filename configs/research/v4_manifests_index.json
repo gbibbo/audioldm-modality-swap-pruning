@@ -1,0 +1,16 @@
+{
+  "generated_by": "scripts/research/build_v4_manifests.py",
+  "master_seed": 20260818,
+  "sha256": {
+    "audioset_ontology.json": "9c685f4403eecc3ca9be37fd7285cf212feaaea6ff7229d3e7ca89e0d1f2d15d",
+    "data_partition.json": "26f70d75ba8cb83e2cd3148446831434e12babb76268b9a7f3d0ad04c86d9477",
+    "event_covariates.json": "0c34fd7a5147db559adcfce60e742ea2e4e37437def5ea43bec07d1c8275e506",
+    "event_family_map.json": "a107d79f18f48d58eab0c61f3967a0dceb61691a346fb3280152697cae7a9e64",
+    "event_set.json": "671f1a4263ed17f43b7dda19b053cf6dcc7afbfc7f9db3747758dd6d5751d7f2",
+    "event_synonyms_expanded.json": "b5029ce31d422097bc78efe62e0db169edf0c5b6bf7432a8319e1d8e9bd28bea",
+    "event_synonyms_strict.json": "f730d952cccf9b7f539b1444b44ab75f81860486781944a15b84ff0d0bfbdd6c",
+    "prompts_heterogeneity_screen.json": "a9cdf239ffaf5c090290322f9c2120eb82f140b254f7904494de91aa3a45590f",
+    "seed_table.json": "a753ebf50d140a09423acc8eaed674cb32fad89d3571afac6c43661b468b68c2",
+    "sentinel_panel.json": "054aba043cb86f90900518fb830a82b471cb1553c34a664ddaab5688b4e8347b"
+  }
+}

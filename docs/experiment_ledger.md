@@ -925,3 +925,27 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Interpretation (screening only).** base is closest to the reference on both metrics; all five pruned systems sit in a band well above it, P3 nominally worst — consistent with the recorded KL band and with M3B (P1≈P2≈P3). **FAD is meaningful (VGGish covariance well-conditioned, 990 frames/128 dims); Cnn14-FD is finite but rank-deficient** (cov rank ≤99 ≪ 2048, N=100), so FD is screening-quality, not a scientific value. No confidence intervals (1 seed).
 * **Acceptance / gate decision:** no gate changed; not promotable. Promotable to a real FAD/FD only with ≥3 seeds, screening-phase n per plan, and the Tier-1 design. `docs/claims_matrix.md` unchanged.
 * **Failure or uncertainty:** single seed; Cnn14-FD rank-deficient; KL not recomputed here (the plain cache API returns a −1 sentinel without caption pairing — the validly-paired KL is already in M4-SCREEN-FOUND).
+
+### 2026-08-20 16:20 | Q2 / MANIFEST-FREEZE | Plan-v4 pre-registration manifests frozen, sha256 recorded
+
+* **Status:** completed (pre-registration; CPU, deterministic). **No pruned generation inspected before this freeze.** CPU queue item Q2 of `docs/NEXT_SESSION.md`.
+* **Milestone / gate:** plan v4 §3–§7 pre-registration (event set, synonym maps, covariates, partition, sentinel, prompts, seeds). Feeds Gate E / Gate M / Gate B′ / Gate I; DECISION-V4-04/07 parameters.
+* **Git commit:** this commit. **Builder:** `scripts/research/build_v4_manifests.py` (reads only frozen inputs: `class_labels_indices.csv`, `audiocaps_train_label.json`, the fetched AudioSet ontology, and the frozen M3B `calibration_manifest.json`; no model/checkpoint/GPU). Master seed `20260818`.
+* **Determinism:** `--check` reproduces all nine manifests **bit-identically** (rebuild → same sha256).
+* **Matching validated:** the strict requested-event map reproduces REVIEW-004's independent counts **exactly** — single-AudioSet-label clips 9 637; Speech labelled 20 561; Siren 858/897; Gunshot 415/836; Explosion 147/231. (Per-clip requested distribution differs from REVIEW-004 only by the plan-§4 plural morphology now included: 0/1/2/3+ = 20 599 / 23 841 / 4 710 / 352.)
+* **Results:** **E\* = 101 events (Tier 0, `n_req≥10`) / 98 (Tier 1, `n_req≥20`)**, all `n_labelled≥200`; 56 events `n_req≥200`. Families span all 7 AudioSet roots. Exposure gradient Sawing/Machine-gun/Explosion (log ≈5.3) → Speech (9.93). Partition: **calibration 256 natural (M3B) + 256 tail-enriched = 512; mechanism 50 events × 20 = 999 prompts** (one event, `/m/012ndj`, yielded 19 disjoint); **holdout 500 (blinded)**; sentinel 20×15=300; Tier-0 screen 200. **All five sets pairwise-disjoint at source-wav id, and disjoint from the val split (0 overlap — no eval contamination).** 2 511 unique wavs.
+* **sha256 (record):**
+  * `event_synonyms_strict.json` `f730d952cccf9b7f539b1444b44ab75f81860486781944a15b84ff0d0bfbdd6c`
+  * `event_synonyms_expanded.json` `b5029ce31d422097bc78efe62e0db169edf0c5b6bf7432a8319e1d8e9bd28bea`
+  * `event_family_map.json` `a107d79f18f48d58eab0c61f3967a0dceb61691a346fb3280152697cae7a9e64`
+  * `event_set.json` `671f1a4263ed17f43b7dda19b053cf6dcc7afbfc7f9db3747758dd6d5751d7f2`
+  * `event_covariates.json` `0c34fd7a5147db559adcfce60e742ea2e4e37437def5ea43bec07d1c8275e506`
+  * `data_partition.json` `26f70d75ba8cb83e2cd3148446831434e12babb76268b9a7f3d0ad04c86d9477`
+  * `sentinel_panel.json` `054aba043cb86f90900518fb830a82b471cb1553c34a664ddaab5688b4e8347b`
+  * `prompts_heterogeneity_screen.json` `a9cdf239ffaf5c090290322f9c2120eb82f140b254f7904494de91aa3a45590f`
+  * `seed_table.json` `a753ebf50d140a09423acc8eaed674cb32fad89d3571afac6c43661b468b68c2`
+  * `audioset_ontology.json` `9c685f4403eecc3ca9be37fd7285cf212feaaea6ff7229d3e7ca89e0d1f2d15d`
+  * `v4_manifests_index.json` `412617fcb7b13b0954eee461df85d58528511a2246624d2bd7dc88a1ca55d435`
+* **Judgment calls recorded:** (1) strict morphology limited to plurals of single-word aliases; verb forms live only in the expanded map (sensitivity) to avoid false positives — a conservative reading of "minimal morphology". (2) Expanded manual block is a small reviewed list for high-value under-counted families (Speech/Siren/Gunshot/Explosion/Thunder); no LLM. (3) Family from the fetched official AudioSet ontology (top-level ancestor). (4) Mechanism events chosen by even stride across the Tier-1 exposure range; sentinel events round-robin across families by exposure. Sizes per DECISION-V4-07.
+* **Acceptance / gate decision:** manifests frozen and hashed; holdout stays blinded until the intervention criterion is frozen (per plan §4 / DECISION-V4-07). No scientific result; no gate evaluated.
+* **Failure or uncertainty:** acoustic-descriptor and guidance covariates are NOT in `event_covariates.json` yet (require FineLAP smoke Q3 and GPU ε forwards); their spec is frozen in the plan. AudioSet-unbalanced exposure not fetched (null; sensitivity only).

@@ -1,0 +1,1686 @@
+{
+  "n_prompts": 200,
+  "prompts": [
+    {
+      "caption": "A woman speaks followed by a faint male voice and laughter",
+      "requested_events": [
+        "/m/01j3sz"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-5iktaMzAaA.wav",
+      "wav_id": "Y-5iktaMzAaA"
+    },
+    {
+      "caption": "A motor vehicle or car passing by",
+      "requested_events": [
+        "/m/07yv9",
+        "/m/0k4j",
+        "/t/dd00134"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-Fid6wTPBzU.wav",
+      "wav_id": "Y-Fid6wTPBzU"
+    },
+    {
+      "caption": "Gun firing and shooting during a rain and thunderstorm",
+      "requested_events": [
+        "/m/06mb1",
+        "/m/0jb2l"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-I2UgD8y7lA.wav",
+      "wav_id": "Y-I2UgD8y7lA"
+    },
+    {
+      "caption": "A rumble and then a hiss",
+      "requested_events": [
+        "/m/07rjwbb"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-I777qzddsc.wav",
+      "wav_id": "Y-I777qzddsc"
+    },
+    {
+      "caption": "Gunshot, shooting, machine gun",
+      "requested_events": [
+        "/m/032s66",
+        "/m/04zjc"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-NromfAJyZs.wav",
+      "wav_id": "Y-NromfAJyZs"
+    },
+    {
+      "caption": "There is hissing and then a loud pop",
+      "requested_events": [
+        "/m/07qsvvw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-OWttnOB3nY.wav",
+      "wav_id": "Y-OWttnOB3nY"
+    },
+    {
+      "caption": "The waves are coming ashore on the ocean",
+      "requested_events": [
+        "/m/034srq",
+        "/m/05kq4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-VR9yLnwdhY.wav",
+      "wav_id": "Y-VR9yLnwdhY"
+    },
+    {
+      "caption": "Motor, engine starting",
+      "requested_events": [
+        "/m/02mk9",
+        "/t/dd00130"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-WFwpBETuDo.wav",
+      "wav_id": "Y-WFwpBETuDo"
+    },
+    {
+      "caption": "Someone sneezes, then coughs are heard followed by two more sneezes",
+      "requested_events": [
+        "/m/01hsr_"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-i8bUT9k9FU.wav",
+      "wav_id": "Y-i8bUT9k9FU"
+    },
+    {
+      "caption": "A muffled roar with the sound of the wind, getting louder, then a train horn",
+      "requested_events": [
+        "/m/0284vy3",
+        "/m/07jdr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part0/Y-n2qmn-4i3E.wav",
+      "wav_id": "Y-n2qmn-4i3E"
+    },
+    {
+      "caption": "A man is speaking and then an electric drill sound",
+      "requested_events": [
+        "/m/01d380"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y-yPk_mb9lHs.wav",
+      "wav_id": "Y-yPk_mb9lHs"
+    },
+    {
+      "caption": "Far off speech and duck quacking",
+      "requested_events": [
+        "/m/09ddx",
+        "/m/09x0r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y01-6u7HTD-c.wav",
+      "wav_id": "Y01-6u7HTD-c"
+    },
+    {
+      "caption": "Cutlery clinking against a plate or dishware and the crackle of a fire or barbecue nearby",
+      "requested_events": [
+        "/m/023pjk"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y074nzzlXf_g.wav",
+      "wav_id": "Y074nzzlXf_g"
+    },
+    {
+      "caption": "The sound of a railroad car screeching on the tracks, and then honking",
+      "requested_events": [
+        "/m/01g50p",
+        "/m/0912c9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y0GRzxYNqvjI.wav",
+      "wav_id": "Y0GRzxYNqvjI"
+    },
+    {
+      "caption": "Vehicle loudly idling outside",
+      "requested_events": [
+        "/m/07pb8fc",
+        "/m/07yv9",
+        "/t/dd00128"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y0Lh4gLA4JW0.wav",
+      "wav_id": "Y0Lh4gLA4JW0"
+    },
+    {
+      "caption": "A woman speaking to a crowd",
+      "requested_events": [
+        "/m/02zsn"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y0QR0A1vHBHY.wav",
+      "wav_id": "Y0QR0A1vHBHY"
+    },
+    {
+      "caption": "A insect flying by a goat outside",
+      "requested_events": [
+        "/m/03fwl",
+        "/m/03vt0",
+        "/t/dd00129"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y0Tx8uH9lx2Y.wav",
+      "wav_id": "Y0Tx8uH9lx2Y"
+    },
+    {
+      "caption": "Cars racing and tires squealing outside",
+      "requested_events": [
+        "/m/0k4j",
+        "/t/dd00128"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part1/Y0Xv7Tucl5Vs.wav",
+      "wav_id": "Y0Xv7Tucl5Vs"
+    },
+    {
+      "caption": "Accelerating car passing by",
+      "requested_events": [
+        "/m/0k4j",
+        "/t/dd00134"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y0pB_DLWEf6s.wav",
+      "wav_id": "Y0pB_DLWEf6s"
+    },
+    {
+      "caption": "Six beeps sound and an adult male speaks",
+      "requested_events": [
+        "/m/02fs_r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y0v0Jhb2wpeQ.wav",
+      "wav_id": "Y0v0Jhb2wpeQ"
+    },
+    {
+      "caption": "A fly is buzzing and a woman is speaking",
+      "requested_events": [
+        "/m/0h2mp"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1BchyQSB3ds.wav",
+      "wav_id": "Y1BchyQSB3ds"
+    },
+    {
+      "caption": "A very loud and annoying fire truck siren",
+      "requested_events": [
+        "/m/03kmc9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1E3h5N6pFw0.wav",
+      "wav_id": "Y1E3h5N6pFw0"
+    },
+    {
+      "caption": "Power tool sawing",
+      "requested_events": [
+        "/m/01b82r",
+        "/m/0_ksk"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1EZrXL7Jbu4.wav",
+      "wav_id": "Y1EZrXL7Jbu4"
+    },
+    {
+      "caption": "Water from a stream as a person mumbles something",
+      "requested_events": [
+        "/m/0j6m2"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1JRq5_tJzfE.wav",
+      "wav_id": "Y1JRq5_tJzfE"
+    },
+    {
+      "caption": "Rustling is present and a cat meows",
+      "requested_events": [
+        "/m/01yrx",
+        "/m/07qrkrw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1NwoL7fn1Qk.wav",
+      "wav_id": "Y1NwoL7fn1Qk"
+    },
+    {
+      "caption": "A man speaking followed by a door closing, followed by more speaking",
+      "requested_events": [
+        "/m/02dgv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1OuL8yhj8LA.wav",
+      "wav_id": "Y1OuL8yhj8LA"
+    },
+    {
+      "caption": "The revving of a motorcycle down a noisy street",
+      "requested_events": [
+        "/m/04_sv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1RQDHn5YiK8.wav",
+      "wav_id": "Y1RQDHn5YiK8"
+    },
+    {
+      "caption": "The sound of silverware hitting the dishes is heard",
+      "requested_events": [
+        "/m/023pjk",
+        "/m/04brg2"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part2/Y1SpHjTw56jg.wav",
+      "wav_id": "Y1SpHjTw56jg"
+    },
+    {
+      "caption": "Following some low level noises, a toilet flush is heard",
+      "requested_events": [
+        "/m/01jt3m"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y1ZL1yUitzWI.wav",
+      "wav_id": "Y1ZL1yUitzWI"
+    },
+    {
+      "caption": "A toilet flush heard",
+      "requested_events": [
+        "/m/01jt3m"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y1emAlYW4QDA.wav",
+      "wav_id": "Y1emAlYW4QDA"
+    },
+    {
+      "caption": "A power tool motor is runs and stops, and a rattling vibration occurs",
+      "requested_events": [
+        "/m/0_ksk"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y1gOJWE43dZM.wav",
+      "wav_id": "Y1gOJWE43dZM"
+    },
+    {
+      "caption": "Muffled dog yipping",
+      "requested_events": [
+        "/m/0bt9lr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y1iCRrHMgBzk.wav",
+      "wav_id": "Y1iCRrHMgBzk"
+    },
+    {
+      "caption": "A long silence followed by a telephone beep and a distant bird call",
+      "requested_events": [
+        "/m/07cx4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y1nK9NDd0Nho.wav",
+      "wav_id": "Y1nK9NDd0Nho"
+    },
+    {
+      "caption": "Gurgling from the tap in the bathroom",
+      "requested_events": [
+        "/m/07swgks"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y1wpiL0AzEmM.wav",
+      "wav_id": "Y1wpiL0AzEmM"
+    },
+    {
+      "caption": "Birds are chirping as well as other sounds of bird vocalization",
+      "requested_events": [
+        "/m/015p6",
+        "/m/020bb7"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y201es_EFkLc.wav",
+      "wav_id": "Y201es_EFkLc"
+    },
+    {
+      "caption": "An engine is idling",
+      "requested_events": [
+        "/m/02mk9",
+        "/m/07pb8fc"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y29ujJGcPvuU.wav",
+      "wav_id": "Y29ujJGcPvuU"
+    },
+    {
+      "caption": "Airplane engine sounds",
+      "requested_events": [
+        "/m/0cmf2"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y2B_YAVD5ILY.wav",
+      "wav_id": "Y2B_YAVD5ILY"
+    },
+    {
+      "caption": "Vehicle engine idling and then accelerating",
+      "requested_events": [
+        "/m/02mk9",
+        "/m/07yv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part3/Y2GWf2ZYii-k.wav",
+      "wav_id": "Y2GWf2ZYii-k"
+    },
+    {
+      "caption": "Faint speech and clip-clopping",
+      "requested_events": [
+        "/m/09x0r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y2Thh7HeFKuk.wav",
+      "wav_id": "Y2Thh7HeFKuk"
+    },
+    {
+      "caption": "A horse is walking and people are speaking",
+      "requested_events": [
+        "/m/03k3r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y2esWrSm30_A.wav",
+      "wav_id": "Y2esWrSm30_A"
+    },
+    {
+      "caption": "A cat meows and splashes in water",
+      "requested_events": [
+        "/m/01yrx",
+        "/m/07qrkrw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y2m92xdyZt50.wav",
+      "wav_id": "Y2m92xdyZt50"
+    },
+    {
+      "caption": "A vehicle's window being rolled up and down, then engine accelerating, with inaudible voice in background",
+      "requested_events": [
+        "/m/07yv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y2nD1v-UYoO8.wav",
+      "wav_id": "Y2nD1v-UYoO8"
+    },
+    {
+      "caption": "Duck call then a guy talking followed by more duck quacks and bird calls",
+      "requested_events": [
+        "/m/015p6",
+        "/m/07qdb04",
+        "/m/09ddx"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y2pmJE16KIHA.wav",
+      "wav_id": "Y2pmJE16KIHA"
+    },
+    {
+      "caption": "A female speaks in a worried voice as the waves come rolling in",
+      "requested_events": [
+        "/m/034srq"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y2sM0mlfLpBU.wav",
+      "wav_id": "Y2sM0mlfLpBU"
+    },
+    {
+      "caption": "A man is chattering away to himself as he fries and stirs food",
+      "requested_events": [
+        "/m/07ptfmf"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y30JTvMLCV0c.wav",
+      "wav_id": "Y30JTvMLCV0c"
+    },
+    {
+      "caption": "Waves are splashing and wind is blowing",
+      "requested_events": [
+        "/m/034srq",
+        "/m/03m9d0z"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y3DhQmxwJ5f0.wav",
+      "wav_id": "Y3DhQmxwJ5f0"
+    },
+    {
+      "caption": "A very loud engine on a motorboat",
+      "requested_events": [
+        "/m/02rlv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y3FMLEu1q_Uk.wav",
+      "wav_id": "Y3FMLEu1q_Uk"
+    },
+    {
+      "caption": "Birds are chirping while people are speaking in the background",
+      "requested_events": [
+        "/m/015p6"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part4/Y3FhfupN-ciA.wav",
+      "wav_id": "Y3FhfupN-ciA"
+    },
+    {
+      "caption": "A truck engine is idling",
+      "requested_events": [
+        "/m/07r04"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part5/Y3LfWfxls1-s.wav",
+      "wav_id": "Y3LfWfxls1-s"
+    },
+    {
+      "caption": "A man gives a speech as he wipes something on a piece of wood",
+      "requested_events": [
+        "/m/083vt",
+        "/m/09x0r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part5/Y3VtUIHO4-DQ.wav",
+      "wav_id": "Y3VtUIHO4-DQ"
+    },
+    {
+      "caption": "Forceful revving of a car engine",
+      "requested_events": [
+        "/m/07q2z82",
+        "/m/0k4j"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part5/Y3a5sF5lmiAk.wav",
+      "wav_id": "Y3a5sF5lmiAk"
+    },
+    {
+      "caption": "A man speaking with insects buzzing",
+      "requested_events": [
+        "/m/03vt0"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part5/Y3oYzD_u2Yos.wav",
+      "wav_id": "Y3oYzD_u2Yos"
+    },
+    {
+      "caption": "Sheep bleating and a ringing noise",
+      "requested_events": [
+        "/m/07bgp"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part5/Y3tfUtLb3sZo.wav",
+      "wav_id": "Y3tfUtLb3sZo"
+    },
+    {
+      "caption": "An adult male is speaking, and deep vibration occurs",
+      "requested_events": [
+        "/m/01jwx6"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part5/Y4CdyinWesFQ.wav",
+      "wav_id": "Y4CdyinWesFQ"
+    },
+    {
+      "caption": "Rapid typing on a keyboard",
+      "requested_events": [
+        "/m/0316dw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y4Ko2TdqMgks.wav",
+      "wav_id": "Y4Ko2TdqMgks"
+    },
+    {
+      "caption": "Water flows in a stream and an animal bleats",
+      "requested_events": [
+        "/m/0j6m2"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y4hUysAJFmf8.wav",
+      "wav_id": "Y4hUysAJFmf8"
+    },
+    {
+      "caption": "Sewing machine running and stopping",
+      "requested_events": [
+        "/m/0llzx"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y4ibh7OjGMmo.wav",
+      "wav_id": "Y4ibh7OjGMmo"
+    },
+    {
+      "caption": "People speaking and making cat and cow noises",
+      "requested_events": [
+        "/m/01yrx"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y5-VdQ476qJ8.wav",
+      "wav_id": "Y5-VdQ476qJ8"
+    },
+    {
+      "caption": "Typing on a computer keyboard",
+      "requested_events": [
+        "/m/01m2v",
+        "/m/0316dw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y5DjP-fZTYNQ.wav",
+      "wav_id": "Y5DjP-fZTYNQ"
+    },
+    {
+      "caption": "A infant sobbing an another young girl speaks. Male voice in the background",
+      "requested_events": [
+        "/m/0463cq4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y5EzQYnFosmk.wav",
+      "wav_id": "Y5EzQYnFosmk"
+    },
+    {
+      "caption": "A car horn honks and echoes",
+      "requested_events": [
+        "/m/0912c9",
+        "/m/0k4j"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y5FrqyZr00wQ.wav",
+      "wav_id": "Y5FrqyZr00wQ"
+    },
+    {
+      "caption": "An animal walking around and a woman speaking",
+      "requested_events": [
+        "/m/0jbk"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part6/Y5HVfB2IOJys.wav",
+      "wav_id": "Y5HVfB2IOJys"
+    },
+    {
+      "caption": "Low rumbling of an idling engine",
+      "requested_events": [
+        "/m/02mk9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y5JGmQx6-Xn0.wav",
+      "wav_id": "Y5JGmQx6-Xn0"
+    },
+    {
+      "caption": "A small dog howls along with sirens",
+      "requested_events": [
+        "/m/07qf0zm",
+        "/m/0bt9lr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y5O7ua0pfKAs.wav",
+      "wav_id": "Y5O7ua0pfKAs"
+    },
+    {
+      "caption": "Loud vibrations of an engine idling",
+      "requested_events": [
+        "/m/01jwx6",
+        "/m/02mk9",
+        "/m/07pb8fc"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y5giawaCDlbI.wav",
+      "wav_id": "Y5giawaCDlbI"
+    },
+    {
+      "caption": "Repetitive, loud snoring",
+      "requested_events": [
+        "/m/01d3sd"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y5lJZp5vyohk.wav",
+      "wav_id": "Y5lJZp5vyohk"
+    },
+    {
+      "caption": "Rain falls while a man speaks",
+      "requested_events": [
+        "/m/06mb1"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y5nsBe0jg3X0.wav",
+      "wav_id": "Y5nsBe0jg3X0"
+    },
+    {
+      "caption": "A boat speeds by with an engine revving and waves crashing followed by wind",
+      "requested_events": [
+        "/m/019jd"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y5wA0BIKE444.wav",
+      "wav_id": "Y5wA0BIKE444"
+    },
+    {
+      "caption": "Men are talking and a small pop go off as the men scream",
+      "requested_events": [
+        "/m/07qsvvw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y66Pa4OLj0nE.wav",
+      "wav_id": "Y66Pa4OLj0nE"
+    },
+    {
+      "caption": "Boat moving in water a clicking noise is also heard and pulling a level",
+      "requested_events": [
+        "/m/019jd"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y693lIR7ILaA.wav",
+      "wav_id": "Y693lIR7ILaA"
+    },
+    {
+      "caption": "Blasts and gunshots are ongoing, metal clinks, scuffing occurs, and two adult males speak over an electronic device",
+      "requested_events": [
+        "/m/032s66"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part7/Y6JxtSOM9ODE.wav",
+      "wav_id": "Y6JxtSOM9ODE"
+    },
+    {
+      "caption": "An engine is idling and clacking and something snaps",
+      "requested_events": [
+        "/m/02mk9",
+        "/m/07pb8fc"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y6VGTnqWVB5k.wav",
+      "wav_id": "Y6VGTnqWVB5k"
+    },
+    {
+      "caption": "Plastic crinkling then a banging sound and more crinkling",
+      "requested_events": [
+        "/t/dd00112"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y6gRSedJYFXA.wav",
+      "wav_id": "Y6gRSedJYFXA"
+    },
+    {
+      "caption": "Motor vehicle revving its engine",
+      "requested_events": [
+        "/m/02mk9",
+        "/m/07q2z82",
+        "/m/07yv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y6ut_Vf_sIBo.wav",
+      "wav_id": "Y6ut_Vf_sIBo"
+    },
+    {
+      "caption": "A man speaking with a cat meowing",
+      "requested_events": [
+        "/m/01yrx"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y72O-THnbJ4I.wav",
+      "wav_id": "Y72O-THnbJ4I"
+    },
+    {
+      "caption": "A person is snoring deeply and a man is talking over him",
+      "requested_events": [
+        "/m/01d3sd"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y72_OfyS2fu8.wav",
+      "wav_id": "Y72_OfyS2fu8"
+    },
+    {
+      "caption": "Buzzing insects with hammering and a male voice",
+      "requested_events": [
+        "/m/03vt0"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y74I4Bx77C4I.wav",
+      "wav_id": "Y74I4Bx77C4I"
+    },
+    {
+      "caption": "People are giving a speech while people cheer",
+      "requested_events": [
+        "/m/09x0r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y7FxYcv4Lluw.wav",
+      "wav_id": "Y7FxYcv4Lluw"
+    },
+    {
+      "caption": "A low whoosh goes by then silence",
+      "requested_events": [
+        "/m/07rqsjt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y7TytX0NEIRE.wav",
+      "wav_id": "Y7TytX0NEIRE"
+    },
+    {
+      "caption": "An aircraft engine is accelerating and vibrating",
+      "requested_events": [
+        "/m/014yck",
+        "/m/0k5j"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y7Y4zUPfFO6E.wav",
+      "wav_id": "Y7Y4zUPfFO6E"
+    },
+    {
+      "caption": "A man and a woman are speaking followed by the sounds of a race car",
+      "requested_events": [
+        "/m/0ltv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part8/Y7_yuZ6D8_Gk.wav",
+      "wav_id": "Y7_yuZ6D8_Gk"
+    },
+    {
+      "caption": "An adult male is speaking as a monologue",
+      "requested_events": [
+        "/m/02qldy"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part9/Y7nY5gByjdgs.wav",
+      "wav_id": "Y7nY5gByjdgs"
+    },
+    {
+      "caption": "Birds are chirping and singing",
+      "requested_events": [
+        "/m/015p6"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part9/Y7vPdfdn3mbA.wav",
+      "wav_id": "Y7vPdfdn3mbA"
+    },
+    {
+      "caption": "An animal is snoring deeply but quietly",
+      "requested_events": [
+        "/m/01d3sd"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part9/Y7wkR_gi-Quc.wav",
+      "wav_id": "Y7wkR_gi-Quc"
+    },
+    {
+      "caption": "A monologue containing some speeches of a lady",
+      "requested_events": [
+        "/m/02qldy",
+        "/m/09x0r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part9/Y8P3vGvRotls.wav",
+      "wav_id": "Y8P3vGvRotls"
+    },
+    {
+      "caption": "An emergency motor vehicle siren blows, a large motor vehicle engine runs and decelerates, and hisses occur",
+      "requested_events": [
+        "/m/03kmc9",
+        "/m/07yv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part9/Y8Rb3I8SyT1U.wav",
+      "wav_id": "Y8Rb3I8SyT1U"
+    },
+    {
+      "caption": "A child voice speaks, music plays, and frogs croak",
+      "requested_events": [
+        "/m/07st88b",
+        "/m/09ld4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y8u4ivdS0Bqc.wav",
+      "wav_id": "Y8u4ivdS0Bqc"
+    },
+    {
+      "caption": "Man speaking followed by footsteps",
+      "requested_events": [
+        "/m/05zppz"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y915FESKzjWM.wav",
+      "wav_id": "Y915FESKzjWM"
+    },
+    {
+      "caption": "Rustling followed by engine starting and revving rapidly",
+      "requested_events": [
+        "/m/02mk9",
+        "/t/dd00130"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y9Zpknjd-3vk.wav",
+      "wav_id": "Y9Zpknjd-3vk"
+    },
+    {
+      "caption": "A man is speaking while sheep bleat and then a woman speaks",
+      "requested_events": [
+        "/m/07bgp",
+        "/m/07q0h5t"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y9facAOtLteE.wav",
+      "wav_id": "Y9facAOtLteE"
+    },
+    {
+      "caption": "A single wet smack followed by a laugh then crashing dishes",
+      "requested_events": [
+        "/m/04brg2"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y9n135R9XixA.wav",
+      "wav_id": "Y9n135R9XixA"
+    },
+    {
+      "caption": "A kid speaking quickly and excitedly out loud",
+      "requested_events": [
+        "/m/0ytgt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y9tTYjYUxxbw.wav",
+      "wav_id": "Y9tTYjYUxxbw"
+    },
+    {
+      "caption": "A man speaking",
+      "requested_events": [
+        "/m/05zppz"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y9ukVorimKuo.wav",
+      "wav_id": "Y9ukVorimKuo"
+    },
+    {
+      "caption": "A bus is drifting slowly",
+      "requested_events": [
+        "/m/01bjv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part10/Y9vF9JLbQDWc.wav",
+      "wav_id": "Y9vF9JLbQDWc"
+    },
+    {
+      "caption": "An infant sneezes and coos followed by an adult speaking",
+      "requested_events": [
+        "/m/01hsr_"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part11/YAxQX6OAUQrI.wav",
+      "wav_id": "YAxQX6OAUQrI"
+    },
+    {
+      "caption": "Applause, cheering, then musical playing",
+      "requested_events": [
+        "/m/028ght"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part11/YB-KEiJiCRmg.wav",
+      "wav_id": "YB-KEiJiCRmg"
+    },
+    {
+      "caption": "An engine running and revving",
+      "requested_events": [
+        "/m/07q2z82"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part11/YB10OgYEeklw.wav",
+      "wav_id": "YB10OgYEeklw"
+    },
+    {
+      "caption": "Water coming from faucet and shutting off",
+      "requested_events": [
+        "/m/02jz0l",
+        "/m/0838f"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part11/YB7LNYTKaSxA.wav",
+      "wav_id": "YB7LNYTKaSxA"
+    },
+    {
+      "caption": "An adult female speaks, followed by a snap and a hiss",
+      "requested_events": [
+        "/m/07rjwbb"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part11/YBDvsGaIihdM.wav",
+      "wav_id": "YBDvsGaIihdM"
+    },
+    {
+      "caption": "A thunderstorm, rain and wind",
+      "requested_events": [
+        "/m/03m9d0z"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part11/YBE53zCOjkhc.wav",
+      "wav_id": "YBE53zCOjkhc"
+    },
+    {
+      "caption": "A man and child are speaking with wind noise in the background",
+      "requested_events": [
+        "/m/03m9d0z"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part11/YBIMT2IAxYck.wav",
+      "wav_id": "YBIMT2IAxYck"
+    },
+    {
+      "caption": "Birds chirp and sing in the background as an adult male speaks, crunching footfalls occur, and an animal growls",
+      "requested_events": [
+        "/m/015p6",
+        "/m/07pggtn"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part12/YBxLGLJTwVG8.wav",
+      "wav_id": "YBxLGLJTwVG8"
+    },
+    {
+      "caption": "A horse snorting and galloping as wind is blowing on a microphone",
+      "requested_events": [
+        "/m/03k3r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part12/YCBIMvIU8_IM.wav",
+      "wav_id": "YCBIMvIU8_IM"
+    },
+    {
+      "caption": "Clip-clop following by howling",
+      "requested_events": [
+        "/m/07rv9rh"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part12/YCadKrgkOOKQ.wav",
+      "wav_id": "YCadKrgkOOKQ"
+    },
+    {
+      "caption": "Buzzing followed by clicks and whistling",
+      "requested_events": [
+        "/m/01w250"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part12/YChNikYYAHN4.wav",
+      "wav_id": "YChNikYYAHN4"
+    },
+    {
+      "caption": "Woman speaking and clapping",
+      "requested_events": [
+        "/m/02zsn"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part13/YDV2bWDtSi-A.wav",
+      "wav_id": "YDV2bWDtSi-A"
+    },
+    {
+      "caption": "A lot of sirens of different types all blaring at the same time along with vehicle noises",
+      "requested_events": [
+        "/m/03kmc9",
+        "/m/07yv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part13/YDcVHwUk1kZ0.wav",
+      "wav_id": "YDcVHwUk1kZ0"
+    },
+    {
+      "caption": "A train approaches with horns blaring loudly",
+      "requested_events": [
+        "/m/07jdr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part13/YDq4oqesr5J0.wav",
+      "wav_id": "YDq4oqesr5J0"
+    },
+    {
+      "caption": "Railroad warning signals beeping while a train horn sounds and train runs on railroad tracks",
+      "requested_events": [
+        "/m/0284vy3",
+        "/m/07jdr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part14/YECPfahcqU4k.wav",
+      "wav_id": "YECPfahcqU4k"
+    },
+    {
+      "caption": "A large bell rings",
+      "requested_events": [
+        "/m/0395lw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part14/YFGLzoiXAqEI.wav",
+      "wav_id": "YFGLzoiXAqEI"
+    },
+    {
+      "caption": "People talk quietly as animals make crinkling noises",
+      "requested_events": [
+        "/m/0jbk"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part15/YGEw1cIXFStg.wav",
+      "wav_id": "YGEw1cIXFStg"
+    },
+    {
+      "caption": "A woman speaks followed by a few beeps",
+      "requested_events": [
+        "/m/02fs_r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part15/YGNH3Dpqqwss.wav",
+      "wav_id": "YGNH3Dpqqwss"
+    },
+    {
+      "caption": "Motor vehicles are racing and skidding",
+      "requested_events": [
+        "/m/07rknqz",
+        "/m/07yv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part15/YGXPeyqXZfyM.wav",
+      "wav_id": "YGXPeyqXZfyM"
+    },
+    {
+      "caption": "Continuous water runs as a man talks ending with a gurgle",
+      "requested_events": [
+        "/m/0838f"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part15/YGesb9ZzBjz4.wav",
+      "wav_id": "YGesb9ZzBjz4"
+    },
+    {
+      "caption": "Click followed by sewing machine",
+      "requested_events": [
+        "/m/0llzx"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part15/YGwEOBgi3RMg.wav",
+      "wav_id": "YGwEOBgi3RMg"
+    },
+    {
+      "caption": "Clicking on a computer keyboard with some electrical humming",
+      "requested_events": [
+        "/m/01m2v"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part16/YHZxl5ot0Luk.wav",
+      "wav_id": "YHZxl5ot0Luk"
+    },
+    {
+      "caption": "A melodic whistling continuously echoing",
+      "requested_events": [
+        "/m/01w250"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part16/YHp33VJU5-TI.wav",
+      "wav_id": "YHp33VJU5-TI"
+    },
+    {
+      "caption": "Rustling with some light typing",
+      "requested_events": [
+        "/m/0316dw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part16/YIAdciIXjwQI.wav",
+      "wav_id": "YIAdciIXjwQI"
+    },
+    {
+      "caption": "A sawing action is followed by a young boy yelling and a young man speaking after that",
+      "requested_events": [
+        "/m/01b82r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part18/YKRA1RQ-INq4.wav",
+      "wav_id": "YKRA1RQ-INq4"
+    },
+    {
+      "caption": "A man speaks nearby, followed by crumpling paper while the man continues to speak",
+      "requested_events": [
+        "/t/dd00112"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part18/YKkDfcs-sjRA.wav",
+      "wav_id": "YKkDfcs-sjRA"
+    },
+    {
+      "caption": "An aircraft engine works nearby",
+      "requested_events": [
+        "/m/014yck",
+        "/m/0k5j"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part18/YKxVi2W3Olag.wav",
+      "wav_id": "YKxVi2W3Olag"
+    },
+    {
+      "caption": "Loud bird song followed by cheerful upbeat music",
+      "requested_events": [
+        "/m/015p6",
+        "/m/020bb7"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part18/YLeGCP6x2npc.wav",
+      "wav_id": "YLeGCP6x2npc"
+    },
+    {
+      "caption": "Several pigeons coo while a wood surface is tapped",
+      "requested_events": [
+        "/m/0h0rv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part19/YN7edlf3fYxA.wav",
+      "wav_id": "YN7edlf3fYxA"
+    },
+    {
+      "caption": "Bells loudly tolling",
+      "requested_events": [
+        "/m/0395lw"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part20/YNiEES_aF9TM.wav",
+      "wav_id": "YNiEES_aF9TM"
+    },
+    {
+      "caption": "A faucet is turned on and fills a glass",
+      "requested_events": [
+        "/m/02jz0l"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part20/YO8fDStDVZGc.wav",
+      "wav_id": "YO8fDStDVZGc"
+    },
+    {
+      "caption": "Audience applause accompanied by cheers",
+      "requested_events": [
+        "/m/028ght"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part20/YOqpuMxjAYTs.wav",
+      "wav_id": "YOqpuMxjAYTs"
+    },
+    {
+      "caption": "While a man talks a drill buzzes constantly",
+      "requested_events": [
+        "/m/01d380"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part21/YPU5UHuJGSaU.wav",
+      "wav_id": "YPU5UHuJGSaU"
+    },
+    {
+      "caption": "Silence followed by water gushing with gurgling noises",
+      "requested_events": [
+        "/m/07swgks"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part21/YPyX-WDbOEtw.wav",
+      "wav_id": "YPyX-WDbOEtw"
+    },
+    {
+      "caption": "A duck calls out loud several times",
+      "requested_events": [
+        "/m/09ddx"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part21/YPztItEIAmwI.wav",
+      "wav_id": "YPztItEIAmwI"
+    },
+    {
+      "caption": "A sheep bleats nearby",
+      "requested_events": [
+        "/m/07bgp",
+        "/m/07q0h5t"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part21/YQj5FSU0U8VM.wav",
+      "wav_id": "YQj5FSU0U8VM"
+    },
+    {
+      "caption": "Goat bleating continuously then clears throat and starts bleating again",
+      "requested_events": [
+        "/m/03fwl"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part21/YQn3hwMZIsMg.wav",
+      "wav_id": "YQn3hwMZIsMg"
+    },
+    {
+      "caption": "A woman talks in the distance, and then steam hisses nearby, followed by a woman talking",
+      "requested_events": [
+        "/m/06wzb",
+        "/m/07rjwbb"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part22/YSJ8xU7Ewii0.wav",
+      "wav_id": "YSJ8xU7Ewii0"
+    },
+    {
+      "caption": "Wind blowing with pigeons cooing and a man speaking briefly",
+      "requested_events": [
+        "/m/0h0rv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part23/YT2rpP8kFQc4.wav",
+      "wav_id": "YT2rpP8kFQc4"
+    },
+    {
+      "caption": "Woosh and tick took of clock",
+      "requested_events": [
+        "/m/01x3z",
+        "/m/07qjznt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part23/YTmk19U7ZQOs.wav",
+      "wav_id": "YTmk19U7ZQOs"
+    },
+    {
+      "caption": "Wind blowing into a microphone followed by multiple bursts of machine gun shots firing alongside metal clanging",
+      "requested_events": [
+        "/m/04zjc"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part24/YUbz-zCifh_U.wav",
+      "wav_id": "YUbz-zCifh_U"
+    },
+    {
+      "caption": "A gunshot then a man pants, yells and then an explosion occurs",
+      "requested_events": [
+        "/m/014zdl"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part24/YVh27Q1X4jn4.wav",
+      "wav_id": "YVh27Q1X4jn4"
+    },
+    {
+      "caption": "A boat runs, followed by a person speaking very loudly as it continues to run",
+      "requested_events": [
+        "/m/019jd"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part24/YVqW6hpDVjn0.wav",
+      "wav_id": "YVqW6hpDVjn0"
+    },
+    {
+      "caption": "A dog barks multiple times loudly nearby",
+      "requested_events": [
+        "/m/05tny_",
+        "/m/0bt9lr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part24/YW3Bz98gN42Y.wav",
+      "wav_id": "YW3Bz98gN42Y"
+    },
+    {
+      "caption": "Thunder clapping as rain falls and a vehicle engine revs for a brief moment as water trickles at a moderate rate",
+      "requested_events": [
+        "/m/06mb1",
+        "/m/0ngt1"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part25/YWXQ-Em-c_sQ.wav",
+      "wav_id": "YWXQ-Em-c_sQ"
+    },
+    {
+      "caption": "An electronic adult male voice speaks and laughs, a metal whoosh occurs followed by a quiet clatter, and a telephone rings once",
+      "requested_events": [
+        "/m/07cx4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part25/YWmc1_QtpLo0.wav",
+      "wav_id": "YWmc1_QtpLo0"
+    },
+    {
+      "caption": "Race cars are speeding and skidding tires",
+      "requested_events": [
+        "/m/07rknqz"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part25/YX1YSEoi-6QQ.wav",
+      "wav_id": "YX1YSEoi-6QQ"
+    },
+    {
+      "caption": "A steam machine is making a hissing sound",
+      "requested_events": [
+        "/m/06wzb"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part26/YYVZAFqLqg0I.wav",
+      "wav_id": "YYVZAFqLqg0I"
+    },
+    {
+      "caption": "Food sizzles in a pan, and then a woman speaks quickly",
+      "requested_events": [
+        "/m/07p9k1k"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part26/YYesa7c_pyUk.wav",
+      "wav_id": "YYesa7c_pyUk"
+    },
+    {
+      "caption": "Muffled ocean waves crashing followed by muffled water pattering on a surface alongside plastic camera muffling",
+      "requested_events": [
+        "/m/034srq",
+        "/m/05kq4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part26/YYfbWad6O55g.wav",
+      "wav_id": "YYfbWad6O55g"
+    },
+    {
+      "caption": "Bees buzz and wind blows",
+      "requested_events": [
+        "/m/01h3n"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part26/YYtvajSLNIDY.wav",
+      "wav_id": "YYtvajSLNIDY"
+    },
+    {
+      "caption": "A woman speaks in a frustrated way, then a series of very rapid, escalating explosions, and an older child exclaims excitedly",
+      "requested_events": [
+        "/m/014zdl"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part27/Y_E6LHY-EMIY.wav",
+      "wav_id": "Y_E6LHY-EMIY"
+    },
+    {
+      "caption": "Emergency vehicle sirens sound nearby as people talk quietly",
+      "requested_events": [
+        "/m/03j1ly",
+        "/m/03kmc9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part27/Y_syKJSgrt6Y.wav",
+      "wav_id": "Y_syKJSgrt6Y"
+    },
+    {
+      "caption": "A motorcycle engine revving up and down",
+      "requested_events": [
+        "/m/04_sv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part28/Ya_Bd9yJLK-U.wav",
+      "wav_id": "Ya_Bd9yJLK-U"
+    },
+    {
+      "caption": "Repetitive burping sounds and a woman and man speaks",
+      "requested_events": [
+        "/m/03q5_w"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part28/YaizpciizxuI.wav",
+      "wav_id": "YaizpciizxuI"
+    },
+    {
+      "caption": "A loud explosion rings",
+      "requested_events": [
+        "/m/014zdl"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part28/Yao9IiKBt7iI.wav",
+      "wav_id": "Yao9IiKBt7iI"
+    },
+    {
+      "caption": "A drill turns loudly nearby",
+      "requested_events": [
+        "/m/01d380"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part28/YaqSHFKL-pdU.wav",
+      "wav_id": "YaqSHFKL-pdU"
+    },
+    {
+      "caption": "Water splashing and gurgling sounds with a clanking noise",
+      "requested_events": [
+        "/m/0838f"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part28/YbkegqFBY-j4.wav",
+      "wav_id": "YbkegqFBY-j4"
+    },
+    {
+      "caption": "Emergency vehicle sirens going off",
+      "requested_events": [
+        "/m/03j1ly",
+        "/m/03kmc9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part29/Yce4iEtOLsSo.wav",
+      "wav_id": "Yce4iEtOLsSo"
+    },
+    {
+      "caption": "A chainsaw loudly cuts through wood and then revs down and idles",
+      "requested_events": [
+        "/m/01j4z9",
+        "/m/083vt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part29/YcpUQHj8AzIU.wav",
+      "wav_id": "YcpUQHj8AzIU"
+    },
+    {
+      "caption": "A machine whirs followed by a quick laugh before a woman speaks from a background distance followed by another woman speaking and dishes are being moved across a surface",
+      "requested_events": [
+        "/m/04brg2"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part29/YdNSX3V6L2RI.wav",
+      "wav_id": "YdNSX3V6L2RI"
+    },
+    {
+      "caption": "Sheep bleating while man speaking and laughing",
+      "requested_events": [
+        "/m/07bgp"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part29/YdYxq4QKhl68.wav",
+      "wav_id": "YdYxq4QKhl68"
+    },
+    {
+      "caption": "An airplane flies by and then an explosion occurs in the distance",
+      "requested_events": [
+        "/m/0cmf2"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part29/Ydv1huWa4-rA.wav",
+      "wav_id": "Ydv1huWa4-rA"
+    },
+    {
+      "caption": "Hiss and then loud baby laughter and woman giggling",
+      "requested_events": [
+        "/m/01j3sz",
+        "/t/dd00001"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part30/Yebq8ROjY1FM.wav",
+      "wav_id": "Yebq8ROjY1FM"
+    },
+    {
+      "caption": "Dogs bark and growl as a lady speaks",
+      "requested_events": [
+        "/m/01z5f",
+        "/m/05tny_",
+        "/m/0bt9lr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part30/YerE30STNQNo.wav",
+      "wav_id": "YerE30STNQNo"
+    },
+    {
+      "caption": "Plastic camera muffling followed by a power tool drill running briefly as muffled wood clanking bangs in the background",
+      "requested_events": [
+        "/m/01d380",
+        "/m/0_ksk"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part30/YfKhG0tRnWJg.wav",
+      "wav_id": "YfKhG0tRnWJg"
+    },
+    {
+      "caption": "Several frogs croak near and far",
+      "requested_events": [
+        "/m/09ld4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part30/YfSH4wXDced0.wav",
+      "wav_id": "YfSH4wXDced0"
+    },
+    {
+      "caption": "Birds chirp and a man speaks",
+      "requested_events": [
+        "/m/015p6",
+        "/m/07pggtn"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part30/YfaeRFMOE3b0.wav",
+      "wav_id": "YfaeRFMOE3b0"
+    },
+    {
+      "caption": "Rustling followed by door opening and female greeting",
+      "requested_events": [
+        "/m/02dgv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part30/YfrjIUoF_6NI.wav",
+      "wav_id": "YfrjIUoF_6NI"
+    },
+    {
+      "caption": "A race car hums at medium frequency nearby, and then starts to accelerate rapidly",
+      "requested_events": [
+        "/m/0k4j",
+        "/m/0ltv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part30/Yg-IfAFQOTYM.wav",
+      "wav_id": "Yg-IfAFQOTYM"
+    },
+    {
+      "caption": "The rain falls with thunderstorm followed by a man talking",
+      "requested_events": [
+        "/m/06mb1",
+        "/m/0jb2l"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part31/Yh7JswUS3ubc.wav",
+      "wav_id": "Yh7JswUS3ubc"
+    },
+    {
+      "caption": "A child talks nearby as water dribbles nearby",
+      "requested_events": [
+        "/m/07pqc89",
+        "/m/0838f"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part32/Yi1Dx7-SF7JA.wav",
+      "wav_id": "Yi1Dx7-SF7JA"
+    },
+    {
+      "caption": "A truck idles nearby as bells ring, and then an engine gradually revs down",
+      "requested_events": [
+        "/m/07r04"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part32/YiMf0glv5UTo.wav",
+      "wav_id": "YiMf0glv5UTo"
+    },
+    {
+      "caption": "Racing car engines change gears as tires squeal and the wind goes by in a fast blast",
+      "requested_events": [
+        "/m/0k4j"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part32/YiW8QAtBpDQY.wav",
+      "wav_id": "YiW8QAtBpDQY"
+    },
+    {
+      "caption": "Something whooshes two times followed by a hit",
+      "requested_events": [
+        "/m/07rqsjt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part32/Yj69VGnBXolE.wav",
+      "wav_id": "Yj69VGnBXolE"
+    },
+    {
+      "caption": "A continuous jet spray spurts out loudly",
+      "requested_events": [
+        "/m/07qlf79"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part32/YjPhDXknWomg.wav",
+      "wav_id": "YjPhDXknWomg"
+    },
+    {
+      "caption": "A large amount of bees buzz together",
+      "requested_events": [
+        "/m/01h3n"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part32/YjaT_MrR1Ziw.wav",
+      "wav_id": "YjaT_MrR1Ziw"
+    },
+    {
+      "caption": "A fast motorboat runs along with water breaking and splashing while the mic has static",
+      "requested_events": [
+        "/m/02rlv9"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part32/YjpsHHcJ4XLA.wav",
+      "wav_id": "YjpsHHcJ4XLA"
+    },
+    {
+      "caption": "A large clock ticks in the distance",
+      "requested_events": [
+        "/m/07qjznt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part33/YkFwUhb0B4ik.wav",
+      "wav_id": "YkFwUhb0B4ik"
+    },
+    {
+      "caption": "A bus idles as a person talks closely nearby",
+      "requested_events": [
+        "/m/01bjv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part33/YkRbHSGt1xg8.wav",
+      "wav_id": "YkRbHSGt1xg8"
+    },
+    {
+      "caption": "Something whips and a pig oinks",
+      "requested_events": [
+        "/t/dd00018"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part34/YmrpMGfGj9Nc.wav",
+      "wav_id": "YmrpMGfGj9Nc"
+    },
+    {
+      "caption": "Speech followed by coughing and laughter and then more speech",
+      "requested_events": [
+        "/m/01j3sz",
+        "/m/09x0r"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part34/YmxGxMt7cWNM.wav",
+      "wav_id": "YmxGxMt7cWNM"
+    },
+    {
+      "caption": "A man and a young woman talking as a goat baas followed by a kid speaking in the background then water lightly splashing",
+      "requested_events": [
+        "/m/03fwl",
+        "/m/0ytgt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part34/Yn9sdcgrA534.wav",
+      "wav_id": "Yn9sdcgrA534"
+    },
+    {
+      "caption": "The rain fall while thunders clapped",
+      "requested_events": [
+        "/m/06mb1",
+        "/m/0ngt1"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part34/YnpbwcincPa4.wav",
+      "wav_id": "YnpbwcincPa4"
+    },
+    {
+      "caption": "A vehicle door opening then closing as a man and a woman speak then laugh as a pig oinks alongside another man speaking in the background",
+      "requested_events": [
+        "/t/dd00018"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part35/YoQ-N2HpFQxo.wav",
+      "wav_id": "YoQ-N2HpFQxo"
+    },
+    {
+      "caption": "Humming of a passing train with a long honking horn",
+      "requested_events": [
+        "/m/07jdr"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part35/YpH4Wx_yghew.wav",
+      "wav_id": "YpH4Wx_yghew"
+    },
+    {
+      "caption": "A woman talks the whole time while liquid boils and the food sizzles",
+      "requested_events": [
+        "/m/07p9k1k"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part35/YpKB2OAe3kK0.wav",
+      "wav_id": "YpKB2OAe3kK0"
+    },
+    {
+      "caption": "Human voices talking and laughing followed by sheep burping",
+      "requested_events": [
+        "/m/03q5_w",
+        "/m/07bgp"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part36/Yqko9VL4V5UA.wav",
+      "wav_id": "Yqko9VL4V5UA"
+    },
+    {
+      "caption": "An helicopter flies moving further",
+      "requested_events": [
+        "/m/09ct_"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part36/YrZ4a1c_wi6U.wav",
+      "wav_id": "YrZ4a1c_wi6U"
+    },
+    {
+      "caption": "Some birds tweet far while the wind blows and then an insect flies nearby",
+      "requested_events": [
+        "/m/03vt0",
+        "/m/0h2mp"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part38/YvO6kZ_NUgR4.wav",
+      "wav_id": "YvO6kZ_NUgR4"
+    },
+    {
+      "caption": "Someone speaks and stirs in a pot",
+      "requested_events": [
+        "/m/07ptfmf"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part38/YvTOKrEEw6jM.wav",
+      "wav_id": "YvTOKrEEw6jM"
+    },
+    {
+      "caption": "Rain falls on a surface very thickly nearby",
+      "requested_events": [
+        "/m/06mb1"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part38/YvgdbX3IsEYY.wav",
+      "wav_id": "YvgdbX3IsEYY"
+    },
+    {
+      "caption": "A couple of men speak as bees buzz and fly around close by",
+      "requested_events": [
+        "/m/01h3n"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part39/YwRSA_YbO-vI.wav",
+      "wav_id": "YwRSA_YbO-vI"
+    },
+    {
+      "caption": "A woman speaking then a man speaking followed by an infant crying",
+      "requested_events": [
+        "/m/0463cq4"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part39/YwRTbswBmGiQ.wav",
+      "wav_id": "YwRTbswBmGiQ"
+    },
+    {
+      "caption": "A helicopter flying with engine sounds",
+      "requested_events": [
+        "/m/09ct_"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part39/Yx8NxYu-2t7Q.wav",
+      "wav_id": "Yx8NxYu-2t7Q"
+    },
+    {
+      "caption": "Several goats bleat quietly",
+      "requested_events": [
+        "/m/03fwl"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part39/YxdmzWY8-TKo.wav",
+      "wav_id": "YxdmzWY8-TKo"
+    },
+    {
+      "caption": "Clip-clops of several horses with wind blowing and people speaking",
+      "requested_events": [
+        "/m/03k3r",
+        "/m/07rv9rh"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/Yz-yxYr8mjrQ.wav",
+      "wav_id": "Yz-yxYr8mjrQ"
+    },
+    {
+      "caption": "Loud gunshots echo",
+      "requested_events": [
+        "/m/032s66"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/Yz87LyYnrFBo.wav",
+      "wav_id": "Yz87LyYnrFBo"
+    },
+    {
+      "caption": "A muffled bus engine running as a woman talks in the distance followed by a person snickering",
+      "requested_events": [
+        "/m/01bjv"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/YzGp-WJAeu3s.wav",
+      "wav_id": "YzGp-WJAeu3s"
+    },
+    {
+      "caption": "A man talking as water trickles followed by two other men talking and bells jingling",
+      "requested_events": [
+        "/m/07pqc89"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/YzRUj5M5WO9E.wav",
+      "wav_id": "YzRUj5M5WO9E"
+    },
+    {
+      "caption": "A man speaks followed by sprays",
+      "requested_events": [
+        "/m/07qlf79"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/YzUXRqKnfgWY.wav",
+      "wav_id": "YzUXRqKnfgWY"
+    },
+    {
+      "caption": "Horse hoofs clopping in the outside",
+      "requested_events": [
+        "/m/03k3r",
+        "/t/dd00129"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/YzZ9Pdt7V8ZI.wav",
+      "wav_id": "YzZ9Pdt7V8ZI"
+    },
+    {
+      "caption": "A man talking as a motor stutters several times while wind blows into a microphone followed by a chainsaw starting up and sawing wood",
+      "requested_events": [
+        "/m/01b82r",
+        "/m/083vt"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/Yzf6VQkHplzQ.wav",
+      "wav_id": "Yzf6VQkHplzQ"
+    },
+    {
+      "caption": "A lion roaring followed by a synthesized whoosh then birds chirping",
+      "requested_events": [
+        "/m/015p6"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/YzhP7cNIMmP0.wav",
+      "wav_id": "YzhP7cNIMmP0"
+    },
+    {
+      "caption": "A swarm of ducks quacking in the distance while a duck quacks in the foreground",
+      "requested_events": [
+        "/m/07qdb04",
+        "/m/09ddx"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/YzlrqNFrL3S0.wav",
+      "wav_id": "YzlrqNFrL3S0"
+    },
+    {
+      "caption": "A woman talking as infants babble then sneeze while plastic clacks on a hard surface",
+      "requested_events": [
+        "/m/01hsr_"
+      ],
+      "wav": "zip_audios/unbalanced_train_segments/unbalanced_train_segments_part40/YzsOadrVY3gs.wav",
+      "wav_id": "YzsOadrVY3gs"
+    }
+  ],
+  "stratified_across": "E* tier0 events",
+  "systems": [
+    "base",
+    "P0-std",
+    "P1-nat"
+  ],
+  "tier": 0
+}

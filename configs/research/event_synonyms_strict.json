@@ -1,0 +1,4171 @@
+{
+  "events": {
+    "/g/122z_qxw": {
+      "aliases": [
+        "firecracker",
+        "firecrackers"
+      ],
+      "display_name": "Firecracker",
+      "index": 433
+    },
+    "/m/011k_j": {
+      "aliases": [
+        "timpani",
+        "timpanis"
+      ],
+      "display_name": "Timpani",
+      "index": 169
+    },
+    "/m/01280g": {
+      "aliases": [
+        "wild animals"
+      ],
+      "display_name": "Wild animals",
+      "index": 108
+    },
+    "/m/012f08": {
+      "aliases": [
+        "motor vehicle (road)"
+      ],
+      "display_name": "Motor vehicle (road)",
+      "index": 306
+    },
+    "/m/012n7d": {
+      "aliases": [
+        "ambulance (siren)"
+      ],
+      "display_name": "Ambulance (siren)",
+      "index": 324
+    },
+    "/m/012ndj": {
+      "aliases": [
+        "fire engine",
+        "fire truck (siren)"
+      ],
+      "display_name": "Fire engine, fire truck (siren)",
+      "index": 325
+    },
+    "/m/012xff": {
+      "aliases": [
+        "toothbrush",
+        "toothbrushes"
+      ],
+      "display_name": "Toothbrush",
+      "index": 375
+    },
+    "/m/0130jx": {
+      "aliases": [
+        "sink (filling or washing)"
+      ],
+      "display_name": "Sink (filling or washing)",
+      "index": 371
+    },
+    "/m/013y1f": {
+      "aliases": [
+        "organ",
+        "organs"
+      ],
+      "display_name": "Organ",
+      "index": 155
+    },
+    "/m/0140xf": {
+      "aliases": [
+        "christmas music"
+      ],
+      "display_name": "Christmas music",
+      "index": 273
+    },
+    "/m/0145m": {
+      "aliases": [
+        "afrobeat",
+        "afrobeats"
+      ],
+      "display_name": "Afrobeat",
+      "index": 257
+    },
+    "/m/014yck": {
+      "aliases": [
+        "aircraft engine"
+      ],
+      "display_name": "Aircraft engine",
+      "index": 336
+    },
+    "/m/014zdl": {
+      "aliases": [
+        "explosion",
+        "explosions"
+      ],
+      "display_name": "Explosion",
+      "index": 426
+    },
+    "/m/0150b9": {
+      "aliases": [
+        "change ringing (campanology)"
+      ],
+      "display_name": "Change ringing (campanology)",
+      "index": 207
+    },
+    "/m/0155w": {
+      "aliases": [
+        "blues",
+        "blueses"
+      ],
+      "display_name": "Blues",
+      "index": 251
+    },
+    "/m/015jpf": {
+      "aliases": [
+        "dial tone"
+      ],
+      "display_name": "Dial tone",
+      "index": 393
+    },
+    "/m/015lz1": {
+      "aliases": [
+        "singing",
+        "singings"
+      ],
+      "display_name": "Singing",
+      "index": 27
+    },
+    "/m/015p6": {
+      "aliases": [
+        "bird",
+        "birds"
+      ],
+      "display_name": "Bird",
+      "index": 111
+    },
+    "/m/015vgc": {
+      "aliases": [
+        "carnatic music"
+      ],
+      "display_name": "Carnatic music",
+      "index": 261
+    },
+    "/m/015y_n": {
+      "aliases": [
+        "swing music"
+      ],
+      "display_name": "Swing music",
+      "index": 230
+    },
+    "/m/0164x2": {
+      "aliases": [
+        "music of africa"
+      ],
+      "display_name": "Music of Africa",
+      "index": 256
+    },
+    "/m/016622": {
+      "aliases": [
+        "tubular bells"
+      ],
+      "display_name": "Tubular bells",
+      "index": 178
+    },
+    "/m/016cjb": {
+      "aliases": [
+        "gospel music"
+      ],
+      "display_name": "Gospel music",
+      "index": 259
+    },
+    "/m/018j2": {
+      "aliases": [
+        "banjo",
+        "banjos"
+      ],
+      "display_name": "Banjo",
+      "index": 147
+    },
+    "/m/018vs": {
+      "aliases": [
+        "bass guitar"
+      ],
+      "display_name": "Bass guitar",
+      "index": 142
+    },
+    "/m/018w8": {
+      "aliases": [
+        "basketball bounce"
+      ],
+      "display_name": "Basketball bounce",
+      "index": 465
+    },
+    "/m/0192l": {
+      "aliases": [
+        "bagpipes",
+        "bagpipeses"
+      ],
+      "display_name": "Bagpipes",
+      "index": 210
+    },
+    "/m/0195fx": {
+      "aliases": [
+        "subway",
+        "subways",
+        "metro",
+        "metros",
+        "underground",
+        "undergrounds"
+      ],
+      "display_name": "Subway, metro, underground",
+      "index": 334
+    },
+    "/m/0199g": {
+      "aliases": [
+        "bicycle",
+        "bicycles"
+      ],
+      "display_name": "Bicycle",
+      "index": 341
+    },
+    "/m/019jd": {
+      "aliases": [
+        "boat",
+        "boats",
+        "water vehicle"
+      ],
+      "display_name": "Boat, Water vehicle",
+      "index": 301
+    },
+    "/m/01b82r": {
+      "aliases": [
+        "sawing",
+        "sawings"
+      ],
+      "display_name": "Sawing",
+      "index": 421
+    },
+    "/m/01b9nn": {
+      "aliases": [
+        "reverberation",
+        "reverberations"
+      ],
+      "display_name": "Reverberation",
+      "index": 511
+    },
+    "/m/01b_21": {
+      "aliases": [
+        "cough",
+        "coughs"
+      ],
+      "display_name": "Cough",
+      "index": 47
+    },
+    "/m/01bjv": {
+      "aliases": [
+        "bus",
+        "buses"
+      ],
+      "display_name": "Bus",
+      "index": 321
+    },
+    "/m/01bns_": {
+      "aliases": [
+        "zither",
+        "zithers"
+      ],
+      "display_name": "Zither",
+      "index": 150
+    },
+    "/m/01c194": {
+      "aliases": [
+        "mantra",
+        "mantras"
+      ],
+      "display_name": "Mantra",
+      "index": 31
+    },
+    "/m/01d380": {
+      "aliases": [
+        "drill",
+        "drills"
+      ],
+      "display_name": "Drill",
+      "index": 425
+    },
+    "/m/01d3sd": {
+      "aliases": [
+        "snoring",
+        "snorings"
+      ],
+      "display_name": "Snoring",
+      "index": 43
+    },
+    "/m/01g50p": {
+      "aliases": [
+        "railroad car",
+        "train wagon"
+      ],
+      "display_name": "Railroad car, train wagon",
+      "index": 332
+    },
+    "/m/01g90h": {
+      "aliases": [
+        "stomach rumble"
+      ],
+      "display_name": "Stomach rumble",
+      "index": 57
+    },
+    "/m/01glhc": {
+      "aliases": [
+        "tapping (guitar technique)"
+      ],
+      "display_name": "Tapping (guitar technique)",
+      "index": 145
+    },
+    "/m/01h3n": {
+      "aliases": [
+        "bee",
+        "bees",
+        "wasp",
+        "wasps",
+        "etc.",
+        "etc.s"
+      ],
+      "display_name": "Bee, wasp, etc.",
+      "index": 131
+    },
+    "/m/01h82_": {
+      "aliases": [
+        "engine knocking"
+      ],
+      "display_name": "Engine knocking",
+      "index": 350
+    },
+    "/m/01h8n0": {
+      "aliases": [
+        "conversation",
+        "conversations"
+      ],
+      "display_name": "Conversation",
+      "index": 4
+    },
+    "/m/01hgjl": {
+      "aliases": [
+        "scratching (performance technique)"
+      ],
+      "display_name": "Scratching (performance technique)",
+      "index": 215
+    },
+    "/m/01hnzm": {
+      "aliases": [
+        "ringtone",
+        "ringtones"
+      ],
+      "display_name": "Ringtone",
+      "index": 391
+    },
+    "/m/01hsr_": {
+      "aliases": [
+        "sneeze",
+        "sneezes"
+      ],
+      "display_name": "Sneeze",
+      "index": 49
+    },
+    "/m/01j3sz": {
+      "aliases": [
+        "laughter",
+        "laughters"
+      ],
+      "display_name": "Laughter",
+      "index": 16
+    },
+    "/m/01j4z9": {
+      "aliases": [
+        "chainsaw",
+        "chainsaws"
+      ],
+      "display_name": "Chainsaw",
+      "index": 347
+    },
+    "/m/01jg02": {
+      "aliases": [
+        "heart sounds",
+        "heartbeat",
+        "heartbeats"
+      ],
+      "display_name": "Heart sounds, heartbeat",
+      "index": 64
+    },
+    "/m/01jg1z": {
+      "aliases": [
+        "heart murmur"
+      ],
+      "display_name": "Heart murmur",
+      "index": 65
+    },
+    "/m/01jnbd": {
+      "aliases": [
+        "echo",
+        "echos"
+      ],
+      "display_name": "Echo",
+      "index": 512
+    },
+    "/m/01jt3m": {
+      "aliases": [
+        "toilet flush"
+      ],
+      "display_name": "Toilet flush",
+      "index": 374
+    },
+    "/m/01jwx6": {
+      "aliases": [
+        "vibration",
+        "vibrations"
+      ],
+      "display_name": "Vibration",
+      "index": 523
+    },
+    "/m/01kcd": {
+      "aliases": [
+        "brass instrument"
+      ],
+      "display_name": "Brass instrument",
+      "index": 185
+    },
+    "/m/01lsmm": {
+      "aliases": [
+        "scissors",
+        "scissorses"
+      ],
+      "display_name": "Scissors",
+      "index": 381
+    },
+    "/m/01lyv": {
+      "aliases": [
+        "country",
+        "countries"
+      ],
+      "display_name": "Country",
+      "index": 229
+    },
+    "/m/01m2v": {
+      "aliases": [
+        "computer keyboard"
+      ],
+      "display_name": "Computer keyboard",
+      "index": 386
+    },
+    "/m/01m4t": {
+      "aliases": [
+        "printer",
+        "printers"
+      ],
+      "display_name": "Printer",
+      "index": 415
+    },
+    "/m/01p970": {
+      "aliases": [
+        "tabla",
+        "tablas"
+      ],
+      "display_name": "Tabla",
+      "index": 170
+    },
+    "/m/01qbl": {
+      "aliases": [
+        "cymbal",
+        "cymbals"
+      ],
+      "display_name": "Cymbal",
+      "index": 171
+    },
+    "/m/01rd7k": {
+      "aliases": [
+        "turkey",
+        "turkeys"
+      ],
+      "display_name": "Turkey",
+      "index": 102
+    },
+    "/m/01s0ps": {
+      "aliases": [
+        "electric piano"
+      ],
+      "display_name": "Electric piano",
+      "index": 154
+    },
+    "/m/01s0vc": {
+      "aliases": [
+        "zipper (clothing)"
+      ],
+      "display_name": "Zipper (clothing)",
+      "index": 378
+    },
+    "/m/01sm1g": {
+      "aliases": [
+        "wood block"
+      ],
+      "display_name": "Wood block",
+      "index": 173
+    },
+    "/m/01swy6": {
+      "aliases": [
+        "yodeling",
+        "yodelings"
+      ],
+      "display_name": "Yodeling",
+      "index": 29
+    },
+    "/m/01v1d8": {
+      "aliases": [
+        "sampler",
+        "samplers"
+      ],
+      "display_name": "Sampler",
+      "index": 159
+    },
+    "/m/01v_m0": {
+      "aliases": [
+        "sine wave"
+      ],
+      "display_name": "Sine wave",
+      "index": 501
+    },
+    "/m/01w250": {
+      "aliases": [
+        "whistling",
+        "whistlings"
+      ],
+      "display_name": "Whistling",
+      "index": 40
+    },
+    "/m/01wy6": {
+      "aliases": [
+        "clarinet",
+        "clarinets"
+      ],
+      "display_name": "Clarinet",
+      "index": 198
+    },
+    "/m/01x3z": {
+      "aliases": [
+        "clock",
+        "clocks"
+      ],
+      "display_name": "Clock",
+      "index": 406
+    },
+    "/m/01xq0k1": {
+      "aliases": [
+        "cattle",
+        "cattles",
+        "bovinae",
+        "bovinaes"
+      ],
+      "display_name": "Cattle, bovinae",
+      "index": 90
+    },
+    "/m/01xqw": {
+      "aliases": [
+        "cello",
+        "cellos"
+      ],
+      "display_name": "Cello",
+      "index": 193
+    },
+    "/m/01y3hg": {
+      "aliases": [
+        "smoke detector",
+        "smoke alarm"
+      ],
+      "display_name": "Smoke detector, smoke alarm",
+      "index": 399
+    },
+    "/m/01yg9g": {
+      "aliases": [
+        "lawn mower"
+      ],
+      "display_name": "Lawn mower",
+      "index": 346
+    },
+    "/m/01yrx": {
+      "aliases": [
+        "cat",
+        "cats"
+      ],
+      "display_name": "Cat",
+      "index": 81
+    },
+    "/m/01z47d": {
+      "aliases": [
+        "busy signal"
+      ],
+      "display_name": "Busy signal",
+      "index": 394
+    },
+    "/m/01z5f": {
+      "aliases": [
+        "canidae",
+        "canidaes",
+        "dogs",
+        "dogses",
+        "wolves",
+        "wolveses"
+      ],
+      "display_name": "Canidae, dogs, wolves",
+      "index": 122
+    },
+    "/m/01z7dr": {
+      "aliases": [
+        "video game music"
+      ],
+      "display_name": "Video game music",
+      "index": 272
+    },
+    "/m/020bb7": {
+      "aliases": [
+        "bird vocalization",
+        "bird call",
+        "bird song"
+      ],
+      "display_name": "Bird vocalization, bird call, bird song",
+      "index": 112
+    },
+    "/m/0239kh": {
+      "aliases": [
+        "cowbell",
+        "cowbells"
+      ],
+      "display_name": "Cowbell",
+      "index": 92
+    },
+    "/m/023pjk": {
+      "aliases": [
+        "cutlery",
+        "cutleries",
+        "silverware",
+        "silverwares"
+      ],
+      "display_name": "Cutlery, silverware",
+      "index": 365
+    },
+    "/m/023vsd": {
+      "aliases": [
+        "sanding",
+        "sandings"
+      ],
+      "display_name": "Sanding",
+      "index": 423
+    },
+    "/m/0242l": {
+      "aliases": [
+        "coin (dropping)"
+      ],
+      "display_name": "Coin (dropping)",
+      "index": 380
+    },
+    "/m/024dl": {
+      "aliases": [
+        "cash register"
+      ],
+      "display_name": "Cash register",
+      "index": 414
+    },
+    "/m/025_jnm": {
+      "aliases": [
+        "finger snapping"
+      ],
+      "display_name": "Finger snapping",
+      "index": 62
+    },
+    "/m/025rv6n": {
+      "aliases": [
+        "fowl",
+        "fowls"
+      ],
+      "display_name": "Fowl",
+      "index": 98
+    },
+    "/m/025td0t": {
+      "aliases": [
+        "background music"
+      ],
+      "display_name": "Background music",
+      "index": 267
+    },
+    "/m/025wky1": {
+      "aliases": [
+        "air conditioning"
+      ],
+      "display_name": "Air conditioning",
+      "index": 413
+    },
+    "/m/0261r1": {
+      "aliases": [
+        "babbling",
+        "babblings"
+      ],
+      "display_name": "Babbling",
+      "index": 6
+    },
+    "/m/026fgl": {
+      "aliases": [
+        "wind chime"
+      ],
+      "display_name": "Wind chime",
+      "index": 206
+    },
+    "/m/026t6": {
+      "aliases": [
+        "drum",
+        "drums"
+      ],
+      "display_name": "Drum",
+      "index": 164
+    },
+    "/m/026z9": {
+      "aliases": [
+        "disco",
+        "discos"
+      ],
+      "display_name": "Disco",
+      "index": 236
+    },
+    "/m/027m70_": {
+      "aliases": [
+        "jingle bell"
+      ],
+      "display_name": "Jingle bell",
+      "index": 202
+    },
+    "/m/0283d": {
+      "aliases": [
+        "drum and bass"
+      ],
+      "display_name": "Drum and bass",
+      "index": 243
+    },
+    "/m/0284vy3": {
+      "aliases": [
+        "train horn"
+      ],
+      "display_name": "Train horn",
+      "index": 331
+    },
+    "/m/028ght": {
+      "aliases": [
+        "applause",
+        "applauses"
+      ],
+      "display_name": "Applause",
+      "index": 67
+    },
+    "/m/028sqc": {
+      "aliases": [
+        "music of asia"
+      ],
+      "display_name": "Music of Asia",
+      "index": 260
+    },
+    "/m/028v0c": {
+      "aliases": [
+        "silence",
+        "silences"
+      ],
+      "display_name": "Silence",
+      "index": 500
+    },
+    "/m/02_41": {
+      "aliases": [
+        "fire",
+        "fires"
+      ],
+      "display_name": "Fire",
+      "index": 298
+    },
+    "/m/02_nn": {
+      "aliases": [
+        "fart",
+        "farts"
+      ],
+      "display_name": "Fart",
+      "index": 60
+    },
+    "/m/02bk07": {
+      "aliases": [
+        "chant",
+        "chants"
+      ],
+      "display_name": "Chant",
+      "index": 30
+    },
+    "/m/02bm9n": {
+      "aliases": [
+        "ratchet",
+        "ratchets",
+        "pawl",
+        "pawls"
+      ],
+      "display_name": "Ratchet, pawl",
+      "index": 405
+    },
+    "/m/02bxd": {
+      "aliases": [
+        "didgeridoo",
+        "didgeridoos"
+      ],
+      "display_name": "Didgeridoo",
+      "index": 211
+    },
+    "/m/02c8p": {
+      "aliases": [
+        "telephone dialing",
+        "dtmf",
+        "dtmfs"
+      ],
+      "display_name": "Telephone dialing, DTMF",
+      "index": 392
+    },
+    "/m/02cjck": {
+      "aliases": [
+        "theme music"
+      ],
+      "display_name": "Theme music",
+      "index": 268
+    },
+    "/m/02cz_7": {
+      "aliases": [
+        "beatboxing",
+        "beatboxings"
+      ],
+      "display_name": "Beatboxing",
+      "index": 218
+    },
+    "/m/02dgv": {
+      "aliases": [
+        "door",
+        "doors"
+      ],
+      "display_name": "Door",
+      "index": 354
+    },
+    "/m/02fs_r": {
+      "aliases": [
+        "beep",
+        "beeps",
+        "bleep",
+        "bleeps"
+      ],
+      "display_name": "Beep, bleep",
+      "index": 481
+    },
+    "/m/02fsn": {
+      "aliases": [
+        "double bass"
+      ],
+      "display_name": "Double bass",
+      "index": 194
+    },
+    "/m/02fxyj": {
+      "aliases": [
+        "humming",
+        "hummings"
+      ],
+      "display_name": "Humming",
+      "index": 37
+    },
+    "/m/02g901": {
+      "aliases": [
+        "electric shaver",
+        "electric razor"
+      ],
+      "display_name": "Electric shaver, electric razor",
+      "index": 382
+    },
+    "/m/02hnl": {
+      "aliases": [
+        "drum kit"
+      ],
+      "display_name": "Drum kit",
+      "index": 162
+    },
+    "/m/02jz0l": {
+      "aliases": [
+        "water tap",
+        "faucet",
+        "faucets"
+      ],
+      "display_name": "Water tap, faucet",
+      "index": 370
+    },
+    "/m/02k_mr": {
+      "aliases": [
+        "drum roll"
+      ],
+      "display_name": "Drum roll",
+      "index": 167
+    },
+    "/m/02l6bg": {
+      "aliases": [
+        "propeller",
+        "propellers",
+        "airscrew",
+        "airscrews"
+      ],
+      "display_name": "Propeller, airscrew",
+      "index": 338
+    },
+    "/m/02lkt": {
+      "aliases": [
+        "electronic music"
+      ],
+      "display_name": "Electronic music",
+      "index": 239
+    },
+    "/m/02mfyn": {
+      "aliases": [
+        "car alarm"
+      ],
+      "display_name": "Car alarm",
+      "index": 310
+    },
+    "/m/02mk9": {
+      "aliases": [
+        "engine",
+        "engines"
+      ],
+      "display_name": "Engine",
+      "index": 343
+    },
+    "/m/02mscn": {
+      "aliases": [
+        "christian music"
+      ],
+      "display_name": "Christian music",
+      "index": 258
+    },
+    "/m/02p01q": {
+      "aliases": [
+        "filing (rasp)"
+      ],
+      "display_name": "Filing (rasp)",
+      "index": 422
+    },
+    "/m/02p0sh1": {
+      "aliases": [
+        "traditional music"
+      ],
+      "display_name": "Traditional music",
+      "index": 264
+    },
+    "/m/02p3nc": {
+      "aliases": [
+        "hiccup",
+        "hiccups"
+      ],
+      "display_name": "Hiccup",
+      "index": 59
+    },
+    "/m/02pjr4": {
+      "aliases": [
+        "blender",
+        "blenders"
+      ],
+      "display_name": "Blender",
+      "index": 369
+    },
+    "/m/02qldy": {
+      "aliases": [
+        "narration",
+        "narrations",
+        "monologue",
+        "monologues"
+      ],
+      "display_name": "Narration, monologue",
+      "index": 5
+    },
+    "/m/02qmj0d": {
+      "aliases": [
+        "string section"
+      ],
+      "display_name": "String section",
+      "index": 190
+    },
+    "/m/02rhddq": {
+      "aliases": [
+        "reversing beeps"
+      ],
+      "display_name": "Reversing beeps",
+      "index": 319
+    },
+    "/m/02rlv9": {
+      "aliases": [
+        "motorboat",
+        "motorboats",
+        "speedboat",
+        "speedboats"
+      ],
+      "display_name": "Motorboat, speedboat",
+      "index": 304
+    },
+    "/m/02rr_": {
+      "aliases": [
+        "effects unit"
+      ],
+      "display_name": "Effects unit",
+      "index": 463
+    },
+    "/m/02rtxlg": {
+      "aliases": [
+        "whispering",
+        "whisperings"
+      ],
+      "display_name": "Whispering",
+      "index": 15
+    },
+    "/m/02sgy": {
+      "aliases": [
+        "electric guitar"
+      ],
+      "display_name": "Electric guitar",
+      "index": 141
+    },
+    "/m/02v2lh": {
+      "aliases": [
+        "new-age music"
+      ],
+      "display_name": "New-age music",
+      "index": 253
+    },
+    "/m/02w4v": {
+      "aliases": [
+        "folk music"
+      ],
+      "display_name": "Folk music",
+      "index": 233
+    },
+    "/m/02x8m": {
+      "aliases": [
+        "funk",
+        "funks"
+      ],
+      "display_name": "Funk",
+      "index": 232
+    },
+    "/m/02x984l": {
+      "aliases": [
+        "mechanical fan"
+      ],
+      "display_name": "Mechanical fan",
+      "index": 412
+    },
+    "/m/02y_763": {
+      "aliases": [
+        "sliding door"
+      ],
+      "display_name": "Sliding door",
+      "index": 357
+    },
+    "/m/02yds9": {
+      "aliases": [
+        "purr",
+        "purrs"
+      ],
+      "display_name": "Purr",
+      "index": 82
+    },
+    "/m/02z32qm": {
+      "aliases": [
+        "fusillade",
+        "fusillades"
+      ],
+      "display_name": "Fusillade",
+      "index": 429
+    },
+    "/m/02zsn": {
+      "aliases": [
+        "female speech",
+        "woman speaking"
+      ],
+      "display_name": "Female speech, woman speaking",
+      "index": 2
+    },
+    "/m/030rvx": {
+      "aliases": [
+        "buzzer",
+        "buzzers"
+      ],
+      "display_name": "Buzzer",
+      "index": 398
+    },
+    "/m/0316dw": {
+      "aliases": [
+        "typing",
+        "typings"
+      ],
+      "display_name": "Typing",
+      "index": 384
+    },
+    "/m/0319l": {
+      "aliases": [
+        "french horn"
+      ],
+      "display_name": "French horn",
+      "index": 186
+    },
+    "/m/0326g": {
+      "aliases": [
+        "flamenco",
+        "flamencos"
+      ],
+      "display_name": "Flamenco",
+      "index": 250
+    },
+    "/m/032n05": {
+      "aliases": [
+        "whale vocalization"
+      ],
+      "display_name": "Whale vocalization",
+      "index": 136
+    },
+    "/m/032s66": {
+      "aliases": [
+        "gunshot",
+        "gunshots",
+        "gunfire",
+        "gunfires"
+      ],
+      "display_name": "Gunshot, gunfire",
+      "index": 427
+    },
+    "/m/0342h": {
+      "aliases": [
+        "guitar",
+        "guitars"
+      ],
+      "display_name": "Guitar",
+      "index": 140
+    },
+    "/m/034srq": {
+      "aliases": [
+        "waves",
+        "waveses",
+        "surf",
+        "surfs"
+      ],
+      "display_name": "Waves, surf",
+      "index": 295
+    },
+    "/m/0395lw": {
+      "aliases": [
+        "bell",
+        "bells"
+      ],
+      "display_name": "Bell",
+      "index": 200
+    },
+    "/m/039jq": {
+      "aliases": [
+        "glass",
+        "glasses"
+      ],
+      "display_name": "Glass",
+      "index": 441
+    },
+    "/m/03_d0": {
+      "aliases": [
+        "jazz",
+        "jazzes"
+      ],
+      "display_name": "Jazz",
+      "index": 235
+    },
+    "/m/03cczk": {
+      "aliases": [
+        "chewing",
+        "chewings",
+        "mastication",
+        "mastications"
+      ],
+      "display_name": "Chewing, mastication",
+      "index": 54
+    },
+    "/m/03cl9h": {
+      "aliases": [
+        "ice cream truck",
+        "ice cream van"
+      ],
+      "display_name": "Ice cream truck, ice cream van",
+      "index": 320
+    },
+    "/m/03dnzn": {
+      "aliases": [
+        "bathtub (filling or washing)"
+      ],
+      "display_name": "Bathtub (filling or washing)",
+      "index": 372
+    },
+    "/m/03fwl": {
+      "aliases": [
+        "goat",
+        "goats"
+      ],
+      "display_name": "Goat",
+      "index": 95
+    },
+    "/m/03gvt": {
+      "aliases": [
+        "hammond organ"
+      ],
+      "display_name": "Hammond organ",
+      "index": 157
+    },
+    "/m/03j1ly": {
+      "aliases": [
+        "emergency vehicle"
+      ],
+      "display_name": "Emergency vehicle",
+      "index": 322
+    },
+    "/m/03k3r": {
+      "aliases": [
+        "horse",
+        "horses"
+      ],
+      "display_name": "Horse",
+      "index": 87
+    },
+    "/m/03kmc9": {
+      "aliases": [
+        "siren",
+        "sirens"
+      ],
+      "display_name": "Siren",
+      "index": 396
+    },
+    "/m/03l9g": {
+      "aliases": [
+        "hammer",
+        "hammers"
+      ],
+      "display_name": "Hammer",
+      "index": 419
+    },
+    "/m/03lty": {
+      "aliases": [
+        "heavy metal"
+      ],
+      "display_name": "Heavy metal",
+      "index": 220
+    },
+    "/m/03m5k": {
+      "aliases": [
+        "harp",
+        "harps"
+      ],
+      "display_name": "Harp",
+      "index": 199
+    },
+    "/m/03m9d0z": {
+      "aliases": [
+        "wind",
+        "winds"
+      ],
+      "display_name": "Wind",
+      "index": 283
+    },
+    "/m/03mb9": {
+      "aliases": [
+        "house music"
+      ],
+      "display_name": "House music",
+      "index": 240
+    },
+    "/m/03p19w": {
+      "aliases": [
+        "jackhammer",
+        "jackhammers"
+      ],
+      "display_name": "Jackhammer",
+      "index": 420
+    },
+    "/m/03q5_w": {
+      "aliases": [
+        "burping",
+        "burpings",
+        "eructation",
+        "eructations"
+      ],
+      "display_name": "Burping, eructation",
+      "index": 58
+    },
+    "/m/03q5t": {
+      "aliases": [
+        "harpsichord",
+        "harpsichords"
+      ],
+      "display_name": "Harpsichord",
+      "index": 160
+    },
+    "/m/03qc9zr": {
+      "aliases": [
+        "screaming",
+        "screamings"
+      ],
+      "display_name": "Screaming",
+      "index": 14
+    },
+    "/m/03qjg": {
+      "aliases": [
+        "harmonica",
+        "harmonicas"
+      ],
+      "display_name": "Harmonica",
+      "index": 208
+    },
+    "/m/03qtq": {
+      "aliases": [
+        "hi-hat",
+        "hi-hats"
+      ],
+      "display_name": "Hi-hat",
+      "index": 172
+    },
+    "/m/03qtwd": {
+      "aliases": [
+        "crowd",
+        "crowds"
+      ],
+      "display_name": "Crowd",
+      "index": 69
+    },
+    "/m/03r5q_": {
+      "aliases": [
+        "jingle (music)"
+      ],
+      "display_name": "Jingle (music)",
+      "index": 269
+    },
+    "/m/03t3fj": {
+      "aliases": [
+        "rimshot",
+        "rimshots"
+      ],
+      "display_name": "Rimshot",
+      "index": 166
+    },
+    "/m/03v3yw": {
+      "aliases": [
+        "keys jangling"
+      ],
+      "display_name": "Keys jangling",
+      "index": 379
+    },
+    "/m/03vt0": {
+      "aliases": [
+        "insect",
+        "insects"
+      ],
+      "display_name": "Insect",
+      "index": 126
+    },
+    "/m/03w41f": {
+      "aliases": [
+        "church bell"
+      ],
+      "display_name": "Church bell",
+      "index": 201
+    },
+    "/m/03wvsk": {
+      "aliases": [
+        "hair dryer"
+      ],
+      "display_name": "Hair dryer",
+      "index": 373
+    },
+    "/m/03wwcy": {
+      "aliases": [
+        "doorbell",
+        "doorbells"
+      ],
+      "display_name": "Doorbell",
+      "index": 355
+    },
+    "/m/03xq_f": {
+      "aliases": [
+        "electronic organ"
+      ],
+      "display_name": "Electronic organ",
+      "index": 156
+    },
+    "/m/04229": {
+      "aliases": [
+        "jet engine"
+      ],
+      "display_name": "Jet engine",
+      "index": 337
+    },
+    "/m/042v_gx": {
+      "aliases": [
+        "acoustic guitar"
+      ],
+      "display_name": "Acoustic guitar",
+      "index": 143
+    },
+    "/m/0463cq4": {
+      "aliases": [
+        "crying",
+        "cryings",
+        "sobbing",
+        "sobbings"
+      ],
+      "display_name": "Crying, sobbing",
+      "index": 22
+    },
+    "/m/046dlr": {
+      "aliases": [
+        "alarm clock"
+      ],
+      "display_name": "Alarm clock",
+      "index": 395
+    },
+    "/m/04_sv": {
+      "aliases": [
+        "motorcycle",
+        "motorcycles"
+      ],
+      "display_name": "Motorcycle",
+      "index": 326
+    },
+    "/m/04brg2": {
+      "aliases": [
+        "dishes",
+        "disheses",
+        "pots",
+        "potses",
+        "and pans"
+      ],
+      "display_name": "Dishes, pots, and pans",
+      "index": 364
+    },
+    "/m/04cvmfc": {
+      "aliases": [
+        "roar",
+        "roars"
+      ],
+      "display_name": "Roar",
+      "index": 110
+    },
+    "/m/04fgwm": {
+      "aliases": [
+        "electric toothbrush"
+      ],
+      "display_name": "Electric toothbrush",
+      "index": 376
+    },
+    "/m/04fq5q": {
+      "aliases": [
+        "foghorn",
+        "foghorns"
+      ],
+      "display_name": "Foghorn",
+      "index": 401
+    },
+    "/m/04gxbd": {
+      "aliases": [
+        "power windows",
+        "electric windows"
+      ],
+      "display_name": "Power windows, electric windows",
+      "index": 311
+    },
+    "/m/04gy_2": {
+      "aliases": [
+        "battle cry"
+      ],
+      "display_name": "Battle cry",
+      "index": 12
+    },
+    "/m/04k94": {
+      "aliases": [
+        "liquid",
+        "liquids"
+      ],
+      "display_name": "Liquid",
+      "index": 444
+    },
+    "/m/04qvtq": {
+      "aliases": [
+        "police car (siren)"
+      ],
+      "display_name": "Police car (siren)",
+      "index": 323
+    },
+    "/m/04rlf": {
+      "aliases": [
+        "music",
+        "musics"
+      ],
+      "display_name": "Music",
+      "index": 137
+    },
+    "/m/04rmv": {
+      "aliases": [
+        "mouse",
+        "mouses"
+      ],
+      "display_name": "Mouse",
+      "index": 124
+    },
+    "/m/04rzd": {
+      "aliases": [
+        "mandolin",
+        "mandolins"
+      ],
+      "display_name": "Mandolin",
+      "index": 149
+    },
+    "/m/04s8yn": {
+      "aliases": [
+        "crow",
+        "crows"
+      ],
+      "display_name": "Crow",
+      "index": 117
+    },
+    "/m/04szw": {
+      "aliases": [
+        "musical instrument"
+      ],
+      "display_name": "Musical instrument",
+      "index": 138
+    },
+    "/m/04wptg": {
+      "aliases": [
+        "wedding music"
+      ],
+      "display_name": "Wedding music",
+      "index": 275
+    },
+    "/m/04zjc": {
+      "aliases": [
+        "machine gun"
+      ],
+      "display_name": "Machine gun",
+      "index": 428
+    },
+    "/m/04zmvq": {
+      "aliases": [
+        "train whistle"
+      ],
+      "display_name": "Train whistle",
+      "index": 330
+    },
+    "/m/05148p4": {
+      "aliases": [
+        "keyboard (musical)"
+      ],
+      "display_name": "Keyboard (musical)",
+      "index": 152
+    },
+    "/m/053hz1": {
+      "aliases": [
+        "cheering",
+        "cheerings"
+      ],
+      "display_name": "Cheering",
+      "index": 66
+    },
+    "/m/056ks2": {
+      "aliases": [
+        "rowboat",
+        "rowboats",
+        "canoe",
+        "canoes",
+        "kayak",
+        "kayaks"
+      ],
+      "display_name": "Rowboat, canoe, kayak",
+      "index": 303
+    },
+    "/m/05_wcq": {
+      "aliases": [
+        "bird flight",
+        "flapping wings"
+      ],
+      "display_name": "Bird flight, flapping wings",
+      "index": 121
+    },
+    "/m/05fw6t": {
+      "aliases": [
+        "music for children"
+      ],
+      "display_name": "Music for children",
+      "index": 252
+    },
+    "/m/05kq4": {
+      "aliases": [
+        "ocean",
+        "oceans"
+      ],
+      "display_name": "Ocean",
+      "index": 294
+    },
+    "/m/05lls": {
+      "aliases": [
+        "opera",
+        "operas"
+      ],
+      "display_name": "Opera",
+      "index": 238
+    },
+    "/m/05pd6": {
+      "aliases": [
+        "orchestra",
+        "orchestras"
+      ],
+      "display_name": "Orchestra",
+      "index": 184
+    },
+    "/m/05r5c": {
+      "aliases": [
+        "piano",
+        "pianos"
+      ],
+      "display_name": "Piano",
+      "index": 153
+    },
+    "/m/05r5wn": {
+      "aliases": [
+        "rattle (instrument)"
+      ],
+      "display_name": "Rattle (instrument)",
+      "index": 175
+    },
+    "/m/05r6t": {
+      "aliases": [
+        "punk rock"
+      ],
+      "display_name": "Punk rock",
+      "index": 221
+    },
+    "/m/05rj2": {
+      "aliases": [
+        "shuffling cards"
+      ],
+      "display_name": "Shuffling cards",
+      "index": 383
+    },
+    "/m/05rwpb": {
+      "aliases": [
+        "independent music"
+      ],
+      "display_name": "Independent music",
+      "index": 265
+    },
+    "/m/05tny_": {
+      "aliases": [
+        "bark",
+        "barks"
+      ],
+      "display_name": "Bark",
+      "index": 75
+    },
+    "/m/05w3f": {
+      "aliases": [
+        "psychedelic rock"
+      ],
+      "display_name": "Psychedelic rock",
+      "index": 225
+    },
+    "/m/05x_td": {
+      "aliases": [
+        "air horn",
+        "truck horn"
+      ],
+      "display_name": "Air horn, truck horn",
+      "index": 318
+    },
+    "/m/05zc1": {
+      "aliases": [
+        "pulleys",
+        "pulleyses"
+      ],
+      "display_name": "Pulleys",
+      "index": 410
+    },
+    "/m/05zppz": {
+      "aliases": [
+        "male speech",
+        "man speaking"
+      ],
+      "display_name": "Male speech, man speaking",
+      "index": 1
+    },
+    "/m/0642b4": {
+      "aliases": [
+        "cupboard open or close"
+      ],
+      "display_name": "Cupboard open or close",
+      "index": 362
+    },
+    "/m/064t9": {
+      "aliases": [
+        "pop music"
+      ],
+      "display_name": "Pop music",
+      "index": 216
+    },
+    "/m/068hy": {
+      "aliases": [
+        "domestic animals",
+        "pets",
+        "petses"
+      ],
+      "display_name": "Domestic animals, pets",
+      "index": 73
+    },
+    "/m/068zj": {
+      "aliases": [
+        "pig",
+        "pigs"
+      ],
+      "display_name": "Pig",
+      "index": 93
+    },
+    "/m/06_fw": {
+      "aliases": [
+        "skateboard",
+        "skateboards"
+      ],
+      "display_name": "Skateboard",
+      "index": 342
+    },
+    "/m/06_y0by": {
+      "aliases": [
+        "environmental noise"
+      ],
+      "display_name": "Environmental noise",
+      "index": 514
+    },
+    "/m/06bxc": {
+      "aliases": [
+        "rapping",
+        "rappings"
+      ],
+      "display_name": "Rapping",
+      "index": 36
+    },
+    "/m/06by7": {
+      "aliases": [
+        "rock music"
+      ],
+      "display_name": "Rock music",
+      "index": 219
+    },
+    "/m/06bz3": {
+      "aliases": [
+        "radio",
+        "radios"
+      ],
+      "display_name": "Radio",
+      "index": 525
+    },
+    "/m/06cqb": {
+      "aliases": [
+        "reggae",
+        "reggaes"
+      ],
+      "display_name": "Reggae",
+      "index": 228
+    },
+    "/m/06d_3": {
+      "aliases": [
+        "rail transport"
+      ],
+      "display_name": "Rail transport",
+      "index": 328
+    },
+    "/m/06h7j": {
+      "aliases": [
+        "run",
+        "runs"
+      ],
+      "display_name": "Run",
+      "index": 51
+    },
+    "/m/06hck5": {
+      "aliases": [
+        "steam whistle"
+      ],
+      "display_name": "Steam whistle",
+      "index": 403
+    },
+    "/m/06hps": {
+      "aliases": [
+        "rodents",
+        "rodentses",
+        "rats",
+        "ratses",
+        "mice",
+        "mices"
+      ],
+      "display_name": "Rodents, rats, mice",
+      "index": 123
+    },
+    "/m/06j64v": {
+      "aliases": [
+        "middle eastern music"
+      ],
+      "display_name": "Middle Eastern music",
+      "index": 234
+    },
+    "/m/06j6l": {
+      "aliases": [
+        "rhythm and blues"
+      ],
+      "display_name": "Rhythm and blues",
+      "index": 226
+    },
+    "/m/06mb1": {
+      "aliases": [
+        "rain",
+        "rains"
+      ],
+      "display_name": "Rain",
+      "index": 289
+    },
+    "/m/06ncr": {
+      "aliases": [
+        "saxophone",
+        "saxophones"
+      ],
+      "display_name": "Saxophone",
+      "index": 197
+    },
+    "/m/06q74": {
+      "aliases": [
+        "ship",
+        "ships"
+      ],
+      "display_name": "Ship",
+      "index": 305
+    },
+    "/m/06rqw": {
+      "aliases": [
+        "ska",
+        "skas"
+      ],
+      "display_name": "Ska",
+      "index": 263
+    },
+    "/m/06rvn": {
+      "aliases": [
+        "snare drum"
+      ],
+      "display_name": "Snare drum",
+      "index": 165
+    },
+    "/m/06w87": {
+      "aliases": [
+        "steel guitar",
+        "slide guitar"
+      ],
+      "display_name": "Steel guitar, slide guitar",
+      "index": 144
+    },
+    "/m/06wzb": {
+      "aliases": [
+        "steam",
+        "steams"
+      ],
+      "display_name": "Steam",
+      "index": 296
+    },
+    "/m/06xkwv": {
+      "aliases": [
+        "mains hum"
+      ],
+      "display_name": "Mains hum",
+      "index": 516
+    },
+    "/m/073cg4": {
+      "aliases": [
+        "cap gun"
+      ],
+      "display_name": "Cap gun",
+      "index": 431
+    },
+    "/m/074ft": {
+      "aliases": [
+        "song",
+        "songs"
+      ],
+      "display_name": "Song",
+      "index": 266
+    },
+    "/m/078jl": {
+      "aliases": [
+        "snake",
+        "snakes"
+      ],
+      "display_name": "Snake",
+      "index": 134
+    },
+    "/m/0790c": {
+      "aliases": [
+        "sonar",
+        "sonars"
+      ],
+      "display_name": "Sonar",
+      "index": 457
+    },
+    "/m/07bgp": {
+      "aliases": [
+        "sheep",
+        "sheeps"
+      ],
+      "display_name": "Sheep",
+      "index": 97
+    },
+    "/m/07bjf": {
+      "aliases": [
+        "single-lens reflex camera"
+      ],
+      "display_name": "Single-lens reflex camera",
+      "index": 417
+    },
+    "/m/07brj": {
+      "aliases": [
+        "tambourine",
+        "tambourines"
+      ],
+      "display_name": "Tambourine",
+      "index": 174
+    },
+    "/m/07c52": {
+      "aliases": [
+        "television",
+        "televisions"
+      ],
+      "display_name": "Television",
+      "index": 524
+    },
+    "/m/07c6l": {
+      "aliases": [
+        "trombone",
+        "trombones"
+      ],
+      "display_name": "Trombone",
+      "index": 188
+    },
+    "/m/07cx4": {
+      "aliases": [
+        "telephone",
+        "telephones"
+      ],
+      "display_name": "Telephone",
+      "index": 389
+    },
+    "/m/07gql": {
+      "aliases": [
+        "trumpet",
+        "trumpets"
+      ],
+      "display_name": "Trumpet",
+      "index": 187
+    },
+    "/m/07gxw": {
+      "aliases": [
+        "techno",
+        "technos"
+      ],
+      "display_name": "Techno",
+      "index": 241
+    },
+    "/m/07hvw1": {
+      "aliases": [
+        "field recording"
+      ],
+      "display_name": "Field recording",
+      "index": 526
+    },
+    "/m/07jdr": {
+      "aliases": [
+        "train",
+        "trains"
+      ],
+      "display_name": "Train",
+      "index": 329
+    },
+    "/m/07k1x": {
+      "aliases": [
+        "tools",
+        "toolses"
+      ],
+      "display_name": "Tools",
+      "index": 418
+    },
+    "/m/07kc_": {
+      "aliases": [
+        "theremin",
+        "theremins"
+      ],
+      "display_name": "Theremin",
+      "index": 213
+    },
+    "/m/07lnk": {
+      "aliases": [
+        "trance music"
+      ],
+      "display_name": "Trance music",
+      "index": 247
+    },
+    "/m/07m2kt": {
+      "aliases": [
+        "chorus effect"
+      ],
+      "display_name": "Chorus effect",
+      "index": 464
+    },
+    "/m/07mzm6": {
+      "aliases": [
+        "wheeze",
+        "wheezes"
+      ],
+      "display_name": "Wheeze",
+      "index": 42
+    },
+    "/m/07n_g": {
+      "aliases": [
+        "tuning fork"
+      ],
+      "display_name": "Tuning fork",
+      "index": 204
+    },
+    "/m/07p6fty": {
+      "aliases": [
+        "shout",
+        "shouts"
+      ],
+      "display_name": "Shout",
+      "index": 8
+    },
+    "/m/07p6mqd": {
+      "aliases": [
+        "slosh",
+        "sloshes"
+      ],
+      "display_name": "Slosh",
+      "index": 446
+    },
+    "/m/07p78v5": {
+      "aliases": [
+        "zing",
+        "zings"
+      ],
+      "display_name": "Zing",
+      "index": 497
+    },
+    "/m/07p7b8y": {
+      "aliases": [
+        "fill (with liquid)"
+      ],
+      "display_name": "Fill (with liquid)",
+      "index": 452
+    },
+    "/m/07p9k1k": {
+      "aliases": [
+        "sizzle",
+        "sizzles"
+      ],
+      "display_name": "Sizzle",
+      "index": 490
+    },
+    "/m/07p_0gm": {
+      "aliases": [
+        "throbbing",
+        "throbbings"
+      ],
+      "display_name": "Throbbing",
+      "index": 522
+    },
+    "/m/07pb8fc": {
+      "aliases": [
+        "idling",
+        "idlings"
+      ],
+      "display_name": "Idling",
+      "index": 352
+    },
+    "/m/07pbtc8": {
+      "aliases": [
+        "walk",
+        "walks",
+        "footsteps",
+        "footstepses"
+      ],
+      "display_name": "Walk, footsteps",
+      "index": 53
+    },
+    "/m/07pc8lb": {
+      "aliases": [
+        "breaking",
+        "breakings"
+      ],
+      "display_name": "Breaking",
+      "index": 470
+    },
+    "/m/07pczhz": {
+      "aliases": [
+        "chop",
+        "chops"
+      ],
+      "display_name": "Chop",
+      "index": 438
+    },
+    "/m/07pdhp0": {
+      "aliases": [
+        "biting",
+        "bitings"
+      ],
+      "display_name": "Biting",
+      "index": 55
+    },
+    "/m/07pdjhy": {
+      "aliases": [
+        "rub",
+        "rubs"
+      ],
+      "display_name": "Rub",
+      "index": 476
+    },
+    "/m/07pggtn": {
+      "aliases": [
+        "chirp",
+        "chirps",
+        "tweet",
+        "tweets"
+      ],
+      "display_name": "Chirp, tweet",
+      "index": 113
+    },
+    "/m/07phhsh": {
+      "aliases": [
+        "rumble",
+        "rumbles"
+      ],
+      "display_name": "Rumble",
+      "index": 493
+    },
+    "/m/07phxs1": {
+      "aliases": [
+        "ding",
+        "dings"
+      ],
+      "display_name": "Ding",
+      "index": 483
+    },
+    "/m/07pjjrj": {
+      "aliases": [
+        "smash",
+        "smashes",
+        "crash",
+        "crashes"
+      ],
+      "display_name": "Smash, crash",
+      "index": 469
+    },
+    "/m/07pjwq1": {
+      "aliases": [
+        "buzz",
+        "buzzes"
+      ],
+      "display_name": "Buzz",
+      "index": 130
+    },
+    "/m/07pkxdp": {
+      "aliases": [
+        "lullaby",
+        "lullabies"
+      ],
+      "display_name": "Lullaby",
+      "index": 271
+    },
+    "/m/07pl1bw": {
+      "aliases": [
+        "splinter",
+        "splinters"
+      ],
+      "display_name": "Splinter",
+      "index": 439
+    },
+    "/m/07plct2": {
+      "aliases": [
+        "crushing",
+        "crushings"
+      ],
+      "display_name": "Crushing",
+      "index": 478
+    },
+    "/m/07plz5l": {
+      "aliases": [
+        "sigh",
+        "sighs"
+      ],
+      "display_name": "Sigh",
+      "index": 26
+    },
+    "/m/07pn_8q": {
+      "aliases": [
+        "chopping (food)"
+      ],
+      "display_name": "Chopping (food)",
+      "index": 366
+    },
+    "/m/07pp8cl": {
+      "aliases": [
+        "telephone bell ringing"
+      ],
+      "display_name": "Telephone bell ringing",
+      "index": 390
+    },
+    "/m/07pp_mv": {
+      "aliases": [
+        "alarm",
+        "alarms"
+      ],
+      "display_name": "Alarm",
+      "index": 388
+    },
+    "/m/07ppn3j": {
+      "aliases": [
+        "sniff",
+        "sniffs"
+      ],
+      "display_name": "Sniff",
+      "index": 50
+    },
+    "/m/07pqc89": {
+      "aliases": [
+        "trickle",
+        "trickles",
+        "dribble",
+        "dribbles"
+      ],
+      "display_name": "Trickle, dribble",
+      "index": 450
+    },
+    "/m/07pqn27": {
+      "aliases": [
+        "bouncing",
+        "bouncings"
+      ],
+      "display_name": "Bouncing",
+      "index": 471
+    },
+    "/m/07prgkl": {
+      "aliases": [
+        "pour",
+        "pours"
+      ],
+      "display_name": "Pour",
+      "index": 449
+    },
+    "/m/07pt_g0": {
+      "aliases": [
+        "pulse",
+        "pulses"
+      ],
+      "display_name": "Pulse",
+      "index": 505
+    },
+    "/m/07ptfmf": {
+      "aliases": [
+        "stir",
+        "stirs"
+      ],
+      "display_name": "Stir",
+      "index": 455
+    },
+    "/m/07ptzwd": {
+      "aliases": [
+        "pump (liquid)"
+      ],
+      "display_name": "Pump (liquid)",
+      "index": 454
+    },
+    "/m/07pws3f": {
+      "aliases": [
+        "bang",
+        "bangs"
+      ],
+      "display_name": "Bang",
+      "index": 466
+    },
+    "/m/07pxg6y": {
+      "aliases": [
+        "eruption",
+        "eruptions"
+      ],
+      "display_name": "Eruption",
+      "index": 435
+    },
+    "/m/07pyf11": {
+      "aliases": [
+        "flap",
+        "flaps"
+      ],
+      "display_name": "Flap",
+      "index": 473
+    },
+    "/m/07pyy8b": {
+      "aliases": [
+        "pant",
+        "pants"
+      ],
+      "display_name": "Pant",
+      "index": 45
+    },
+    "/m/07pzfmf": {
+      "aliases": [
+        "crackle",
+        "crackles"
+      ],
+      "display_name": "Crackle",
+      "index": 299
+    },
+    "/m/07q0h5t": {
+      "aliases": [
+        "bleat",
+        "bleats"
+      ],
+      "display_name": "Bleat",
+      "index": 96
+    },
+    "/m/07q0yl5": {
+      "aliases": [
+        "snort",
+        "snorts"
+      ],
+      "display_name": "Snort",
+      "index": 46
+    },
+    "/m/07q2z82": {
+      "aliases": [
+        "accelerating",
+        "acceleratings",
+        "revving",
+        "revvings",
+        "vroom",
+        "vrooms"
+      ],
+      "display_name": "Accelerating, revving, vroom",
+      "index": 353
+    },
+    "/m/07q4ntr": {
+      "aliases": [
+        "bellow",
+        "bellows"
+      ],
+      "display_name": "Bellow",
+      "index": 9
+    },
+    "/m/07q5rw0": {
+      "aliases": [
+        "neigh",
+        "neighs",
+        "whinny",
+        "whinnies"
+      ],
+      "display_name": "Neigh, whinny",
+      "index": 89
+    },
+    "/m/07q6cd_": {
+      "aliases": [
+        "squeak",
+        "squeaks"
+      ],
+      "display_name": "Squeak",
+      "index": 361
+    },
+    "/m/07q7njn": {
+      "aliases": [
+        "chink",
+        "chinks",
+        "clink",
+        "clinks"
+      ],
+      "display_name": "Chink, clink",
+      "index": 442
+    },
+    "/m/07qb_dv": {
+      "aliases": [
+        "scratch",
+        "scratches"
+      ],
+      "display_name": "Scratch",
+      "index": 474
+    },
+    "/m/07qc9xj": {
+      "aliases": [
+        "clicking",
+        "clickings"
+      ],
+      "display_name": "Clicking",
+      "index": 491
+    },
+    "/m/07qcpgn": {
+      "aliases": [
+        "tap",
+        "taps"
+      ],
+      "display_name": "Tap",
+      "index": 360
+    },
+    "/m/07qcx4z": {
+      "aliases": [
+        "tearing",
+        "tearings"
+      ],
+      "display_name": "Tearing",
+      "index": 480
+    },
+    "/m/07qdb04": {
+      "aliases": [
+        "quack",
+        "quacks"
+      ],
+      "display_name": "Quack",
+      "index": 105
+    },
+    "/m/07qf0zm": {
+      "aliases": [
+        "howl",
+        "howls"
+      ],
+      "display_name": "Howl",
+      "index": 77
+    },
+    "/m/07qfgpx": {
+      "aliases": [
+        "jingle",
+        "jingles",
+        "tinkle",
+        "tinkles"
+      ],
+      "display_name": "Jingle, tinkle",
+      "index": 495
+    },
+    "/m/07qfr4h": {
+      "aliases": [
+        "hubbub",
+        "hubbubs",
+        "speech noise",
+        "speech babble"
+      ],
+      "display_name": "Hubbub, speech noise, speech babble",
+      "index": 70
+    },
+    "/m/07qh7jl": {
+      "aliases": [
+        "creak",
+        "creaks"
+      ],
+      "display_name": "Creak",
+      "index": 486
+    },
+    "/m/07qjznl": {
+      "aliases": [
+        "tick-tock",
+        "tick-tocks"
+      ],
+      "display_name": "Tick-tock",
+      "index": 408
+    },
+    "/m/07qjznt": {
+      "aliases": [
+        "tick",
+        "ticks"
+      ],
+      "display_name": "Tick",
+      "index": 407
+    },
+    "/m/07qlf79": {
+      "aliases": [
+        "spray",
+        "sprays"
+      ],
+      "display_name": "Spray",
+      "index": 453
+    },
+    "/m/07qlwh6": {
+      "aliases": [
+        "squish",
+        "squishes"
+      ],
+      "display_name": "Squish",
+      "index": 447
+    },
+    "/m/07qmpdm": {
+      "aliases": [
+        "clatter",
+        "clatters"
+      ],
+      "display_name": "Clatter",
+      "index": 489
+    },
+    "/m/07qn4z3": {
+      "aliases": [
+        "rattle",
+        "rattles"
+      ],
+      "display_name": "Rattle",
+      "index": 135
+    },
+    "/m/07qn5dc": {
+      "aliases": [
+        "crowing",
+        "crowings",
+        "cock-a-doodle-doo",
+        "cock-a-doodle-doos"
+      ],
+      "display_name": "Crowing, cock-a-doodle-doo",
+      "index": 101
+    },
+    "/m/07qnq_y": {
+      "aliases": [
+        "thump",
+        "thumps",
+        "thud",
+        "thuds"
+      ],
+      "display_name": "Thump, thud",
+      "index": 460
+    },
+    "/m/07qqyl4": {
+      "aliases": [
+        "boom",
+        "booms"
+      ],
+      "display_name": "Boom",
+      "index": 436
+    },
+    "/m/07qrkrw": {
+      "aliases": [
+        "meow",
+        "meows"
+      ],
+      "display_name": "Meow",
+      "index": 83
+    },
+    "/m/07qs1cx": {
+      "aliases": [
+        "crack",
+        "cracks"
+      ],
+      "display_name": "Crack",
+      "index": 440
+    },
+    "/m/07qsvvw": {
+      "aliases": [
+        "burst",
+        "bursts",
+        "pop",
+        "pops"
+      ],
+      "display_name": "Burst, pop",
+      "index": 434
+    },
+    "/m/07qv4k0": {
+      "aliases": [
+        "scrape",
+        "scrapes"
+      ],
+      "display_name": "Scrape",
+      "index": 475
+    },
+    "/m/07qv_d5": {
+      "aliases": [
+        "toot",
+        "toots"
+      ],
+      "display_name": "Toot",
+      "index": 309
+    },
+    "/m/07qv_x_": {
+      "aliases": [
+        "shuffle",
+        "shuffles"
+      ],
+      "display_name": "Shuffle",
+      "index": 52
+    },
+    "/m/07qw_06": {
+      "aliases": [
+        "wail",
+        "wails",
+        "moan",
+        "moans"
+      ],
+      "display_name": "Wail, moan",
+      "index": 25
+    },
+    "/m/07qwdck": {
+      "aliases": [
+        "ping",
+        "pings"
+      ],
+      "display_name": "Ping",
+      "index": 482
+    },
+    "/m/07qwf61": {
+      "aliases": [
+        "honk",
+        "honks"
+      ],
+      "display_name": "Honk",
+      "index": 107
+    },
+    "/m/07qwyj0": {
+      "aliases": [
+        "rustle",
+        "rustles"
+      ],
+      "display_name": "Rustle",
+      "index": 487
+    },
+    "/m/07qyrcz": {
+      "aliases": [
+        "plop",
+        "plops"
+      ],
+      "display_name": "Plop",
+      "index": 494
+    },
+    "/m/07qz6j3": {
+      "aliases": [
+        "whimper",
+        "whimpers"
+      ],
+      "display_name": "Whimper",
+      "index": 24
+    },
+    "/m/07r04": {
+      "aliases": [
+        "truck",
+        "trucks"
+      ],
+      "display_name": "Truck",
+      "index": 316
+    },
+    "/m/07r10fb": {
+      "aliases": [
+        "raindrop",
+        "raindrops"
+      ],
+      "display_name": "Raindrop",
+      "index": 290
+    },
+    "/m/07r4gkf": {
+      "aliases": [
+        "patter",
+        "patters"
+      ],
+      "display_name": "Patter",
+      "index": 125
+    },
+    "/m/07r4k75": {
+      "aliases": [
+        "grunt",
+        "grunts"
+      ],
+      "display_name": "Grunt",
+      "index": 39
+    },
+    "/m/07r4wb8": {
+      "aliases": [
+        "knock",
+        "knocks"
+      ],
+      "display_name": "Knock",
+      "index": 359
+    },
+    "/m/07r5c2p": {
+      "aliases": [
+        "caw",
+        "caws"
+      ],
+      "display_name": "Caw",
+      "index": 118
+    },
+    "/m/07r5v4s": {
+      "aliases": [
+        "drip",
+        "drips"
+      ],
+      "display_name": "Drip",
+      "index": 448
+    },
+    "/m/07r660_": {
+      "aliases": [
+        "giggle",
+        "giggles"
+      ],
+      "display_name": "Giggle",
+      "index": 18
+    },
+    "/m/07r67yg": {
+      "aliases": [
+        "ding-dong",
+        "ding-dongs"
+      ],
+      "display_name": "Ding-dong",
+      "index": 356
+    },
+    "/m/07r81j2": {
+      "aliases": [
+        "caterwaul",
+        "caterwauls"
+      ],
+      "display_name": "Caterwaul",
+      "index": 85
+    },
+    "/m/07r_25d": {
+      "aliases": [
+        "coo",
+        "coos"
+      ],
+      "display_name": "Coo",
+      "index": 116
+    },
+    "/m/07r_80w": {
+      "aliases": [
+        "hoot",
+        "hoots"
+      ],
+      "display_name": "Hoot",
+      "index": 120
+    },
+    "/m/07r_k2n": {
+      "aliases": [
+        "yip",
+        "yips"
+      ],
+      "display_name": "Yip",
+      "index": 76
+    },
+    "/m/07rbp7_": {
+      "aliases": [
+        "whip",
+        "whips"
+      ],
+      "display_name": "Whip",
+      "index": 472
+    },
+    "/m/07rc7d9": {
+      "aliases": [
+        "bow-wow",
+        "bow-wows"
+      ],
+      "display_name": "Bow-wow",
+      "index": 78
+    },
+    "/m/07rcgpl": {
+      "aliases": [
+        "hum",
+        "hums"
+      ],
+      "display_name": "Hum",
+      "index": 496
+    },
+    "/m/07rdhzs": {
+      "aliases": [
+        "whack",
+        "whacks",
+        "thwack",
+        "thwacks"
+      ],
+      "display_name": "Whack, thwack",
+      "index": 468
+    },
+    "/m/07rgkc5": {
+      "aliases": [
+        "static",
+        "statics"
+      ],
+      "display_name": "Static",
+      "index": 515
+    },
+    "/m/07rgt08": {
+      "aliases": [
+        "chuckle",
+        "chuckles",
+        "chortle",
+        "chortles"
+      ],
+      "display_name": "Chuckle, chortle",
+      "index": 21
+    },
+    "/m/07rjwbb": {
+      "aliases": [
+        "hiss",
+        "hisses"
+      ],
+      "display_name": "Hiss",
+      "index": 84
+    },
+    "/m/07rjzl8": {
+      "aliases": [
+        "slam",
+        "slams"
+      ],
+      "display_name": "Slam",
+      "index": 358
+    },
+    "/m/07rkbfh": {
+      "aliases": [
+        "chatter",
+        "chatters"
+      ],
+      "display_name": "Chatter",
+      "index": 68
+    },
+    "/m/07rknqz": {
+      "aliases": [
+        "skidding",
+        "skiddings"
+      ],
+      "display_name": "Skidding",
+      "index": 312
+    },
+    "/m/07rn7sz": {
+      "aliases": [
+        "shatter",
+        "shatters"
+      ],
+      "display_name": "Shatter",
+      "index": 443
+    },
+    "/m/07rpkh9": {
+      "aliases": [
+        "moo",
+        "moos"
+      ],
+      "display_name": "Moo",
+      "index": 91
+    },
+    "/m/07rqsjt": {
+      "aliases": [
+        "whoosh",
+        "whooshes",
+        "swoosh",
+        "swooshes",
+        "swish",
+        "swishes"
+      ],
+      "display_name": "Whoosh, swoosh, swish",
+      "index": 459
+    },
+    "/m/07rrh0c": {
+      "aliases": [
+        "thunk",
+        "thunks"
+      ],
+      "display_name": "Thunk",
+      "index": 461
+    },
+    "/m/07rrlb6": {
+      "aliases": [
+        "splash",
+        "splashes",
+        "splatter",
+        "splatters"
+      ],
+      "display_name": "Splash, splatter",
+      "index": 445
+    },
+    "/m/07rv4dm": {
+      "aliases": [
+        "clang",
+        "clangs"
+      ],
+      "display_name": "Clang",
+      "index": 484
+    },
+    "/m/07rv9rh": {
+      "aliases": [
+        "clip-clop",
+        "clip-clops"
+      ],
+      "display_name": "Clip-clop",
+      "index": 88
+    },
+    "/m/07rwj3x": {
+      "aliases": [
+        "whoop",
+        "whoops"
+      ],
+      "display_name": "Whoop",
+      "index": 10
+    },
+    "/m/07rwm0c": {
+      "aliases": [
+        "clickety-clack",
+        "clickety-clacks"
+      ],
+      "display_name": "Clickety-clack",
+      "index": 492
+    },
+    "/m/07ryjzk": {
+      "aliases": [
+        "slap",
+        "slaps",
+        "smack",
+        "smacks"
+      ],
+      "display_name": "Slap, smack",
+      "index": 467
+    },
+    "/m/07s02z0": {
+      "aliases": [
+        "squeal",
+        "squeals"
+      ],
+      "display_name": "Squeal",
+      "index": 485
+    },
+    "/m/07s04w4": {
+      "aliases": [
+        "snicker",
+        "snickers"
+      ],
+      "display_name": "Snicker",
+      "index": 19
+    },
+    "/m/07s0dtb": {
+      "aliases": [
+        "gasp",
+        "gasps"
+      ],
+      "display_name": "Gasp",
+      "index": 44
+    },
+    "/m/07s0s5r": {
+      "aliases": [
+        "strum",
+        "strums"
+      ],
+      "display_name": "Strum",
+      "index": 146
+    },
+    "/m/07s12q4": {
+      "aliases": [
+        "crunch",
+        "crunches"
+      ],
+      "display_name": "Crunch",
+      "index": 499
+    },
+    "/m/07s2xch": {
+      "aliases": [
+        "groan",
+        "groans"
+      ],
+      "display_name": "Groan",
+      "index": 38
+    },
+    "/m/07s34ls": {
+      "aliases": [
+        "whir",
+        "whirs"
+      ],
+      "display_name": "Whir",
+      "index": 488
+    },
+    "/m/07s72n": {
+      "aliases": [
+        "dubstep",
+        "dubsteps"
+      ],
+      "display_name": "Dubstep",
+      "index": 242
+    },
+    "/m/07s8j8t": {
+      "aliases": [
+        "roll",
+        "rolls"
+      ],
+      "display_name": "Roll",
+      "index": 477
+    },
+    "/m/07sbbz2": {
+      "aliases": [
+        "rock and roll"
+      ],
+      "display_name": "Rock and roll",
+      "index": 224
+    },
+    "/m/07sq110": {
+      "aliases": [
+        "belly laugh"
+      ],
+      "display_name": "Belly laugh",
+      "index": 20
+    },
+    "/m/07sr1lc": {
+      "aliases": [
+        "yell",
+        "yells"
+      ],
+      "display_name": "Yell",
+      "index": 11
+    },
+    "/m/07st88b": {
+      "aliases": [
+        "croak",
+        "croaks"
+      ],
+      "display_name": "Croak",
+      "index": 133
+    },
+    "/m/07st89h": {
+      "aliases": [
+        "cluck",
+        "clucks"
+      ],
+      "display_name": "Cluck",
+      "index": 100
+    },
+    "/m/07svc2k": {
+      "aliases": [
+        "gobble",
+        "gobbles"
+      ],
+      "display_name": "Gobble",
+      "index": 103
+    },
+    "/m/07swgks": {
+      "aliases": [
+        "gurgling",
+        "gurglings"
+      ],
+      "display_name": "Gurgling",
+      "index": 297
+    },
+    "/m/07sx8x_": {
+      "aliases": [
+        "squawk",
+        "squawks"
+      ],
+      "display_name": "Squawk",
+      "index": 114
+    },
+    "/m/07szfh9": {
+      "aliases": [
+        "cacophony",
+        "cacophonies"
+      ],
+      "display_name": "Cacophony",
+      "index": 519
+    },
+    "/m/07xzm": {
+      "aliases": [
+        "ukulele",
+        "ukuleles"
+      ],
+      "display_name": "Ukulele",
+      "index": 151
+    },
+    "/m/07y_7": {
+      "aliases": [
+        "violin",
+        "violins",
+        "fiddle",
+        "fiddles"
+      ],
+      "display_name": "Violin, fiddle",
+      "index": 191
+    },
+    "/m/07yv9": {
+      "aliases": [
+        "vehicle",
+        "vehicles"
+      ],
+      "display_name": "Vehicle",
+      "index": 300
+    },
+    "/m/081rb": {
+      "aliases": [
+        "writing",
+        "writings"
+      ],
+      "display_name": "Writing",
+      "index": 387
+    },
+    "/m/0838f": {
+      "aliases": [
+        "water",
+        "waters"
+      ],
+      "display_name": "Water",
+      "index": 288
+    },
+    "/m/083vt": {
+      "aliases": [
+        "wood",
+        "woods"
+      ],
+      "display_name": "Wood",
+      "index": 437
+    },
+    "/m/085jw": {
+      "aliases": [
+        "wind instrument",
+        "woodwind instrument"
+      ],
+      "display_name": "Wind instrument, woodwind instrument",
+      "index": 195
+    },
+    "/m/08cyft": {
+      "aliases": [
+        "electronic dance music"
+      ],
+      "display_name": "Electronic dance music",
+      "index": 245
+    },
+    "/m/08j51y": {
+      "aliases": [
+        "dental drill",
+        "dentist's drill"
+      ],
+      "display_name": "Dental drill, dentist's drill",
+      "index": 345
+    },
+    "/m/08p9q4": {
+      "aliases": [
+        "sidetone",
+        "sidetones"
+      ],
+      "display_name": "Sidetone",
+      "index": 518
+    },
+    "/m/0912c9": {
+      "aliases": [
+        "vehicle horn",
+        "car horn",
+        "honking",
+        "honkings"
+      ],
+      "display_name": "Vehicle horn, car horn, honking",
+      "index": 308
+    },
+    "/m/0939n_": {
+      "aliases": [
+        "gargling",
+        "garglings"
+      ],
+      "display_name": "Gargling",
+      "index": 56
+    },
+    "/m/096m7z": {
+      "aliases": [
+        "noise",
+        "noises"
+      ],
+      "display_name": "Noise",
+      "index": 513
+    },
+    "/m/09b5t": {
+      "aliases": [
+        "chicken",
+        "chickens",
+        "rooster",
+        "roosters"
+      ],
+      "display_name": "Chicken, rooster",
+      "index": 99
+    },
+    "/m/09ct_": {
+      "aliases": [
+        "helicopter",
+        "helicopters"
+      ],
+      "display_name": "Helicopter",
+      "index": 339
+    },
+    "/m/09d5_": {
+      "aliases": [
+        "owl",
+        "owls"
+      ],
+      "display_name": "Owl",
+      "index": 119
+    },
+    "/m/09ddx": {
+      "aliases": [
+        "duck",
+        "ducks"
+      ],
+      "display_name": "Duck",
+      "index": 104
+    },
+    "/m/09f96": {
+      "aliases": [
+        "mosquito",
+        "mosquitos"
+      ],
+      "display_name": "Mosquito",
+      "index": 128
+    },
+    "/m/09ld4": {
+      "aliases": [
+        "frog",
+        "frogs"
+      ],
+      "display_name": "Frog",
+      "index": 132
+    },
+    "/m/09t49": {
+      "aliases": [
+        "rustling leaves"
+      ],
+      "display_name": "Rustling leaves",
+      "index": 284
+    },
+    "/m/09x0r": {
+      "aliases": [
+        "speech",
+        "speeches"
+      ],
+      "display_name": "Speech",
+      "index": 0
+    },
+    "/m/09xqv": {
+      "aliases": [
+        "cricket",
+        "crickets"
+      ],
+      "display_name": "Cricket",
+      "index": 127
+    },
+    "/m/0_1c": {
+      "aliases": [
+        "artillery fire"
+      ],
+      "display_name": "Artillery fire",
+      "index": 430
+    },
+    "/m/0_ksk": {
+      "aliases": [
+        "power tool"
+      ],
+      "display_name": "Power tool",
+      "index": 424
+    },
+    "/m/0b9m1": {
+      "aliases": [
+        "harmonic",
+        "harmonics"
+      ],
+      "display_name": "Harmonic",
+      "index": 502
+    },
+    "/m/0b_fwt": {
+      "aliases": [
+        "electronic tuner"
+      ],
+      "display_name": "Electronic tuner",
+      "index": 462
+    },
+    "/m/0bm02": {
+      "aliases": [
+        "bass drum"
+      ],
+      "display_name": "Bass drum",
+      "index": 168
+    },
+    "/m/0brhx": {
+      "aliases": [
+        "speech synthesizer"
+      ],
+      "display_name": "Speech synthesizer",
+      "index": 7
+    },
+    "/m/0bt9lr": {
+      "aliases": [
+        "dog",
+        "dogs"
+      ],
+      "display_name": "Dog",
+      "index": 74
+    },
+    "/m/0btp2": {
+      "aliases": [
+        "traffic noise",
+        "roadway noise"
+      ],
+      "display_name": "Traffic noise, roadway noise",
+      "index": 327
+    },
+    "/m/0c1dj": {
+      "aliases": [
+        "sound effect"
+      ],
+      "display_name": "Sound effect",
+      "index": 504
+    },
+    "/m/0c2wf": {
+      "aliases": [
+        "typewriter",
+        "typewriters"
+      ],
+      "display_name": "Typewriter",
+      "index": 385
+    },
+    "/m/0c3f7m": {
+      "aliases": [
+        "fire alarm"
+      ],
+      "display_name": "Fire alarm",
+      "index": 400
+    },
+    "/m/0cdnk": {
+      "aliases": [
+        "roaring cats (lions",
+        "tigers)",
+        "tigers)s"
+      ],
+      "display_name": "Roaring cats (lions, tigers)",
+      "index": 109
+    },
+    "/m/0cfdd": {
+      "aliases": [
+        "drum machine"
+      ],
+      "display_name": "Drum machine",
+      "index": 163
+    },
+    "/m/0ch8v": {
+      "aliases": [
+        "livestock",
+        "livestocks",
+        "farm animals",
+        "working animals"
+      ],
+      "display_name": "Livestock, farm animals, working animals",
+      "index": 86
+    },
+    "/m/0chx_": {
+      "aliases": [
+        "white noise"
+      ],
+      "display_name": "White noise",
+      "index": 520
+    },
+    "/m/0cj0r": {
+      "aliases": [
+        "pink noise"
+      ],
+      "display_name": "Pink noise",
+      "index": 521
+    },
+    "/m/0cmf2": {
+      "aliases": [
+        "fixed-wing aircraft",
+        "airplane",
+        "airplanes"
+      ],
+      "display_name": "Fixed-wing aircraft, airplane",
+      "index": 340
+    },
+    "/m/0d31p": {
+      "aliases": [
+        "vacuum cleaner"
+      ],
+      "display_name": "Vacuum cleaner",
+      "index": 377
+    },
+    "/m/0d8_n": {
+      "aliases": [
+        "pizzicato",
+        "pizzicatos"
+      ],
+      "display_name": "Pizzicato",
+      "index": 192
+    },
+    "/m/0dbvp": {
+      "aliases": [
+        "goose",
+        "gooses"
+      ],
+      "display_name": "Goose",
+      "index": 106
+    },
+    "/m/0dgbq": {
+      "aliases": [
+        "civil defense siren"
+      ],
+      "display_name": "Civil defense siren",
+      "index": 397
+    },
+    "/m/0dl5d": {
+      "aliases": [
+        "progressive rock"
+      ],
+      "display_name": "Progressive rock",
+      "index": 223
+    },
+    "/m/0dl83": {
+      "aliases": [
+        "arrow",
+        "arrows"
+      ],
+      "display_name": "Arrow",
+      "index": 458
+    },
+    "/m/0dl9sf8": {
+      "aliases": [
+        "throat clearing"
+      ],
+      "display_name": "Throat clearing",
+      "index": 48
+    },
+    "/m/0dls3": {
+      "aliases": [
+        "grunge",
+        "grunges"
+      ],
+      "display_name": "Grunge",
+      "index": 222
+    },
+    "/m/0dq0md": {
+      "aliases": [
+        "music of bollywood"
+      ],
+      "display_name": "Music of Bollywood",
+      "index": 262
+    },
+    "/m/0dv3j": {
+      "aliases": [
+        "boiling",
+        "boilings"
+      ],
+      "display_name": "Boiling",
+      "index": 456
+    },
+    "/m/0dv5r": {
+      "aliases": [
+        "camera",
+        "cameras"
+      ],
+      "display_name": "Camera",
+      "index": 416
+    },
+    "/m/0dwsp": {
+      "aliases": [
+        "marimba",
+        "marimbas",
+        "xylophone",
+        "xylophones"
+      ],
+      "display_name": "Marimba, xylophone",
+      "index": 180
+    },
+    "/m/0dwt5": {
+      "aliases": [
+        "vibraphone",
+        "vibraphones"
+      ],
+      "display_name": "Vibraphone",
+      "index": 182
+    },
+    "/m/0dwtp": {
+      "aliases": [
+        "glockenspiel",
+        "glockenspiels"
+      ],
+      "display_name": "Glockenspiel",
+      "index": 181
+    },
+    "/m/0dxrf": {
+      "aliases": [
+        "frying (food)"
+      ],
+      "display_name": "Frying (food)",
+      "index": 367
+    },
+    "/m/0f8s22": {
+      "aliases": [
+        "chime",
+        "chimes"
+      ],
+      "display_name": "Chime",
+      "index": 205
+    },
+    "/m/0fd3y": {
+      "aliases": [
+        "ambient music"
+      ],
+      "display_name": "Ambient music",
+      "index": 246
+    },
+    "/m/0fqfqc": {
+      "aliases": [
+        "drawer open or close"
+      ],
+      "display_name": "Drawer open or close",
+      "index": 363
+    },
+    "/m/0fx80y": {
+      "aliases": [
+        "plucked string instrument"
+      ],
+      "display_name": "Plucked string instrument",
+      "index": 139
+    },
+    "/m/0fx9l": {
+      "aliases": [
+        "microwave oven"
+      ],
+      "display_name": "Microwave oven",
+      "index": 368
+    },
+    "/m/0g12c5": {
+      "aliases": [
+        "distortion",
+        "distortions"
+      ],
+      "display_name": "Distortion",
+      "index": 517
+    },
+    "/m/0g293": {
+      "aliases": [
+        "music of latin america"
+      ],
+      "display_name": "Music of Latin America",
+      "index": 248
+    },
+    "/m/0g6b5": {
+      "aliases": [
+        "fireworks",
+        "fireworkses"
+      ],
+      "display_name": "Fireworks",
+      "index": 432
+    },
+    "/m/0gg8l": {
+      "aliases": [
+        "bluegrass",
+        "bluegrasses"
+      ],
+      "display_name": "Bluegrass",
+      "index": 231
+    },
+    "/m/0ggq0m": {
+      "aliases": [
+        "classical music"
+      ],
+      "display_name": "Classical music",
+      "index": 237
+    },
+    "/m/0ggx5q": {
+      "aliases": [
+        "dance music"
+      ],
+      "display_name": "Dance music",
+      "index": 274
+    },
+    "/m/0ghcn6": {
+      "aliases": [
+        "growling",
+        "growlings"
+      ],
+      "display_name": "Growling",
+      "index": 79
+    },
+    "/m/0glt670": {
+      "aliases": [
+        "hip hop music"
+      ],
+      "display_name": "Hip hop music",
+      "index": 217
+    },
+    "/m/0gvgw0": {
+      "aliases": [
+        "air brake"
+      ],
+      "display_name": "Air brake",
+      "index": 317
+    },
+    "/m/0gy1t2s": {
+      "aliases": [
+        "bicycle bell"
+      ],
+      "display_name": "Bicycle bell",
+      "index": 203
+    },
+    "/m/0gywn": {
+      "aliases": [
+        "soul music"
+      ],
+      "display_name": "Soul music",
+      "index": 227
+    },
+    "/m/0h0rv": {
+      "aliases": [
+        "pigeon",
+        "pigeons",
+        "dove",
+        "doves"
+      ],
+      "display_name": "Pigeon, dove",
+      "index": 115
+    },
+    "/m/0h2mp": {
+      "aliases": [
+        "fly",
+        "flies",
+        "housefly",
+        "houseflies"
+      ],
+      "display_name": "Fly, housefly",
+      "index": 129
+    },
+    "/m/0h9mv": {
+      "aliases": [
+        "tire squeal"
+      ],
+      "display_name": "Tire squeal",
+      "index": 313
+    },
+    "/m/0hdsk": {
+      "aliases": [
+        "chirp tone"
+      ],
+      "display_name": "Chirp tone",
+      "index": 503
+    },
+    "/m/0hsrw": {
+      "aliases": [
+        "sailboat",
+        "sailboats",
+        "sailing ship"
+      ],
+      "display_name": "Sailboat, sailing ship",
+      "index": 302
+    },
+    "/m/0j2kx": {
+      "aliases": [
+        "waterfall",
+        "waterfalls"
+      ],
+      "display_name": "Waterfall",
+      "index": 293
+    },
+    "/m/0j45pbj": {
+      "aliases": [
+        "mallet percussion"
+      ],
+      "display_name": "Mallet percussion",
+      "index": 179
+    },
+    "/m/0j6m2": {
+      "aliases": [
+        "stream",
+        "streams"
+      ],
+      "display_name": "Stream",
+      "index": 292
+    },
+    "/m/0jb2l": {
+      "aliases": [
+        "thunderstorm",
+        "thunderstorms"
+      ],
+      "display_name": "Thunderstorm",
+      "index": 286
+    },
+    "/m/0jbk": {
+      "aliases": [
+        "animal",
+        "animals"
+      ],
+      "display_name": "Animal",
+      "index": 72
+    },
+    "/m/0jtg0": {
+      "aliases": [
+        "sitar",
+        "sitars"
+      ],
+      "display_name": "Sitar",
+      "index": 148
+    },
+    "/m/0k4j": {
+      "aliases": [
+        "car",
+        "cars"
+      ],
+      "display_name": "Car",
+      "index": 307
+    },
+    "/m/0k5j": {
+      "aliases": [
+        "aircraft",
+        "aircrafts"
+      ],
+      "display_name": "Aircraft",
+      "index": 335
+    },
+    "/m/0k65p": {
+      "aliases": [
+        "hands",
+        "handses"
+      ],
+      "display_name": "Hands",
+      "index": 61
+    },
+    "/m/0l14_3": {
+      "aliases": [
+        "bowed string instrument"
+      ],
+      "display_name": "Bowed string instrument",
+      "index": 189
+    },
+    "/m/0l14gg": {
+      "aliases": [
+        "soundtrack music"
+      ],
+      "display_name": "Soundtrack music",
+      "index": 270
+    },
+    "/m/0l14j_": {
+      "aliases": [
+        "flute",
+        "flutes"
+      ],
+      "display_name": "Flute",
+      "index": 196
+    },
+    "/m/0l14jd": {
+      "aliases": [
+        "choir",
+        "choirs"
+      ],
+      "display_name": "Choir",
+      "index": 28
+    },
+    "/m/0l14l2": {
+      "aliases": [
+        "shofar",
+        "shofars"
+      ],
+      "display_name": "Shofar",
+      "index": 212
+    },
+    "/m/0l14md": {
+      "aliases": [
+        "percussion",
+        "percussions"
+      ],
+      "display_name": "Percussion",
+      "index": 161
+    },
+    "/m/0l14qv": {
+      "aliases": [
+        "synthesizer",
+        "synthesizers"
+      ],
+      "display_name": "Synthesizer",
+      "index": 158
+    },
+    "/m/0l14t7": {
+      "aliases": [
+        "singing bowl"
+      ],
+      "display_name": "Singing bowl",
+      "index": 214
+    },
+    "/m/0l156b": {
+      "aliases": [
+        "steelpan",
+        "steelpans"
+      ],
+      "display_name": "Steelpan",
+      "index": 183
+    },
+    "/m/0l156k": {
+      "aliases": [
+        "whistle",
+        "whistles"
+      ],
+      "display_name": "Whistle",
+      "index": 402
+    },
+    "/m/0l15bq": {
+      "aliases": [
+        "clapping",
+        "clappings"
+      ],
+      "display_name": "Clapping",
+      "index": 63
+    },
+    "/m/0l7xg": {
+      "aliases": [
+        "gears",
+        "gearses"
+      ],
+      "display_name": "Gears",
+      "index": 409
+    },
+    "/m/0llzx": {
+      "aliases": [
+        "sewing machine"
+      ],
+      "display_name": "Sewing machine",
+      "index": 411
+    },
+    "/m/0ln16": {
+      "aliases": [
+        "salsa music"
+      ],
+      "display_name": "Salsa music",
+      "index": 249
+    },
+    "/m/0ltv": {
+      "aliases": [
+        "race car",
+        "auto racing"
+      ],
+      "display_name": "Race car, auto racing",
+      "index": 315
+    },
+    "/m/0lyf6": {
+      "aliases": [
+        "breathing",
+        "breathings"
+      ],
+      "display_name": "Breathing",
+      "index": 41
+    },
+    "/m/0m0jc": {
+      "aliases": [
+        "electronica",
+        "electronicas"
+      ],
+      "display_name": "Electronica",
+      "index": 244
+    },
+    "/m/0mbct": {
+      "aliases": [
+        "gong",
+        "gongs"
+      ],
+      "display_name": "Gong",
+      "index": 177
+    },
+    "/m/0mkg": {
+      "aliases": [
+        "accordion",
+        "accordions"
+      ],
+      "display_name": "Accordion",
+      "index": 209
+    },
+    "/m/0ngt1": {
+      "aliases": [
+        "thunder",
+        "thunders"
+      ],
+      "display_name": "Thunder",
+      "index": 287
+    },
+    "/m/0xzly": {
+      "aliases": [
+        "maraca",
+        "maracas"
+      ],
+      "display_name": "Maraca",
+      "index": 176
+    },
+    "/m/0y4f8": {
+      "aliases": [
+        "vocal music"
+      ],
+      "display_name": "Vocal music",
+      "index": 254
+    },
+    "/m/0ytgt": {
+      "aliases": [
+        "child speech",
+        "kid speaking"
+      ],
+      "display_name": "Child speech, kid speaking",
+      "index": 3
+    },
+    "/m/0z9c": {
+      "aliases": [
+        "a capella"
+      ],
+      "display_name": "A capella",
+      "index": 255
+    },
+    "/t/dd00001": {
+      "aliases": [
+        "baby laughter"
+      ],
+      "display_name": "Baby laughter",
+      "index": 17
+    },
+    "/t/dd00002": {
+      "aliases": [
+        "baby cry",
+        "infant cry"
+      ],
+      "display_name": "Baby cry, infant cry",
+      "index": 23
+    },
+    "/t/dd00003": {
+      "aliases": [
+        "male singing"
+      ],
+      "display_name": "Male singing",
+      "index": 32
+    },
+    "/t/dd00004": {
+      "aliases": [
+        "female singing"
+      ],
+      "display_name": "Female singing",
+      "index": 33
+    },
+    "/t/dd00005": {
+      "aliases": [
+        "child singing"
+      ],
+      "display_name": "Child singing",
+      "index": 34
+    },
+    "/t/dd00006": {
+      "aliases": [
+        "synthetic singing"
+      ],
+      "display_name": "Synthetic singing",
+      "index": 35
+    },
+    "/t/dd00013": {
+      "aliases": [
+        "children playing"
+      ],
+      "display_name": "Children playing",
+      "index": 71
+    },
+    "/t/dd00018": {
+      "aliases": [
+        "oink",
+        "oinks"
+      ],
+      "display_name": "Oink",
+      "index": 94
+    },
+    "/t/dd00031": {
+      "aliases": [
+        "happy music"
+      ],
+      "display_name": "Happy music",
+      "index": 276
+    },
+    "/t/dd00032": {
+      "aliases": [
+        "funny music"
+      ],
+      "display_name": "Funny music",
+      "index": 277
+    },
+    "/t/dd00033": {
+      "aliases": [
+        "sad music"
+      ],
+      "display_name": "Sad music",
+      "index": 278
+    },
+    "/t/dd00034": {
+      "aliases": [
+        "tender music"
+      ],
+      "display_name": "Tender music",
+      "index": 279
+    },
+    "/t/dd00035": {
+      "aliases": [
+        "exciting music"
+      ],
+      "display_name": "Exciting music",
+      "index": 280
+    },
+    "/t/dd00036": {
+      "aliases": [
+        "angry music"
+      ],
+      "display_name": "Angry music",
+      "index": 281
+    },
+    "/t/dd00037": {
+      "aliases": [
+        "scary music"
+      ],
+      "display_name": "Scary music",
+      "index": 282
+    },
+    "/t/dd00038": {
+      "aliases": [
+        "rain on surface"
+      ],
+      "display_name": "Rain on surface",
+      "index": 291
+    },
+    "/t/dd00048": {
+      "aliases": [
+        "train wheels squealing"
+      ],
+      "display_name": "Train wheels squealing",
+      "index": 333
+    },
+    "/t/dd00065": {
+      "aliases": [
+        "light engine (high frequency)"
+      ],
+      "display_name": "Light engine (high frequency)",
+      "index": 344
+    },
+    "/t/dd00066": {
+      "aliases": [
+        "medium engine (mid frequency)"
+      ],
+      "display_name": "Medium engine (mid frequency)",
+      "index": 348
+    },
+    "/t/dd00067": {
+      "aliases": [
+        "heavy engine (low frequency)"
+      ],
+      "display_name": "Heavy engine (low frequency)",
+      "index": 349
+    },
+    "/t/dd00077": {
+      "aliases": [
+        "mechanisms",
+        "mechanismses"
+      ],
+      "display_name": "Mechanisms",
+      "index": 404
+    },
+    "/t/dd00088": {
+      "aliases": [
+        "gush",
+        "gushes"
+      ],
+      "display_name": "Gush",
+      "index": 451
+    },
+    "/t/dd00092": {
+      "aliases": [
+        "wind noise (microphone)"
+      ],
+      "display_name": "Wind noise (microphone)",
+      "index": 285
+    },
+    "/t/dd00112": {
+      "aliases": [
+        "crumpling",
+        "crumplings",
+        "crinkling",
+        "crinklings"
+      ],
+      "display_name": "Crumpling, crinkling",
+      "index": 479
+    },
+    "/t/dd00121": {
+      "aliases": [
+        "boing",
+        "boings"
+      ],
+      "display_name": "Boing",
+      "index": 498
+    },
+    "/t/dd00125": {
+      "aliases": [
+        "inside",
+        "insides",
+        "small room"
+      ],
+      "display_name": "Inside, small room",
+      "index": 506
+    },
+    "/t/dd00126": {
+      "aliases": [
+        "inside",
+        "insides",
+        "large room or hall"
+      ],
+      "display_name": "Inside, large room or hall",
+      "index": 507
+    },
+    "/t/dd00127": {
+      "aliases": [
+        "inside",
+        "insides",
+        "public space"
+      ],
+      "display_name": "Inside, public space",
+      "index": 508
+    },
+    "/t/dd00128": {
+      "aliases": [
+        "outside",
+        "outsides",
+        "urban or manmade"
+      ],
+      "display_name": "Outside, urban or manmade",
+      "index": 509
+    },
+    "/t/dd00129": {
+      "aliases": [
+        "outside",
+        "outsides",
+        "rural or natural"
+      ],
+      "display_name": "Outside, rural or natural",
+      "index": 510
+    },
+    "/t/dd00130": {
+      "aliases": [
+        "engine starting"
+      ],
+      "display_name": "Engine starting",
+      "index": 351
+    },
+    "/t/dd00134": {
+      "aliases": [
+        "car passing by"
+      ],
+      "display_name": "Car passing by",
+      "index": 314
+    },
+    "/t/dd00135": {
+      "aliases": [
+        "children shouting"
+      ],
+      "display_name": "Children shouting",
+      "index": 13
+    },
+    "/t/dd00136": {
+      "aliases": [
+        "whimper (dog)"
+      ],
+      "display_name": "Whimper (dog)",
+      "index": 80
+    }
+  },
+  "map": "strict",
+  "morphology": "plural of single-word aliases only (plan \u00a74 minimal); verb forms in expanded",
+  "n_min": 200,
+  "source": "class_labels_indices.csv comma aliases + plural morphology"
+}
