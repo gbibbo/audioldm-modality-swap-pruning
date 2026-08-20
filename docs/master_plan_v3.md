@@ -1,5 +1,10 @@
 # Master Plan v3 - Modality-Swap-Aware Structured Pruning + Parameter-Efficient Recovery for AudioLDM
 
+> **SUPERSEDED 2026-08-20 by `docs/master_plan_v4.md` (DECISION-V4-00, ledger). Kept for
+> history — do NOT execute from this file.** v3's RQs and M3–M7 are replaced by v4; v3's
+> provenance, Git discipline, CPU-Studio/GPU-Job policy, frozen SHAs, and "negative results
+> are valid" carry over unchanged into v4.
+
 **Status:** Execution in progress. Lightning AI access, Remote-SSH, GitHub authentication, and remote Claude Code are operational. GPU-hour totals remain deliberately parameterized until the first real GPU benchmark is completed.  
 **Plan date:** 2026-08-17 (operational update of v3)  
 **Primary short target:** ICASSP 2027, full-paper deadline 2026-09-16.  

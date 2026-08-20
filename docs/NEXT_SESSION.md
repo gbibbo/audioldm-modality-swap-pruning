@@ -7,8 +7,8 @@ Self-contained. A fresh session needs only this file; everything it points to is
 1. `PROGRESS.md` state block (injected by the hook).
 2. `docs/HANDOFF.md` — only the head block dated 2026-08-20 14:00; the rest is history.
 3. `docs/decisions/DECISION-V4_pending.md` — the decision sheet.
-4. `docs/master_plan_v4_draft.md` (rc4) — the proposed plan; `docs/master_plan_v3.md` is
-   still the contract until V4-00 is recorded.
+4. `docs/master_plan_v4.md` (rc4) — the **adopted contract** (DECISION-V4-00, 2026-08-20);
+   `docs/master_plan_v3.md` is superseded, kept for history.
 5. `docs/review/2026-08-20_reframing_round1.md` … `round5.md` — why the plan changed.
 6. `docs/experiment_ledger.md` entries `M3B-SALIENCY-RUN`, `M3A-DIAG-RUN`,
    `M4-SCREEN-FOUND`, `REVIEW-001..005`.
@@ -16,12 +16,12 @@ Self-contained. A fresh session needs only this file; everything it points to is
 Verify before anything else: `git status --short --branch` clean, `git log -1` at or after
 `d4ca0ae`, `.venv/bin/python -c "import torch; print(torch.__version__)"` → `1.13.1+cu117`.
 
-## 2. First action: the decision sheet
+## 2. First action: the decision sheet — DONE (2026-08-20 14:13)
 
-Ask Gabriel, in one message, whether he adopts the recommended defaults for V4-00..07 or
-overrides any row, and what the real credit balance is (V4-02). Record exactly what he says
-as ledger entries, then propagate (sheet §"What the agent does"). **Do not fill any row
-yourself. Do not launch any GPU job in this session unless Gabriel says so explicitly.**
+Gabriel adopted all eight recommended defaults verbatim (Tier 0 only, ~2.7 cr; balance
+~3–5 cr; 2.0-cr reserve stands). Recorded as ledger `DECISION-V4-00..07` and propagated
+(v4 = contract, v3 superseded, `AGENTS.md` step 2, `docs/claims_matrix.md`, PROGRESS,
+HANDOFF). **No GPU job in this session unless Gabriel says so explicitly.**
 
 ## 3. CPU queue (credit-free) — run after V4-00 is recorded, one `/cerrar-hito` per item
 

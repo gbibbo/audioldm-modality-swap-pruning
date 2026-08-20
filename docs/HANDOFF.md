@@ -7,10 +7,13 @@ to continue from this file alone, without any prior chat history.
 
 ---
 
-> ## ⚠ READ FIRST — PLAN V4 REFRAMING PENDING GABRIEL'S DECISIONS (2026-08-20 14:00)
+> ## ⚠ READ FIRST — PLAN V4 ADOPTED; CPU QUEUE Q1–Q7 IN PROGRESS (2026-08-20 14:13)
 >
-> **Start with `docs/NEXT_SESSION.md`** (reading order, decision sheet
-> `docs/decisions/DECISION-V4_pending.md` with recommended defaults, CPU queue Q1–Q7).
+> **Start with `docs/NEXT_SESSION.md`** (reading order, CPU queue Q1–Q7). The decision
+> sheet `docs/decisions/DECISION-V4_pending.md` is now **recorded** as ledger
+> `DECISION-V4-00..07` — Gabriel adopted all eight recommended defaults verbatim
+> (Tier 0 only, ~2.7 cr; balance ~3–5 cr spendable; 2.0-cr reserve stands). **The contract
+> is now `docs/master_plan_v4.md`; v3 is superseded (kept for history).**
 >
 > **Everything below this block is historical context (2026-08-18/19). The current state
 > is:**
@@ -24,11 +27,12 @@ to continue from this file alone, without any prior chat history.
 >    insensitive to the modality-swap hypothesis by construction and the 2026 literature
 >    narrowed the gap.** Read `docs/review/2026-08-20_reframing_round1.md` … `round5.md`
 >    in order (ledger `REVIEW-001..005`).
-> 3. **`docs/master_plan_v4_draft.md` rc4 is the proposed replacement plan** (event-level
+> 3. **`docs/master_plan_v4.md` rc4 is the ADOPTED CONTRACT** (event-level
 >    semantic forgetting under TTA pruning → mechanism: exposure / guidance / acoustics →
 >    mechanism-informed calibration with placebo + holdout → PEFT as cost baseline).
->    **It is NOT adopted. `docs/master_plan_v3.md` remains the contract until Gabriel
->    records DECISION-V4-00..07 in `docs/experiment_ledger.md`** (list in the draft, §10).
+>    Adopted 2026-08-20 (DECISION-V4-00..07); `docs/master_plan_v3.md` superseded, kept for
+>    history. P0-standard is now the primary baseline, P0-published the reproducibility
+>    control (V4-01).
 > 4. **Credits:** 4.205 spent on 14 Lightning jobs (SDK-summed); ≈3–5 spendable under
 >    DECISION-CG-001's 2.0 reserve. v4 Tier 0 ≈2.7 cr (screening only); Tier 1 ≈45 cr.
 >    **Do not launch any GPU job until V4-00 and V4-02 are recorded.**

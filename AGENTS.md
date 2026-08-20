@@ -5,7 +5,7 @@ Canonical instructions for coding agents in this repository.
 ## Start here
 
 1. Read the bounded state block at the top of `PROGRESS.md` through `<!-- FIN-ESTADO -->`.
-2. Read `docs/master_plan_v3.md`. If it has not yet been moved there, read `master_plan_v3.md` at the repository root and move it into `docs/` during bootstrap without changing its content.
+2. Read `docs/master_plan_v4.md` — the execution contract (adopted 2026-08-20, DECISION-V4-00). `docs/master_plan_v3.md` is superseded and kept only for history; read it for background, not as the contract.
 3. Confirm that `docs/experiment_ledger.md`, `docs/compute_budget.md`, `docs/claims_matrix.md`, and `docs/pilot_protocol.md` exist. If any is missing, create the corresponding project template before substantial work.
 4. Inspect the actual Git repository, code, tests, checkpoints, manifests, and outputs before asserting that prior work or a milestone exists.
 

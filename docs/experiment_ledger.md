@@ -845,3 +845,52 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Six residues fixed (rc3 → rc4):** `K_rand = 20` everywhere + exact rank test for Gate E; Gate M blocks rewritten with the event-specific covariates and the P1-vs-P0 calibration-exposure slope contrast; tie-break by cross-validated predictive gain; placebo matched on baseline capture / eligible prompts / exposure / family; one mechanism-general intervention recipe (acoustic variant only if FineLAP passed); FineLAP fallback (H-acoustic leaves primary Gate M) and seed pairing specified; H-guidance primary = canonical template vs unconditional.
 * **Verified:** FineLAP weights public on Hugging Face (`AndreasXi/FineLAP`, MIT, `get_frame_level_score → (B,N,T)`); `torch 1.13.1` compatibility still to be smoked.
 * **Outputs:** `docs/master_plan_v4_draft.md` rc4; `docs/review/2026-08-20_reframing_round5.md`. **v3 remains the contract until DECISION-V4-00..07 are recorded.**
+
+### 2026-08-20 14:13 | DECISION-V4-00 | Adopt master plan v4 (rc4) as the execution contract; v3 becomes historical
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13 America/Montevideo, interactively, adopting the two-reviewer audit's unanimous recommended default verbatim (`docs/decisions/DECISION-V4_pending.md`).
+* **Milestone / gate:** Plan-version gate — v4 adoption.
+* **Decision (recommended default, adopted verbatim):** *Adopt rc4. On recording: move the draft to `docs/master_plan_v4.md`, mark it "contract", mark v3 "superseded 2026-08-20", update `AGENTS.md` step 2 and `docs/claims_matrix.md` (§9 of the draft).*
+* **Scope:** v4 supersedes v3's RQs and M3–M7; v3's provenance, Git discipline, CPU-Studio/GPU-Job policy, frozen SHAs, and "negative results are valid" carry over unchanged. v3 is kept, not deleted.
+* **Propagation done in this commit:** `docs/master_plan_v4_draft.md` → `docs/master_plan_v4.md` (status changed DRAFT → CONTRACT); `docs/master_plan_v3.md` header marked "SUPERSEDED 2026-08-20 by v4 (DECISION-V4-00); kept for history"; `AGENTS.md` step 2 now points at v4; `docs/claims_matrix.md` updated per §9; `PROGRESS.md` state block + log; `docs/HANDOFF.md` head block.
+
+### 2026-08-20 14:13 | DECISION-V4-01 | Primary L1 baseline = P0-standard; P0-published = reproducibility control
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13, recommended default adopted verbatim.
+* **Decision (verbatim):** *P0-standard (keep-highest-L1) is the primary scientific baseline; P0-published (Singh et al. artefact, keeps lowest-L1) is the reproducibility control. Amends DECISION-M3B-002/003; wording "vs the published L1 artefact" stays mandatory for P0-published.*
+* **Effect:** resolves the REVIEW-001 co-equal-baselines question and the C4a audit finding — the primary/secondary labeling that DECISION-CG-001 left open is now fixed. Both P0-published and P0-L1 are already materialized/generated (superset collected at screening); the gate decision now uses P0-standard as primary. The DECISION-M3B-003 wording constraint stands for any P0-published comparison.
+
+### 2026-08-20 14:13 | DECISION-V4-02 | Credit tier authorized = Tier 0 only (~2.7 cr); balance ~3–5 cr spendable
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13.
+* **Decision (verbatim):** *Tier 0 only (≈2.7 cr, screening) with the current balance; the 2.0-cr reserve of CG-001 stands. Tier 1 (≈45 cr) and Tier 2 (≈25–35 cr) require explicit new funding + a new decision.*
+* **Balance (stated by Gabriel):** ~3–5 credits spendable in org `independentaudioresearch` (range confirmed; no exact figure given). SDK-summed job spend = 4.205 cr on 14 jobs (2026-08-20). Tier 0 (~2.7 cr) fits inside the stated range with the 2.0-cr hard reserve intact.
+* **Consequence:** no Tier-1/Tier-2 GPU work may be planned or launched under this decision. Any GPU job still requires Gabriel's explicit in-conversation go, a clean pushed commit, a CPU dry-run and a GPU smoke.
+
+### 2026-08-20 14:13 | DECISION-V4-03 | ELSA deferred; PANNs top-10 recall is the primary event metric
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13.
+* **Decision (verbatim):** *Defer. Optional secondary metric at most; never a gate or primary metric. Primary event metric = PANNs top-10 recall per requested event (Singh et al. 2026 compatible); secondary local = CLAP score of the event phrase.*
+
+### 2026-08-20 14:13 | DECISION-V4-04 | Event-set and null parameters frozen
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13.
+* **Decision (verbatim):** *`N_min = 200` AudioCaps-train clips, `n_min = 10` (Tier 0) / `20` (Tier 1) eligible prompts; mild budget `channel_mult=(1,2,3,4)` (measured −23.7 %); RAND×5 for Tier-0 forward diagnostics; `K_rand = 20` minimum for Gate E with the exact rank test.*
+* **Note:** the mild budget `(1,2,3,4)` = 317.308 M params (−23.7 %) is CPU-measured (REVIEW-003). The materializer is still hardcoded to `(1,2,3,1)`; parameterizing it by `channel_mult` is CPU-queue item Q4.
+
+### 2026-08-20 14:13 | DECISION-V4-05 | Keep the v3 modality-swap result in the paper as a one-paragraph negative
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13.
+* **Decision (verbatim):** *Yes, as one paragraph of negative result; D1 (signed asymmetry + per-stratum) decides "not supported" vs "not detectable at this budget".*
+
+### 2026-08-20 14:13 | DECISION-V4-06 | Temporal-occupancy estimator = FineLAP, conditional on a CPU smoke
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13.
+* **Decision (verbatim):** *FineLAP (`AndreasXi/FineLAP`, MIT) conditional on a CPU validity smoke under `torch 1.13.1`; if the smoke fails, H-acoustic leaves the primary Gate M and the single-label-clip subset is sensitivity only.*
+* **Note:** the smoke is CPU-queue item Q3; its PASS/FAIL determines whether H-acoustic stays in the primary Gate M.
+
+### 2026-08-20 14:13 | DECISION-V4-07 | Partition sizes, sentinel panel, MDE, and Gate I margins
+
+* **Status:** completed (gate decision). **Decided by Gabriel**, 2026-08-20 ~14:13.
+* **Decision (verbatim):** *Proposed: calibration pool 256 natural + 256 tail-enriched; mechanism set 50 events × 20 prompts; intervention holdout 500 prompts, disjoint at source-wav level; sentinel panel 20 events × 15 prompts stratified by exposure × family; MDE for Gate E fixed from Tier-0 rates by the power simulation (≥ 80 % power); Gate I `δ_target = +5 pp`, `δ_harm = 2 pp` (non-inferiority), FAD/FD +5 % relative, KL +0.05.*
+* **Note:** these may stay open until immediately before the holdout is unblinded; while open, the holdout stays blinded. Recorded here as adopted defaults; the power simulation (Q7) fixes the MDE from Tier-0 rates.

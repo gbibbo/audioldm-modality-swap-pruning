@@ -1,9 +1,9 @@
-# Master plan v4 — DRAFT rc4 (2026-08-20) — proposed freeze candidate
+# Master plan v4 (rc4, frozen 2026-08-20) — EXECUTION CONTRACT
 
-**Status: DRAFT. `docs/master_plan_v3.md` remains the execution contract until Gabriel
-records DECISION-V4-00 (adopt v4) in `docs/experiment_ledger.md`.** Everything v3 says
+**Status: CONTRACT (adopted 2026-08-20, DECISION-V4-00, ledger). This supersedes
+`docs/master_plan_v3.md`, which is kept for history.** Everything v3 says
 about provenance, Git discipline, the CPU-Studio/GPU-Job policy, frozen SHAs, and
-"negative results are valid" carries over unchanged. This draft replaces v3 §1–§2
+"negative results are valid" carries over unchanged. This plan replaces v3 §1–§2
 (framing, RQs), §4–§6 (criteria, budget contract, timestep protocol — kept as machinery,
 re-purposed), and M3–M7; it is the product of the two-reviewer audit recorded in
 `docs/review/2026-08-20_reframing_round{1,2,3,4,5}.md`.
@@ -232,6 +232,10 @@ RQ1 → `rejected` (wording pending D1). RQ2a/RQ2b → `rejected` at the salienc
 EFF unchanged.
 
 ## 10. Decisions required from Gabriel before execution
+
+> **ALL RESOLVED 2026-08-20 (DECISION-V4-00..07, ledger). Gabriel adopted every recommended
+> default verbatim; Tier 0 only (~2.7 cr, balance ~3–5 cr spendable, 2.0-cr reserve stands).
+> The list below is retained for traceability.**
 
 * **DECISION-V4-00** adopt v4 (supersedes v3 RQs/M3–M7) — or reject and keep v3.
 * **DECISION-V4-01** P0-standard becomes the primary scientific baseline; P0-published

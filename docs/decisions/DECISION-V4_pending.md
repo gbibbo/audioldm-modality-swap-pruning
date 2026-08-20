@@ -1,7 +1,10 @@
-# DECISION-V4-00..07 — decision sheet (PENDING Gabriel)
+# DECISION-V4-00..07 — decision sheet (RESOLVED 2026-08-20)
 
-**Status: PENDING.** Nothing here is in force until Gabriel records it in
-`docs/experiment_ledger.md`. Until then `docs/master_plan_v3.md` is the contract.
+**Status: RESOLVED 2026-08-20 14:13.** Gabriel adopted **all eight recommended defaults
+verbatim** (Tier 0 only; balance ~3–5 cr spendable). Recorded as ledger
+`DECISION-V4-00..07`; `docs/master_plan_v4.md` is now the contract, v3 superseded. This
+sheet is retained for traceability; the "Decision (Gabriel)" column below reads "adopted
+default" for every row.
 
 Each row carries the **unanimous recommendation of the two-reviewer audit** (rounds 1–5,
 `docs/review/`). Gabriel can (a) write "adopt the recommended defaults for V4-00..07" —
