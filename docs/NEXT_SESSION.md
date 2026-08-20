@@ -23,7 +23,7 @@ Gabriel adopted all eight recommended defaults verbatim (Tier 0 only, ~2.7 cr; b
 (v4 = contract, v3 superseded, `AGENTS.md` step 2, `docs/claims_matrix.md`, PROGRESS,
 HANDOFF). **No GPU job in this session unless Gabriel says so explicitly.**
 
-## 3. CPU queue (credit-free) — run after V4-00 is recorded, one `/cerrar-hito` per item
+## 3. CPU queue (credit-free) — ✅ COMPLETE (Q1–Q7 done 2026-08-20, one commit each; ledger Q1..Q7 + E-BLAS)
 
 | # | Item | Done when |
 |---|---|---|
