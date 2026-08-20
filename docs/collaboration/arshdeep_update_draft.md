@@ -6,88 +6,61 @@ reproduction commands are given so nothing has to be taken on trust.
 
 ---
 
-## Suggested message
+## Suggested message (short form — preferred)
 
-Hi Arshdeep,
+An external review judged the first draft too long for an update. This shorter version
+says the same load-bearing things. **Two accuracy fixes were applied to the reviewer's
+wording** — see "Wording traps" below; do not reintroduce them.
 
-Quick update on the modality-swap pruning project, plus two things I'd like your read on —
-one of which concerns the published PruningAudioLDM artifacts directly.
+> Hi Arshdeep,
+>
+> Quick update. We now reproduce the released `(1,2,3,1)` pruning artifact **bit-exactly
+> (690/690 tensors)** from the base checkpoint plus `sorted_indexes_dict.pkl`, and our
+> modality-swap diagnostics, P0-P3 saliency code and parameter-efficient recovery are all
+> implemented and tested. The recovery path is confirmed working **on GPU** (284/284 LoRA
+> adapters receiving gradients, no frozen weight updated); the diagnostics and saliency
+> criteria are validated on CPU and have not been run on GPU yet.
+>
+> First T4 profiling is encouraging. PEFT recovery training peaks at only **~4.2 GB at
+> batch 8**, and a full-model forward+backward — our cost proxy for a saliency gradient
+> evaluation — takes **~1.6 s per batch of 8**. So the modality-aware pruning experiment
+> itself looks very affordable. The expensive part is recovery, currently projected at
+> **~46 GPU-hours per model** at the 100k-step budget; we still need to benchmark
+> generation before fixing the full evaluation budget. We have deliberately **not** run the
+> RQ1/RQ2 comparisons yet, because we want to freeze the protocol first.
+>
+> During the reproduction we found one thing I'd like to check with you. The released L1
+> artifact appears to keep the **lowest-L1 filters** in the pruned layers, i.e. the reverse
+> of the conventional magnitude rule. We get **Spearman −1.0** between the released ranking
+> and the conventional L1 ranking across **all 28 ranked layers**, on the 15 actually-pruned
+> layers the kept set has lower mean L1 than the removed set, and the public code looks
+> consistent with that (`np.argsort` ascending, then `[:k]`). Is that intentional?
+>
+> We also found **four tensors** where the public reconstruction script gives a different
+> result from the released checkpoint (the script reproduces 686/690), although we can
+> reproduce the released checkpoint exactly. Happy to send the details and the reproduction
+> script.
+>
+> Two smaller things that may be useful: the released pruned checkpoint is **pre-recovery**
+> — all 2061 same-shape tensors are bit-identical to the base model — and the base
+> checkpoint has the **same md5** in the official AudioLDM record (Zenodo 7884686) as in
+> yours, so the provenance chain is clean.
+>
+> Finally, if you have the fully finetuned `(1,2,3,1)` checkpoint, could you share it? It
+> would give us an apples-to-apples full-FT reference for the recovery experiment.
+>
+> Best,
+> Gabriel
 
-**Where the project is.** The infrastructure is complete and reproducible: environment
-pinned to your frozen dependency set, both architectures rebuilt and strict-loaded from the
-public checkpoints, AudioCaps validated, and a research test suite of 13 modules passing on
-CPU. The scientific runs have **not** started — the pilot protocol is pre-registered and
-must be frozen before any saliency result is inspected, so I've deliberately kept the
-diagnostics away from the pruned checkpoint until then.
+### Wording traps (fixed above — do not undo)
 
-**We reproduce your pruning pipeline bit-exactly.** Starting from `audioldm-m-full.ckpt`
-and `sorted_indexes_dict.pkl`, our materializer reconstructs
-`l1_audioldm-m-full_p1.ckpt` at **690/690 tensors bit-identical**. Along the way I also
-confirmed the checkpoint is **pre-recovery**: all 2061 same-shape tensors are bit-identical
-to the base model, so it is pure prune-and-merge output, never finetuned. And the base
-checkpoint has the same md5 in the official AudioLDM record (Zenodo 7884686) as in yours
-(21376822), so the provenance chain is clean end to end.
-
-**Question 1 — the pruning direction.** This is the one I'd most like your view on. The
-published L1 checkpoint appears to keep, per pruned layer, the `k` conv filters of
-**lowest** output-channel L1 magnitude, i.e. inverted relative to the usual L1 rule of
-Li et al. (2017), which keeps the highest. I verified this four independent ways:
-
-1. our per-filter L1 ranking vs the published ranking gives **Spearman = −1.000000 on all
-   28 ranked layers** — an exact reversal, not a partial correlation;
-2. the published ranking lists low-L1 filters first and high-L1 last;
-3. reading your own code: `layerwise_sorted_index_generation.py` computes
-   `l1_imp_index` as the per-filter `sum(|w|)` and then `sorted_idx = np.argsort(scores)`,
-   which is **ascending**, while `pruned_unet_dict_creation.py:118` keeps
-   `out_idx_full[:out_k]` — the first `k`, i.e. the lowest-L1 filters;
-4. on the **15/15** layers that are actually pruned, the kept set has a lower mean L1 than
-   the removed set.
-
-Because our materializer is bit-exact to the artifact, this is a property of the published
-checkpoint itself rather than of our reading of it. I'm **not** asserting it's a bug — it
-may be deliberate, or a convention I'm not seeing. But it changes how the baseline should
-be described in writing, so I'd rather ask than assume. Reproduce with:
-`scripts/research/verify_l1_direction.py` (exits 0 on CONFIRMED).
-
-For our own work we've decided to **adopt your published convention** for the L1 baseline,
-since the baseline we compare against *is* your released artifact, and we verified that
-reproduces your kept-set exactly on 12/12 ranking-driven layers. We'll additionally report
-standard keep-highest-L1 as a secondary reference, and word every comparison as "vs the
-published L1 pruning artifact" rather than "vs standard L1 magnitude pruning", so the
-direction and the criterion quality don't get conflated.
-
-**Question 2 — four tensors where the public script and the released checkpoint differ.**
-Running your public reconstruction script reproduces **686/690** tensors; four need
-different conventions to match the release, and the artifact looks internally inconsistent
-at those seams:
-
-* `output_blocks.0.0.in_layers.2` and `output_blocks.1.0.in_layers.2` take their output
-  channels **positionally** (first 192) while the consumer downstream selects by ranking;
-* `output_blocks.2.0.in_layers.2` has a **positional weight but a ranked bias**, so the
-  bias values attach to different channels than the weight rows;
-* `input_blocks.10.0.in_layers.2` keeps its input columns in identity order, where the
-  reference reorders them by the `input_blocks.9.0.op` ranking.
-
-We reproduce all four exactly as released (we're diagnosing that specific checkpoint), but
-if any of these were unintended it would be worth knowing before either of us writes about
-the pruned model.
-
-**One request.** The recovered, fully finetuned `(1,2,3,1)` checkpoint doesn't appear to be
-public — I checked GitHub releases on both repos and Zenodo 21376822, which holds only
-pre-recovery artifacts. Our RQ3 (how much a fixed parameter-efficient recovery restores)
-would be much stronger with it as the full-finetuning reference. Without it we can only
-report a published-reference comparison and can't claim any exact percentage-of-full-FT
-recovery. If you can share it, that unblocks the strongest version of that comparison.
-
-**What's coming that may be useful to you.** The diagnostics we've built are
-modality-specific: the audio and text CLAP paths both enter the same FiLM interface, so we
-can measure per-example how much pruning damage is modality-dependent, against a matched
-random-pruning null of 20 masks. If that signal is real, it says something about *what*
-pruning destroys in a text-to-audio model, not just how much. Happy to share the code and
-the pre-registered protocol before we run it, if you'd like to look at the design first.
-
-Best,
-Gabriel
+1. **Do not write "the diagnostics and saliency code are running on GPU."** Only the PEFT
+   recovery path has run on CUDA. The `D_gen`/`D_mod`/`R_mod` diagnostics and the P0-P3
+   channel-gate Taylor criteria are CPU control-tested only.
+2. **The ~1.6 s figure is a cost PROXY, not the saliency path.** `time_saliency` in the
+   benchmark runs a generic full-model forward+backward with every parameter requiring
+   grad; it does **not** exercise `research_pruning/taylor` channel gates. Describe it as a
+   proxy, at batch 8 on a T4, or the number will be read as something we have not measured.
 
 ---
 

@@ -67,13 +67,28 @@ training on the pruned model peaks at 4.18 GB, about 29 % of the card.
 
 * **Provider:** Lightning AI, Studio `gabriel-allgd-deploy-model-devbox`,
   teamspace `independentaudioresearch/general`, cluster `lightning-public-prod` (us-east-1).
-* **Price per GPU-hour:** **NOT MEASURED DIRECTLY.** *(Derived, weak.)* `gpu-benchmark-3`
-  cost **0.1372 credits** for roughly 9 minutes of wall time, implying **~0.91
-  credits/GPU-hour**. Treat that as an **upper bound only**: machine provisioning dominates
-  a 9-minute job, so the marginal rate for a long run is lower. Do not use this figure for
-  a serious projection — read the published price, or derive it from a long job.
-* **Credits remaining:** ~9.6 of 10.0 topped up on 2026-08-19 *(10.0 minus 0.107 + 0.091 +
-  0.137 across three jobs; see the ledger for the two failures)*.
+* **Price per GPU-hour: ~0.89 credits/GPU-hour** *(derived empirically from three
+  independent jobs, final settled costs)* — and this is **not** the figure that was quoted
+  to us:
+
+  | Job | Settled cost | ~Billed wall | Implied rate |
+  |---|---:|---:|---:|
+  | `gpu-benchmark-1` | 0.1168 | ~8 min | 0.88 cr/h |
+  | `gpu-benchmark-2` | 0.1179 | ~8 min | 0.88 cr/h |
+  | `gpu-benchmark-3` | 0.1674 | ~11 min | 0.91 cr/h |
+
+  Three jobs of different durations converge on **~0.89 cr/GPU-h**, so this is the actual
+  on-demand T4 rate on this account rather than a provisioning artefact of one short job
+  (an earlier version of this file called it a weak upper bound; three data points now say
+  otherwise). **A figure of ~0.19 cr/h was quoted to the project — that is 4.7× lower than
+  observed.** Before committing to a large run, confirm the published price and check
+  whether 0.19 refers to **interruptible** instances; if so, that is a major lever, and one
+  this project can safely use because exact training resume is now proven (S4/F11).
+  Also note settled costs came in ~10-30 % above the values read while jobs were running.
+* **Credits remaining:** ~9.6 of the 10.0 topped up on 2026-08-19 — **0.402 credits spent
+  across three jobs** (settled: 0.1168 + 0.1179 + 0.1674; two of the three were failures,
+  see the ledger), plus an un-itemised interactive T4 Studio window on 2026-08-19 that does
+  not appear in job costs.
 * **Paid amount forecast:** cannot be stated until `Tgen` is measured and the M5 step count
   is decided — see Compute Gate CG.
 * **Institutional compute assumed:** TBD — **this is now a live question, not a formality.**
@@ -95,12 +110,21 @@ Formulas are the master plan's §7.3.
 | M5 | recovery, 100k steps **per model** | `100000*Ttrain/3600` | **46.46 per model** | derived from measured | benchmark JSON |
 | M6 | analysis | CPU | ~0 | — | — |
 
-**Measurable subtotal excluding M4 and M5: 0.82 GPU-hours.** M1, M2, M3A and M3B together
-are under one GPU-hour — i.e. **the scientific core of the pruning study is essentially
-free at this scale.**
+**Measurable subtotal excluding M4 and M5: 0.82 GPU-hours.**
+
+> **CORRECTION (2026-08-20, external review — an earlier version of this file was wrong).**
+> That 0.82 figure was previously described as "the entire RQ1/RQ2 programme". **It is
+> not.** `docs/claims_matrix.md` states RQ2a's required evidence as **"M3 Gate B + M4"**:
+> closing RQ2 scientifically means pruning with P0/P1/P2/P3, **generating audio, and
+> evaluating FAD/KL/PANNs** — i.e. M4, whose cost is unknown because `Tgen` is unmeasured.
+> What 0.82 GPU-hours actually buys is **the diagnostics of RQ1 and the saliency
+> computation for RQ2** — the genuinely novel machinery — not the RQ2 verdict.
+> The accurate statement is: *the modality-swap diagnostics and paired-saliency
+> computation are surprisingly cheap; the generation-based evaluation is not yet costed;
+> the identified bottleneck is M5 recovery at ~46 GPU-h per model.*
 
 **M5 dominates everything by roughly 50×.** At 46.46 GPU-hours per model, four criteria
-(P0/P1/P2/P3) would be **185.8 GPU-hours**. At the weakly-derived ~0.91 credits/GPU-hour
+(P0/P1/P2/P3) would be **185.8 GPU-hours**. At the empirically derived ~0.89 credits/GPU-hour
 that is **~42 credits for a single model** against ~9.6 credits available. Even an
 order-of-magnitude cheaper marginal rate would not bring four models within the current
 balance. This is the finding that Compute Gate CG has to be decided on.
@@ -108,6 +132,71 @@ balance. This is the finding that Compute Gate CG has to be decided on.
 *(Caveat on M5: `100000*Ttrain` uses `Ttrain` at batch 8. Extending the batch ladder would
 raise throughput per sample, and the 100k-step figure is the master plan's own number, not
 an optimised one. Both are levers, and both are Gabriel's call — see below.)*
+
+## Full-experiment credit estimate (2026-08-20)
+
+**Backbone is measured; `Tgen` is DERIVED and is the weakest link.** `Ttrain`, `Tfwd` and
+the credit rate are measured. `Tgen` is derived as
+`DDIM_steps × (Tfwd / batch) × 1.15`, i.e. one U-Net forward per sampling step at the
+measured per-sample forward cost of **0.0582 s**, plus 15 % for VAE decode and vocoder:
+
+| DDIM steps | Derived Tgen per 10 s clip |
+|---:|---:|
+| 50 | 3.35 s |
+| 100 | 6.69 s |
+| 200 | 13.38 s |
+
+Estimates below use **S = 200** (the conservative end) and `Neval = 200`. **Measuring
+`Tgen` for real is the single cheapest way to firm up this whole table.**
+
+Model count for generation assumes the five-criterion split (see the P0 note below):
+**P0-published, P0-L1, P1, P2, P3, plus the unpruned base = 6 models.**
+
+| Component | GPU-h | Basis |
+|---|---:|---|
+| M1 GPU acceptance (500 steps) | 0.23 | measured `Ttrain` |
+| M2 paired diagnostics | 0.05 | measured `Tfwd` |
+| M3A random null (21 masks × 2 modalities) | 0.14 | measured `Tfwd` |
+| M3B saliency (`4B`, B=256) | 0.45 | measured `Tsal` |
+| M4 screening generation (6 models × 200 clips) | 4.46 | **derived `Tgen`** |
+| M4 confirmatory (3 models × 2 extra seeds) | 4.46 | **derived `Tgen`** |
+| M5 recovery | **46.46 per model** | measured `Ttrain`, 100k steps |
+| M5 post-recovery generation | 0.74 per model | **derived `Tgen`** |
+
+### Scenarios (including the master plan's 20 % contingency, at ~0.89 cr/GPU-h)
+
+| Scenario | GPU-hours | **Credits** | Notes |
+|---|---:|---:|---|
+| **A — RQ1 + RQ2 complete** (diagnostics, saliency, pruning, generation, FAD/KL/PANNs; **no recovery**) | 11.8 | **~10** | fits, barely, in the current ~9.6 balance |
+| **B — A + RQ3 with 2 recovered models** | 125.0 | **~111** | minimum defensible recovery arm |
+| **C — A + RQ3 with 5 recovered models** | 295.0 | **~263** | the full pre-registered programme |
+
+### The levers, in order of impact
+
+1. **Recovery step count.** `100000` is the master plan's number, not an optimised one.
+   Parameter-efficient recovery typically converges far sooner. At **20k steps** M5 falls
+   from 46.46 to **9.3 GPU-h per model (÷5)**: scenario **B → ~32 credits**, **C → ~64
+   credits**. This dwarfs every other lever and should be settled by a short
+   loss-vs-steps curve, which is cheap.
+2. **Interruptible instances.** Typically ~half price. This project can use them safely
+   because **exact training resume is now proven** (F11 fix + regression S4 + the
+   `m1_gpu_acceptance.py` resume test), so a preemption costs a restart, not a run.
+   Combined with lever 1: **scenario C ≈ 32 credits**.
+3. **Batch 16/32.** Per-sample cost was still falling at batch 8 (0.2051 s) with 10.4 GB
+   free; a further 15-20 % is plausible on both training and generation.
+4. **DDIM steps for screening.** Using S=50 for screening and S=200 only for the
+   confirmatory comparison cuts the screening generation ~4×.
+
+### Bottom line
+
+* **RQ1 and RQ2 end to end are affordable today** (~10 credits) — *including* the
+  generation-based evaluation, which the earlier version of this file wrongly omitted.
+* **RQ3 as pre-registered is not** (~111-263 credits against ~9.6).
+* With the two main levers (20k-step recovery + interruptible), **the full programme lands
+  near ~32 credits**, which changes the decision from "cut the recovery arm" to "top up
+  modestly and validate the step count first".
+
+All of this rests on a derived `Tgen`. Measure it before treating any of these as firm.
 
 ## Compute Gate CG
 
