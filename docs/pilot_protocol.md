@@ -1,12 +1,23 @@
 # M3 Pilot Protocol
 
-**Status: DRAFT — PENDING REVIEW. NOT FROZEN.** M3 is blocked until this
-file is reviewed against `docs/master_plan_v3.md`, completed, and committed
-**before any saliency or D_gen/D_mod/R_mod result on the real pruned checkpoint is
-inspected**. Every numeric value below is a **reasoned proposal**, provisional until
-(a) the first GPU benchmark populates `docs/compute_budget.md` (so `T_sal`/`T_fwd`
-are known) and (b) Compute Gate CG is resolved. Do not treat this draft as a
-pre-registration. `Freeze commit`/`Freeze timestamp` are intentionally left blank.
+**Status: FROZEN — 2026-08-20 00:53 America/Montevideo (03:53 UTC).** This is the
+pre-registration. Both freeze prerequisites are satisfied: (a) the first GPU
+benchmark populated `docs/compute_budget.md` with measured `T_sal`/`T_fwd`
+(`M0-005-RUN`), and (b) Compute Gate CG is resolved (`DECISION-CG-001`). The
+calibration slots are materialised into a hashable manifest
+(`configs/research/calibration_manifest.json`, sha256 `8d7de065…`), so the
+`(example, stratum, timestep)` slots and every gate threshold are fixed **before any
+saliency or D_gen/D_mod/R_mod result on the real base/pruned checkpoint is
+inspected**. No proposal below may be revised after results are seen; any change
+must be a new dated `docs/experiment_ledger.md` entry that supersedes this freeze.
+The `(PROPOSAL)` tags below are retained verbatim as the historical record of how
+each value was reasoned; as of this freeze they are **pre-registered decisions**.
+
+> **Load-bearing caveat (unchanged by the freeze).** P1 text-only Taylor is the
+> mandatory RQ2 baseline and is scientifically load-bearing. Its implementation
+> (`research_pruning/taylor/`) and the real audio/text loss closures used by the
+> saliency run must pass an evidence-first `/auditar` **before** any saliency number
+> it produces is treated as a result. Freezing the protocol does not waive that gate.
 
 ## Machinery status (this unit, M3-000)
 
@@ -84,6 +95,13 @@ cross-modal advantage would be a design artefact (RQ2 would collapse). Rule:
   example" of §5, refined to fall inside the stratum.
 
 ## Slot construction (PROPOSAL)
+
+> **FROZEN REALISATION.** The rules below are materialised into the hashable
+> manifest `configs/research/calibration_manifest.json` (sha256 `8d7de065…`) by
+> `scripts/research/build_calibration_manifest.py`. That manifest pins the 256 wav
+> ids in draw order, the first-caption per wav, and every per-slot timestep
+> (`t_paired[K]`, `t_p1[K][2]`). The saliency run MUST consume that file; it must
+> not re-draw slots. Rebuilding the script reproduces the identical sha256.
 
 * **Example pool:** AudioCaps **train** manifest
   (`datafiles/audiocaps_train_label.json`, 49 502 items), which is disjoint from
@@ -310,9 +328,13 @@ Proof for each seam: `scripts/research/verify_l1_bitexact.py` →
   `9a2593c20555d510d0edef76deb2075121f5e865f5f931d0c28584fa83524360`
   (full-ranking fingerprints, M3-002). Materializer bit-exact to published ckpt (690/690).
 * Matched-null fit form: LINEAR (OLS); bootstrap unit: WAV; `n_boot` 10 000.
-* Calibration manifest SHA256: _pending (built at freeze time; E, K, caption rule fixed)_
-* Timestep list/hash: _pending (built at freeze time)_
-* Code commit: _pending_
+* Calibration manifest: `configs/research/calibration_manifest.json`, SHA256
+  `8d7de0659554385389d3d71d349037d39c39e5842a7488e85037c060532b2d80`
+  (E=256, K=5, caption rule and master seed fixed; built by
+  `scripts/research/build_calibration_manifest.py`, verified deterministic).
+* Timestep list/hash: pinned **inside** the calibration manifest above (per-slot
+  `t_paired[K]` and `t_p1[K][2]`); covered by the same sha256. No separate file.
+* Code commit: `42f015d` (HEAD at freeze; suite 13/13 PASS).
 * Resolved config: `audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original_medium.yaml`
-* Freeze commit: _left blank — reviewed before freezing_
-* Freeze timestamp: _left blank — reviewed before freezing_
+* Freeze commit: this commit.
+* Freeze timestamp: 2026-08-20 00:53 America/Montevideo (2026-08-20 03:53 UTC).
