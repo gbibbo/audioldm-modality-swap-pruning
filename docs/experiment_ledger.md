@@ -821,3 +821,12 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Compute reality check (SDK):** 14 jobs, **4.205 credits spent**; remaining spendable under DECISION-CG-001 ≈ 3–5 credits. Plan v4 draft is therefore tiered (Tier 0 ≈ 2.7 cr; Tier 1 ≈ 30 cr; Tier 2 ≈ 25–35 cr).
 * **Outputs:** `docs/review/2026-08-20_reframing_round2.md`, `docs/master_plan_v4_draft.md` (rc1). Decisions DECISION-V4-00..05 listed there for Gabriel. `docs/master_plan_v3.md` remains the contract.
 * **Failure or uncertainty:** `seg_label` .npy files referenced by the upstream manifest are not on disk (temporal-occupancy covariate must come from framewise PANNs); mild-budget `channel_mult` materializability unverified; ELSA reproducibility unresolved.
+
+### 2026-08-20 12:46 | REVIEW-003 / PLAN-V4-rc2 | Hostile review round 3: two rc1 errors fixed (Gate E not executable in Tier 0; RAND×2 is not a null), mild budget measured, draft rc2 (NOT adopted)
+
+* **Status:** documentation + CPU measurement only; no gate changed, no GPU spent.
+* **Errors in rc1 accepted:** (1) Tier 0 produced no RAND audio, so Gate E could not be read out there — Tier 0 is now a heterogeneity *screen*; Gate E is Tier 1. (2) Gate E's between-mask 95th percentile needs `K_rand ≥ 10` masks; rc1 had RAND×2. Tier 1a re-costed ≈23 credits.
+* **Measured (CPU, frozen config):** U-Net params by `channel_mult`: `(1,2,3,5)` 415.955 M; `(1,2,3,4)` 317.308 M (−23.7 %); `(1,2,3,3)` 239.047 M (−42.5 %); `(1,2,3,2)` 182.168 M (−56.2 %); `(1,2,3,1)` 145.674 M (−65.0 %). Mild budget set to `(1,2,3,4)`. Materializer currently hardcoded to `(1,2,3,1)` (`research_pruning/diagnostics/random_masks.py::build_pruned_unet`).
+* **Verified:** `class_labels_indices.csv` carries official comma aliases (basis of the strict synonym map). FineLAP (2604.01155) code public; checkpoint/API unconfirmed → occupancy estimator conditional on a CPU smoke (DECISION-V4-06).
+* **Other rc2 changes:** Gate M as nested block LRTs; occupancy not measured with the outcome detector; FAD/FD rule = before any scientifically-used generation; seed-robustness from the FAD 3-seed audio; Music drift → exploratory §10b.
+* **Outputs:** `docs/review/2026-08-20_reframing_round3.md`, `docs/master_plan_v4_draft.md` rc2. Both reviewers vote adopt; **v3 remains the contract until DECISION-V4-00.**

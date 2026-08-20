@@ -1,4 +1,4 @@
-# Master plan v4 — DRAFT rc1 (2026-08-20)
+# Master plan v4 — DRAFT rc2 (2026-08-20)
 
 **Status: DRAFT. `docs/master_plan_v3.md` remains the execution contract until Gabriel
 records DECISION-V4-00 (adopt v4) in `docs/experiment_ledger.md`.** Everything v3 says
@@ -6,7 +6,9 @@ about provenance, Git discipline, the CPU-Studio/GPU-Job policy, frozen SHAs, an
 "negative results are valid" carries over unchanged. This draft replaces v3 §1–§2
 (framing, RQs), §4–§6 (criteria, budget contract, timestep protocol — kept as machinery,
 re-purposed), and M3–M7; it is the product of the two-reviewer audit recorded in
-`docs/review/2026-08-20_reframing_round{1,2}.md`.
+`docs/review/2026-08-20_reframing_round{1,2,3}.md`.
+
+**rc1 → rc2 changelog (round 3):** Gate E moved out of Tier 0 (Tier 0 generates no RAND audio, so it cannot be evaluated there); Gate E null needs `K_rand ≥ 10` masks, not 2; Gate M re-specified as nested block likelihood-ratio tests; temporal occupancy measured with an evaluator independent of the outcome detector; two-level pre-registered synonym protocol derived from official AudioSet aliases; mild budget fixed from measured geometry `(1,2,3,4)` = −23.7 %; FAD/FD rule restated; seed-robustness check reuses the FAD 3-seed audio; Music-drift observation demoted to exploratory with an independent-evaluator control.
 
 ---
 
@@ -70,7 +72,7 @@ negative, reported in one paragraph).
 |---|---|---|
 | H-tail | per-event loss ↓ with exposure | primary: `log n_AudioCaps(event)` from `audiocaps_train_label.json` (49 502 clips; Speech 41.5 %, Siren 1.81 %, Gunshot 1.69 %, Drill 1.51 %, Explosion 0.47 %); secondary: `log n_AudioSet-unbalanced(event)` |
 | H-guidance | per-event loss ↑ with the event's guidance dependence and with pruning error in the guidance direction | `G_F(event) = E‖ε_F,c − ε_F,∅‖` on slots whose source clip contains the event; `ΔG_P(event) = E‖(ε_P,c−ε_P,∅) − (ε_F,c−ε_F,∅)‖`; both forward-only on the frozen slots |
-| H-acoustic | per-event loss tracks acoustic structure | onset strength, temporal occupancy (framewise PANNs on the reference clip), spectral flatness, spectral flux — fixed list, no post-hoc additions |
+| H-acoustic | per-event loss tracks acoustic structure | onset strength, temporal occupancy, spectral flatness, spectral flux on the **reference** clip — fixed list, no post-hoc additions. **Occupancy must not be measured with the outcome detector (PANNs)** — circularity: an event PANNs handles poorly would look both low-occupancy and poorly captured. Primary estimator: frame-level text-audio grounding with an independent model (candidate **FineLAP**, arXiv 2604.01155, EAT + RoBERTa, code github.com/xiquan-li/FineLAP; public checkpoint **unconfirmed**), with the score→duration rule frozen before use; sensitivity: PANNs `Cnn14_DecisionLevelMax` framewise output. **If FineLAP fails a CPU validity smoke on known events, occupancy is dropped from the block rather than replaced at the last minute.** |
 
 Descriptors and exposures are frozen in a manifest (`configs/research/event_covariates.json`, sha256 in the ledger) **before** any pruned-model generation is evaluated.
 
@@ -82,8 +84,13 @@ Descriptors and exposures are frozen in a manifest (`configs/research/event_cova
   `n_min = 10` (Tier 0) / `20` (Tier 1).
 * **Requested event.** `e` is requested by prompt `p` iff `e` is among the AudioSet
   labels of the source clip **and** the caption contains `e`'s display name or a
-  pre-registered synonym (map frozen in `configs/research/event_synonyms.json`). This
-  removes the construct-validity problem of scoring labels the caption never asked for.
+  pre-registered synonym. **Two-level protocol, both frozen with hash before any pruned
+  generation is inspected:** (i) *strict map* = the official AudioSet display name and its
+  comma-separated aliases as shipped in `class_labels_indices.csv` (e.g. `Gunshot, gunfire`;
+  `Police car (siren)`) plus minimal morphology (plurals, obvious verb forms); (ii)
+  *expanded map* = manual additions reviewed once, used only as a sensitivity analysis.
+  No LLM-generated synonyms. Files: `configs/research/event_synonyms_{strict,expanded}.json`.
+  This removes the construct-validity problem of scoring labels the caption never asked for.
 * **Capture.** Occurrence `(p, e)` is captured iff `e` ∈ PANNs (Cnn14) top-10 of the
   generated clip — "PANNs top-10 event recall, following Singh et al. (2026)". Secondary:
   CLAP score of the event phrase vs the clip. Optional (Tier 1, API-bound): ELSA
@@ -108,21 +115,34 @@ Descriptors and exposures are frozen in a manifest (`configs/research/event_cova
 | P1-nat | text Taylor, natural calibration (M3B manifest) | data-aware baseline |
 | RAND×k | random structured masks, seeds as M3A | matched null |
 | P1-tail / P1-guid | P1 with tail-reweighted / guidance-weighted calibration | RQ3′ intervention, only if Gate B′ passes |
-| mild budget | a second `channel_mult` (candidate `(1,2,3,3)`; materializability to be verified) | saturation control; Tier 1 |
+| mild budget | `channel_mult=(1,2,3,4)`: **measured 317.308 M params = −23.7 %** (vs `(1,2,3,3)` −42.5 %, `(1,2,3,2)` −56.2 %, `(1,2,3,1)` −65.0 %; CPU build, this session). Engineering prerequisite: parameterize `build_pruned_unet`/`materialize` (currently hardcoded to `(1,2,3,1)`) with a bit-exact regression test at `(1,2,3,1)` | saturation control; Tier 1 |
 
 P2/P3 are dropped (resolved negative; one sentence in the paper).
 
 ## 6. Gates (pre-registered)
 
-* **Gate E (heterogeneity, RQ1′).** The between-event variance of `L_{P0-std}(e)` exceeds
-  the 95th percentile of the same statistic for `RAND` masks matched on `D_gen`, **and**
-  Spearman between `L_{P0-std}(e)` and `L_{P1-nat}(e)` ≥ 0.5 (the pattern is a property
-  of pruning, not of one criterion). FAIL ⇒ the phenomenon is not specific; report as
-  such and stop RQ2′/RQ3′.
-* **Gate M (mechanism, RQ2′).** Pre-registered model comparison (AIC/likelihood-ratio)
-  among the three single-covariate models and the full model; a mechanism "wins" only if
-  its interaction term is significant at α = 0.01 after the others are included. "None"
-  is a valid outcome.
+* **Heterogeneity screen (Tier 0, not a gate).** On 200 stratified prompts × {base, P0-std,
+  P1-nat}: between-event dispersion of `L(e)` with prompt-bootstrap CI, and Spearman
+  between `L_{P0-std}(e)` and `L_{P1-nat}(e)`. Its only role is to inform DECISION-V4-02
+  (fund Tier 1 or not). **Tier 0 generates no RAND audio, so Gate E cannot be evaluated in
+  Tier 0.**
+* **Gate E (heterogeneity, RQ1′) — Tier 1 only.** The between-event variance of
+  `L_{P0-std}(e)` exceeds the 95th percentile of the same statistic across **`K_rand ≥ 10`
+  random structured masks** (20 if funded) matched on `D_gen`, **and** Spearman between
+  `L_{P0-std}(e)` and `L_{P1-nat}(e)` ≥ 0.5 (the pattern is a property of pruning, not of
+  one criterion). The between-mask percentile is computed on the **same matched prompt
+  subset for every system** (RAND masks are generated on 300 prompts each; P0-std's
+  statistic for the gate is computed on that same 300-prompt subset; the 1000-prompt set
+  feeds Gate M). Prompt-bootstrap of two masks does **not** estimate between-mask
+  variability and is not accepted. FAIL ⇒ the phenomenon is not specific; report as such
+  and stop RQ2′/RQ3′.
+* **Gate M (mechanism, RQ2′).** Three pre-registered covariate **blocks**: tail = {log
+  AudioCaps exposure} (AudioSet exposure as sensitivity, not forced in jointly if
+  collinear); guidance = {`G_F`, `ΔG_P`}; acoustic = {onset, occupancy, flatness, flux}.
+  Nested likelihood-ratio tests of the full mixed model against full-minus-block, on the
+  `system × block` interactions, α = 0.01 per block; a mechanism "wins" only by its
+  **whole block**, never by one descriptor chosen after the fact. AIC reported
+  descriptively. "None" is a valid outcome.
 * **Gate B′ (intervention changes the mask).** Kept-set overlap(P1-nat, P1-variant) falls
   below the 5th percentile of the null distribution of overlap(P1-half_i, P1-half_j)
   over ≥ 1000 natural splits of matched size and budget, computed from stored per-slot
@@ -141,22 +161,24 @@ S=50**; saliency **0.222 s/backward**; diagnostic forward **≈0.059 s/sample**;
 | Tier | Content | Est. credits |
 |---|---|---|
 | **0 — closes v3 + screens v4** (fits current balance) | D1+D2 in one job: {base, P0-std, P0-pub, P1-nat, RAND×5} × 500 slots × {audio-cond, text-cond, uncond} forward (~0.35); Gate B′ saliency on enriched pool 512 ex × K=5 × 2 draws with per-slot storage (~0.5); event-level screening: 200 stratified prompts × {base, P0-std, P1-nat}, 1 seed (~1.5); smokes (~0.3) | **≈2.7** |
-| **1a — RQ1′/RQ2′ confirmatory** | 50 events × 20 prompts × {base, P0-std, P0-pub, P1-nat, RAND×2, mild P0-std, mild P1}, 1 seed; FAD guardrail 3 seeds on 300 clips | ≈20 |
+| **1a — RQ1′/RQ2′ confirmatory** | 50 events × 20 prompts × {base, P0-std, P0-pub, P1-nat, mild P0-std, mild P1} (6 000 clips, 1 seed) + **RAND×10 × 300 prompts** (3 000 clips) for Gate E; FAD guardrail 3 seeds × 300 clips × 3 systems — **those seeds' audio is also scored for event recall as the seed-robustness check** (no extra cost) | ≈23 |
 | **1b — H-guidance CFG grid** | 3 CFG × {base, P0-std} × 300 prompts | ≈4.5 |
 | **1c — RQ3′ generation** | {P1-nat, P1-variant} × 1000 prompts (only if Gate B′ passes) | ≈5 |
 | **2 — RQ4′ PEFT recovery** | 2 models × 25k steps + eval; optional unpruned-PEFT control | ≈25–35 |
 
 Hard rules: no tier starts without Gabriel's written authorization in the ledger; the
 2.0-credit reserve of DECISION-CG-001 stands; every GPU job is preceded by a CPU dry-run
-and a GPU smoke; **FAD/FD NaN (F-eval-3) must be fixed before any Tier-1 spend**.
+and a GPU smoke; **FAD/FD NaN (F-eval-3) must be fixed before any new audio generation
+that will be used scientifically** (it does not block D1/D2 or Gate B′, which use no FAD;
+in practice it is fixed first because it is CPU work).
 
 ## 8. Milestones and dates (submission target 2026-09-16 retained, with v3's rule: do not submit underpowered)
 
 | Milestone | Content | Target |
 |---|---|---|
 | M4-0 | Gabriel decisions (§10); fix FAD/FD; freeze event set, synonym map, covariate manifest, stratified prompt manifest (hashes in ledger) | 08-22 |
-| M4-1 (Tier 0) | D1+D2 job; Gate B′ saliency job; screening generation; Gate E screening read-out; Gate B′ verdict | 08-25 |
-| M4-2 | Tier decision on evidence; if Tier 1 funded: 1a/1b/1c | 08-26 → 09-05 |
+| M4-1 (Tier 0) | D1+D2 job; Gate B′ saliency job; screening generation; **heterogeneity screen read-out (not Gate E)**; Gate B′ verdict; FineLAP validity smoke (CPU) | 08-25 |
+| M4-2 | Tier decision on evidence; if Tier 1 funded: 1a (incl. RAND×10 → Gate E) / 1b / 1c | 08-26 → 09-05 |
 | M4-3 | Gate M model comparison; claims matrix; RQ-swap wording from D1 | 09-07 |
 | M4-4 (optional Tier 2) | PEFT recovery of 2 models | 09-08 → 09-12 |
 | M8′ | paper; coauthor review | 09-12 → 09-16 |
@@ -177,10 +199,21 @@ EFF unchanged.
   figure the plan may assume.
 * **DECISION-V4-03** ELSA: adopt as secondary metric (API cost, reproducibility caveat) or
   defer.
-* **DECISION-V4-04** `N_min`, `n_min`, mild-budget `channel_mult`, and whether RAND uses
-  5 or 20 masks in Tier 0.
+* **DECISION-V4-04** `N_min = 200`, `n_min = 10/20`, mild budget `(1,2,3,4)` (−23.7 %),
+  RAND×5 for Tier-0 forward diagnostics, **`K_rand ≥ 10` for Gate E** (20 if funded).
 * **DECISION-V4-05** keep RQ-swap in the paper as a one-paragraph negative result (yes /
   no).
+* **DECISION-V4-06** occupancy estimator: FineLAP (conditional on a CPU validity smoke) or
+  drop occupancy from the acoustic block.
+
+## 10b. Exploratory observations (never in the claims matrix unless promoted by a decision)
+
+* **"Music" drift.** AudioCaps-train has 0 Music clips, yet PANNs top-1 = Music rises from
+  9 (base) to 24 (P3) of 100 in the M4 screening. Rival explanation: AudioSet's hierarchical
+  ontology lets PANNs back off to broad classes (Music/Speech) when audio is ambiguous —
+  i.e. detector behaviour, not generator collapse. Promotion requires agreement of an
+  independent evaluator (CLAP/FineLAP similarity to "music" vs the requested event) **and**
+  the PANNs distribution on real reference audio as control.
 
 ## 11. Literature positioning (verified 2026-08-20; see round-1/2 docs for URLs)
 
