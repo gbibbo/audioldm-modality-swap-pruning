@@ -200,16 +200,21 @@ All of this rests on a derived `Tgen`. Measure it before treating any of these a
 
 ## Compute Gate CG
 
-* **Decision:** **UNRESOLVED — requires Gabriel.** It is a *schedule* decision, not a
-  scientific one (master plan §7.4). Condition-by-condition against §7.4:
-* **Evidence date:** 2026-08-19 (target decision date was 2026-08-18, already passed).
+* **Decision:** **RESOLVED (Gabriel, 2026-08-20, ledger DECISION-CG-001) — resolved by
+  descoping.** Authorized now: the core RQ1+RQ2 programme (M1 GPU acceptance, M2, M3A,
+  M3B, pruning, **screening generation at DDIM S=50** + FAD/KL/PANNs) plus a **~2k-step M5
+  convergence probe**. Deferred until top-up: S=200 confirmatory generation and any full
+  M5 recovery. **Hard reserve: 2.0 credits untouched** (spendable ≈ 7.6). Interruptible
+  instances: trial cheaply first, then use for long jobs (exact resume proven).
+* **Evidence date:** 2026-08-19 (measurements); decision 2026-08-20. The table below
+  records the state the decision was taken on.
 
 | § | Condition | Status |
 |---|---|---|
 | 1 | a usable cloud environment is confirmed | **SATISFIED** — Lightning AI, T4 via Jobs, end-to-end verified |
 | 2 | M1 benchmark has produced real throughput/VRAM numbers on the selected GPU | **SATISFIED** — this document |
-| 3 | projected ICASSP-core cost fits Lightning credits + ~US$50 discretionary and/or institutional compute | **CANNOT BE SATISFIED AS SPECIFIED** — M5 alone is 46.46 GPU-h per model; `Tgen` is still unmeasured so M4 is unknown |
-| 4 | projected completion leaves paper writing starting by 2026-09-05 | **UNDECIDABLE** until 3 is resolved |
+| 3 | projected ICASSP-core cost fits Lightning credits + ~US$50 discretionary and/or institutional compute | **RESOLVED BY DESCOPING (DECISION-CG-001)** — the S=50-screening core fits the balance; RQ3 recovery + S=200 confirmatory deferred to a top-up informed by the M5 probe |
+| 4 | projected completion leaves paper writing starting by 2026-09-05 | **SATISFIED under the descoped plan** |
 
 * **Projected ICASSP-core cost:** cannot be stated. Two inputs are missing: `Tgen`
   (blocking M4) and a decision on the M5 step budget / number of recovered models.
