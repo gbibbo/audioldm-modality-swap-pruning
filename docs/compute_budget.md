@@ -37,13 +37,23 @@ lightning job run --name gpu-benchmark-3 --machine T4 \
 * **TRAIN_SEC_PER_STEP:** 1.672427 *(measured, batch 8, 30 steps after 5 warmup)*
 * **SALIENCY_SEC_PER_GRAD_EVAL_OR_BATCH:** 1.596534 *(measured, batch 8, 20 iters)*
 * **FORWARD_SEC_PER_DIAGNOSTIC_BATCH:** 0.465546 *(measured, batch 8, 20 iters)*
-* **GEN_SEC_PER_CLIP_OR_BATCH:** **NOT MEASURED** — the generation stack is not wired
-  (`--with-generation` was not run). This blocks the M4 projection; see Compute Gate CG.
-* **GEN_BATCH_SIZE:** **NOT MEASURED**
+* **GEN_SEC_PER_CLIP:** **MEASURED (job `tgen-2`, Tesla T4, 2026-08-20, commit `39d3627`)** —
+  real end-to-end `LatentDiffusion.generate_sample` (DDIM + VAE decode + HiFi-GAN vocoder),
+  n_gen=1, guidance 3.5, batch 4, 8 clips per point on the disjoint val split:
+  **S=50 → 8.435 s/clip; S=200 → 32.337 s/clip.** Raw: job log; `measure_tgen.py`.
+* **GEN_BATCH_SIZE:** 4 *(measured; peak VRAM had ~8 GB headroom, can go higher)*
 * **PEAK_TRAIN_VRAM_GB:** 4.177 *(measured)*
 * **PEAK_SALIENCY_VRAM_GB:** 4.152 *(measured)*
 * **PEAK_FORWARD_VRAM_GB:** 1.540 *(measured)*
-* **PEAK_GENERATION_VRAM_GB:** **NOT MEASURED**
+* **PEAK_GENERATION_VRAM_GB:** 8.293 *(measured, S=50, batch 4; ~57 % of the T4)*
+
+> **KEY FINDING — the DERIVED `Tgen` was ~2.4× too low (2026-08-20).** The earlier
+> derivation `Tgen = DDIM_steps × (Tfwd/batch) × 1.15` gave S=50 → 3.35 s and S=200 →
+> 13.38 s. **Measured is S=50 → 8.44 s and S=200 → 32.34 s — 2.5×/2.4× higher.** Root cause:
+> classifier-free guidance runs **two** U-Net forwards per DDIM step (conditional +
+> unconditional), which the ×1 derivation ignored; VAE decode + vocoder add the rest. **Every
+> M4/M5-generation cost below that used the derived `Tgen` is therefore ~2.4× optimistic and
+> is corrected here.** This is exactly why `Tgen` had to be measured.
 
 ### Batch escalation — MEASURED
 
@@ -135,19 +145,16 @@ an optimised one. Both are levers, and both are Gabriel's call — see below.)*
 
 ## Full-experiment credit estimate (2026-08-20)
 
-**Backbone is measured; `Tgen` is DERIVED and is the weakest link.** `Ttrain`, `Tfwd` and
-the credit rate are measured. `Tgen` is derived as
-`DDIM_steps × (Tfwd / batch) × 1.15`, i.e. one U-Net forward per sampling step at the
-measured per-sample forward cost of **0.0582 s**, plus 15 % for VAE decode and vocoder:
+**`Tgen` is now MEASURED (2026-08-20), superseding the derivation below.** `Ttrain`, `Tfwd`,
+`Tgen` and the credit rate are all measured now.
 
-| DDIM steps | Derived Tgen per 10 s clip |
-|---:|---:|
-| 50 | 3.35 s |
-| 100 | 6.69 s |
-| 200 | 13.38 s |
+| DDIM steps | Derived Tgen (old, ×1 fwd) | **MEASURED Tgen** |
+|---:|---:|---:|
+| 50 | 3.35 s | **8.435 s** |
+| 200 | 13.38 s | **32.337 s** |
 
-Estimates below use **S = 200** (the conservative end) and `Neval = 200`. **Measuring
-`Tgen` for real is the single cheapest way to firm up this whole table.**
+The derivation was ~2.4× low (CFG = 2 forwards/step; see KEY FINDING above). **Screening uses
+S=50 (DECISION-CG-001); confirmatory S=200 is deferred.** `Neval = 200` per the protocol.
 
 Model count for generation assumes the five-criterion split (see the P0 note below):
 **P0-published, P0-L1, P1, P2, P3, plus the unpruned base = 6 models.**

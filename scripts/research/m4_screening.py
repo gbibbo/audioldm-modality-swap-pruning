@@ -129,6 +129,13 @@ def main() -> int:
         t0 = time.perf_counter()
         model, load_info = build_model(config, device)  # base LatentDiffusion
         base_diffusion_model = model.model.diffusion_model  # keep to restore for 'base'
+        # Generate ALL criteria from their raw loaded/materialized weights, no EMA:
+        # `model_ema` was registered for the base 960-channel U-Net, so `ema_scope` would
+        # size-mismatch the moment a pruned (192-channel) U-Net is swapped in. Disabling
+        # EMA also uniformises the comparison — every model (base + P0/P1/P2/P3) generates
+        # from its own weights with no EMA advantage — removing an EMA confound.
+        model.use_ema = False
+        result["use_ema"] = False
         result["model_build_s"] = time.perf_counter() - t0
         result["load_info"] = load_info
 

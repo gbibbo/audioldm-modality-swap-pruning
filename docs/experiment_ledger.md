@@ -759,3 +759,16 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 
 * **Failure or uncertainty:** the saliency VALUES remain uncomputed — they are the GPU run's output; this audit certifies the machinery and the data path, not the result. E=2 dry-run overlaps are non-scientific.
 * **Ops finding (interruptible trial, DECISION-CG-001 decision 4).** The Tgen job `tgen-1` was launched `--interruptible` and went Running → **Pending (preempted)** mid-run; `measure_tgen` has no resume, so a preemption restarts it from scratch. **Lesson: interruptible fits only LONG resumable jobs (M5 training, exact resume proven); short non-resumable measurements should run on-demand.** `tgen-1` stopped at 0.0678 credits; Tgen re-launched on-demand.
+
+### 2026-08-20 01:45 | M0-006-TGEN | Tgen MEASURED on the real generation stack — derived value was ~2.4× too low
+
+* **Status:** completed (measurement). Job `tgen-2`, Tesla T4, **Completed, cost 0.2039 credits**.
+* **Milestone / gate:** M4 costing (Compute Gate CG input). Closes the last unmeasured backbone number.
+* **Git commit:** `39d362733e527e1fcec5ded81bf2d31ba32bb429` (clean), verified by preflight.
+* **Command:** `measure_tgen.py --steps-list 50,200 --clips 8 --batch 4 --n-gen 1 --warmup-steps 8 --expect-gpu T4 --expect-commit 39d3627 --out artifacts/m3_pilot/tgen_measured.json` (result also in the job log).
+* **GPU / runtime:** Tesla T4; guidance 3.5; disjoint val split; real `LatentDiffusion.generate_sample` (DDIM + VAE decode + HiFi-GAN vocoder).
+* **Primary result (MEASURED):** **S=50 → 8.435 s/clip; S=200 → 32.337 s/clip; peak generation VRAM 8.293 GB** (batch 4, ~57 % of the T4).
+* **FINDING — the derived `Tgen` was ~2.4× low.** `docs/compute_budget.md` had derived S=50 → 3.35 s and S=200 → 13.38 s via `DDIM_steps × Tfwd/batch × 1.15`. Measured is 2.5×/2.4× higher. **Root cause: classifier-free guidance runs TWO U-Net forwards per DDIM step** (conditional + unconditional); the ×1 derivation missed the factor of 2, and VAE-decode + vocoder add the rest. Corrected in `docs/compute_budget.md` (GEN_* lines + derived-vs-measured table + KEY FINDING). **Consequence: every M4/M5-generation cost row that used the derived `Tgen` is ~2.4× optimistic.** Corrected screening cost at S=50, 6 models × 200 clips = **2.81 GPU-h ≈ 2.5 credits** (was ~1.05 implied by the derived value).
+* **Two CPU-only shims in `measure_tgen.py` are active ONLY under `--dry-run-cpu`** (`torch.load` map_location; `DDIMSampler` device) and did not touch this measured run — the job ran the native CUDA paths. Base U-Net loaded 0-missing; the conditioner was remapped (`cond_stage_model.*` → `cond_stage_models.0.*`) so real CLAP weights load.
+* **Failure or uncertainty:** measured at batch 4; larger batches would lower per-clip cost. `n_gen=1` (single candidate); the config's `n_candidates_per_samples=3` is a ×3 multiplier applied only if best-of-3 selection is used.
+* **Ops:** the earlier `--interruptible` Tgen (`tgen-1`) was preempted (0.068 cr, no resume); this on-demand re-run completed cleanly. A separate saliency smoke (`sal-smoke-1`) FAILED on a **dirty-tree preflight** (0.114 cr) because the Job snapshot captured an uncommitted file created just after launch — **lesson: keep the tree clean AND do not edit the repo in the seconds after `lightning job run` returns.**
