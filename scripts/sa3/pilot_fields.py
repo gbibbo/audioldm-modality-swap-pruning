@@ -203,6 +203,9 @@ def main():
         "I_PT_dep": ({str(g): iptdep["per_block"][g] for g in blocks} if a.with_dep else None),
         "I_PT_dep_excluded_levels": (iptdep["excluded_levels"] if a.with_dep else None),
         "W": W, "greedy_D_P": greedy_out,
+        "raw_numerators": {"dp_num": dp_num, "f_den": f_den, "db_num": db_num, "fb_den": fb_den,
+                            "ipt_num_per_level": ipt_num, "ipt_den_per_level": ipt_den,
+                            "fp_sq_per_level": fp_sq_lvl},
         "note": "PILOT sizing only; no section-8 decision. eta_max from smoke (6.7e-5).",
         "wall_s": round(time.time() - t_start, 1),
     })

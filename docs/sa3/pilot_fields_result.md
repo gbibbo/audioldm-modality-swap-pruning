@@ -1,5 +1,8 @@
 # RQ1 field pilot — result (PILOT / sizing, NOT a section-8 decision)
 
+> **⚠ SEE `docs/sa3/review_erratum_2026-08-21.md` (E6/E8).** The `D_P/D_B≈10×` claim needs the field-norm ratio to rule out a normalization artifact; the phrasing is corrected below.
+
+
 **Job `sa3-pilot-fields-2` (Tesla T4, 0.2888 cr, commit 31d9ad6), N=32 prompts of `panel_pilot`,
 all 20 blocks, forward-only, fp16.** Raw: `artifacts/sa3/pilot_fields.json`. This is pilot data —
 it SIZES the main experiment and shows direction; no case-A–E decision is read from it (that is
@@ -21,7 +24,7 @@ main-panel, after freezing N_main / n_u / margins, per §6.0).
    post-vs-base sensitivity ratio `D_P/D_B` is **6.8–11.5 for blocks 3–11** but ~1.0–1.5 for the
    boundary blocks (0, 17, 18, 19). i.e. the post model is ~an order of magnitude more sensitive
    to removing a middle block than the base is, while both are equally (very) sensitive at the
-   boundaries. This is the RQ1 signal: post-training changed *where* structural importance sits.
+   boundaries. This is the RQ1 signal (phrasing per erratum E8): **few-step post-training strongly amplifies relative interior-block sensitivity while much of the global block-importance ranking remains shared with the base** (ρ(D_P,D_B)=0.82). Whether the amplification is real or a normalization artifact (‖F_P‖² vs ‖F_B‖²) is checked in `rq1_field_norms.py` — see erratum E6.
 3. **Parameter-space change does NOT predict functional importance.** `W(g)` is tiny (~1e-5) and
    nearly uniform across all 20 blocks; **Spearman(D_P, W) = −0.21** (≈ 0). The weights barely move
    and move uniformly, yet the functional impact varies ~100× — a `‖ΔW‖`-based proxy would miss the

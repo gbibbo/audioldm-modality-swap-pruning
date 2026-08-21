@@ -1,5 +1,8 @@
 # Single-block E adversary — result (PILOT-directional, CLAP+KL only)
 
+> **⚠ SUPERSEDED IN PART — SEE `docs/sa3/review_erratum_2026-08-21.md` (E1–E3).** The seed floor below was on the wrong scale (m_CLAP=0.164 should be 0.040) and the comparator was hardcoded to dense-7 (nearest is dense-8). **Corrected verdict (`adversary_reanalysis.json`): 9/20 blocks inferior on CLAP — boundary 0/1/19 PLUS interior 5/6/7/9/17/18 — i.e. a STRONGER CASE-E direction, not MIXED.** The 'only 0/1/19' reading below was a floor artifact.
+
+
 **Job `sa3-adversary-1` (Tesla T4, 0.195 cr, commit 9133829), N=16 `panel_pilot` prompts, all 20
 blocks removed one at a time @ 8 steps, R=5 dense-8 seed streams, dense ladder 8/7/6/5/4.** Scored
 CLAP + KL_passt (`--no-fd`; OpenL3/FD is ~2 h on CPU for 464 clips — deferred to a GPU pass). Raw:
