@@ -237,3 +237,27 @@ All of this rests on a derived `Tgen`. Measure it before treating any of these a
   (b) extend the batch ladder to 16/32, since 10.4 GB was still free and per-sample
   throughput was still improving; (c) only then re-evaluate condition 3 with real numbers
   for both arms.
+
+## SA3 T4 smoke — MEASURED (Tesla T4, 2026-08-21, job `sa3-smoke-1`, 0.156 cr, commit 61dfbfc)
+
+First real GPU numbers for the Stable Audio 3 line (fp16, `small-sfx` post + base). Raw:
+`artifacts/sa3/smoke_t4.json`. Engineering smoke on P_smoke (4 prompts); **not scientific**.
+
+* **GPU:** Tesla T4. **Load fp16:** post 19.4 s / **2.28 GB peak**, base 11.8 s / 2.29 GB.
+* **Raw DiT s/forward (fp16):** batch 1 **0.0622 s**; batch 4 0.0632 s (0.0158/sample); batch 8
+  0.1182 s (**0.0148/sample**). Peak VRAM ~1.79 GB → **enormous headroom on the 14.5 GB T4**;
+  batching to 16/32 is free.
+* **η (fp16-vs-fp32 post field, per level):** max **6.67e-5** (range 1.8e-5–6.7e-5) — fp16 resolves
+  the field; the tangent-regime precision floor `‖δF‖²/‖F‖² ≥ 10η ≈ 6.7e-4` is achievable.
+* **S_traj:** 8 states, τ exactly match `schedule_post_10s.json`. **Empty BlockMask bit-exact** (fp16).
+* **Generation latency (fp16, incl. SAME-S decode, T4, median):** dense 4-step **0.338 s**, 5
+  **0.393**, 6 **0.443**, 7 **0.514**, 8 **0.600 s**; block-skip(5)@8 **0.560 s** (removing 1 of 20
+  blocks saves ~0.04 s/gen at 8 steps; nearest-latency dense comparator ≈ 7.5 steps).
+
+### Pilot cost model (from these measurements) — for the budget rule
+
+At ~0.89 cr/GPU-h, T4 wall dominated by DiT forwards (~0.015 s/sample batched) + generations
+(0.6 s dense-8). A pilot first rung (N=16, n_u=8) is on the order of tens of minutes of T4
+(field forwards + a minimal A_tan probe pass + R=5 dense streams + 8→7 margins), i.e. **~0.2–0.6
+cr** — affordable under the 5-cr overnight cap. A_tan's probe×block×κ×family fan-out is the cost
+driver; start minimal (U_gen, κ_0) and expand per the pre-registered rules.
