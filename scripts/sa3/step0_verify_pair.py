@@ -25,6 +25,33 @@ import time
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 from research_sa3 import loading as L  # noqa: E402
 
+ARCH_PREFIXES = ("model.diffusion.config.", "model.pretransform.", "model.conditioning.", "model.io_channels",
+                 "sample_rate", "audio_channels", "model_type", "model.diffusion.type")
+OBJECTIVE_SAMPLING_KEYS = ("model.diffusion.diffusion_objective", "distribution_shift", "use_effective_length_for_schedule",
+                           "mask_padding_attention", "sample_size", "training.", "sampling")
+
+
+def classify_config_diff(cd: dict) -> dict:
+    """Split a flattened config diff into ARCHITECTURE (invalidates the block mapping) vs
+    OBJECTIVE/SAMPLING (legitimate base-vs-post differences) vs OTHER (must be inspected)."""
+    def bucket(key: str) -> str:
+        if key.startswith("model.conditioning.") and ("repo_id" in key or "subfolder" in key or "model_path" in key):
+            return "text_encoder_location"          # where t5gemma is fetched from: not architecture
+        if any(key.startswith(p) or key == p for p in ARCH_PREFIXES):
+            return "architecture"
+        if any(k in key for k in OBJECTIVE_SAMPLING_KEYS):
+            return "objective_or_sampling"
+        return "other"
+    out = {"architecture": [], "objective_or_sampling": [], "text_encoder_location": [], "other": []}
+    for k in cd["only_a"]:
+        out[bucket(k)].append(("only_base", k))
+    for k in cd["only_b"]:
+        out[bucket(k)].append(("only_post", k))
+    for k, va, vb in cd["changed"]:
+        out[bucket(k)].append(("changed", k, va, vb))
+    return out
+
+
 T5_FILES = ["config.json", "generation_config.json", "special_tokens_map.json", "tokenizer.json",
             "tokenizer.model", "tokenizer_config.json", "model.safetensors"]
 EXPECTED_DEPTH = 20  # base model_config.json (read 2026-08-20): model.diffusion.config.depth
@@ -110,10 +137,22 @@ def main() -> int:
                           "t5gemma_identical": all(
                               base["t5gemma"][f] and post["t5gemma"][f] and base["t5gemma"][f]["sha256"] == post["t5gemma"][f]["sha256"]
                               for f in T5_FILES)}
+        cls = classify_config_diff(cd)
+        result["pair"]["config_diff_classified"] = cls
+        result["pair"]["t5gemma_per_file_identical"] = {
+            f: (base["t5gemma"][f] is not None and post["t5gemma"][f] is not None
+                and base["t5gemma"][f]["sha256"] == post["t5gemma"][f]["sha256"]) for f in T5_FILES}
+        bi, pi = base["index"]["block_inventory"], post["index"]["block_inventory"]
+        c["pair_block_mapping_20_20"] = (len(bi) == EXPECTED_DEPTH and len(pi) == EXPECTED_DEPTH
+                                        and all(bi[g] == pi[g] for g in bi))
         c["pair_diffusion_config_identical"] = not (dd["only_a"] or dd["only_b"] or dd["changed"])
+        c["pair_no_architecture_config_diff"] = len(cls["architecture"]) == 0
+        c["pair_other_config_diff_empty"] = len(cls["other"]) == 0
         c["pair_state_dict_keys_shapes_identical"] = not (idd["only_a"] or idd["only_b"] or idd["shape_mismatch"])
         c["pair_objectives"] = [base["config"]["diffusion_objective"], post["config"]["diffusion_objective"]]
-        ok &= c["pair_diffusion_config_identical"] and c["pair_state_dict_keys_shapes_identical"]
+        c["pair_t5gemma_identical"] = result["pair"]["t5gemma_identical"]
+        ok &= (c["pair_diffusion_config_identical"] and c["pair_no_architecture_config_diff"]
+               and c["pair_state_dict_keys_shapes_identical"] and c["pair_block_mapping_20_20"])
 
     if args.build:
         import torch
@@ -145,6 +184,34 @@ def main() -> int:
         c["build_blockmask_skip5_changes"] = not torch.equal(y, y5)
         result["build"]["rel_change_skip5"] = float(((y - y5).norm() / y.norm()).item())
         ok &= all(c[k] for k in ["build_depth_20", "build_forward_finite", "build_blockmask_identity_bitexact", "build_blockmask_skip5_changes"])
+        del model
+
+        if args.post_dir:
+            cfg_p = L.patch_text_encoder_path(post_cfg, os.path.join(args.post_dir, "t5gemma-b-b-ul2"))
+            tb = time.time()
+            model_p, rep_p = L.build_model_strict(cfg_p, os.path.join(args.post_dir, "model.safetensors"), device="cpu")
+            result["build_post"] = {"strict_load_report": rep_p, "build_s": time.time() - tb,
+                                    "diffusion_objective": model_p.model.diffusion_objective}
+            dit_p = model_p.model.model
+            result["build_post"]["depth"] = depth(dit_p)
+            result["build_post"]["dit_params"] = sum(p.numel() for p in dit_p.parameters())
+            with torch.no_grad():
+                yp = dit_p._forward(x, t, cross_attn_cond=ctx, global_embed=glob)
+                with block_mask(dit_p, []):
+                    yp0 = dit_p._forward(x, t, cross_attn_cond=ctx, global_embed=glob)
+                with block_mask(dit_p, [5]):
+                    yp5 = dit_p._forward(x, t, cross_attn_cond=ctx, global_embed=glob)
+            c["build_post_strict_load"] = True
+            c["build_post_depth_20"] = result["build_post"]["depth"] == EXPECTED_DEPTH
+            c["build_post_forward_finite"] = bool(torch.isfinite(yp).all())
+            c["build_post_blockmask_identity_bitexact"] = bool(torch.equal(yp, yp0))
+            c["build_post_blockmask_skip5_changes"] = not torch.equal(yp, yp5)
+            # same random input through both checkpoints: they must differ (post-training happened)
+            result["build_post"]["rel_diff_base_vs_post_same_input"] = float(((y - yp).norm() / y.norm()).item())
+            c["build_pair_fields_differ"] = not torch.equal(y, yp)
+            ok &= all(c[k] for k in ["build_post_depth_20", "build_post_forward_finite",
+                                     "build_post_blockmask_identity_bitexact", "build_post_blockmask_skip5_changes",
+                                     "build_pair_fields_differ"])
 
     result["ok"] = bool(ok)
     result["wall_s"] = time.time() - t0
