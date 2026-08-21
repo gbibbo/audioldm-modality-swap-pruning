@@ -291,7 +291,15 @@ def main():
     a = ap.parse_args()
     if not a.dry_run_cpu and not a.smoke and not a.data_dir:
         ap.error("--data_dir is required for a real run (or use --dry-run-cpu / --smoke)")
-    return train(a)
+    ret = train(a)
+    # HARD EXIT after a GPU smoke: wandb (imported by the training stack) spawns non-daemon
+    # threads that block a clean interpreter exit, so the Lightning JOB stays "Running" and keeps
+    # billing after the ~35 s of real compute. This bit us on sa3-smoke-t4-1 (job idled to 0.141 cr).
+    # os._exit bypasses those threads; results are already flushed to disk + stdout above.
+    if a.smoke and not a.dry_run_cpu:
+        sys.stdout.flush(); sys.stderr.flush()
+        os._exit(ret)
+    return ret
 
 
 if __name__ == "__main__":

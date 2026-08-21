@@ -290,3 +290,17 @@ Settled ~10–30% above running figures (as noted above). Overnight-mandate tota
 
 **Lesson:** a job stopped seconds into Running still settled at **0.036 cr** (provisioning/snapshot is
 not free) — cheap, but not zero; prefer getting the launch right over stop-and-relaunch.
+
+## MEASURED — T4 LoRA training (SA3 controls), 2026-08-21 (job sa3-smoke-t4-1)
+
+Infra micro-smoke (synthetic data, `L_6` single-block, standard `lora` r16, backbone block 6,
+`16-mixed` + base fp16, 10 s crop, batch 1). **MEASURED on Tesla T4:**
+
+* `TRAIN_SEC_PER_STEP` (LoRA, batch 1) = **0.2534 s/step** (median of 25, warmup dropped)
+* `PEAK_VRAM` = **1.81 GB** (of 16 — no OOM; large headroom for batch/steps)
+* model load ≈ 13 s; 495 K trainable LoRA params of 568 M.
+* **Projection @ ~0.89 cr/GPU-h:** 1000 steps ≈ 0.070 GPU-h ≈ **0.066 cr/control** (incl. load);
+  **`L_6` + `L_13` ≈ 0.132 cr**. Synthetic infra numbers only — not a scientific result.
+* **Ops caveat:** the T4 job kept billing after compute finished (wandb non-daemon threads block a
+  clean exit); `train_control_loras.py --smoke` now `os._exit()`s to prevent idle billing. For long
+  training jobs, poll cost and/or set a max runtime.
