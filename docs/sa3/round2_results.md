@@ -59,13 +59,44 @@ distinct from `D_P`?** Primary probe family only (U_gen = standard LoRA r16), n_
   reusing the already-persisted states (n_u=8 now frozen). Estimated ~0.9 cr (N=16 A_tan was 0.459 cr;
   linear in N). Accumulated so far 1.68 cr ⇒ a N=32 A_tan lands ~2.6 cr, within the ≤2–3 phase target.
 
+## A_tan gate RESOLVED at N=32 (job `sa3-atan-n32-1`, 0.482 cr; κ=0.01 frozen)
+
+κ micro-calibrated to **0.01** first (CPU, `kappa_calibration.py`: all 8 probes' mean linearity ∈
+[1.956,2.012], precision 7.79e-4 ≥ floor; smaller κ fail precision) — so this is NOT a non-linearity
+artifact. N=32, n_u=8, linearity now fully in range (median 1.98). **n_u_main=4** (very stable).
+
+| k | R_Atan (removable) | R_DP | δ | robust? |
+|---|---|---|---|---|
+| 2 | {13,14} | {12,13} | 1 | floor-sensitive (within size-16 floor) |
+| 4 | {12,13,14,15} | {11,12,13,14} | 1 | marginal (floor 0 on the 32 gate prompts, but 1 on the fuller 64-prompt pool) |
+| 6 | {11,12,13,14,15,16} | {9,10,11,12,13,14} | 2 | **ROBUST — exceeds the floor on both pools** |
+
+**Key evidence = cross-N stability, not just the floor.** A_tan's removable sets are **IDENTICAL at
+N=16 and N=32** (k=2/4/6), and D_P is stable at N=32 (N_main analysis). Two stable rankings that
+differ by 2 blocks at k=6 ⇒ the divergence is **real**, not sampling noise. Spearman(A_tan,D_P)=0.86
+overall (both rank the boundaries critical) — but the DECISION-RELEVANT removable tail diverges:
+**A_tan systematically prefers the higher-index interiors (13–16); D_P prefers the lower ones (9–14).**
+
+**⇒ RQ2 SURVIVES the cheap gate.** This is the anticipated positive outcome: adaptability
+(`A_tan`) occupies structural resources **distinct** from standalone field sensitivity (`D_P`) — the
+adaptability-aware removable set (13–16) differs stably from the deployment one (9–14), strongest and
+robust at k=6. Caveat: a fully same-scale disjoint floor for A_tan would need N=64 A_tan prompts
+(Gabriel: do NOT auto-escalate); the cross-N stability + the N=32 D_P stability carry the claim.
+
+**Next step (Gabriel's call — the FIRST expensive step): real held-out adapters (case C).** Train a
+few standard `lora` r16 adapters on distinct SFX domains (CC0 44.1 kHz data), and test whether the
+A_tan-vs-D_P divergence PREDICTS which blocks a real adapter can survive. Only that closes RQ2 as a
+genuine contribution; if the divergence does not predict real-adapter survival, the line still dies —
+but now for a scientifically interesting reason, not underpowering.
+
 ## Corrected bottom line (round 2)
+
 
 * **RQ1:** amplification real (E6); **D_P stably identifies the least field-sensitive interiors (around 9–14), stable at N=32; end-to-end removability unresolved**;
   **I_PT redundant with D_P and noisier → PT-specific criterion closed.**
-* **RQ2/A_tan:** machinery validated (batched, verified, linearity ≈ 2.0, n_u=8); **the A_tan-vs-D_P
-  gate is UNDERPOWERED at N=16 — not resolved.** Next single step: A_tan at N=32 to decide whether
-  the residual RQ2 contribution lives (stable distinct A_tan structure → real held-out adapters) or
-  dies (A_tan ≈ D_P → close before building CC0 datasets / training LoRAs).
+* **RQ2/A_tan:** RESOLVED at N=32 (κ=0.01 frozen) — **A_tan carries structure distinct from D_P**
+  (stable removable-tail divergence 9–14 vs 13–16, robust at k=6; identical N=16→N=32). **RQ2 survives.**
+  Next (Gabriel's call, first expensive step): real held-out adapters (case C) to test whether the
+  divergence predicts real-adapter survival.
 * No CASE E demonstrated; no main-panel work; N_main(D_P)=32 / n_u=8 are the frozen sizes.
 
