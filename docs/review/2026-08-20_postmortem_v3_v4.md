@@ -80,66 +80,70 @@ before adoption and compared against data we already had.**
 
 ---
 
-## 3. Rules for the next plan (apply before adoption, not after)
+## 3. Rules for the next plan (DECISION-RULES-001, Gabriel 2026-08-20 22:02)
 
-Each rule names the failure it prevents. A plan that cannot answer a rule is not ready to adopt.
+Gabriel kept the **scientific** rules and removed the process/management ones (cooling period,
+calendar, record-at-launch) from the protocol — those belong to `AGENTS.md`, not to the
+science. Seven rules remain; each is an *adoption condition*, not a checklist applied afterwards.
 
-* **R1 — Effect-size statement.** For every primary quantity: (a) the magnitude H1 predicts,
-  with the reasoning; (b) the **smallest effect size of interest** (SESOI) below which the
-  result changes nobody's mind; (c) the cheapest measurement that bounds the true magnitude.
-  Adoption requires (c) to have been *run* and to show the plausible range overlaps (b).
-  *(Prevents 1.)*
-* **R2 — Positive control before any null.** Before the first confirmatory GPU run, plant a
-  known effect of SESOI size (a synthetic LoRA, a deliberately modified block, a known
-  intervention) and show the instrument detects it with the pre-registered statistic. No
-  detection ⇒ fix the instrument, not the hypothesis. *(Prevents 3.)*
-* **R3 — Instrument chosen for the question, with an explicit inheritance list.** Write down
-  every element inherited from a prior pipeline (model, data, metric, pruning family) and the
-  reason each is *necessary* for the question. Anything inherited "because it was there" is
-  replaced or justified. *(Prevents 2.)*
-* **R4 — Analysis tier first; method tier only on evidence.** The plan is staged so that the
-  first tier is a forward-only / training-free *analysis* whose every outcome is publishable
-  (or at least informative), with kill thresholds written before the data. RQs that propose a
-  *method* are not written in detail until the analysis tier has a result. *(Prevents 1, 5.)*
-* **R5 — The strongest reviewer objection runs in the first experiment.** Name the
-  "why not just do the obvious thing" baseline (for the new plan: *prune the deployed model on
-  its own end-to-end damage*) and put it in the first GPU job, not the last table. *(Prevents 4.)*
-* **R6 — Power and feasibility are adoption conditions.** Power simulation at the plausible
-  magnitude (not a placeholder), materialization/loading of every system, and a measured
-  per-unit cost exist *before* the plan is signed. *(Prevents 6.)*
-* **R7 — Cooling period and an expected-value reviewer.** No plan is adopted within 24 h of
-  the trigger that killed the previous one. One review round is explicitly assigned to
-  "probability of a positive × value of a positive − cost", with numbers. *(Prevents 4, 5.)*
-* **R8 — Novelty ledger.** The three nearest papers and the one sentence that separates us
-  from each, re-checked at every gate, with "what we will NOT claim" written down. (The
-  current draft already does this; keep it.) *(Prevents the next pivot from being a re-run of
-  someone else's result.)*
-* **R9 — Calendar follows evidence.** No submission date in the plan until the analysis tier
-  has a result; venue chosen afterwards. *(Prevents 5.)*
-* **R10 — Every run recorded before the next is launched.** Ledger entry (even a stub) at
-  launch, completed at read-out; no job reads its own result without the entry existing.
-  *(Prevents the M4-SCREEN-FOUND failure.)*
+* **S1 — Effect size before method.** For every primary quantity: the magnitude H1 predicts,
+  the **smallest effect size of interest** (SESOI), and a cheap *functional* measurement that
+  bounds the true magnitude — run before adoption. Parameter-space proxies (e.g.
+  `‖W_P − W_B‖`) are explanatory covariates, never the effect estimate. *(Prevents root cause 1.)*
+* **S2 — Positive control before any null result.** Two kinds: a *synthetic* planted effect of
+  SESOI size that the instrument must recover, and an *ecological* one showing the phenomenon
+  to be preserved exists before intervention (for the SA3 direction: the dense-base → dense-post
+  LoRA transfer ceiling). *(Prevents 3.)*
+* **S3 — Every inherited design choice requires scientific necessity.** Model, data, metric,
+  pruning family: each is justified for the question or replaced. *(Prevents 2.)*
+* **S4 — Analysis before intervention.** The first tier is forward-only / training-free, its
+  decision table is written before the data, and method RQs stay as sketches until it has a
+  result. *(Prevents 1, 5.)*
+* **S5 — Strongest competing explanation / baseline first.** The "why not just do the obvious
+  thing" baseline runs in the first experiment, not the last table. *(Prevents 4.)*
+* **S6 — Novelty must survive the closest prior art before implementation.** Novelty ledger:
+  nearest papers, the sentence separating us from each, and what we will *not* claim; re-checked
+  at every gate. *(Prevents re-running someone else's result.)*
+* **S7 — A statistically detectable effect is not automatically a scientifically valuable
+  effect** (learned from AudioLDM). The SESOI is defined in *decision* terms: the effect must
+  change which structures would be selected at the target budget, or move the
+  deployment/compatibility Pareto front materially — not merely reach p < 0.05 or ρ = .92 vs .95
+  on 100 000 samples. *(Prevents the next "supports funding Tier 1".)*
 
----
+Power/feasibility before signing (old R6) is folded into S1/S4: the analysis tier *is* the
+feasibility and magnitude measurement. Record-at-launch (old R10) remains an `AGENTS.md`
+obligation.
 
 ## 4. Applying the rules to the Stable Audio 3 direction (what it still owes)
 
-| Rule | Status for the SA3 proposal | Owed before adoption |
+| Rule | Status for the SA3 proposal (22:02 version) | Owed before adoption |
 |---|---|---|
-| R1 | Kill thresholds sketched (ρ(D_B,D_P) > 0.9, `I_PT/D_P` flat) but no predicted magnitudes | Predict the size of `I_PT` under H1 (e.g. from the per-block weight deltas `‖W_P − W_B‖`, free to compute) and state the SESOI for RQ2/RQ3 (how much unseen-LoRA fidelity must a mask recover to matter) |
-| R2 | Not yet | A planted test: a LoRA we *know* is carried by specific blocks (train it with `--include layers[a-b]`), then check the tangent-space probe and the mask score recover those blocks |
-| R3 | Good: the instrument (matched base/post pair, official LoRA transfer) is chosen for the question; depth pruning justified | List what is still inherited (AudioCaps captions for eval, CLAP/FD metrics) and why |
-| R4 | Good: RQ1 forward-only first | Write RQ1's decision table (cases 1–4) as the *only* adopted content; RQ2–RQ4 stay as sketches |
-| R5 | Named (post-only end-to-end pruning) | Put it in the first GPU job |
-| R6 | Costs sketched from repo numbers; T4/torch 2.7.1 untested | venv + load + one forward on T4; measured s/forward; materialize a block-skipped model |
-| R7 | Being violated right now (three pivot proposals in one evening) | Sleep on it; assign the EV review |
-| R8 | Done in the draft (TALL-Masks, NPS, TinyFusion, 2607.06335/06631, EcoDiff); add tangent-space fine-tuning / task arithmetic in tangent space (Ortiz-Jiménez et al. 2023) and LoRA cross-backbone transfer work | Keep |
-| R9 | Calendar deliberately excluded from the discussion | Keep it excluded until RQ1 has data |
-| R10 | Process in place | Keep |
+| S1 | Kill thresholds sketched; no predicted magnitudes | Per-block functional quantities `D_B`, `D_P`, `I_PT` (normalized), `A` on the 20 blocks — forward-only; `‖ΔW_g‖` computed only as an explanatory covariate (`ρ(‖ΔW‖, I_PT) ≈ 0` would itself be a result) |
+| S2 | Both controls now specified | Synthetic: a LoRA trained with `--include layers[a-b]`, the sensitivity instrument must mark `a–b`. Ecological: the dense-base → dense-post transfer ceiling for a real LoRA, measured *before* any pruning |
+| S3 | Instrument chosen for the question (matched base/post pair, official LoRA transfer, depth pruning keeps block geometry so adapters map trivially) | List the remaining inheritances (AudioCaps captions, CLAP/FD metrics) with their necessity |
+| S4 | RQ1/RQ2 forward-only; decision cases A–D written | Add case E: the post-trained 8-step model tolerates **no** block removal without repair (2607.06335) — pre-write that branch |
+| S5 | Post-only pruning is now the *objective* of the constrained formulation, not a side baseline | Run it in the first GPU job; report the full Pareto front over `(ε_PT, ε_A)` rather than one `(λ, μ)` |
+| S6 | Novelty ledger: TinyFusion, EcoDiff, 2607.06335, 2607.06631, TALL-Masks, NPS, tangent-space task arithmetic, **CAR-LoRA (ICLR 2026: adapter-side compression-aware training, LLMs, quantization/pruning — does not choose the backbone to preserve unseen adapters)**, Compress-then-Serve | Keep; headline = *backbone-side* compatibility preservation without seeing or retraining adapters |
+| S7 | Stated | Define the SESOI as "the top-k removal sets chosen by `D_P` and by `A` differ at k ∈ {2, 4, 6}" (decision-relevant), not as a ρ threshold |
 
-**One risk the rules surface immediately (R1/R4):** few-step adversarial generators may not
-tolerate *any* block removal without repair (cf. 2607.06335's finding that a pruned generator
-produces unusable samples before teacher-aligned repair). If removing even 1–2 of 20 blocks
+**Verified code facts that shape the probes (22:02):** SA3 `lora-xs` is `ΔW = U · M · Vᵀ` with
+`U ∈ ℝ^{fan_out×r}`, `V ∈ ℝ^{fan_in×r}` = top-r singular vectors of the layer's `W0`
+(sign-canonicalized), frozen, and only `M ∈ ℝ^{r×r}` trainable (`stable_audio_3/models/lora/model.py`).
+`svd_bases.pt` ships **only with `small-sfx-base`**, not with `small-sfx`: a LoRA-XS trained on
+base and applied to post is well-defined only if the *base's* bases are supplied; otherwise the
+loader recomputes SVD from the post's weights and `M` lands in a different basis. Two
+consequences: (i) the ecological probe family must use the base's `U, V`; (ii) for `lora-xs`
+the official transfer contract is itself basis-dependent — a fact to report, and a reason the
+standard `lora`/`dora-rows` adapters (which transfer basis-free) must be in the held-out set too.
+
+**Exact enumeration beats greedy at the budgets that matter.** With 20 blocks, the feasible
+masks are C(20,2) = 190, C(20,3) = 1 140, C(20,4) = 4 845, C(20,6) = 38 760. With ~108-token
+sequences, forward-only proxies on a fixed latent panel make the Pareto front **exact** for
+k ≤ 4 (and samplable for k = 6), removing the optimizer as a confound in RQ3. Greedy is then a
+scalability note, not the method.
+
+**One risk the rules surface immediately (S1/S4):** few-step adversarial generators may not
+tolerate *any* block removal without repair (cf. 2607.06335). If removing even 1–2 of 20 blocks
 destroys `small-sfx` at 8 steps, "pipeline-preserving *mask*" collapses into "mask + minimal
 repair", which is the crowded territory. RQ1's first forward-only day must measure this before
-anything else is designed; the branch for that outcome must be written now, not after.
+anything else is designed; the branch for that outcome is case E above.
