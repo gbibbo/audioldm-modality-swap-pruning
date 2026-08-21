@@ -24,6 +24,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", required=True); ap.add_argument("--out", required=True)
     ap.add_argument("--device", default="cpu")
+    ap.add_argument("--no-fd", action="store_true", help="skip OpenL3/FD (slow on CPU); CLAP+KL verdict only")
     a = ap.parse_args()
     man = json.load(open(a.manifest))
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -34,13 +35,16 @@ def main():
     cache = {}
     def feats(fp):
         if fp not in cache:
-            cache[fp] = {"post": B.passt_post(_load(fp, 32000)), "ol3": B.ol3_embed(_load(fp, 48000))}
+            d = {"post": B.passt_post(_load(fp, 32000))}
+            if not a.no_fd:
+                d["ol3"] = B.ol3_embed(_load(fp, 48000))
+            cache[fp] = d
         return cache[fp]
 
     # CLAP per system+prompt, KL per system+prompt (vs ref), FD per system (set vs ref set)
     aids = sorted(prompts, key=lambda x: int(x))
     ref_feat = {aid: feats(systems[ref][aid]) for aid in aids if aid in systems[ref]}
-    ref_ol3 = np.stack([ref_feat[aid]["ol3"] for aid in aids if aid in ref_feat])
+    ref_ol3 = None if a.no_fd else np.stack([ref_feat[aid]["ol3"] for aid in aids if aid in ref_feat])
     out = {"systems": {}, "margins": {}, "verdicts": {}, "manifest": os.path.basename(a.manifest)}
     for sid, files in systems.items():
         sa = [aid for aid in aids if aid in files]
@@ -54,8 +58,11 @@ def main():
             if aid in ref_feat:
                 p = feats(files[aid])["post"] + 1e-12; q = ref_feat[aid]["post"] + 1e-12
                 kl_per[aid] = float(np.sum(p * np.log(p / q)))
-        emb = np.stack([feats(files[aid])["ol3"] for aid in sa])
-        fd = 0.0 if sid == ref else frechet(emb, ref_ol3)
+        if a.no_fd:
+            fd = float("nan")
+        else:
+            emb = np.stack([feats(files[aid])["ol3"] for aid in sa])
+            fd = 0.0 if sid == ref else frechet(emb, ref_ol3)
         out["systems"][sid] = {"CLAP_mean": float(np.mean(list(clap_per.values()))),
                                "KL_mean": float(np.mean(list(kl_per.values()))) if kl_per else float("nan"),
                                "FD": float(fd), "CLAP_per": clap_per, "KL_per": kl_per}
@@ -76,7 +83,7 @@ def main():
     # 8->7 deterioration
     d8, d7 = S.get("dense8_s0"), S.get("dense7_s0")
     if d8 and d7:
-        m_CLAP = max(0.0, d8["CLAP_mean"] - d7["CLAP_mean"]); m_KL = max(0.0, d7["KL_mean"]); m_FD = max(0.0, d7["FD"])
+        m_CLAP = max(0.0, d8["CLAP_mean"] - d7["CLAP_mean"]); m_KL = max(0.0, d7["KL_mean"]); m_FD = (float("nan") if a.no_fd else max(0.0, d7["FD"]))
         margins = {"m_CLAP": max(m_CLAP, r_CLAP), "m_KL": max(m_KL, r_KL), "m_FD": max(m_FD, r_FD),
                    "delta_CLAP": m_CLAP, "delta_KL": m_KL, "delta_FD": m_FD,
                    "r_CLAP": r_CLAP, "r_KL": r_KL, "r_FD": r_FD}
@@ -95,7 +102,10 @@ def main():
             g = int(sid.replace("skip", ""))
             clap_def = cC - S[sid]["CLAP_mean"]            # >0 => skip worse than comparator on CLAP
             kl_def = S[sid]["KL_mean"] - cK; fd_def = S[sid]["FD"] - cF
-            verdict = "inferior" if (clap_def > margins["m_CLAP"] or (kl_def > margins["m_KL"] and fd_def > margins["m_FD"])) else "not_inferior_or_indeterminate"
+            if a.no_fd:
+                verdict = "inferior" if clap_def > margins["m_CLAP"] else "not_inferior_or_indeterminate"
+            else:
+                verdict = "inferior" if (clap_def > margins["m_CLAP"] or (kl_def > margins["m_KL"] and fd_def > margins["m_FD"])) else "not_inferior_or_indeterminate"
             out["verdicts"][sid] = {"block": g, "CLAP": S[sid]["CLAP_mean"], "KL": S[sid]["KL_mean"],
                                     "FD": S[sid]["FD"], "clap_deficit": clap_def, "kl_deficit": kl_def,
                                     "fd_deficit": fd_def, "directional_verdict": verdict}

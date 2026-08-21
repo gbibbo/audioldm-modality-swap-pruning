@@ -261,3 +261,17 @@ At ~0.89 cr/GPU-h, T4 wall dominated by DiT forwards (~0.015 s/sample batched) +
 (field forwards + a minimal A_tan probe pass + R=5 dense streams + 8→7 margins), i.e. **~0.2–0.6
 cr** — affordable under the 5-cr overnight cap. A_tan's probe×block×κ×family fan-out is the cost
 driver; start minimal (U_gen, κ_0) and expand per the pre-registered rules.
+
+## SA3 pilot + adversary — MEASURED (Tesla T4, 2026-08-21)
+
+Overnight-mandate GPU spend (cap 5 cr / target ≤2): **smoke 0.156 + field-pilot 0.289 + adversary
+0.195 = 0.640 cr total** (well under target). Stopped job `sa3-pilot-fields-1` = 0.000 cr (caught
+in Pending). All on-demand T4, fresh snapshots, `max_runtime` caps, per-job CPU dry-run first.
+
+* **`sa3-pilot-fields-2`** (RQ1 field pilot, N=32, 20 blocks, no-dep): wall 676 s compute, **0.2888 cr**.
+  Per-block forward loop with `block_mask` swaps runs ~1.7× slower than the tight-loop s/forward
+  (0.062 s) — budget field-stage work at ~0.1 s/effective forward, not 0.06.
+* **`sa3-adversary-1`** (single-block E, N=16, 29 systems, 464 gens): wall 255 s compute, **0.195 cr**
+  → ~0.55 s/generation incl. block-mask overhead + wav save (vs 0.60 s dense-8 in the tight smoke).
+* **Scoring note:** OpenL3/FD on CPU is ~15–30 s/clip → impractical for 464 clips (~2 h); the pilot
+  adversary is scored CLAP+KL only (`--no-fd`). A GPU scoring pass (or a subset) is needed for FD.
