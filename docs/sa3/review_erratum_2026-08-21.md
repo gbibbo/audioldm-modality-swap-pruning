@@ -58,9 +58,12 @@ seed drift). [RESULT PENDING — running on CPU.]
 
 * **10× caveat (task 6):** `D_P` and `D_B` are normalized by DIFFERENT denominators (`‖F_P‖²`,
   `‖F_B‖²`). The non-normalized damage ratio is `(D_P/D_B)·(‖F_P‖²/‖F_B‖²)`. Measuring the field-norm
-  ratio (`rq1_field_norms.py`, CPU, no block removal) settles whether the 10× is real amplification
-  or a normalization artifact. [RESULT PENDING.] The pilot did not save raw numerators; `pilot_fields.py`
-  is fixed to save them going forward.
+  ratio (`rq1_field_norms.py`, CPU, no block removal) settles this. **RESULT: `‖F_P‖²/‖F_B‖² = 0.889`**
+  (panel; the two fields have nearly equal magnitude), so the normalization is NOT distorting the picture.
+  The **non-normalized** damage ratio `‖F_P−F_P^−g‖² / ‖F_B−F_B^−g‖²` is **9–10× for interior blocks 5/6/7/9**
+  (median 5.3× across all blocks, range 0.8–10.2×) and ~1.0–1.3× at the boundaries. **⇒ the 10× is REAL
+  functional amplification, not a normalization artifact.** The RQ1 finding survives this falsifier.
+  (`pilot_fields.py` now saves raw numerators for future runs.)
 * **I_PT≈D_P (task 7, `rq1_reanalysis.py`, from disk):** ρ(D_P,I_PT)=+0.93, ρ(D_P,D_B)=+0.82,
   ρ(I_PT,W)=−0.34, ρ(D_P,W)=−0.21. **LOO-ranking-induced removal sets** (least-damage-to-remove;
   NOT confirmatory greedy, NO bootstrap floor): R_DP vs R_IPT disagree by **≤1 block** at k∈{2,4,6}
