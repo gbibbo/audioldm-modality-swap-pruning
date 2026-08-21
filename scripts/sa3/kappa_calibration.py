@@ -34,6 +34,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=4); ap.add_argument("--n-u", type=int, default=8)
     ap.add_argument("--rank", type=int, default=16)
+    ap.add_argument("--states", type=int, default=0)
     ap.add_argument("--kappa-grid", default="0.01,0.005,0.0025")
     ap.add_argument("--state-store", default="artifacts/sa3/pilot_states")
     ap.add_argument("--out", default="artifacts/sa3/kappa_calibration.json")
@@ -56,7 +57,7 @@ def main():
     # precompute baselines F_P per prompt
     base = []
     for sf in sfs:
-        d = torch.load(sf); sts = d["states"]; cap = d["caption"]
+        d = torch.load(sf); sts = (d["states"][:a.states] if a.states else d["states"]); cap = d["caption"]
         cc = rep(F.prepare_conditioning(post, cap, SECONDS, "cpu", latent_len=sts[0][1].shape[-1], dtype=dtype), len(sts))
         bx, bt = batched(sts)
         with torch.no_grad():
@@ -69,17 +70,17 @@ def main():
         per_probe = []
         for u in range(a.n_u):
             lin_ratios = []; num_df = 0.0; den_fp = 0.0
+            P.build_probe(post, family="U_gen", kappa=kap, rank=a.rank, seed=1000 + u)  # BUILD ONCE
             for b in base:
-                P.build_probe(post, family="U_gen", kappa=kap, rank=a.rank, seed=1000 + u)
-                P.set_strength(post, 1.0)
                 with torch.no_grad():
+                    P.set_strength(post, 1.0)
                     dfu = F.raw_field(post, b["bx"], b["bt"], b["cc"]).float() - b["FP"].float()
                     du = float(F.state_sq_norm(dfu).sum().item())
-                    P.probe_scale(post, 2.0)
+                    P.set_strength(post, 2.0)
                     d2 = float(F.state_sq_norm(F.raw_field(post, b["bx"], b["bt"], b["cc"]).float() - b["FP"].float()).sum().item())
-                P.remove_probe(post)
                 lin_ratios.append((d2 ** 0.5) / (du ** 0.5) if du > 0 else float("nan"))
                 num_df += du; den_fp += b["fp_sq"]
+            P.remove_probe(post)
             import numpy as np
             lin = float(np.mean(lin_ratios)); prec = num_df / den_fp
             per_probe.append({"u": u, "linearity_mean": lin, "precision_ratio": prec,
