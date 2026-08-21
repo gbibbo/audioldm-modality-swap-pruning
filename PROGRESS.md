@@ -41,7 +41,7 @@
 
 ## OPEN ITEMS
 
-0. **SA3 — STEP 0 COMPLETE, base/post PAIR VERIFIED (ledger SA3-STEP0-002): identical `model.diffusion.config`, 685/685 keys+shapes+dtypes, 20↔20 blocks of 22.30 M, byte-identical T5Gemma copies, effective latent scale 1.0 in both, strict exact loads, BlockMask bit-exact on both, fields differ (rel 0.145). Config differences confined to objective (`rectified_flow`→`rf_denoiser`), `sample_size` (120.74→120.00 s) and `training.*` (ARC). Protocol rc3.1 (SA3-PROTOCOL-004) accepted as the scientific protocol. HF credential removed (`hf auth logout`). NEXT candidate for authorization: the T4 smoke only (§6.0 sequence); pilot and everything after it stay unauthorized. GPU NOT authorized yet.**
+0. **SA3 — OVERNIGHT MANDATE IN PROGRESS (2026-08-21, cap 5 cr / target ≤2; accumulated 0.156 cr). Phase 0 (CPU) COMPLETE + Phase 1 (T4 smoke) COMPLETE.** Phase 0: frozen panels (smoke/pilot/main, disjoint by source wav) + schedules + seed table (SA3-PHASE0-001); decision core metrics/greedy/samplesize/E-rule + synthetic tests (002); E-metric stack CLAP/KL-PaSST/FD-OpenL3 in isolated `.venv-metrics` + scorer self-test (003); fields.py raw/deploy validated on the real pair (004); e2e/states/latency + full CPU dry-run — S_traj τ matches schedule (005); smoke_t4.py + CPU dry-run 0 errors (006). **Phase 1 T4 smoke `sa3-smoke-1` (0.156 cr, SA3-SMOKE-001): 0 errors, all items measured** — fp16 s/forward 0.062 s(b1)/0.0148(b8), η_max 6.7e-5, empty-mask bit-exact, latency dense-8 0.60 s, VRAM ~1.8 GB; E-panel skip5 (block removed) drifts FD 99.9 ≫ latency-matched dense7 FD 20.7 → **CASE-E hint (P_smoke, not scientific)**. NEXT: RQ1 field pilot (D_P/I_PT/D_B/W + D_P greedy) on P_pilot; A_tan deferred to a bit-exact-validated probes.py. Every GPU job gated on a green CPU dry-run + the budget rule.**
 1. **Request the recovered full-FT `(1,2,3,1)` checkpoint from Arshdeep today** — the public search is finished and the artifact is proven absent. Also ask him to confirm the pre-recovery reading of `l1_audioldm-m-full_p1.ckpt`, and (new, AUDIT-M3-001) whether the seam conventions found in the published pruned checkpoint are intentional: 4 tensors deviate from his public script, and the artifact is internally inconsistent at `output_blocks.0/1` (consumer selects by ranking, producer outputs positional channels) and at `output_blocks.2.0.in_layers.2` (weight positional, bias ranked).
 2. **M1 GPU acceptance (only remaining M1 item, blocked on GPU + CG):** apply the minimal upstream patch (`setup_peft`/`build_peft_optimizer`/EMA/resume per `docs/integration_notes.md`), then run several hundred real optimization steps and record VRAM, sec/step and a resume test in `docs/compute_budget.md`. M1 CPU acceptance is COMPLETE (M1-005/006/007; F1–F8 all addressed).
 
@@ -80,6 +80,10 @@
 <!-- FIN-ESTADO -->
 
 ## LOG
+
+### 2026-08-21 03:10 | Overnight mandate — Phase 0 (CPU) + Phase 1 (T4 smoke) complete
+
+* Under Gabriel's conditional overnight mandate (cap 5 cr / target ≤2). Built + CPU-validated the entire SA3 analysis stack: deterministic panels/schedules/seeds; metrics/greedy/samplesize/E-rule decision core; isolated `.venv-metrics` (CLAP/PaSST/OpenL3) + scorer; fields.py (raw/deploy) validated on the real base/post pair; e2e/states/latency (S_traj τ confirmed = frozen schedule). One T4 smoke `sa3-smoke-1` (0.156 cr, 0 errors): fp16 s/forward, η, latency, VRAM, empty-mask bit-exact all measured; E-panel metrics run on real GPU audio; skip-one-block drifts far more than the latency-matched dense comparator (CASE-E hint, P_smoke/not scientific). Accumulated GPU spend tonight: 0.156 cr. Ledger SA3-PHASE0-001..006, SA3-SMOKE-001; compute_budget updated with real T4 numbers.
 
 ### 2026-08-21 01:07 | SA3 Step 0 COMPLETE — pair verified
 
