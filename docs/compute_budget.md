@@ -275,3 +275,18 @@ in Pending). All on-demand T4, fresh snapshots, `max_runtime` caps, per-job CPU 
   → ~0.55 s/generation incl. block-mask overhead + wav save (vs 0.60 s dense-8 in the tight smoke).
 * **Scoring note:** OpenL3/FD on CPU is ~15–30 s/clip → impractical for 464 clips (~2 h); the pilot
   adversary is scored CLAP+KL only (`--no-fd`). A GPU scoring pass (or a subset) is needed for FD.
+
+### Settled costs (final, 2026-08-21 overnight)
+
+Settled ~10–30% above running figures (as noted above). Overnight-mandate total (cap 5, target ≤2):
+
+| job | status | settled cr |
+|---|---|---:|
+| sa3-smoke-1 | Completed | 0.1560 |
+| sa3-pilot-fields-1 | Stopped (in Pending→Running) | 0.0357 |
+| sa3-pilot-fields-2 | Completed | 0.3253 |
+| sa3-adversary-1 | Completed | 0.2161 |
+| **TOTAL** | | **0.7331** |
+
+**Lesson:** a job stopped seconds into Running still settled at **0.036 cr** (provisioning/snapshot is
+not free) — cheap, but not zero; prefer getting the launch right over stop-and-relaunch.
