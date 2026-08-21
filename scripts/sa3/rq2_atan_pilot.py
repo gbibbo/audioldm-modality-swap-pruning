@@ -126,6 +126,10 @@ def main():
                 P.remove_probe(post)
                 prec[f"{u}|{kf}"] = {"denom": denom, "num_tan": num_tan}
         pp[aid] = prec
+        # incremental partial write (cap-kill safety)
+        os.makedirs(os.path.dirname(a.out), exist_ok=True)
+        json.dump({**R, "per_prompt_probe": pp, "linearity_checks": lin_checks,
+                   "complete_prompts": list(pp), "partial": True}, open(a.out, "w"), indent=2)
         gc.collect()
     del post; gc.collect()
 
