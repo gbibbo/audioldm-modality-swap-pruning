@@ -1,9 +1,10 @@
-# SA3 analysis protocol — RQ1 / RQ2 (analysis-first) — **rc2**
+# SA3 analysis protocol — RQ1 / RQ2 (analysis-first) — **rc3**
 
-**Status: ANALYSIS PROTOCOL rc2, 2026-08-20 23:35 (Montevideo). Revision of rc1 (commit
-`76fdcda`) after the external protocol review. Direction and architecture accepted by the
-reviewer; rc2 fixes the eight mandatory points and the two minor ones below. No GPU has been
-run. No pruning method, no LoRA recovery, no RQ3/RQ4 design is part of this document (§11).**
+**Status: ANALYSIS PROTOCOL rc3, 2026-08-20 23:44 (Montevideo). rc1 (`76fdcda`) → rc2
+(`a57176d`) → rc3 after the second external review. Reviewer decision on rc2: GO for Step 0
+(CPU): `.venv-sa3`, checkpoint/config verification, `research_sa3/` skeleton, tests, CPU
+dry-run; NO GO for any scientific GPU smoke until rc3. No GPU has been run. No pruning
+method, no LoRA recovery, no RQ3/RQ4 design is part of this document (§11).**
 This is not a master plan. It instantiates the adoption rules S1–S7 of
 `docs/review/2026-08-20_postmortem_v3_v4.md` §3 (DECISION-RULES-001) for two analysis
 questions on Stable Audio 3 `small-sfx-base` / `small-sfx`.
@@ -29,11 +30,37 @@ now, before data, and never tuned afterwards. No estimate is presented as a meas
    smoke (§4.2).
 7. `I_PT` renamed **normalized post-training-delta distortion**, unbounded above, pooled
    ratio with a measured denominator guard, reported per noise level (§3.2).
-8. **Pre-registered sample-size rules** for `N_p` and `n_u` from precision/stability of each
+8. **Pre-registered sample-size rules** for `N_p` (now `N_main`, rc3) and `n_u` from precision/stability of each
    criterion's own quantities, never from cross-criterion divergence (§2.3).
 Minor: `D_B^common` vs `D_B^deploy` (§3.1); the phase is *analysis-first* (forward-only
 structural analysis + one ecological adapter validation that requires LoRA training), not
 strictly forward-only.
+
+**rc2 → rc3 changelog (second review, 2026-08-20 23:44):**
+1. Set-divergence floor now in the **same units** as `δ` (bootstrap disagreement count, 95th
+   percentile, exceed the floor of **both** criteria); Jaccard is descriptive only (§4.1).
+2. **Measurement uncertainty** (≥ 5 independent seed streams → distributions, CIs) separated
+   from the **non-inferiority margin** (operational: one sampling step's worth of dense
+   degradation, 8 → 7, measured on the pilot before any mask) (§9.2).
+3. Positive control = **trained single-block LoRAs** `L_6`, `L_13` with identifiable
+   localisation; the `layers[4-7]` version dropped (§5.1).
+4. Each ecological adapter gets a **frozen train/eval split** and a **task-level held-out
+   metric** `T(L; system)`; field preservation alone never demonstrates function preservation
+   (§5.2, §3.4).
+5. `L_ceil` replaced by the **dense-transfer compatibility band**; the claim is "stays within
+   the band or recovers a pre-registered fraction of the pruning-induced extra loss" (§4.3).
+6. **Disjoint pilot panel** fixes `N_main` and `n_u` from precision tied to the set-level
+   SESOI; the main panel never informs its own size; the "largest the smoke allows, then
+   double" wording removed (§2.3). S1 is satisfied by the pilot, **not** by a theoretical
+   `I_PT` range (§11).
+7. `E`-greedy is **mandatory for cases C/D to authorise RQ3**; without it RQ1/RQ2 may
+   conclude but no method is authorised; `E`-greedy uses the multivariate rule, not CLAP-only
+   (§3.5, §6.2, §8, §11).
+8. **Probe → adapter correspondence frozen**: `U_gen` → standard `lora` r = 16 (primary);
+   `U_xs` → real `lora-xs` adapters (secondary, matched); `dora-rows` external validity; no
+   best-of-two (§3.4).
+Also: `η_i` per noise level (§3.2); "≥ 4 adapters" is a feasibility minimum, the unit of
+generalisation is the **domain** (§5.2).
 
 ---
 
@@ -182,26 +209,34 @@ re-noising, also shared. Seed table hashed. T5Gemma token embeddings and the `se
 embedding are computed once per prompt and cached; only the DiT is evaluated repeatedly.
 `local_add_cond` is the no-inpainting default, identical across systems.
 
-### 2.3 Sample-size rules (pre-registered; fixed before any RQ1/RQ2 read-out)
+### 2.3 Pilot panel and sample-size rules (pre-registered)
 
-`N_p` (prompts) and `n_u` (probes) are chosen by **precision of each criterion's own
-quantities**, never by the divergence between criteria, never by any RQ1/RQ2 outcome.
+Two **disjoint** prompt panels are drawn from the same construction (§2.1) with different
+seeds: a **pilot panel** `P_pilot` and a **main panel** `P_main` (no shared source wav).
 
-* **`N_p` rule.** Start at `N_p^(0)` = the largest panel the smoke's measured s/forward allows
-  within the authorized job (TBM). Using **only** `D_P(g)` and `I_PT(g)` of the dense/post pair
-  (RQ1 quantities of one criterion at a time) and the positive-control runs, compute by prompt
-  bootstrap (B = 1 000 **[pre-registered constant]**): (i) the 95 % CI half-width of each
-  per-block score; (ii) the Jaccard stability of that criterion's **own** greedy sets
-  `R_X(k)`, k ∈ {2, 4, 6}, across bootstrap replicates. Stop when (i) ≤ 0.10 × the inter-block
-  IQR of the score **[pre-registered constant]** for every block and (ii) ≥ 0.90
-  **[pre-registered constant]** for every k; otherwise double `N_p` and repeat. If the budget
-  cap is reached first, the result is reported as **underpowered** and §8 is not applied.
-* **`n_u` rule.** Increase `n_u` (doubling from 8 **[pre-registered constant]**) until the
-  Monte-Carlo standard error of `A_tan(g)` over probes is ≤ 0.10 × its inter-block IQR
-  **[pre-registered constant]** for every block, for each probe family separately. Never
-  adjusted after `A_tan` is compared with anything.
-* The **cross-criterion** statistics of §4 are computed once, after `N_p` and `n_u` are frozen
-  and written to the ledger.
+* **Role of the pilot (S1 + precision):** the pilot is the *only* data used to (i) bound the
+  magnitude and variance of `D_P`, `I_PT`, `A_tan` (this is how S1 is satisfied — no
+  theoretical `I_PT` range is written), (ii) measure the dense seed-stream distributions and
+  the 8 → 7 step margin of §9.2, (iii) fix `N_main` and `n_u`. Pilot results are reported as
+  pilot; no §8 decision is read from them.
+* **`N_main` rule (tied to the set-level SESOI).** The decision unit is the greedy set at
+  k ∈ {2, 4, 6}. On the pilot, for each criterion `X` separately (`D_P`, `I_PT^raw`,
+  `A_tan`), compute by prompt bootstrap (B = 1 000 **[pre-registered constant]**) the
+  disagreement count between pairs of replicates, `d_X(k) = |R_X^a(k) △ R_X^b(k)| / 2`, as a
+  function of the subsampled prompt count `N`, and fit its decay. `N_main` is the smallest `N`
+  at which the 95th-percentile **[pre-registered constant]** of `d_X(k)` is **0 blocks** for
+  every `X` and every `k` (i.e. the floor `f_X(k)` of §4.1 is below the one-block SESOI unit),
+  extrapolated from the pilot curve and then **verified on the main panel only after it is
+  frozen**. If the pilot predicts `N_main` beyond the authorised budget, the experiment is
+  declared **underpowered before it runs** and §8 is not applied. `N_main` never uses the
+  divergence *between* criteria and is never revised after main-panel data exist.
+* **`n_u` rule.** On the pilot, for each probe family, increase `n_u` (doubling from 8
+  **[pre-registered constant]**) until the probe-bootstrap 95th percentile of `d_{A_tan}(k)` is
+  0 blocks at every k; that `n_u` is frozen for the main panel.
+* Jaccard of bootstrap sets is **reported as a descriptive stability diagnostic** (not a
+  criterion).
+* The cross-criterion statistics of §4 are computed once, on the main panel, after `N_main`
+  and `n_u` are frozen and written to the ledger.
 
 ---
 
@@ -232,9 +267,10 @@ Per noise level `τ_i` and block `g`:
 
 * **Pooled ratio:** `I_PT(g) = Σ_i num_i(g) / Σ_i den_i` (ratio of sums, not mean of ratios).
 * **Per-level:** `I_PT,i(g) = num_i(g) / den_i`, reported as a 20 × 8 table.
-* **Denominator guard (measured, not chosen):** `η` = the fp16-vs-fp32 discrepancy of the post
-  field on CPU-reference states, `η = ‖F_P^{fp16} − F_P^{fp32}‖² / ‖F_P‖²` (smoke). Levels with
-  `den_i / ‖F_{P,i}‖² < η` are reported but excluded from the pooled ratio and flagged.
+* **Denominator guard (measured, not chosen):** `η_i` = the fp16-vs-fp32 discrepancy of the post
+  field **per noise level**, `η_i = ‖F_{P,i}^{fp16} − F_{P,i}^{fp32}‖² / ‖F_{P,i}‖²` (smoke, on
+  CPU-reference states). Levels with `den_i / ‖F_{P,i}‖² < η_i` are reported but excluded from
+  the pooled ratio and flagged. `η = max_i η_i` is the global precision reference of §3.4.
 * **Interpretation:** `I_PT` is a **relative distortion of the post-training delta**; it is
   ≥ 0 and **unbounded above** (removing a block can alter the delta by more than the delta's
   own norm). It is *not* a fraction destroyed. Both `I_PT^raw` and `I_PT^dep` are reported.
@@ -281,12 +317,19 @@ measurable. `κ` is **never** set to match a real adapter's magnitude.
 `L` of §5.2 (trained on the base, applied to the post at `strength = 1.0`):
 `A_eco(g; L) = ‖δF(L) − δF^{−g}(L)‖² / ‖δF(L)‖²` on `S_traj`, plus its end-to-end analogue
 (§9: adapter effect on generated audio with/without `g`). `L` is **never used** to choose
-probes, `κ`, `N_p`, `n_u` or any set.
+probes, `κ`, `N_main`, `n_u` or any set.
 
-**RQ2 claim structure.** (i) `A_tan` (blind) **predicts** `A_eco` across blocks for held-out
-adapters (pre-registered: rank correlation and, decision-relevant, agreement of the greedy
-sets they induce, §4.1); (ii) the adaptability-aware greedy set differs from the post-only
-greedy set (§4.1). Both are required for case C/D.
+**Frozen probe → adapter correspondence (no best-of-two).** *Primary pair:* `U_gen` predicts
+standard **`lora`, rank 16** held-out adapters. *Secondary, matched pair (pre-specified):*
+`U_xs` predicts real **`lora-xs`** adapters, run only if such adapters are trained. `dora-rows`
+adapters are **external validity** (reported, never used to choose between probe families).
+The probe family that "predicts better" is never selected after the fact.
+
+**RQ2 claim structure.** (i) `A_tan` from the primary pair (blind) **predicts** `A_eco` across
+blocks for held-out adapters (pre-registered: rank correlation and, decision-relevant, the
+set-disagreement statistic of §4.1); (ii) the adaptability-aware greedy set differs from the
+post-only greedy set (§4.1); (iii) the adapters' **task-level function** `T(L; ·)` (§5.2) is
+preserved per §4.3. All three are required for case C/D.
 
 ### 3.5 Selections (sets) — non-additive
 
@@ -294,11 +337,15 @@ For a per-block or per-set score `X`, the **sequential greedy** selection `R_X^g
 start from the dense post model; evaluate all 20 single removals; remove the best (smallest
 `X`); re-evaluate all 19 remaining removals *from the new architecture*; repeat to k = 6. That
 is 20 + 19 + 18 + 17 + 16 + 15 = **105 candidate evaluations** per criterion; sets at k = 2, 4,
-6 are read off the path. Criteria: `D_P` (field proxy), `E` (end-to-end, §9 — the strongest
-post-only adversary, run if the smoke shows 105 × `N_p` generations are affordable; otherwise
-`D_P`-greedy is the primary adversary and `E`-greedy is run at k = 2, 4, 6 only for the
-`D_P`-greedy path's alternatives, reported as such), `A_tan` (adaptability-aware, field),
-`I_PT` (PT-aware, field). Single-block leave-one-out tables (§7) are **analysis**, not
+6 are read off the path. Criteria: `D_P` (field proxy), `E` (end-to-end, §9 — **the strongest
+post-only adversary**), `A_tan` (adaptability-aware, field), `I_PT` (PT-aware, field).
+**`E`-greedy selection rule (same multivariate rule as deployment, §9.2, never CLAP-only):**
+at each step, among the candidate removals, keep those whose KL and FD drift from the dense
+post model are within the margins `m_KL`, `m_FD`; among them choose the highest CLAP; if none
+satisfies both caps, choose the candidate with the smallest maximum normalised violation
+`max(ΔKL/m_KL, ΔFD/m_FD)`. **If `E`-greedy (105 × `N_main` generations) cannot be afforded,
+RQ1/RQ2 may still conclude, but cases C/D cannot authorise RQ3** (§8, §11); `D_P`-greedy is
+then reported as a *field* adversary only. Single-block leave-one-out tables (§7) are **analysis**, not
 selection; the additivity gap `X(R(k)) − Σ_{g∈R(k)} X({g})` is reported as a diagnostic.
 
 ### 3.6 End-to-end `E(M)`
@@ -310,12 +357,16 @@ and a primary scalar; never used as an abstract scalar elsewhere.
 
 ## 4. SESOI in decision terms (S7) with measured anchors
 
-### 4.1 Set divergence
+### 4.1 Set divergence (blocks, with a floor in blocks)
 
-`δ_XY(k) = |R_X^greedy(k) △ R_Y^greedy(k)| / 2` for the pairs (`D_P`, `A_tan`), (`D_P`, `I_PT`),
-(`D_B^common`, `D_P`), and (`A_tan`, `A_eco`) (prediction check). **Floor:** the bootstrap
-instability of each criterion's *own* greedy set (§2.3 (ii)): a divergence between criteria is
-real only if it exceeds `1 − Jaccard` of the within-criterion bootstrap at the same k.
+`δ_XY(k) = |R_X^greedy(k) △ R_Y^greedy(k)| / 2` ∈ {0, …, k} for the pairs (`D_P`, `A_tan`),
+(`D_P`, `I_PT`), (`D_B^common`, `D_P`), and (`A_tan`, `A_eco`) (prediction check).
+**Floor in the same units:** `f_X(k)` = 95th percentile **[pre-registered constant]** over
+bootstrap replicate pairs of `|R_X^a(k) △ R_X^b(k)| / 2` (prompt bootstrap on the main panel,
+B = 1 000; for `A_tan` also probe bootstrap). A divergence between criteria is **real** iff
+`δ_XY(k) > max(f_X(k), f_Y(k))`. By §2.3 the main panel is sized so that `f_X(k) = 0` for the
+field criteria; if the verification on the frozen main panel finds `f_X(k) ≥ 1` for some
+`(X, k)`, that `(X, k)` is reported as unresolved. Jaccard is reported descriptively.
 
 ### 4.2 Cost of respecting adaptability — two yardsticks, neither called "iso-compute"
 
@@ -336,66 +387,93 @@ real only if it exceeds `1 − Jaccard` of the within-criterion bootstrap at the
   `R_{D_P}^greedy(k)` (or `R_E^greedy(k)` if run); reported with the tuple and the
   non-inferiority verdict.
 
-### 4.3 Gain in adaptability and its anchor
+### 4.3 Adapter function: the dense-transfer compatibility band
 
-`G_adapt(k) = A_eco(R_{D_P}^greedy(k)) − A_eco(R_{A_tan}^greedy(k))`, evaluated **on the held-out
-adapters** (leave-set-out, not summed), averaged over adapters. **Anchor (measured, §5.2):**
-`L_ceil` = adapter-effect loss the official dense base → dense post transfer already incurs. A
-`G_adapt` below `L_ceil` is within what the official pipeline already accepts (**not
-material**); above it, material.
+For each held-out adapter `L` with its frozen task metric `T(L; system)` (§5.2, higher =
+function better preserved):
+
+* **Compatibility band** `[T_lo(L), T_hi(L)]` = the interval spanned by `T(L; dense base)` and
+  `T(L; dense post)` (the two systems the official pipeline declares compatible), each with
+  its seed/prompt CI. This is a **baseline/band**, not an improvement threshold.
+* **Pruning-induced extra loss** for a set `M`: `ℓ(M; L) = max(0, T_lo(L) − T(L; post^{−M}))`.
+* **Claim structure (per adapter, summarised over adapters):** the post-only set
+  `R_E^greedy(k)` (or `R_{D_P}`) pushes `T` **below the band** (`ℓ > 0` beyond its CI) while the
+  adaptability-aware set `R_{A_tan}^greedy(k)` **stays within the band** (`ℓ = 0` within CI) or
+  recovers at least `ρ_rec = 0.5` **[pre-registered constant]** of the post-only extra loss:
+  `ℓ(R_{A_tan}) ≤ (1 − ρ_rec)·ℓ(R_{post-only})`.
+* Field-level `A_eco` is reported alongside as mechanism; **only `T` carries the function
+  claim.**
 
 ### 4.4 Minimal result that would justify a new pruning method
 
 To be confirmed by the measured anchors, not signed here: at k = 4,
-`δ_{D_P,A_tan}(4) ≥ 1` above the floor **and** `δ_{A_tan,A_eco}(4) = 0` within the floor
-(prediction holds) **and** `G_adapt(4) ≥ L_ceil` **and** `R_{A_tan}^greedy(4)` non-inferior
-(§9.2) to `R_{D_P}^greedy(4)` or, failing that, non-inferior to its latency-matched dense
-comparator. If the floor, `L_ceil`, or the latency-matched comparator cannot be measured, the
-SESOI is declared **not yet defensible** and the main experiment is not signed.
+`δ_{D_P,A_tan}(4) ≥ 1` above both floors **and** `δ_{A_tan,A_eco}(4) ≤ max floor`
+(prediction holds) **and** the band condition of §4.3 holds for the majority of held-out
+adapters **and** `R_{A_tan}^greedy(4)` is non-inferior (§9.2) to `R_E^greedy(4)` or, failing
+that, to its latency-matched dense comparator. If the floors, the band, the margins or the
+latency-matched comparator cannot be measured, the SESOI is declared **not yet defensible**
+and the main experiment is not signed.
 
 ---
 
 ## 5. Positive controls (S2) — before any null reading
 
-### 5.1 Synthetic, localized — two levels
+### 5.1 Localised controls — unit test and identifiable scientific control
 
-* **Unit test (code only, not evidence):** a generic probe injected **only** into blocks 4–7;
+* **Unit test (code only, not evidence):** a generic probe injected only into blocks 4–7;
   `A_carry` must attribute 100 % to 4–7 and `A_tan(g)` for `g ∉ {4..7}` must equal the
-  interference term. This validates the restriction/attribution code; it cannot fail
-  scientifically because the attribution knows the support. Lives in `tests/sa3/`.
-* **Scientific positive control (mandatory before RQ2 is interpreted):** a **trained** LoRA
-  `L_4-7` on `small-sfx-base` with `--include "transformer.layers[4-7]"` (bracket syntax per
-  `lora.md`), applied to the dense post. The instruments that will carry the RQ2 conclusion —
-  `A_eco(g; L_4-7)` computed **functionally from outputs** (field on `S_traj` and end-to-end
-  adapter effect on generated audio, §9) — must rank blocks 4–7 as the four most damaging
-  removals for this adapter, with every other block at the interference floor; and the
-  `A_eco`-greedy selection for this adapter must avoid 4–7 at k ≤ 6. **Fail ⇒ the measurement
-  chain cannot localize a known adaptation from outputs; RQ2 is not read.** Requires the same
-  data as §5.2.
+  interference term. Validates restriction/attribution code; cannot fail scientifically
+  because the attribution knows the support. Lives in `tests/sa3/`.
+* **Scientific positive control (mandatory before RQ2 is interpreted): trained single-block
+  LoRAs.** Train `L_6` with `--include "transformer.layers[6]"` and `L_13` with
+  `--include "transformer.layers[13]"` (blocks 6 and 13 **[pre-registered choice]**: one in
+  each half of the depth, away from the boundary blocks) on `small-sfx-base`, same recipe and
+  data regime as §5.2, applied to the dense post at strength 1.0; their dense adapter effects
+  are reported (no magnitude matching constant). A single-block adapter's parameters live in
+  one block by construction, but whether its **function** can be localised *from outputs* is
+  exactly what the instrument must show. **Pass (per control `L_b`):** `A_eco(b; L_b)` exceeds
+  `A_eco(g; L_b)` for every `g ≠ b` by more than the bootstrap CI, on the field **and** on the
+  end-to-end task metric `T(L_b; ·)` (§5.2); and the `L_b`-specific greedy never removes `b`
+  at k ≤ 6. **Fail ⇒ the measurement chain cannot localise a known adaptation from outputs;
+  RQ2 is not read.** (The earlier `layers[4-7]` control is dropped: restricting parameters to
+  four blocks does not guarantee that all four are the four most damaging removals.)
 
-### 5.2 Ecological — does the compatibility contract exist before pruning?
+### 5.2 Ecological — does the compatibility contract exist, and is the adapter's *function* measurable?
 
 Train real adapters on `small-sfx-base` with the repo recipe (`scripts/train_lora.py`, rank 16,
 1 000 steps per its quick-start; 20–50 clips per `lora.md`):
 
-* **Primary adapters: `--include transformer.layers`** (backbone only), two adapter types
-  (`lora` and `dora-rows`, the default), `exclude seconds_total` implied by the include. This
-  confines the adaptation to exactly the structural space our analysis covers. The repo's
-  default otherwise parametrizes **both the diffusion model and the conditioner**
-  (`lora.md` "How LoRA Training Works" step 3) — a conditioner adaptation would transfer
-  through a component we never prune and would contaminate `L_ceil`.
-* **Secondary (sensitivity):** the same data with the full default (model + conditioner),
-  reported separately, never used as anchor.
-* Apply each to dense base and dense post; measure `δF_B(L)`, `δF_P(L)` on the common states
-  and the end-to-end adapter effect with/without `L`. `L_ceil = ‖δF_P(L) − δF_B(L)‖² /
-  ‖δF_B(L)‖²` (field) and its end-to-end analogue. **If the adapter effect on the post is
-  uncorrelated with that on the base, the adapter axis is dropped** and RQ2 is reported as
-  "no contract to preserve"; RQ1 proceeds.
-* **Held-out set for RQ2:** ≥ 4 adapters **[pre-registered constant]** from distinct SFX
-  domains, none used for any selection, `κ`, `N_p` or `n_u` decision.
-* **Data prerequisite (the only external-data dependency):** 20–50 captioned 44.1 kHz clips per
-  domain, CC0 (Freesound). Not held; a separate, small, licensed-data task. Until it exists,
-  RQ1 and the `A_tan` tables can run; RQ2 cannot be interpreted.
+* **Per-adapter frozen data split (before training):** the domain's clips are split
+  80 / 20 **[pre-registered constant]** into `train_L` and `eval_L` (minimum 5 held-out clips
+  **[pre-registered constant]**), plus a held-out list of **domain prompts** `prompts_L`
+  (captions not used in training). Split files are hashed in the ledger before
+  `train_lora.py` runs.
+* **Task-level metric `T(L; system)` (frozen before training; the *function* claim rests on
+  it):** generate with `system` (+ `L`, strength 1.0) on `prompts_L` and compute (a) CLAP
+  audio–audio similarity of the generations to `eval_L` embeddings, (b) CLAP text–audio score
+  against `prompts_L`, (c) `FD_openl3` between the generations and `eval_L`, (d) an in-domain
+  retrieval rate: fraction of generations whose nearest CLAP neighbour in
+  `eval_L ∪ (generic panel generations)` is in `eval_L`. `T` is the tuple; the **primary
+  scalar** for the band of §4.3 is (a); the others are reported. Generations on the same
+  prompts *without* `L` give the adapter-effect baseline.
+* **Primary adapters: `--include transformer.layers`** (backbone only), adapter type
+  **`lora`** (the primary correspondence of §3.4). The repo's default otherwise parametrises
+  **both the diffusion model and the conditioner** (`lora.md` "How LoRA Training Works" step
+  3) — a conditioner adaptation would transfer through a component we never prune.
+* **Secondary / sensitivity:** `lora-xs` adapters (matched to `U_xs`, if trained);
+  `dora-rows` (external validity); full default model + conditioner (reported separately,
+  never an anchor).
+* **Compatibility check before any pruning:** `T(L; dense base)` and `T(L; dense post)` define
+  the band of §4.3. If the adapter's effect on the dense post is absent or uncorrelated with
+  its effect on the dense base (field and task), **the adapter axis is dropped** and RQ2 is
+  reported as "no contract to preserve"; RQ1 proceeds.
+* **Held-out set for RQ2:** ≥ 4 adapters from distinct SFX **domains** is the **feasibility
+  minimum** **[pre-registered constant]**, not sufficient evidence for a broad "unseen
+  adapters" claim; the unit of generalisation is the domain, not `lora` vs `dora`. None of
+  them is used for any selection, `κ`, `N_main` or `n_u` decision.
+* **Data prerequisite (the only external-data dependency):** 20–50 captioned 44.1 kHz clips
+  per domain, CC0 (Freesound). Not held; a separate, small, licensed-data task. Until it
+  exists, RQ1 and the `A_tan` tables can run; RQ2 cannot be interpreted.
 
 ---
 
@@ -407,10 +485,11 @@ In the **first GPU job** after the smoke, before any `I_PT` or `A` is read:
    the dense post model at 7 and 8 steps (bracket for k = 1: 152 block-passes ∈ {140, 160}) and,
    once measured, vs its latency-matched dense comparator. If **every** `E({g})` is inferior
    (§9.2) to the latency-matched dense comparator, record **CASE E** and stop.
-2. **Post-only greedy baseline (non-additive).** `R_{D_P}^greedy(k)` and, if affordable,
-   `R_E^greedy(k)` (§3.5), with `E` of the resulting sets measured at k = 2, 4, 6 against the
-   bracket and the latency-matched comparator. These are the adversaries every later set is
-   compared against.
+2. **Post-only greedy baselines (non-additive).** `R_E^greedy(k)` (§3.5, multivariate rule —
+   the adversary that must exist for any method claim) and `R_{D_P}^greedy(k)` (field), with
+   `E` of the resulting sets measured at k = 2, 4, 6 against the bracket and the
+   latency-matched comparator. If `R_E^greedy` is not run, the fact is recorded and §8 C/D
+   cannot authorise RQ3.
 
 ---
 
@@ -419,7 +498,7 @@ In the **first GPU job** after the smoke, before any `I_PT` or `A` is read:
 * **Stage 1 (this protocol).** (a) Leave-one-block-out **analysis**: 20 variants × {base,
   post} × states; all §3 quantities; additivity diagnostics. (b) **Greedy selections** (§3.5)
   for `D_P`, `A_tan` (`U_gen`, `U_xs`), `I_PT^raw`, `I_PT^dep`, and `E` if affordable. (c)
-  Cross-criterion statistics (§4) computed once, after §2.3 freezes `N_p`, `n_u`. (d)
+  Cross-criterion statistics (§4) computed once, on the main panel, after §2.3 freezes `N_main`, `n_u`. (d)
   `A_eco` on held-out adapters and the prediction check `A_tan → A_eco`.
 * **Stage 2 (conditional, specified, not executed).** Only if §4.1 divergence is real:
   exact enumeration of masks for k ≤ 4 (C(20,2) = 190, C(20,3) = 1 140, C(20,4) = 4 845) on the
@@ -431,16 +510,16 @@ In the **first GPU job** after the smoke, before any `I_PT` or `A` is read:
 
 ## 8. Result matrix (frozen before data)
 
-"Coincide" = `δ_XY(k)` within the bootstrap floor at every k ∈ {2, 4, 6}; "flat" = the
+"Coincide" = `δ_XY(k) ≤ max(f_X(k), f_Y(k))` at every k ∈ {2, 4, 6} (§4.1); "flat" = the
 across-block spread of `I_PT` within its bootstrap spread; "predicts" =
-`δ_{A_tan,A_eco}(k)` within the floor for held-out adapters.
+`δ_{A_tan,A_eco}(k) ≤ max floor` for held-out adapters.
 
 | case | pattern | decision |
 |---|---|---|
 | **A** | `R_{D_B^common}`, `R_{D_P}`, `R_{A_tan}` coincide; `I_PT` flat | Close. Negative analysis note. No RQ3. |
 | **B** | `R_{D_P} ≠ R_{D_B^common}` or `I_PT` structured, **but** `R_{A_tan}` coincides with `R_{D_P}` (or `A_tan` does not predict `A_eco`) | PT-aware analysis is a possible smaller paper; the adapter axis adds nothing. RQ3 may be *designed* without the adaptability constraint only if `I_PT^dep` vs `I_PT^raw` shows real guidance-internalisation structure. |
-| **C** | `R_{A_tan} ≠ R_{D_P}` above the floor; `A_tan` predicts `A_eco`; `G_adapt(k) ≥ L_ceil` for some k; `R_{A_tan}^greedy(k)` non-inferior (§9.2) to the post-only set or to its latency-matched dense comparator | Adapter-compatible pruning justified. Proceed to **design** RQ3. |
-| **D** | `I_PT` and `A_tan` both diverge from `D_P` and from each other, with C's conditions met | Strongest case; RQ3 design with both constraints; stage 2. |
+| **C** | `R_{A_tan} ≠ R_E` (and `≠ R_{D_P}`) above both floors; `A_tan` predicts `A_eco`; the band condition of §4.3 holds for the majority of held-out adapters; `R_{A_tan}^greedy(k)` non-inferior (§9.2) to `R_E^greedy(k)` or to its latency-matched dense comparator | Adapter-compatible pruning justified. Proceed to **design** RQ3 — **only if `R_E^greedy` was run**; otherwise C is reported as "analysis supports, method unauthorised". |
+| **D** | `I_PT` and `A_tan` both diverge from `D_P`/`R_E` and from each other, with C's conditions met | Strongest case; RQ3 design with both constraints; stage 2. Same `R_E^greedy` requirement as C. |
 | **E** | Every single-block removal is inferior to its latency-matched dense comparator (§6.1) | Depth pruning without repair is not a deployment option here. The proposal dies; "mask + repair" (2607.06335 territory) is **not** pursued from this protocol. Report. |
 
 Mixed patterns are reported as such and do not trigger RQ3. Secondary pre-registered
@@ -462,26 +541,34 @@ readings (no decisions): `ρ(W, I_PT)`, `ρ(I_PT^raw, I_PT^dep)`, `A_carry` vs `
   model's** over the panel; lower is better (drift from dense).
 * **Optional, secondary:** a pre-registered T2A-bench subset (Gemini 2.5 Pro judge, paid API).
 * **Not used:** PANNs top-10 recall.
-* **Seed floor:** the dense post model with a second, disjoint seed stream on the same panel
-  gives, for each metric, `φ_CLAP` (absolute CLAP difference between the two seed streams),
-  `φ_KL`, `φ_FD` (KL / FD of seed stream 2 against seed stream 1). These are the measured
-  resampling floors.
+* **Measurement uncertainty (not a margin):** the dense post model is generated with
+  `R = 5` **[pre-registered constant]** independent seed streams on the panel. They give, per
+  metric, the **distribution** of dense-vs-dense differences (CLAP: paired differences across
+  streams; KL / FD: each stream against each other). Every system-vs-system comparison is
+  seed-paired (stream 1) and its CI is obtained by prompt bootstrap **and** by repeating the
+  comparison on the other streams; CIs, not single realised differences, enter every rule.
 
 ### 9.2 `E(M)` — operational definition
 
 `E(M) = (CLAP(M), KL(M), FD(M))`.
 
-* **Primary scalar** (for `C_dep`, ordering along greedy paths, and `E`-greedy): `CLAP(M)`.
-* **Non-inferiority of system X to system Y [pre-registered rule]:**
-  `CLAP(X) ≥ CLAP(Y) − φ_CLAP` **and** `KL(X) ≤ KL(Y) + φ_KL` **and** `FD(X) ≤ FD(Y) + φ_FD`
-  — X loses no more on any metric than seed resampling alone moves the dense model.
-* **Inferior / dominated:** X is inferior to Y if it fails the CLAP condition **or** fails both
-  drift conditions. (Failing exactly one drift cap with CLAP non-inferior is reported as
-  "mixed"; it does not count as non-inferior.)
-* Every `E` comparison in §4, §6 and §8 uses this rule; numbers are always shown as the tuple.
-* Adapter-effect end-to-end analogue (§3.4, §5): the same tuple computed between "with L" and
-  "without L" outputs of the same system; `A_eco` end-to-end = relative change of that tuple's
-  CLAP component after removal (KL/FD reported).
+* **Primary scalar** (for `C_dep` and for ordering within the multivariate rule): `CLAP(M)`.
+* **Non-inferiority margins (operational, fixed on the pilot before any mask is evaluated):**
+  `m_CLAP`, `m_KL`, `m_FD` = the degradation the **dense** post model incurs from dropping
+  **one sampling step (8 → 7)** on the pilot panel, each as the point estimate of the paired
+  difference (CLAP) / drift (KL, FD). Rationale: one step is the smallest deployment trade-off
+  the model's own inference guide treats as acceptable ("reduce this number at some cost to
+  quality", `inference.md:52`); it is mask-independent and measured, not chosen. Recorded in
+  the ledger before the main panel is touched.
+* **Non-inferiority of system X to system Y [pre-registered rule]:** the **upper 95 % CI
+  bound** (§9.1 uncertainty) of the paired CLAP deficit `CLAP(Y) − CLAP(X)` is ≤ `m_CLAP`
+  **and** the upper CI bounds of `KL(X) − KL(Y)` and `FD(X) − FD(Y)` are ≤ `m_KL`, `m_FD`.
+* **Inferior / dominated:** X is inferior to Y if the *lower* CI bound of the CLAP deficit
+  exceeds `m_CLAP`, **or** both drift deficits' lower CI bounds exceed their margins. Anything
+  else is **"indeterminate"** (reported as such; never counted as non-inferior).
+* Every `E` comparison in §4, §6 and §8 uses this rule; numbers are always shown as the tuple
+  with CIs.
+* Adapter-related end-to-end quantities use the task metric `T` of §5.2, not `E`.
 
 ---
 
@@ -507,25 +594,29 @@ research_sa3/
   greedy.py         sequential greedy selection for any criterion (105 evaluations to k=6); additivity gap
   e2e.py            8-step generation; SAME-S decode; CLAP / KL_passt / FD_openl3 vs dense; seed floors phi; E tuple + rule
   latency.py        wall-clock per generation for dense 4..8 steps and pruned systems; nearest-latency comparator
-  samplesize.py     N_p / n_u rules of section 2.3 (bootstrap CI, Jaccard stability, MC s.e.)
+  samplesize.py     pilot-based N_main / n_u rules of section 2.3 (disagreement-count floors vs N; probe bootstrap)
+  taskmetric.py     per-adapter T(L; system): CLAP audio-audio to eval_L, CLAP text, FD_openl3 to eval_L, retrieval rate
   report.py         JSON writer (schema below) + markdown tables
 configs/sa3/
-  panel_prompts.json, seed_table.json, schedule_post_10s.json, probes.json, heldout_adapters.json
+  panel_pilot.json, panel_main.json (disjoint), seed_table.json (R=5 dense streams), schedule_post_10s.json,
+  probes.json, adapters/{domain}/{split.json, prompts_L.json} (hashed before training)
 scripts/sa3/
   step0_verify_pair.py   (CPU) hashes, key/shape/config diff -- MUST pass first
-  smoke_t4.py            (GPU, one short job) s/forward at batch {1,4,8}; VRAM; eta (fp16 vs fp32); latency of dense
-                         at 4..8 steps and of one block-removed variant; E of dense at 8/7/6/5 steps
+  smoke_t4.py            (GPU, one short job) s/forward at batch {1,4,8}; VRAM; eta_i (fp16 vs fp32 per level); latency of
+                         dense at 4..8 steps and of one block-removed variant; E of dense at 8/7/6/5 steps (pilot panel)
   rq_adversary.py        section 6: single-block E table; D_P-greedy (and E-greedy if affordable); brackets; comparators
   rq1_rq2_stage1.py      section 3 quantities; kappa grid; greedy paths; section 2.3 rules; section 4 statistics; case
-  train_control_loras.py wraps scripts/train_lora.py: L_4-7 (--include "transformer.layers[4-7]"), primary
-                         (--include transformer.layers) and secondary (full) adapters; records configs + hashes
+  train_control_loras.py wraps scripts/train_lora.py: L_6 / L_13 (--include "transformer.layers[6]" / "[13]"),
+                         primary (--include transformer.layers, lora r16) and secondary (lora-xs, dora-rows, full)
+                         adapters; consumes the frozen splits; records configs + hashes
 tests/sa3/
   test_blockskip.py      empty mask == original (bit-exact); skip g changes output; skip-all == project_in/out path
   test_fields.py         deploy field == DiffusionTransformer.forward(cfg_scale=7, apg_scale in {1.0, 0.0}) (bit-exact)
   test_probes.py         U_xs probe == add_lora('lora-xs') with the same M (bit-exact); kappa rescaling; linearity check
   test_metrics.py        synthetic tables -> pooled/per-level I_PT with guard; greedy paths; floors; non-inferiority rule; case
   test_localized_probe.py  the section 5.1 UNIT TEST (attribution code), on a tiny random-weights DiT
-  test_samplesize.py     section 2.3 rules on synthetic data (stop only on precision, never on divergence)
+  test_samplesize.py     section 2.3 rules on synthetic data (pilot-only; stop on set-floor = 0, never on divergence)
+  test_noninferiority.py section 9.2 rule on synthetic tuples with CIs (non-inferior / inferior / indeterminate)
 ```
 
 **Output JSON (every run):** `{git_commit, upstream_commit, ckpt_sha256{base, post, svd_bases},
@@ -546,11 +637,12 @@ block; greedy/metrics/rules on synthetic tables; localized-probe unit test.
 dense at 4–8 steps**. Upstream README reference points (H200, not T4, not ours): inference peak
 1.69–2.40 GB for `small`; LoRA training ≈ 2.5 GB — VRAM bounds only.
 
-**Cost model (filled only from the smoke):** field stage forwards = `N_p × 8 × [ 2 models ×
+**Cost model (filled only from the smoke):** field stage forwards = `N × 8 × [ 2 models ×
 21 variants + CFG uncond branch × 21 + Σ_κ n_u × 21 × 2 families ]` plus greedy paths
-(`105 × N_p × 8` per field criterion); end-to-end = `N_p × (1 + 20 + 5 dense step counts +
-greedy sets at k = 2, 4, 6 + adapters × …)` eight-step generations + decodes; `E`-greedy adds
-`105 × N_p` generations if run. `N_p`, `n_u` follow §2.3; recorded in the ledger with the smoke.
+(`105 × N × 8` per field criterion); end-to-end = `N × (R = 5 dense streams + 20 + 5 dense
+step counts + greedy sets at k = 2, 4, 6 + adapters × …)` eight-step generations + decodes;
+`E`-greedy adds `105 × N` generations (mandatory for any method authorisation). `N` is the
+pilot size first, then `N_main` from §2.3; recorded in the ledger with the smoke.
 
 ---
 
@@ -558,17 +650,22 @@ greedy sets at k = 2, 4, 6 + adapters × …)` eight-step generations + decodes;
 
 * Authorized by Gabriel (2026-08-20 23:14 "go"; 23:35 rc2 request): **writing this protocol**.
   Not authorized: any GPU job, any method, any LoRA recovery, RQ3/RQ4.
-* **Before the first GPU job** (explicit go each): step 0 passes on CPU; `tests/sa3/` pass; CPU
-  dry-run passes; panel, seed table, schedule hashed in the ledger; S1 magnitudes for RQ1
-  written down (predicted range of `I_PT` under "post-training reorganises structure" vs "it
-  does not", argued from the training-pipeline description, not from `W`); novelty ledger
-  (§12) re-read.
-* **Before RQ2 is interpreted:** the trained localized control of §5.1 passes; the primary
-  ecological adapters of §5.2 exist and `L_ceil` is measured; `N_p`, `n_u` frozen by §2.3.
+* **Authorised by the second review (2026-08-20 23:44): Step 0 (CPU), `.venv-sa3`,
+  checkpoint/config verification, `research_sa3/` skeleton, `tests/sa3/`, CPU dry-run.**
+* **Before the first GPU job** (explicit go): step 0 passes; tests and CPU dry-run pass; pilot
+  and main panels, seed table (R = 5), schedule hashed in the ledger; novelty ledger (§12)
+  re-read. **S1 is satisfied by the pilot panel (§2.3), not by a theoretical `I_PT` range** —
+  no such number is written anywhere.
+* **Before the main panel is touched:** pilot results recorded (magnitudes, variances,
+  `N_main`, `n_u`, margins `m_·`, dense-stream distributions).
+* **Before RQ2 is interpreted:** the single-block controls `L_6`, `L_13` of §5.1 pass; the
+  primary ecological adapters of §5.2 exist with frozen splits and task metrics, and their
+  dense-transfer bands are measured; `N_main`, `n_u` frozen by §2.3.
 * **After RQ1/RQ2:** cases **C** / **D** permit *designing* RQ3 (constrained formulation,
-  stage-2 enumeration, held-out adapter validation) as a new protocol document. Cases **A**,
-  **B without guidance structure**, **E** close the line or reduce it to an analysis note. No
-  result here approves a pruning method.
+  stage-2 enumeration, held-out adapter validation) as a new protocol document **only if
+  `R_E^greedy` was run**; otherwise they are reported as analysis results without method
+  authorisation. Cases **A**, **B without guidance structure**, **E** close the line or reduce
+  it to an analysis note. No result here approves a pruning method.
 
 ---
 
