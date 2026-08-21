@@ -49,7 +49,12 @@ the pilot has resolution. CLAP-only; FD via the paired drift (E4); NOT a main-pa
 small-sample Frechet. Not deleted (smoke FD kept, descriptive). Replaced for the pilot by a
 **paired per-prompt cosine drift** (`paired_openl3_drift.py`, pre-registered: 1−cos of mean OpenL3
 env/mel256/512 hop=1.0s embeddings, skip-g vs dense-8 per prompt, bootstrap CI, null = dense-stream
-seed drift). [RESULT PENDING — running on CPU.]
+seed drift). **RESULT (`openl3_drift.json`):** null seed-drift p95 = **0.0148**; dense 4-step drift
+(0.0048) is *below* seed noise (robust to step reduction). Using the lower-CI-vs-p95 rule, **only
+boundary blocks 0, 1, 19 drift beyond seed noise** (0.021–0.031); **every interior block 2–18 is
+within/below the floor** (0.003–0.012; block 5 = 0.0066). **This confirms the FD rank-deficiency
+concern:** the smoke's alarming set-level `FD=99.9` for skip-5 was a small-sample Frechet artifact —
+the trustworthy paired per-prompt drift says block-5 removal barely moves the acoustic embedding.
 
 ## E5 — OpenL3 device/timing (task 5)
 
@@ -91,6 +96,26 @@ seed drift). [RESULT PENDING — running on CPU.]
 **"few-step post-training strongly amplifies relative interior-block sensitivity while much of the
 global block-importance ranking remains shared with the base."** (Pending the field-norm check that
 the amplification is not a normalization artifact.)
+
+## Synthesis of the corrected pilot (the honest combined read)
+
+Two independent end-to-end metrics after correction, N=16 pilot:
+
+* **OpenL3 (acoustic paired drift):** only boundaries 0/1/19 beyond seed noise; **all interiors
+  removable-looking**.
+* **CLAP (semantic, bootstrap CI):** boundaries 0/1/19 + **block 6** confidently inferior; 13/14/16
+  confidently removable; **13 blocks indeterminate** (underpowered).
+
+⇒ **Single-block removal of interior blocks looks largely tolerable end-to-end at N=16; this is NOT
+a clean CASE E.** The only interior flag is block 6 (CLAP alone) — the most field-amplified block
+(non-normalized 10.2×), so `D_P/D_B` and the end-to-end verdict agree where the pilot can resolve.
+
+**Consequence for the direction (matches Gabriel's "qué me interesa decidir después").** If interior
+blocks are removable and `D_P` already identifies which (and `I_PT ≈ D_P`), RQ1 is scientifically
+interesting but does **not by itself justify a PT-aware pruning method**. The potential contribution
+is now RQ2: **`A_tan` must (a) differ from `D_P`/`E` and (b) predict real held-out adapter survival
+(case C)**. That — not a faster FD number — is the decision-relevant next experiment. Before it,
+finish sizing (`N_main` from the D_P/I_PT bootstrap; `n_u` from an `A_tan` pilot) per rc3.1 §6.0.
 
 ## What this means for the direction
 
