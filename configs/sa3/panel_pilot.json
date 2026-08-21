@@ -1,0 +1,1046 @@
+{
+  "items": [
+    {
+      "audiocap_id": "508",
+      "caption": "Rain is heard falling",
+      "nwords": 4,
+      "source_wav": "-BUWGM7qeUM",
+      "start_time": 10,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "845",
+      "caption": "A man speaks while operating a power tool",
+      "nwords": 8,
+      "source_wav": "-JP1GqPEKtw",
+      "start_time": 130,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "2022",
+      "caption": "Man gives speech, echo heard in background",
+      "nwords": 7,
+      "source_wav": "-mhFGevxLUg",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "3988",
+      "caption": "Train horn sounds as it moves along tracks",
+      "nwords": 8,
+      "source_wav": "0a9wVat2PWk",
+      "start_time": 230,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "6046",
+      "caption": "Water gurgling",
+      "nwords": 2,
+      "source_wav": "1PvMtRIlZNI",
+      "start_time": 0,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "6466",
+      "caption": "Two quick whistle sounds with water splashing and mixed with kids playing",
+      "nwords": 12,
+      "source_wav": "1_z6NcidGzM",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "7294",
+      "caption": "A woman is giving a speech",
+      "nwords": 6,
+      "source_wav": "1vCYiVvZ7VE",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "8070",
+      "caption": "A large dog barks",
+      "nwords": 4,
+      "source_wav": "2EsxcKe1A4w",
+      "start_time": 28,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "8303",
+      "caption": "A motor revs hard, a man speaks",
+      "nwords": 7,
+      "source_wav": "2KR0C5ysO8o",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "10176",
+      "caption": "An engine is being started up then idles",
+      "nwords": 8,
+      "source_wav": "350OCezayrk",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "11051",
+      "caption": "People are talking and water is splashing",
+      "nwords": 7,
+      "source_wav": "3RultJjvTWI",
+      "start_time": 400,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "11262",
+      "caption": "A man is speaking and a dog is barking",
+      "nwords": 9,
+      "source_wav": "3XuyGJqaXv8",
+      "start_time": 16,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "11905",
+      "caption": "A main horn honks, a train passes by",
+      "nwords": 8,
+      "source_wav": "3ndid3jni7M",
+      "start_time": 40,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "12038",
+      "caption": "Man talking with cranking noises in the background",
+      "nwords": 8,
+      "source_wav": "3qrVku794u0",
+      "start_time": 12,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "12089",
+      "caption": "A man is giving a speech and a crowd cheers",
+      "nwords": 10,
+      "source_wav": "3rna9zo5ZOs",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "12420",
+      "caption": "A baby crying with a television on in background",
+      "nwords": 9,
+      "source_wav": "404cD3bVXDc",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "13469",
+      "caption": "Snorting and breathing",
+      "nwords": 3,
+      "source_wav": "4UPOUGVMlEs",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "13767",
+      "caption": "A man talking with light tapping and a vehicle passing by in the background",
+      "nwords": 14,
+      "source_wav": "4abZbau8tZo",
+      "start_time": 14,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "16853",
+      "caption": "A vehicle's engine starts to die down",
+      "nwords": 7,
+      "source_wav": "5xC4hkAWiao",
+      "start_time": 0,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "17422",
+      "caption": "Dog panting followed by footsteps",
+      "nwords": 5,
+      "source_wav": "6CDl4CqOgMg",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "17868",
+      "caption": "Water is splashing down into a bathtub",
+      "nwords": 7,
+      "source_wav": "6Pywt0f_NFY",
+      "start_time": 160,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "18237",
+      "caption": "A baby is crying and a person sneezes then another person speaks",
+      "nwords": 12,
+      "source_wav": "6aWnK1GyeJY",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "18336",
+      "caption": "Something clicks repeatedly and then a man begins talking",
+      "nwords": 9,
+      "source_wav": "6cyKp3EDm-0",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "18515",
+      "caption": "A man speaking as water runs from the faucet",
+      "nwords": 9,
+      "source_wav": "6i5eQOpFk_U",
+      "start_time": 170,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "18770",
+      "caption": "Birds singing outdoors",
+      "nwords": 3,
+      "source_wav": "6pssFJ0m-kU",
+      "start_time": 60,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "18912",
+      "caption": "Pots bang then a faucet turns on and water flows",
+      "nwords": 10,
+      "source_wav": "6ukYSXzfEgQ",
+      "start_time": 20,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "21331",
+      "caption": "A kid laughing and screaming with a man chuckling and woman whispering",
+      "nwords": 12,
+      "source_wav": "83j4GgHXTLE",
+      "start_time": 210,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "21639",
+      "caption": "Outside noises of insects buzzing around, birds communicating and a man exchanging information with another man",
+      "nwords": 16,
+      "source_wav": "8DQfjqPCTI8",
+      "start_time": 450,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "21794",
+      "caption": "People are laughing and a small dog yips",
+      "nwords": 8,
+      "source_wav": "8IdCiapDYCU",
+      "start_time": 20,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "23674",
+      "caption": "A truck revs up and moves, then men talk",
+      "nwords": 9,
+      "source_wav": "9E8BmPZ9mWc",
+      "start_time": 12,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "24040",
+      "caption": "A man and a woman talking then the crinkling of paper",
+      "nwords": 11,
+      "source_wav": "9PN4gyxpH2M",
+      "start_time": 40,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "27054",
+      "caption": "A man is speaking",
+      "nwords": 4,
+      "source_wav": "ArHiac57pVk",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "27649",
+      "caption": "Vehicle approaching while downshifting and passing by",
+      "nwords": 7,
+      "source_wav": "BA-lFjpzad4",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "45226",
+      "caption": "Thunder roars in the distance as rain falls",
+      "nwords": 8,
+      "source_wav": "Lbken4JCr94",
+      "start_time": 10,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "50570",
+      "caption": "Low speech from a man followed by machine making a beeping noise",
+      "nwords": 12,
+      "source_wav": "P4qd8uodw_M",
+      "start_time": 0,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "53541",
+      "caption": "Horses run in the distance then a man speaks and a woman cheers then talks",
+      "nwords": 15,
+      "source_wav": "R4fXcbWFhJg",
+      "start_time": 10,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "63671",
+      "caption": "Continuous, quiet tick-tocking",
+      "nwords": 3,
+      "source_wav": "Y3lNEe-ZGF0",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "64200",
+      "caption": "Vehicles driving by then accelerating and revving as a crowd of people talk",
+      "nwords": 13,
+      "source_wav": "YQGW5AwDOIo",
+      "start_time": 560,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "93810",
+      "caption": "A sewing machine is in use, and a woman talks",
+      "nwords": 10,
+      "source_wav": "t4prXmPwthg",
+      "start_time": 150,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "102763",
+      "caption": "Pigeons are cooing",
+      "nwords": 3,
+      "source_wav": "x5AH2gW_8S4",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102784",
+      "caption": "Humming noise then sneezing and coughing",
+      "nwords": 6,
+      "source_wav": "TQr9v-PQOc4",
+      "start_time": 0,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102785",
+      "caption": "A faucet pouring water as a plastic container fills with liquid and scrubbing against a plastic surface while water trickles",
+      "nwords": 20,
+      "source_wav": "r2djvq1vc68",
+      "start_time": 20,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "102799",
+      "caption": "Frogs and crickets chirping and croaking",
+      "nwords": 6,
+      "source_wav": "v59uHr-B1no",
+      "start_time": 18,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102833",
+      "caption": "A motorbike engine running idle as wind blows into a microphone and birds chirp in the background",
+      "nwords": 17,
+      "source_wav": "eXj9OAik5cc",
+      "start_time": 370,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "102834",
+      "caption": "A person snoring",
+      "nwords": 3,
+      "source_wav": "niwgMbB6tpQ",
+      "start_time": 10,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102846",
+      "caption": "A beep is followed by retching and muffled speech",
+      "nwords": 9,
+      "source_wav": "HdPSebdDxe4",
+      "start_time": 90,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "102854",
+      "caption": "A woman speaks followed by a sewing machine slow stitching",
+      "nwords": 10,
+      "source_wav": "CYUlLTKoa1Y",
+      "start_time": 80,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "102885",
+      "caption": "Pigeons coo with some light rustling",
+      "nwords": 6,
+      "source_wav": "e2rScj9UyMs",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102894",
+      "caption": "Faint snoring and gurgling",
+      "nwords": 4,
+      "source_wav": "lTfNLKEy1RU",
+      "start_time": 120,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102895",
+      "caption": "A man speaking while water is spraying into a sink and draining",
+      "nwords": 12,
+      "source_wav": "LVvS3s9dFKw",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "102902",
+      "caption": "Wind blowing with some rustling and humming of engines",
+      "nwords": 9,
+      "source_wav": "h3UhoHIMfpw",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "102907",
+      "caption": "People speaking faintly with some humming and a hydraulic hiss",
+      "nwords": 10,
+      "source_wav": "LP_DzNUkAKY",
+      "start_time": 490,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "102925",
+      "caption": "A sewing machine sews followed by a man talking",
+      "nwords": 9,
+      "source_wav": "hxbmDeNSO6Q",
+      "start_time": 230,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "102946",
+      "caption": "A motor is revving and changing gears",
+      "nwords": 7,
+      "source_wav": "CeRoaEcqUgM",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102967",
+      "caption": "A man speaking with frying food and stirring sounds",
+      "nwords": 9,
+      "source_wav": "MOxddxW5PXs",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "102986",
+      "caption": "Several ducks quack with some distant humming",
+      "nwords": 7,
+      "source_wav": "OpiWMltpj44",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102988",
+      "caption": "Men humming and talking with baby crying in the background",
+      "nwords": 10,
+      "source_wav": "YH4qi8Ul6v0",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103010",
+      "caption": "Water running from a flushed toilet",
+      "nwords": 6,
+      "source_wav": "YIqpIjjee00",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103018",
+      "caption": "Several gunshots with a click and glass breaking",
+      "nwords": 8,
+      "source_wav": "HeEa1GZpUGI",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103019",
+      "caption": "Fire igniting followed by an electronic beep then footsteps running on concrete as vehicle engines run idle and horns honk in the background",
+      "nwords": 23,
+      "source_wav": "ItS07xtdi4s",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103020",
+      "caption": "A loud metallic whine punctuated by a train horn",
+      "nwords": 9,
+      "source_wav": "cFoXRmGgIME",
+      "start_time": 20,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103022",
+      "caption": "A muffled helicopter engine flying",
+      "nwords": 5,
+      "source_wav": "bIV3bJZpkgA",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103031",
+      "caption": "A person is snoring",
+      "nwords": 4,
+      "source_wav": "SCow4mpBsGY",
+      "start_time": 0,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103045",
+      "caption": "Rain lightly falling while water trickles and splashes followed by wind blowing into a microphone then thunder roaring in the distance",
+      "nwords": 21,
+      "source_wav": "AI1OweEW8C0",
+      "start_time": 50,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103052",
+      "caption": "An insect buzzing followed by a man talking",
+      "nwords": 8,
+      "source_wav": "t3VFlDiEKgY",
+      "start_time": 190,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103053",
+      "caption": "A distant engine hums loudly with splashing water and blowing wind",
+      "nwords": 11,
+      "source_wav": "wrQDkX0NbTA",
+      "start_time": 29,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103080",
+      "caption": "Vibrations from a sewing machine",
+      "nwords": 5,
+      "source_wav": "Or7umk40TZA",
+      "start_time": 6,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103092",
+      "caption": "A plastic clack followed by young girl talking then another a young girl burping proceeded by both girls laughing",
+      "nwords": 19,
+      "source_wav": "Bvw2gv1fcZw",
+      "start_time": 70,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103098",
+      "caption": "A man talking as metal rattles then clanks followed by several metal objects falling over onto a hard surface",
+      "nwords": 19,
+      "source_wav": "T32kii824pA",
+      "start_time": 240,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103132",
+      "caption": "A low slow groan followed by a crash and men speaking with distant birds",
+      "nwords": 14,
+      "source_wav": "nq0BF9zGkzg",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103147",
+      "caption": "An animal hisses",
+      "nwords": 3,
+      "source_wav": "hhSqQN1Ou68",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103161",
+      "caption": "Typing on a typewriter is ongoing with clicking and clacking, a bell rings, and a clack occurs with the carriage return",
+      "nwords": 21,
+      "source_wav": "t1hj7se76wQ",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103164",
+      "caption": "A toy helicopter flying",
+      "nwords": 4,
+      "source_wav": "yau2WIRkxb8",
+      "start_time": 100,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103169",
+      "caption": "Steam followed by knocking sounds",
+      "nwords": 5,
+      "source_wav": "pHYkWkZ4guE",
+      "start_time": 320,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103171",
+      "caption": "A train engine running as bells chime followed by a lawn mower running then a steam engine running while a steam whistle blows and a crowd of people talk in the background",
+      "nwords": 32,
+      "source_wav": "aZAXO2WZn84",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103181",
+      "caption": "Bursts of video game gunfire and popping occur in rapid succession",
+      "nwords": 11,
+      "source_wav": "WmDe2xbnSY4",
+      "start_time": 190,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103188",
+      "caption": "Two vehicles drive by as a man is speaking in the distance",
+      "nwords": 12,
+      "source_wav": "TSdAJWJ-tW0",
+      "start_time": 12,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103189",
+      "caption": "A car accelerating and squealing on road",
+      "nwords": 7,
+      "source_wav": "o3mZR8OvPko",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103198",
+      "caption": "A vehicle driving by while revving as tires skid and squeal",
+      "nwords": 11,
+      "source_wav": "KtinboYbmHQ",
+      "start_time": 50,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103202",
+      "caption": "A man speaking with light wind followed by brief silence then birds chirping.",
+      "nwords": 13,
+      "source_wav": "bygBWUkpaC8",
+      "start_time": 270,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103206",
+      "caption": "A woman whistles and sings",
+      "nwords": 5,
+      "source_wav": "MTaLknnq4wc",
+      "start_time": 60,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103214",
+      "caption": "Several rapid gunshots with a distant aircraft passing by with a booming engine",
+      "nwords": 13,
+      "source_wav": "nD1K1Zo0qrM",
+      "start_time": 10,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103219",
+      "caption": "Loud footsteps followed by a scream and explosions",
+      "nwords": 8,
+      "source_wav": "os_2U4xqTqw",
+      "start_time": 100,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103221",
+      "caption": "Rain falling and thunder roaring in the distance",
+      "nwords": 8,
+      "source_wav": "SGaIvgwwWSE",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103229",
+      "caption": "Food and oil sizzling followed by steam hissing as a man talks and light rock music plays in the background",
+      "nwords": 20,
+      "source_wav": "ZY4aGEniU_E",
+      "start_time": 90,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103269",
+      "caption": "Loud crumpling followed by loud, high pitched buzzing",
+      "nwords": 8,
+      "source_wav": "TaQKhIRwii4",
+      "start_time": 100,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103271",
+      "caption": "A person clapping followed by a dog barking then knocking on a glass surface as birds chirp during outdoor ambiance",
+      "nwords": 20,
+      "source_wav": "ptIksg9KEac",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103273",
+      "caption": "Continuous hissing and clanking",
+      "nwords": 4,
+      "source_wav": "cz0FSQDVBMw",
+      "start_time": 90,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103303",
+      "caption": "A short loud vibration",
+      "nwords": 4,
+      "source_wav": "i1u_2eZYYlE",
+      "start_time": 0,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103323",
+      "caption": "Several church bells ringing",
+      "nwords": 4,
+      "source_wav": "H7rd9bZtbgc",
+      "start_time": 330,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103341",
+      "caption": "A woman speaks affectionately as a pig oinks quietly, then wood creaks",
+      "nwords": 12,
+      "source_wav": "E9zN3-C64KE",
+      "start_time": 25,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103372",
+      "caption": "A loud metal clank followed by pressurized air releasing as a truck engine runs idle before accelerating",
+      "nwords": 17,
+      "source_wav": "LB6CZ0x-kns",
+      "start_time": 0,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103408",
+      "caption": "An infant yelling as a young boy talks while a hard surface is slapped several times",
+      "nwords": 16,
+      "source_wav": "fsBR7e_X_0Y",
+      "start_time": 40,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103434",
+      "caption": "An engine vibrates followed by a man speaking",
+      "nwords": 8,
+      "source_wav": "UV1kdjwpy6U",
+      "start_time": 17,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103450",
+      "caption": "A loud whoosh followed by a woman speaking then digital beeps and men speaking",
+      "nwords": 14,
+      "source_wav": "rPkCYq4Zjwk",
+      "start_time": 0,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103458",
+      "caption": "A dog barking as footsteps walking on foliage and a man talking while a pig squeals",
+      "nwords": 16,
+      "source_wav": "SNIaYhri76w",
+      "start_time": 90,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103483",
+      "caption": "Spraying and hissing with some light vibrations",
+      "nwords": 7,
+      "source_wav": "IKnx3hJv1bs",
+      "start_time": 150,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103493",
+      "caption": "Humming of engines followed by the neigh of a horse and birds chirping in the background",
+      "nwords": 16,
+      "source_wav": "JhGp7HmRQxg",
+      "start_time": 0,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103507",
+      "caption": "A vehicle struggling to start with some clicks and whines",
+      "nwords": 10,
+      "source_wav": "TOaQMYc79Mw",
+      "start_time": 40,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103513",
+      "caption": "A man talking as a swam of insects buzz",
+      "nwords": 9,
+      "source_wav": "AUJPx81qKtY",
+      "start_time": 0,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103540",
+      "caption": "A train running on a railroad track followed by a vehicle door closing and a man talking in the distance while a train horn honks and railroad crossing warning signals ring",
+      "nwords": 31,
+      "source_wav": "YQSuFyFm3Lc",
+      "start_time": 230,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103551",
+      "caption": "Water flowing and splashing, increases in volume suddenly",
+      "nwords": 8,
+      "source_wav": "txeXrpoMST4",
+      "start_time": 500,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103613",
+      "caption": "Two men communicating with each other followed by plastic clacking then a power tool drilling as wind softly blows into a microphone",
+      "nwords": 22,
+      "source_wav": "FDwK7T1JO_0",
+      "start_time": 160,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103614",
+      "caption": "Rustling with footsteps and people briefly gasping",
+      "nwords": 7,
+      "source_wav": "8ZH_PoK0clI",
+      "start_time": 14,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103647",
+      "caption": "Ducks quacking and chirping as a rooster crows and a crowd of people talks in the background",
+      "nwords": 17,
+      "source_wav": "DzKjogSVOLM",
+      "start_time": 21,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103716",
+      "caption": "Several goats baaing as grass shuffles followed by a person chuckling in the background",
+      "nwords": 14,
+      "source_wav": "taYKM1OSTwE",
+      "start_time": 120,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103722",
+      "caption": "A large duck quacks and small ducks chirp",
+      "nwords": 8,
+      "source_wav": "z1ax0QPpd14",
+      "start_time": 170,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103752",
+      "caption": "An infant laughing",
+      "nwords": 3,
+      "source_wav": "d6gu2w19YQo",
+      "start_time": 70,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "103755",
+      "caption": "A click is followed by a woman speaking and then a sewing machine stitching",
+      "nwords": 14,
+      "source_wav": "xpZna_FwDhI",
+      "start_time": 70,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103782",
+      "caption": "A man talking as pigeons coo and bird wings flap",
+      "nwords": 10,
+      "source_wav": "orgwzt45ojE",
+      "start_time": 30,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103821",
+      "caption": "A woman is speaking followed by a dog growling and barking",
+      "nwords": 11,
+      "source_wav": "HZ9O6sc7cLA",
+      "start_time": 180,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103845",
+      "caption": "A man talking followed by another man yelling in the background then an aircraft engine starting up as vehicles drive by",
+      "nwords": 21,
+      "source_wav": "lX3k5p2I_g0",
+      "start_time": 140,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103871",
+      "caption": "Whooshing and humming with a man speaking and distant squeaks",
+      "nwords": 10,
+      "source_wav": "rvtA7c1I4xo",
+      "start_time": 0,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103910",
+      "caption": "A man speaks followed by thumps and clicks with some faint grunts",
+      "nwords": 12,
+      "source_wav": "bhlhcGONisM",
+      "start_time": 130,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103959",
+      "caption": "A man talking while another person talks in the distance as water trickles and birds chirp in the background",
+      "nwords": 19,
+      "source_wav": "mVjub3o_IxE",
+      "start_time": 40,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "104091",
+      "caption": "Wind blowing and ocean in the background",
+      "nwords": 7,
+      "source_wav": "G0IsabU5hn4",
+      "start_time": 3,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "104120",
+      "caption": "An emergency siren blaring steadily",
+      "nwords": 5,
+      "source_wav": "woadpeAGHUQ",
+      "start_time": 70,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "104160",
+      "caption": "Fast and loud typing on computer keyboard",
+      "nwords": 7,
+      "source_wav": "Bz9Y5nZK3eo",
+      "start_time": 21,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "104250",
+      "caption": "A man talking then whistling",
+      "nwords": 5,
+      "source_wav": "Hdxfbpnd2-8",
+      "start_time": 140,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "104514",
+      "caption": "A woman speaks while a crowd talks and chuckles",
+      "nwords": 9,
+      "source_wav": "MBP4RcnwGZw",
+      "start_time": 40,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "104590",
+      "caption": "Crying and screaming with some coughing",
+      "nwords": 6,
+      "source_wav": "O90Qy2xG6oA",
+      "start_time": 30,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "104642",
+      "caption": "Water spraying and gurgling as a man speaks and a crowd of people talk in the background",
+      "nwords": 17,
+      "source_wav": "Me4npKmtchA",
+      "start_time": 270,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "104820",
+      "caption": "A helicopter flying followed by wind heavily blowing into a microphone",
+      "nwords": 11,
+      "source_wav": "dYvL6uEMl6E",
+      "start_time": 60,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "105001",
+      "caption": "Woman speaking with fly buzzing around",
+      "nwords": 6,
+      "source_wav": "tmLAXm1WlnE",
+      "start_time": 50,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "105032",
+      "caption": "A woman talking followed by a group of people laughing as plastic crinkles",
+      "nwords": 13,
+      "source_wav": "_oKXrY5Ff0g",
+      "start_time": 60,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "105209",
+      "caption": "A clock ticking followed by plastic clacking then cuckoo bird cooing before bells chiming",
+      "nwords": 14,
+      "source_wav": "OxUVcZmeiyI",
+      "start_time": 30,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "105455",
+      "caption": "A horn beeping rapidly then a long loud beep",
+      "nwords": 9,
+      "source_wav": "mYQrjcYNrW0",
+      "start_time": 20,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "105561",
+      "caption": "Rain and thunder",
+      "nwords": 3,
+      "source_wav": "Z-SIyOChVh8",
+      "start_time": 0,
+      "tercile": 0
+    }
+  ],
+  "master_seed": 20260818,
+  "name": "panel_pilot",
+  "note": "pilot: sizes/calibrates the main experiment; no section-8 decision",
+  "role": "pilot",
+  "seconds_total": 10,
+  "size": 128,
+  "source_csv": "data/dataset/metadata/audiocaps/test.csv",
+  "source_csv_rows": 4875,
+  "source_csv_sha256": "b91c4b7ded2f4f6e7db5b9c4983dc1e1dca3d556f505b61e3fd65cac7e1c638a",
+  "tercile_counts": {
+    "0": 43,
+    "1": 43,
+    "2": 42
+  },
+  "tercile_word_boundaries": [
+    7,
+    11
+  ]
+}

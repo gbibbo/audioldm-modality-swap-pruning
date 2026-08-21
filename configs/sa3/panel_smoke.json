@@ -1,0 +1,54 @@
+{
+  "items": [
+    {
+      "audiocap_id": "5958",
+      "caption": "A sound of vibrating motor",
+      "nwords": 5,
+      "source_wav": "1N_DtRpdAp8",
+      "start_time": 6,
+      "tercile": 0
+    },
+    {
+      "audiocap_id": "102963",
+      "caption": "Road traffic with engines followed by a shrill car alarm then whistles and several loud car horns blaring",
+      "nwords": 18,
+      "source_wav": "i2yhbckq3p0",
+      "start_time": 110,
+      "tercile": 2
+    },
+    {
+      "audiocap_id": "103148",
+      "caption": "White noise followed by brief, muffled speech and rustling",
+      "nwords": 9,
+      "source_wav": "Ivg_q4t-3w0",
+      "start_time": 1,
+      "tercile": 1
+    },
+    {
+      "audiocap_id": "103578",
+      "caption": "Horns blowing of a passing train",
+      "nwords": 6,
+      "source_wav": "JHhEjsAkZoc",
+      "start_time": 20,
+      "tercile": 0
+    }
+  ],
+  "master_seed": 20260818,
+  "name": "panel_smoke",
+  "note": "engineering only; excluded from S1/margins/N_main/n_u and all scientific results",
+  "role": "smoke",
+  "seconds_total": 10,
+  "size": 4,
+  "source_csv": "data/dataset/metadata/audiocaps/test.csv",
+  "source_csv_rows": 4875,
+  "source_csv_sha256": "b91c4b7ded2f4f6e7db5b9c4983dc1e1dca3d556f505b61e3fd65cac7e1c638a",
+  "tercile_counts": {
+    "0": 2,
+    "1": 1,
+    "2": 1
+  },
+  "tercile_word_boundaries": [
+    7,
+    11
+  ]
+}

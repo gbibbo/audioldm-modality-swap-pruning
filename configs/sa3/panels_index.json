@@ -1,0 +1,19 @@
+{
+  "disjoint_by_source_wav": true,
+  "master_seed": 20260818,
+  "panels": {
+    "panel_main.json": {
+      "sha256": "b502eaff0c4e3bba4412be77cf6d269811c3b62ee2c29771c9c1b07581a3ce96",
+      "size": 256
+    },
+    "panel_pilot.json": {
+      "sha256": "79e80d59edee9ce00510b8fce39270494557f344962333b3efb5aa7cbd0feebc",
+      "size": 128
+    },
+    "panel_smoke.json": {
+      "sha256": "121866c21ed04548dacb5f9304cc3890c1c77a03e63c04c3ac2e5993d10f37e4",
+      "size": 4
+    }
+  },
+  "source_csv_sha256": "b91c4b7ded2f4f6e7db5b9c4983dc1e1dca3d556f505b61e3fd65cac7e1c638a"
+}

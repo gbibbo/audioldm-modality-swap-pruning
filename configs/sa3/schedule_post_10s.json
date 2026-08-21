@@ -1,0 +1,56 @@
+{
+  "diffusion_objective": "rf_denoiser",
+  "downsampling_ratio": 4096,
+  "effective_seq_len": 108,
+  "reference_full_shift": {
+    "shift": {
+      "max_length": 4096,
+      "min_length": 256,
+      "type": "DistributionShift(full)"
+    },
+    "sigmas": [
+      1.0,
+      0.9202618598937988,
+      0.8318243026733398,
+      0.7331817150115967,
+      0.6224592924118042,
+      0.4972936511039734,
+      0.3546612858772278,
+      0.19063186645507812,
+      0.0
+    ]
+  },
+  "role": "post",
+  "sample_rate": 44100,
+  "sampler": "pingpong",
+  "seconds_total": 10,
+  "shift": {
+    "anchor_logsnr": -6.2,
+    "logsnr_end": 2.0,
+    "rate": 0,
+    "source": "config sampling_distribution_shift_options=null -> wrapper fallback",
+    "type": "LogSNRShift"
+  },
+  "sigmas": [
+    1.0,
+    0.9943755865097046,
+    0.9844802021980286,
+    0.957912266254425,
+    0.8909031748771667,
+    0.7455465793609619,
+    0.5124973654747009,
+    0.27388501167297363,
+    0.0
+  ],
+  "steps": 8,
+  "tau_levels": [
+    1.0,
+    0.9943755865097046,
+    0.9844802021980286,
+    0.957912266254425,
+    0.8909031748771667,
+    0.7455465793609619,
+    0.5124973654747009,
+    0.27388501167297363
+  ]
+}
