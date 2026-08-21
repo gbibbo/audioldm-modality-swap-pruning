@@ -30,18 +30,19 @@ paired CLAP-deficit bootstrap CI (B=2000 over the 16 prompts) — inferior iff *
 non-inferior iff **upper** CI ≤ margin; else indeterminate:
 
 * **INFERIOR: 0, 1, 6, 19** (3 boundary + interior block 6).
-* **NON-INFERIOR (removable): 13, 14, 16.**
+* **CLAP-NON-INFERIOR under the pilot margin: 13, 14, 16** (CLAP only — NOT "removable"; the full E=(CLAP,KL,FD) non-inferiority is not established).
 * **INDETERMINATE: 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 15, 17, 18 (13 blocks).**
 
 **Both prior reads were wrong.** The overnight read ("only 0/1/19 inferior") used a 4×-too-loose
 floor; my first correction ("9/20 inferior incl. 6 interior") used point estimates and ignored
 sampling uncertainty. **The honest answer with CIs: N=16 is UNDERPOWERED to decide CASE E for the
 middle blocks** — most are indeterminate. Only boundary blocks + interior block 6 are confidently
-inferior; blocks 13/14/16 are confidently removable. This is direct evidence for task 8 (size
-`N_main` before any CASE-E call). **Coherent cross-check:** block 6 is the single most field-amplified
-interior block (non-normalized 10.2×, E6) and it is the one confidently-inferior interior block;
-the confidently-removable 13/14/16 have low D_P/D_B — so D_P/D_B tracks the end-to-end verdict where
-the pilot has resolution. CLAP-only; FD via the paired drift (E4); NOT a main-panel decision.
+inferior; blocks 13/14/16 are **CLAP-non-inferior under the pilot margin** (not globally removable).
+This is direct evidence for task 8 (size `N_main` before any CASE-E call). **Descriptive cross-check
+(NOT a prediction claim):** block 6 (most field-amplified interior, non-normalized 10.2×, E6) is also
+the one interior block flagged CLAP-inferior; the CLAP-non-inferior 13/14/16 have low D_P/D_B. This
+co-occurrence is consistent with D_P/D_B carrying end-to-end-relevant signal where the pilot resolves;
+it does NOT establish that D_P predicts the end-to-end verdict. CLAP-only; FD via the paired drift (E4); NOT a main-panel decision.
 
 ## E4 — FD-OpenL3 at N=16 is rank-deficient; use paired per-prompt drift (task 4)
 
@@ -50,7 +51,9 @@ small-sample Frechet. Not deleted (smoke FD kept, descriptive). Replaced for the
 **paired per-prompt cosine drift** (`paired_openl3_drift.py`, pre-registered: 1−cos of mean OpenL3
 env/mel256/512 hop=1.0s embeddings, skip-g vs dense-8 per prompt, bootstrap CI, null = dense-stream
 seed drift). **RESULT (`openl3_drift.json`):** null seed-drift p95 = **0.0148**; dense 4-step drift
-(0.0048) is *below* seed noise (robust to step reduction). Using the lower-CI-vs-p95 rule, **only
+(0.0048) is *below* the seed-noise p95 — i.e. **not resolved as different from dense-8 by this
+one-sided difference-detection diagnostic** (NOT a robustness or non-inferiority claim). Using the
+lower-CI-vs-p95 rule, **only
 boundary blocks 0, 1, 19 drift beyond seed noise** (0.021–0.031); **every interior block 2–18 is
 within/below the floor** (0.003–0.012; block 5 = 0.0066). **This confirms the FD rank-deficiency
 concern:** the smoke's alarming set-level `FD=99.9` for skip-5 was a small-sample Frechet artifact —
@@ -99,28 +102,38 @@ the amplification is not a normalization artifact.)
 
 ## Synthesis of the corrected pilot (the honest combined read)
 
-Two independent end-to-end metrics after correction, N=16 pilot:
+Two end-to-end diagnostics after correction, N=16 pilot — **note what each test can and cannot say:**
 
-* **OpenL3 (acoustic paired drift):** only boundaries 0/1/19 beyond seed noise; **all interiors
-  removable-looking**.
-* **CLAP (semantic, bootstrap CI):** boundaries 0/1/19 + **block 6** confidently inferior; 13/14/16
-  confidently removable; **13 blocks indeterminate** (underpowered).
+* **OpenL3 (acoustic paired drift) — a ONE-SIDED difference-detection test.** Only boundaries 0/1/19
+  drift beyond the seed-variability p95; for every interior block the drift is **not resolved as
+  different from dense-8 by this diagnostic**. This is NOT a removability or non-inferiority claim —
+  failing to detect drift above stochastic seed variability is not evidence of equivalence.
+* **CLAP (semantic, paired bootstrap CI, 3-way rule).** Boundaries 0/1/19 + **block 6** confidently
+  inferior; **13/14/16 CLAP-non-inferior under the pilot margin**; **13 blocks indeterminate**
+  (underpowered). CLAP-non-inferior is NOT "removable" — the full multivariate E=(CLAP,KL,FD) is not
+  established (KL still has an incomplete null; FD is only the descriptive/diagnostic drift above).
 
-⇒ **Single-block removal of interior blocks looks largely tolerable end-to-end at N=16; this is NOT
-a clean CASE E.** The only interior flag is block 6 (CLAP alone) — the most field-amplified block
-(non-normalized 10.2×), so `D_P/D_B` and the end-to-end verdict agree where the pilot can resolve.
-
-**Consequence for the direction (matches Gabriel's "qué me interesa decidir después").** If interior
-blocks are removable and `D_P` already identifies which (and `I_PT ≈ D_P`), RQ1 is scientifically
-interesting but does **not by itself justify a PT-aware pruning method**. The potential contribution
-is now RQ2: **`A_tan` must (a) differ from `D_P`/`E` and (b) predict real held-out adapter survival
-(case C)**. That — not a faster FD number — is the decision-relevant next experiment. Before it,
-finish sizing (`N_main` from the D_P/I_PT bootstrap; `n_u` from an `A_tan` pilot) per rc3.1 §6.0.
+**Corrected conclusion (today):** **No CASE E is demonstrated. N=16 is insufficient.** There is
+evidence that SOME interior blocks can tolerate removal **on CLAP** (13/14/16), and **no OpenL3
+acoustic drift is detected above seed variability** for the interiors — **but end-to-end removability
+is NOT established.** The only interior CLAP-inferior flag is block 6 (the most field-amplified block,
+non-normalized 10.2×). The co-occurrence of "most amplified D_P/D_B" and "CLAP-inferior" at block 6 is
+a **descriptive** cross-check consistent with D_P/D_B carrying end-to-end-relevant signal at the few
+blocks the pilot resolves — it does **not** establish that D_P *predicts* the end-to-end verdict.
 
 ## What this means for the direction
 
-If, after these corrections, interior blocks turn out **removable end-to-end and D_P already
-identifies which**, RQ1 is interesting but does not by itself justify a PT-aware pruning method
-(the I_PT≈D_P collapse points that way). The potential contribution then shifts to **RQ2**: `A_tan`
-must say something **different from D_P/E** and predict real held-out adapter survival (case C). That
-is the next scientific question — not a fast FD number.
+The corrected evidence is precisely: **CASE E not demonstrated; RQ1 reveals a clear structural
+amplification (real, E6) but `I_PT` looks redundant with `D_P` (E7, weak, no floor yet); and RQ2 is
+the concrete opportunity to justify OR kill the remaining contribution.**
+
+The cheap decisive question is: **does `A_tan` carry structural information distinct from `D_P`?**
+
+* If **no** (A_tan's ranking/greedy essentially coincides with D_P), the adapter-compatible-pruning
+  hypothesis is likely dead — and we learn this **without building CC0 datasets or training LoRAs**.
+* If **yes and stable** (A_tan diverges from D_P in a decision-relevant way), only then is it worth
+  investing in real held-out adapters to test whether that divergence predicts real function (case C).
+
+Before any of it: finish `D_P/I_PT` sizing (`N_main` from a per-prompt bootstrap) — and only then a
+minimal primary-`A_tan` pilot (`n_u` from its own bootstrap) per rc3.1 §6.0. If `I_PT` stays collapsed
+onto `D_P`, close the PT-specific-criterion idea rather than spend to rescue it.
