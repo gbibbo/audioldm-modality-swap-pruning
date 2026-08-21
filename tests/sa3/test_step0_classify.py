@@ -13,5 +13,5 @@ c = classify_config_diff(cd)
 ok = ([x[1] for x in c["architecture"]] == ["model.diffusion.config.depth"]
       and sorted(x[1] for x in c["objective_or_sampling"]) == sorted(["model.diffusion.sampling_distribution_shift_options.type", "training.demo.x", "model.diffusion.diffusion_objective"])
       and [x[1] for x in c["text_encoder_location"]] == ["model.conditioning.configs.[0].config.repo_id"]
-      and [x[1] for x in c["other"]] == ["weird.key"])
+      and [x[1] for x in c["other"]] == ["weird.key"] and c["resolved_at_build"] == [])
 print("  C1 classify:", c); print("ALL PASS" if ok else "SOME FAILED"); sys.exit(0 if ok else 1)

@@ -37,12 +37,14 @@ def classify_config_diff(cd: dict) -> dict:
     def bucket(key: str) -> str:
         if key.startswith("model.conditioning.") and ("repo_id" in key or "subfolder" in key or "model_path" in key):
             return "text_encoder_location"          # where t5gemma is fetched from: not architecture
+        if key == "model.pretransform.scale":
+            return "resolved_at_build"              # AutoencoderPretransform(scale=1.0) default; compared on the built models
         if any(key.startswith(p) or key == p for p in ARCH_PREFIXES):
             return "architecture"
         if any(k in key for k in OBJECTIVE_SAMPLING_KEYS):
             return "objective_or_sampling"
         return "other"
-    out = {"architecture": [], "objective_or_sampling": [], "text_encoder_location": [], "other": []}
+    out = {"architecture": [], "objective_or_sampling": [], "text_encoder_location": [], "resolved_at_build": [], "other": []}
     for k in cd["only_a"]:
         out[bucket(k)].append(("only_base", k))
     for k in cd["only_b"]:
@@ -160,7 +162,9 @@ def main() -> int:
         cfg = L.patch_text_encoder_path(base_cfg, os.path.join(args.base_dir, "t5gemma-b-b-ul2"))
         tb = time.time()
         model, rep = L.build_model_strict(cfg, os.path.join(args.base_dir, "model.safetensors"), device="cpu")
-        result["build"] = {"strict_load_report": rep, "build_s": time.time() - tb}
+        result["build"] = {"strict_load_report": rep, "build_s": time.time() - tb,
+                           "effective_pretransform_scale": float(getattr(model.pretransform, "scale", float("nan"))),
+                           "pretransform_downsampling_ratio": int(model.pretransform.downsampling_ratio)}
         dit = model.model.model  # ConditionedDiffusionModelWrapper -> DiTWrapper -> DiffusionTransformer
         result["build"]["depth"] = depth(dit)
         result["build"]["dit_params"] = sum(p.numel() for p in dit.parameters())
@@ -191,7 +195,13 @@ def main() -> int:
             tb = time.time()
             model_p, rep_p = L.build_model_strict(cfg_p, os.path.join(args.post_dir, "model.safetensors"), device="cpu")
             result["build_post"] = {"strict_load_report": rep_p, "build_s": time.time() - tb,
-                                    "diffusion_objective": model_p.model.diffusion_objective}
+                                    "diffusion_objective": model_p.model.diffusion_objective,
+                                    "effective_pretransform_scale": float(getattr(model_p.pretransform, "scale", float("nan"))),
+                                    "pretransform_downsampling_ratio": int(model_p.pretransform.downsampling_ratio)}
+            c["build_pair_effective_pretransform_identical"] = (
+                result["build"]["effective_pretransform_scale"] == result["build_post"]["effective_pretransform_scale"]
+                and result["build"]["pretransform_downsampling_ratio"] == result["build_post"]["pretransform_downsampling_ratio"])
+            ok &= c["build_pair_effective_pretransform_identical"]
             dit_p = model_p.model.model
             result["build_post"]["depth"] = depth(dit_p)
             result["build_post"]["dit_params"] = sum(p.numel() for p in dit_p.parameters())
