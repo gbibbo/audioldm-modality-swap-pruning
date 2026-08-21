@@ -1278,3 +1278,10 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **A_tan removable sets vs D_P:** k=2 {13,14}/{12,13}; k=4 {12,13,14,15}/{11,12,13,14}; k=6 {11–16}/{9–14}. δ=1/1/2.
 * **GATE — UNDERPOWERED at N=16 (corrected).** The first pass reported "A_tan diverges" using a with-replacement floor (too loose → 0). Fixed to a **disjoint-pair floor** + the D_P-stability requirement (N_main=32): δ (1–2 blocks) is comparable to D_P's own sampling noise and **CANNOT be declared real**. **The gate did not resolve.** Resolve with **A_tan at N≥32** (n_u=8 frozen; reuse states); est. ~0.9 cr → ~2.6 accumulated, within ≤3.
 * **Acceptance / gate decision:** RQ2 gate unresolved at N=16 (underpowered), consistent with N_main(D_P)=32. NOT proceeding to real adapters or main. The single next step (Gabriel's call on the ~0.9 cr) is A_tan at N=32 to decide whether A_tan carries structure distinct from D_P.
+
+### 2026-08-21 16:33 | SA3-KAPPA-CALIB-001 | κ micro-calibration (CPU, 0 GPU) → freeze κ=0.01 before N=32 A_tan
+
+* **Status:** completed (CPU). **0 GPU.** Per Gabriel's round-3 requirement: fix the tangent-regime κ BEFORE N=32 and WITHOUT looking at A_tan-vs-D_P. `scripts/sa3/kappa_calibration.py` (build-once per probe, `set_strength(2)` for the 2u perturbation, no block removal), n_u=8 frozen probes × 3 prompts × 3 states.
+* **Result:** **κ=0.01 PASSES for ALL 8 probes** — per-probe mean linearity ‖δF(2u)‖/‖δF(u)‖ ∈ **[1.956, 2.012]** (well within [1.9,2.1]); precision ‖δF(u)‖²/‖F_P‖² min **7.79e-4 ≥ floor 10η=6.7e-4**. Precision ∝ κ² ⇒ κ=0.005 (→1.95e-4) and κ=0.0025 (→4.9e-5) FAIL the precision floor, so **κ=0.01 is the LARGEST κ passing both criteria → FROZEN κ=0.01**.
+* **Consequence:** the N=16 A_tan "linearity not all in [1.9,2.1]" was per-(probe,prompt,state) NOISE, not systematic non-linearity — the per-probe MEANS are ~2.0. The N=16 gate stands (underpowered, not a κ artifact); N=32 proceeds at κ=0.01.
+* **Acceptance / gate decision:** κ=0.01 frozen. Launch N=32 A_tan (n_u=8, κ=0.01, reuse states, disjoint floor, set-divergence gate). Est ~0.53 cr.
