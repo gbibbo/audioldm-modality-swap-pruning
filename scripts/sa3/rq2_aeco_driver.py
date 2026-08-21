@@ -44,8 +44,30 @@ def load_post(device, half):
     return model, cfg
 
 
+def load_frozen_eta(eta_config, dry):
+    """Read the FROZEN precision η from the smoke artifact (no silent numeric default for science runs).
+    Pooled = conservative max over the per-level η (matches the frozen probe guard). Returns
+    (eta_pooled, provenance_dict). Dry-run may proceed with a clearly-labelled synthetic η."""
+    if eta_config:
+        d = json.load(open(eta_config))
+        de = d.get("measurements", {}).get("D_eta", d.get("D_eta", d))
+        per_level = de.get("per_level")
+        eta_pooled = float(de.get("eta_max", max(per_level) if per_level else None))
+        prov = {"source": eta_config, "eta_max": eta_pooled, "per_level": per_level,
+                "git_commit": d.get("git_commit"), "pooled_rule": "max(per_level)"}
+        return eta_pooled, prov
+    if dry:
+        return 6.667e-05, {"source": "DRY_SYNTHETIC", "eta_max": 6.667e-05,
+                           "pooled_rule": "dry-run placeholder (NOT for scientific use)"}
+    raise SystemExit("scientific run requires --eta-config (frozen η from the smoke, e.g. "
+                     "artifacts/sa3/smoke_t4.json); no silent η default is allowed")
+
+
 def field_aeco(post, state_files, blocks, dev, dtype, eta):
-    """Compute A_eco(g;L) over blocks from the persisted/captured states. Adapter already attached."""
+    """Compute A_eco(g;L) over blocks from the persisted/captured states. Adapter already attached.
+    Persists per-prompt sufficient stats (den + per-block num + fp_sq) so A_eco(g) and its CIs are
+    bootstrappable over prompts downstream (ratio of sums), matching the A_tan sufficient-stats
+    pattern."""
     def batched(sts):
         xs = torch.cat([x for _, x in sts], dim=0).to(dev, dtype)
         ts = torch.tensor([tau for tau, _ in sts], device=dev, dtype=dtype)
@@ -77,14 +99,16 @@ def field_aeco(post, state_files, blocks, dev, dtype, eta):
         den_p = float(F.state_sq_norm(dFL).sum().item())
         fp_p = float(F.state_sq_norm(FP.float()).sum().item())
         den += den_p; fp_sq += fp_p
+        num_p = {}
         for g in blocks:
             P.restrict_to_surviving(post, removed_block=g)   # strength 1 except block g -> 0
             with block_mask(post, [g]):
                 fpu_mg = F.raw_field(post, bx, bt, cc)
             dfl_mg = fpu_mg.float() - FPmg[g].float()
-            num[g] += float(F.state_sq_norm(dFL - dfl_mg).sum().item())
+            num_p[str(g)] = float(F.state_sq_norm(dFL - dfl_mg).sum().item())
+            num[g] += num_p[str(g)]
             P.set_strength(post, 1.0)
-        per_prompt[aid] = {"den": den_p, "fp_sq": fp_p}
+        per_prompt[aid] = {"den": den_p, "fp_sq": fp_p, "num_by_block": num_p}
         print(f"[aeco] prompt {aid} den(||dF(L)||^2)={den_p:.4e} ||F_P||^2={fp_p:.4e}", flush=True)
         gc.collect()
     aeco = M.a_eco({g: num[g] for g in blocks}, den) if den > 0 else {g: float("nan") for g in blocks}
@@ -125,10 +149,13 @@ def main():
     ap.add_argument("--state-store", default="artifacts/sa3/pilot_states")
     ap.add_argument("--n", type=int, default=32)
     ap.add_argument("--blocks", default=None)
-    ap.add_argument("--eta", type=float, default=1e-3)
+    ap.add_argument("--eta-config", default=None,
+                    help="path to the FROZEN η artifact (e.g. artifacts/sa3/smoke_t4.json); REQUIRED "
+                         "for scientific runs — no silent numeric default (rc1.1 patch 3)")
     ap.add_argument("--atan-json", default=None, help="JSON {block: A_tan} for the §6 prediction check")
     ap.add_argument("--dp-json", default=None, help="JSON {block: D_P} for the §6 prediction check")
-    ap.add_argument("--floor-k", default="2:0,4:0,6:0", help="k:floor,... §4.1 bootstrap floors")
+    ap.add_argument("--floors-json", default=None,
+                    help="JSON {k: {f_atan,f_dp,f_aeco}} §4.1 pair-specific bootstrap floors (rc1.1 patch 1)")
     ap.add_argument("--prompts", default=None, help="comma-separated prompts for --mode task")
     ap.add_argument("--task-out", default="artifacts/sa3/aeco_task_wavs")
     ap.add_argument("--task-steps", type=int, default=8)
@@ -157,19 +184,24 @@ def main():
     t0 = time.time()
 
     if a.mode in ("field", "both"):
+        eta_pooled, eta_prov = load_frozen_eta(a.eta_config, a.dry_run_cpu)
+        R["eta_provenance"] = eta_prov
         state_files = sorted(glob.glob(os.path.join(a.state_store, "state_*.pt")),
                              key=lambda p: int(os.path.basename(p).split("_")[1].split(".")[0]))[:a.n]
         assert state_files, f"no persisted states in {a.state_store}"
-        fr = field_aeco(post, state_files, blocks, dev, dtype, a.eta)
+        fr = field_aeco(post, state_files, blocks, dev, dtype, eta_pooled)
         R["field"] = fr
         aeco_str = ", ".join("%d:%.4f" % (g, fr["A_eco"][str(g)]) for g in blocks)
-        print("[aeco] A_eco={ %s } precision_ok=%s" % (aeco_str, fr["precision_ok"]), flush=True)
-        # optional §6 prediction check
+        print("[aeco] eta=%.3e (%s) A_eco={ %s } precision_ok=%s"
+              % (eta_pooled, eta_prov["source"], aeco_str, fr["precision_ok"]), flush=True)
+        # optional §6 prediction check (pair-specific floors)
         if a.atan_json and a.dp_json:
             a_tan = {int(k): float(v) for k, v in json.load(open(a.atan_json)).items()}
             d_p = {int(k): float(v) for k, v in json.load(open(a.dp_json)).items()}
             a_eco = {int(g): fr["A_eco"][str(g)] for g in blocks}
-            floors = {int(kv.split(":")[0]): int(kv.split(":")[1]) for kv in a.floor_k.split(",")}
+            floors = {}
+            if a.floors_json:
+                floors = {int(k): v for k, v in json.load(open(a.floors_json)).items()}
             R["prediction_check"] = APRED.prediction_check(a_eco, a_tan, d_p, floors)
             print(f"[aeco] §6 verdict (k=6): {R['prediction_check']['verdict']}", flush=True)
 

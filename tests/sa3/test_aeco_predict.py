@@ -30,59 +30,71 @@ def a1_helpers():
 
 
 def a2_prediction_verdict():
-    ok = AP.prediction_verdict(delta_atan=0, delta_dp=2, floor=0) == "CONFIRM"     # A in, D out
-    ok = ok and AP.prediction_verdict(delta_atan=2, delta_dp=0, floor=0) == "CONTRADICT"
-    ok = ok and AP.prediction_verdict(delta_atan=0, delta_dp=0, floor=0) == "AMBIGUOUS"  # both in
-    ok = ok and AP.prediction_verdict(delta_atan=3, delta_dp=3, floor=0) == "AMBIGUOUS"  # both out
-    ok = ok and AP.prediction_verdict(delta_atan=1, delta_dp=2, floor=1) == "CONFIRM"    # floor absorbs A only
-    print(f"    A2 prediction_verdict ok={ok}")
+    # pair-specific floors F_A, F_D
+    ok = AP.prediction_verdict(0, 2, floor_A=0, floor_D=0) == "CONFIRM"       # A in, D out
+    ok = ok and AP.prediction_verdict(2, 0, floor_A=0, floor_D=0) == "CONTRADICT"
+    ok = ok and AP.prediction_verdict(0, 0, floor_A=0, floor_D=0) == "AMBIGUOUS"  # both in
+    ok = ok and AP.prediction_verdict(3, 3, floor_A=0, floor_D=0) == "AMBIGUOUS"  # both out
+    ok = ok and AP.prediction_verdict(1, 2, floor_A=1, floor_D=0) == "CONFIRM"    # F_A absorbs A only
+    # THE patch-1 point: a noisy A_eco floor (f_aeco=2) makes δ_D=2 no longer "outside" -> AMBIGUOUS,
+    # NOT the CONFIRM a single shared floor of 0 would have wrongly produced.
+    ok = ok and AP.prediction_verdict(1, 2, floor_A=2, floor_D=2) == "AMBIGUOUS"
+    print(f"    A2 prediction_verdict (pair-specific floors) ok={ok}")
     return ok
 
 
 def a3_prediction_check_confirm():
     # Construct scores so at k=6 A_tan's tail == A_eco's tail (delta 0) but D_P's tail differs (delta>0).
-    # 8 blocks. A_eco least-removable tail (lowest 6) chosen; A_tan matches it exactly; D_P shifts 2.
     a_eco = {g: float(g) for g in range(8)}          # lowest-6 = {0,1,2,3,4,5}
     a_tan = {g: float(g) for g in range(8)}          # identical -> delta_atan(6)=0
     d_p = {0: 9, 1: 9, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7}  # lowest-6 = {2,3,4,5,6,7} -> delta_dp(6)=2
-    r = AP.prediction_check(a_eco, a_tan, d_p, floor_by_k={2: 0, 4: 0, 6: 0}, k_primary=6)
+    floors0 = {2: {"f_atan": 0, "f_dp": 0, "f_aeco": 0}, 4: {}, 6: {"f_atan": 0, "f_dp": 0, "f_aeco": 0}}
+    r = AP.prediction_check(a_eco, a_tan, d_p, floors_by_k=floors0, k_primary=6)
     ok = r["verdict"] == "CONFIRM"
     ok = ok and r["per_k"][6]["delta_atan_eco"] == 0 and r["per_k"][6]["delta_dp_eco"] == 2
-    ok = ok and r["spearman_atan_eco"] == 1.0                      # A_tan perfectly ranks A_eco
-    ok = ok and r["spearman_corroborates"] is True
-    print(f"    A3 check verdict={r['verdict']} dA6={r['per_k'][6]['delta_atan_eco']} "
-          f"dD6={r['per_k'][6]['delta_dp_eco']} rhoA={r['spearman_atan_eco']:.2f}")
+    ok = ok and r["per_k"][6]["F_A"] == 0 and r["per_k"][6]["F_D"] == 0
+    ok = ok and r["spearman_atan_eco"] == 1.0 and r["spearman_corroborates"] is True
+    # same data, but a noisy A_eco floor f_aeco=2 -> F_D=2 -> δ_D=2 no longer outside -> AMBIGUOUS
+    floors_noisy = {2: {}, 4: {}, 6: {"f_atan": 0, "f_dp": 0, "f_aeco": 2}}
+    r2 = AP.prediction_check(a_eco, a_tan, d_p, floors_by_k=floors_noisy, k_primary=6)
+    ok = ok and r2["verdict"] == "AMBIGUOUS" and r2["per_k"][6]["F_D"] == 2
+    print(f"    A3 clean={r['verdict']} noisy_f_aeco={r2['verdict']} (F_D={r2['per_k'][6]['F_D']})")
     return ok
 
 
 def a4_control_pass_even_when_b_not_top1():
-    # THE rc1 CORRECTION: b passes even though it is NOT the top-1 (least removable) A_eco block.
-    # Removing host block 6 deletes the adapter -> A_eco(6)~1 and uplift collapses; some external
-    # removal (say block 9) still shows uplift. Another block g=9 has HIGHER A_eco than 6, so b is
-    # not top-1 -- old rule would (wrongly) STOP; rc1 rule PASSES.
+    # rc1 CORRECTION: b passes even though it is NOT the top-1 A_eco block. Decided from CIs only.
+    # A_eco(6) CI contains 1 + precision ok; ΔT(post^-6) CI contains 0; an external removal has lower-CI>0.
     r = AP.control_localization_verdict(
         block_b=6,
-        a_eco_b=0.97,                                  # ~1 sanity ok
-        dT_post_minus_b=0.005,                         # uplift ~0 after removing 6
-        dT_external={9: 0.20, 3: 0.15, 11: 0.18},      # externals retain measurable uplift
+        a_eco_b_ci=(0.92, 1.05),                       # CI contains 1
+        precision_ok=True,
+        dT_post_minus_b_ci=(-0.01, 0.02),              # CI contains 0
+        dT_external_ci={9: (0.10, 0.28), 3: (-0.02, 0.20), 11: (0.05, 0.30)},  # 9 & 11 have lower-CI>0
     )
     ok = r["pass"] is True and r["verdict"] == "PASS"
-    ok = ok and r["cond_sanity_A_eco_b_near_1"] and r["cond_uplift_collapse_near_0"] and r["cond_external_uplift_observable"]
-    print(f"    A4 control PASS (b not top-1) verdict={r['verdict']} extmax={r['external_uplift_max']}")
+    ok = ok and r["cond_sanity_A_eco_b_ci_contains_1"] and r["cond_uplift_collapse_ci_contains_0"]
+    ok = ok and r["cond_external_uplift_lowerCI_positive"] and r["external_observable_blocks"] == [9, 11]
+    print(f"    A4 control PASS (b not top-1) verdict={r['verdict']} ext_ok={r['external_observable_blocks']}")
     return ok
 
 
 def a5_control_stop_cases():
-    # STOP if the adapter does NOT vanish when its host block is removed (uplift survives at post^-b)
-    r1 = AP.control_localization_verdict(6, a_eco_b=0.4, dT_post_minus_b=0.19,
-                                         dT_external={9: 0.2})
-    stop1 = r1["verdict"] == "STOP_RQ2" and not r1["cond_sanity_A_eco_b_near_1"] and not r1["cond_uplift_collapse_near_0"]
-    # STOP if the pipeline can NEVER observe an uplift (all externals dead too) -> instrument dead
-    r2 = AP.control_localization_verdict(6, a_eco_b=0.98, dT_post_minus_b=0.001,
-                                         dT_external={9: 0.001, 3: 0.0})
-    stop2 = r2["verdict"] == "STOP_RQ2" and not r2["cond_external_uplift_observable"]
-    ok = stop1 and stop2
-    print(f"    A5 STOP cases: uplift-survives={stop1} instrument-dead={stop2}")
+    # STOP if the field precision guard fails (adapter effect not measurable) even if A_eco(b) CI ~1
+    r0 = AP.control_localization_verdict(6, a_eco_b_ci=(0.9, 1.1), precision_ok=False,
+                                         dT_post_minus_b_ci=(-0.01, 0.01), dT_external_ci={9: (0.1, 0.2)})
+    stop0 = r0["verdict"] == "STOP_RQ2" and not r0["cond_sanity_A_eco_b_ci_contains_1"]
+    # STOP if the uplift does NOT collapse at post^-b (CI strictly positive -> adapter survived removal)
+    r1 = AP.control_localization_verdict(6, a_eco_b_ci=(0.2, 0.6), precision_ok=True,
+                                         dT_post_minus_b_ci=(0.10, 0.25), dT_external_ci={9: (0.1, 0.2)})
+    stop1 = r1["verdict"] == "STOP_RQ2" and not r1["cond_uplift_collapse_ci_contains_0"]
+    # STOP if NO external removal has a positive lower-CI (instrument can never see an uplift)
+    r2 = AP.control_localization_verdict(6, a_eco_b_ci=(0.95, 1.02), precision_ok=True,
+                                         dT_post_minus_b_ci=(-0.005, 0.005),
+                                         dT_external_ci={9: (-0.02, 0.03), 3: (-0.05, 0.01)})
+    stop2 = r2["verdict"] == "STOP_RQ2" and not r2["cond_external_uplift_lowerCI_positive"]
+    ok = stop0 and stop1 and stop2
+    print(f"    A5 STOP: precision-fail={stop0} uplift-survives={stop1} instrument-dead={stop2}")
     return ok
 
 

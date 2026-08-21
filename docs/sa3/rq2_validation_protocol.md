@@ -184,13 +184,15 @@ accumulated cost line in the ledger, from a clean pushed commit. STOP conditions
 * **Primary question (pre-registered), `[rc1]` decision rules frozen now:** does `A_tan` (blind, from
   `U_gen` r16) predict `A_eco` **better than `D_P`**?
   * **Primary test = `k = 6`** (the only k where the pre-gate divergence was robust). Let
-    `δ_A(6) = δ_{A_tan,A_eco}(6)`, `δ_D(6) = δ_{D_P,A_eco}(6)`, `floor = max(f_{A_tan}(6), f_{D_P}(6))`
-    (§4.1 bootstrap floor). Per adapter:
-    * **CONFIRM** ⇔ `δ_A(6) ≤ floor` **and** `δ_D(6) > floor` (equivalently `δ_A(6) < δ_D(6)` with
-      the gap covered by the bootstrap): `A_tan` is inside the stability floor of `A_eco` and `D_P`
-      is outside.
-    * **CONTRADICT** ⇔ the inverse: `δ_D(6) ≤ floor` **and** `δ_A(6) > floor`.
-    * **AMBIGUOUS** ⇔ both inside, both outside, or a tie.
+    `δ_A(6) = δ_{A_tan,A_eco}(6)`, `δ_D(6) = δ_{D_P,A_eco}(6)`. **`[rc1.1]` Each comparison uses the
+    §4.1 floors of BOTH criteria it involves — A_eco's own floor never drops out:**
+    `F_A = max(f_{A_tan}(6), f_{A_eco}(6))`, `F_D = max(f_{D_P}(6), f_{A_eco}(6))`. Per adapter:
+    * **CONFIRM** ⇔ `δ_A(6) ≤ F_A` **and** `δ_D(6) > F_D`: `A_tan` is inside the stability floor of
+      `A_eco` and `D_P` is outside.
+    * **CONTRADICT** ⇔ the inverse: `δ_D(6) ≤ F_D` **and** `δ_A(6) > F_A`.
+    * **AMBIGUOUS** ⇔ anything else (both inside, both outside, or mixed). **`δ_A(6) < δ_D(6)` is
+      NOT the gate** — it is a secondary descriptive analysis only (it is not equivalent to the
+      floor-based rule; a noisy `f_{A_eco}` can absorb a small `δ_D`).
   * **Secondary (corroborative, never override the gate):** k∈{2,4} set-disagreement; rank
     correlations ρ(A_tan, A_eco) vs ρ(D_P, A_eco).
 * **Frozen correspondence:** `U_gen` → standard `lora` r16 (primary). No best-of-two; the probe
@@ -241,6 +243,16 @@ ecological adapters before §7 confirms; converting a negative into a new hypoth
     single-block `--include`, local `small-sfx-base`), `--dry-run-cpu`.
   * `scripts/sa3/rq2_aeco_driver.py` — `A_eco^generic`/`A_eco^domain` + `ΔT_L` manifest driver,
     `--dry-run-cpu`; staging (field first, ΔT only if it survives).
-  * `scripts/sa3/build_domain_manifest.py` — per-clip license+sha256 manifest, deterministic 80/20
-    split + `prompts_L`, disjointness checks, `--selftest` (no external data).
-  * Tests: `tests/sa3/{test_aeco_predict,test_domain_manifest,test_adapters_include}.py`.
+  * `scripts/sa3/build_domain_manifest.py` — CC0 license + 44.1k-mono sha256 manifest, deterministic
+    resample-to-44.1 + duration/silence/dedup filters + derived captions (spec §3–§4), 80/20 split +
+    `prompts_L`, disjointness checks, `--selftest` (no external data; run in `.venv-metrics`).
+  * Tests: `tests/sa3/{test_aeco_predict,test_adapters_include}.py` + `build_domain_manifest.py --selftest`.
+* **`[rc1.1]` amended 2026-08-21 18:52 (Gabriel's review of `9b56b71`):** (1) prediction gate uses
+  **pair-specific floors** `F_A=max(f_Atan,f_Aeco)`, `F_D=max(f_DP,f_Aeco)` (a single shared floor
+  was wrong; `δ_A<δ_D` is secondary-descriptive, not the gate); (2) control STOP decided from
+  **measured CIs** (A_eco(b) CI ∋ 1 + precision guard; ΔT(post^{−b}) CI ∋ 0; some external removal
+  lower-CI > 0) — no `0.10`/`0.02` constants; (3) A_eco precision guard reads the **frozen η** from
+  the smoke (`--eta-config`, pooled `max(η_i)=6.667e-5`), no silent default; (4) T4 training uses
+  **`16-mixed` + base fp16** (not bf16); (5) intra-domain selection frozen in
+  `docs/sa3/freesound_selection_spec.md` (queries/tags/sort/N/duration/silence/dedup/caption/resample,
+  training crop 10 s) — **before** any Freesound page is opened.

@@ -123,7 +123,8 @@ def train(a):
     steps = 1 if dry else a.steps
     trainer = pl.Trainer(
         devices=1, accelerator=("cpu" if device.type == "cpu" else "gpu"), strategy="auto",
-        precision=("32-true" if device.type == "cpu" else "bf16-mixed"),
+        # T4 has no bf16 tensor cores -> FP16 mixed on GPU (LoRA params stay fp32); fp32 on CPU dry-run
+        precision=("32-true" if device.type == "cpu" else "16-mixed"),
         accumulate_grad_batches=1, callbacks=[], logger=False,
         max_steps=steps, enable_checkpointing=False, enable_progress_bar=False,
         num_sanity_val_steps=0, log_every_n_steps=a.log_every,
@@ -151,10 +152,13 @@ def main():
     ap.add_argument("--rank", type=int, default=16)
     ap.add_argument("--steps", type=int, default=1000)
     ap.add_argument("--batch_size", type=int, default=1)
-    ap.add_argument("--duration", type=float, default=2.0)
+    ap.add_argument("--duration", type=float, default=10.0,
+                    help="FROZEN training crop = 10.0 s for controls AND ecological adapters "
+                         "(matches the analysis panel SECONDS=10 / generation length); registered pre-data")
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--base_precision", default="bf16")
+    ap.add_argument("--base_precision", default="fp16", choices=["fp16", "float16", "fp32", "bf16", "bfloat16"],
+                    help="T4 target -> fp16 (default); bf16 only on Ampere+; base fp32 ok if VRAM allows")
     ap.add_argument("--log_every", type=int, default=100)
     ap.add_argument("--save", required=True)
     ap.add_argument("--expect-commit", default=None)

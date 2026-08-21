@@ -66,17 +66,19 @@ def _avg_ranks(vals: List[float]) -> List[float]:
 
 
 # ---------------------------------------------------------- §6 prediction verdict (k=6 primary)
-def prediction_verdict(delta_atan: int, delta_dp: int, floor: int) -> str:
-    """Frozen rc1 rule (primary k=6). Given the set-disagreements of A_tan and D_P against A_eco and
-    the max bootstrap floor:
+def prediction_verdict(delta_atan: int, delta_dp: int, floor_A: int, floor_D: int) -> str:
+    """Frozen rc1.1 rule (primary k=6) with PAIR-SPECIFIC floors (§4.1: each comparison uses the
+    floors of BOTH criteria it involves; A_eco's own floor never drops out):
 
-      CONFIRM    ⇔ δ_A ≤ floor AND δ_D > floor   (A_tan inside A_eco's stability, D_P outside)
-      CONTRADICT ⇔ δ_D ≤ floor AND δ_A > floor   (the inverse)
-      AMBIGUOUS  ⇔ both inside, both outside, or a tie.
+        F_A = max(f_Atan, f_Aeco)   F_D = max(f_DP, f_Aeco)
+        CONFIRM    ⇔ δ_A ≤ F_A AND δ_D > F_D   (A_tan inside A_eco's stability, D_P outside)
+        CONTRADICT ⇔ δ_D ≤ F_D AND δ_A > F_A   (the inverse)
+        AMBIGUOUS  ⇔ anything else.
 
-    Corroborative rank correlations never override this discrete gate."""
-    a_in = delta_atan <= floor
-    d_in = delta_dp <= floor
+    NOTE: this is NOT equivalent to `δ_A < δ_D`; that inequality is a secondary descriptive analysis
+    only, never the gate. Corroborative rank correlations never override this discrete gate."""
+    a_in = delta_atan <= floor_A
+    d_in = delta_dp <= floor_D
     if a_in and not d_in:
         return "CONFIRM"
     if d_in and not a_in:
@@ -88,15 +90,17 @@ def prediction_check(
     a_eco: Dict[int, float],
     a_tan: Dict[int, float],
     d_p: Dict[int, float],
-    floor_by_k: Dict[int, int],
+    floors_by_k: Dict[int, Dict[str, int]],
     k_primary: int = 6,
     ks: Tuple[int, ...] = (2, 4, 6),
 ) -> dict:
     """Full §6 check from per-block score dicts. Uses LOO removal tails (lowest_k) for the sets and
-    reports the primary verdict at k_primary plus secondary k's and corroborative Spearman.
+    the pair-specific floors of §4.1.
 
-    `floor_by_k[k]` is the §4.1 max bootstrap floor at that k (integer blocks). Returns a dict with
-    `verdict` (the primary-k discrete verdict) and a full trace."""
+    `floors_by_k[k]` is a dict of the three §4.1 bootstrap floors at that k, in blocks:
+    `{"f_atan": int, "f_dp": int, "f_aeco": int}` (missing keys default to 0). From these:
+    `F_A = max(f_atan, f_aeco)`, `F_D = max(f_dp, f_aeco)`. Returns the primary-k verdict + full
+    trace + corroborative Spearman + the descriptive-only `delta_atan < delta_dp` flag."""
     blocks = sorted(a_eco)
     per_k = {}
     for k in ks:
@@ -105,11 +109,15 @@ def prediction_check(
         R_dp = lowest_k(d_p, k)
         dA = set_disagreement(R_atan, R_eco)
         dD = set_disagreement(R_dp, R_eco)
-        fl = int(floor_by_k.get(k, 0))
+        fk = floors_by_k.get(k, {}) or {}
+        f_atan = int(fk.get("f_atan", 0)); f_dp = int(fk.get("f_dp", 0)); f_aeco = int(fk.get("f_aeco", 0))
+        F_A = max(f_atan, f_aeco); F_D = max(f_dp, f_aeco)
         per_k[k] = {
             "R_eco": sorted(R_eco), "R_atan": sorted(R_atan), "R_dp": sorted(R_dp),
-            "delta_atan_eco": dA, "delta_dp_eco": dD, "floor": fl,
-            "verdict": prediction_verdict(dA, dD, fl),
+            "delta_atan_eco": dA, "delta_dp_eco": dD,
+            "f_atan": f_atan, "f_dp": f_dp, "f_aeco": f_aeco, "F_A": F_A, "F_D": F_D,
+            "verdict": prediction_verdict(dA, dD, F_A, F_D),
+            "delta_A_lt_delta_D_descriptive": bool(dA < dD),
         }
     rho_atan = spearman([a_tan[g] for g in blocks], [a_eco[g] for g in blocks])
     rho_dp = spearman([d_p[g] for g in blocks], [a_eco[g] for g in blocks])
@@ -121,48 +129,53 @@ def prediction_check(
         "spearman_dp_eco": rho_dp,
         "spearman_corroborates": (not math.isnan(rho_atan) and not math.isnan(rho_dp)
                                   and rho_atan > rho_dp),
-        "note": "LOO removal tails (lowest_k); NOT sequential-greedy masks (§3.5). k=6 primary (rc1).",
+        "note": "LOO removal tails (lowest_k); NOT sequential-greedy masks (§3.5). k=6 primary; "
+                "pair-specific floors F_A=max(f_Atan,f_Aeco), F_D=max(f_DP,f_Aeco) (rc1.1).",
     }
 
 
 # ------------------------------------------------- §3 control localisation verdict (rc1 re-spec)
+def _ci(x):
+    """Normalise a CI to an ordered (lo, hi) tuple."""
+    lo, hi = float(x[0]), float(x[1])
+    return (lo, hi) if lo <= hi else (hi, lo)
+
+
 def control_localization_verdict(
     block_b: int,
-    a_eco_b: float,                 # A_eco(b; L_b): fraction of L_b's field effect that vanishes on removing b
-    dT_post_minus_b: float,         # ΔT_{L_b}(post^{-b}): uplift left after removing the host block b
-    dT_external: Dict[int, float],  # g -> ΔT_{L_b}(post^{-g}) for external removals g != b
-    ci_a_eco: float = 0.10,         # CI half-width on the A_eco(b) ≈ 1 sanity
-    ci_dT_zero: float = 0.0,        # uncertainty band for "ΔT ≈ 0" (0 -> use dT_measurable as the band)
-    dT_measurable: float = 0.02,    # an external removal "retains measurable uplift" if ΔT > this
+    a_eco_b_ci,                      # (lo, hi) CI on A_eco(b; L_b)
+    precision_ok: bool,              # the §6 signal/precision guard on ||δF(L_b)||^2 (from metrics.precision_ok)
+    dT_post_minus_b_ci,              # (lo, hi) CI on ΔT_{L_b}(post^{-b})
+    dT_external_ci: Dict[int, tuple],  # g -> (lo, hi) CI on ΔT_{L_b}(post^{-g}) for external g != b
 ) -> dict:
-    """rc1 STOP gate for a single-block control L_b. The gate rests on δF^{-b}(L_b)=0 (removing the
-    host block physically deletes the adapter), NOT on b being the top-1 of the 20 A_eco scores
-    (that is reported descriptively — a single-block adapter's *function* can route through
-    downstream blocks).
+    """rc1.1 STOP gate for a single-block control L_b — decided ENTIRELY from measured intervals, with
+    NO arbitrary science constants. The gate rests on δF^{-b}(L_b)=0 (removing the host block
+    physically deletes the adapter), NOT on b being the top-1 of the 20 A_eco scores (descriptive —
+    a single-block adapter's *function* can route through downstream blocks).
 
     PASS (all three):
-      (1) sanity        : A_eco(b) ≈ 1                    -> a_eco_b >= 1 - ci_a_eco
-      (2) uplift collapse: ΔT_{L_b}(post^{-b}) ≈ 0        -> |dT_post_minus_b| <= max(ci_dT_zero, dT_measurable)
-      (3) observability : some external g keeps ΔT > 0    -> max_g dT_external[g] > dT_measurable
+      (1) field sanity  : precision guard passes AND the CI of A_eco(b) is COMPATIBLE WITH 1
+                          (1.0 ∈ [lo, hi]);
+      (2) uplift collapse: the CI of ΔT_{L_b}(post^{-b}) CONTAINS 0 (lo ≤ 0 ≤ hi);
+      (3) observability : SOME external removal g has a strictly positive uplift lower-CI (lo > 0).
     Else STOP RQ2 (the chain cannot localise a known adaptation from outputs)."""
-    zero_band = max(ci_dT_zero, dT_measurable)
-    cond_sanity = a_eco_b >= (1.0 - ci_a_eco)
-    cond_collapse = abs(dT_post_minus_b) <= zero_band
-    ext_max = max(dT_external.values()) if dT_external else float("-inf")
-    ext_argmax = max(dT_external, key=dT_external.get) if dT_external else None
-    cond_observability = ext_max > dT_measurable
+    a_lo, a_hi = _ci(a_eco_b_ci)
+    d_lo, d_hi = _ci(dT_post_minus_b_ci)
+    cond_sanity = bool(precision_ok) and (a_lo <= 1.0 <= a_hi)
+    cond_collapse = (d_lo <= 0.0 <= d_hi)
+    ext_ok_blocks = [g for g, ci in dT_external_ci.items() if _ci(ci)[0] > 0.0]
+    cond_observability = len(ext_ok_blocks) > 0
     passed = cond_sanity and cond_collapse and cond_observability
-    # descriptive-only: is b the least-removable (highest A_eco) block? not a gate.
     return {
         "block_b": block_b,
         "pass": bool(passed),
         "verdict": "PASS" if passed else "STOP_RQ2",
-        "cond_sanity_A_eco_b_near_1": bool(cond_sanity),
-        "cond_uplift_collapse_near_0": bool(cond_collapse),
-        "cond_external_uplift_observable": bool(cond_observability),
-        "a_eco_b": a_eco_b,
-        "dT_post_minus_b": dT_post_minus_b,
-        "external_uplift_max": ext_max if dT_external else None,
-        "external_uplift_argmax_block": ext_argmax,
-        "note": "rc1: top-1 ranking of A_eco(b) is descriptive, not a STOP criterion.",
+        "cond_sanity_A_eco_b_ci_contains_1": bool(cond_sanity),
+        "cond_uplift_collapse_ci_contains_0": bool(cond_collapse),
+        "cond_external_uplift_lowerCI_positive": bool(cond_observability),
+        "precision_ok": bool(precision_ok),
+        "a_eco_b_ci": [a_lo, a_hi],
+        "dT_post_minus_b_ci": [d_lo, d_hi],
+        "external_observable_blocks": sorted(ext_ok_blocks),
+        "note": "rc1.1: decided from measured CIs only; top-1 ranking of A_eco(b) is descriptive.",
     }
