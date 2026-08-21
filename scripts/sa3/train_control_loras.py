@@ -25,6 +25,62 @@ import torch
 from research_sa3 import loading
 
 BASE_DIR = "data/sa3/small-sfx-base"
+CR_PER_GPU_HOUR = 0.89   # empirical T4 rate (docs/compute_budget.md)
+
+
+class StepTimer:
+    """pl.Callback measuring per-step wall (cuda-synced) + capturing the training loss."""
+    def __init__(self):
+        self.times, self.losses, self._t = [], [], None
+
+    def _cb(self):
+        import pytorch_lightning as pl
+        import time as _time
+        outer = self
+
+        class _C(pl.Callback):
+            def on_train_batch_start(self, trainer, pl_module, batch, batch_idx):
+                if torch.cuda.is_available():
+                    torch.cuda.synchronize()
+                outer._t = _time.perf_counter()
+
+            def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx):
+                if torch.cuda.is_available():
+                    torch.cuda.synchronize()
+                if outer._t is not None:
+                    outer.times.append(_time.perf_counter() - outer._t)
+                loss = outputs.get("loss") if isinstance(outputs, dict) else outputs
+                if loss is not None:
+                    try:
+                        outer.losses.append(float(loss.detach().float().item()))
+                    except Exception:
+                        pass
+        return _C()
+
+
+def reload_effect_check(save_path, state_file, device, half):
+    """Export→reload→effect: apply the trained LoRA to a FRESH base and confirm ||δF(L)||^2 > 0."""
+    import gc
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from research_sa3 import fields as Fmod, probes as Pmod, adapters as ADmod
+    dtype = torch.float16 if half else torch.float32
+    model, _ = build_local_base(device)
+    if half:
+        model = model.half()
+    rep = ADmod.apply_trained_lora(model, save_path)
+    d = torch.load(state_file); sts = d["states"][:2]; cap = d["caption"]
+    xs = torch.cat([x for _, x in sts], dim=0).to(device, dtype)
+    ts = torch.tensor([tau for tau, _ in sts], device=device, dtype=dtype)
+    cc0 = Fmod.prepare_conditioning(model, cap, 10, device, latent_len=sts[0][1].shape[-1], dtype=dtype)
+    cc = {k: (v.repeat(xs.shape[0], *([1] * (v.ndim - 1))) if torch.is_tensor(v) else v) for k, v in cc0.items()}
+    Pmod.set_strength(model, 0.0); FP = Fmod.raw_field(model, xs, ts, cc).detach().float()
+    Pmod.set_strength(model, 1.0); FPL = Fmod.raw_field(model, xs, ts, cc).detach().float()
+    effect = float(Fmod.state_sq_norm(FPL - FP).sum().item())
+    del model; gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    return {"reload_blocks": rep["blocks"], "reload_n_layers": rep["n_layers"],
+            "delta_F_sq": effect, "effect_nonzero": bool(effect > 0)}
 
 
 def include_for(block, backbone):
@@ -69,13 +125,16 @@ def train(a):
         assert cur.startswith(a.expect_commit) or a.expect_commit.startswith(cur), f"commit {cur}!={a.expect_commit}"
         assert not subprocess.getoutput("git status --porcelain"), "dirty tree"
 
+    import time as _time
     pl.seed_everything(a.seed, workers=True)
+    _t_load = _time.perf_counter()
     model, model_config = build_local_base(device)
+    load_wall_s = _time.perf_counter() - _t_load
     sample_rate = model.sample_rate
     ds_ratio = model.pretransform.downsampling_ratio
 
     data_dir = a.data_dir
-    if dry:
+    if dry or (a.smoke and not a.data_dir):
         tmp = tempfile.mkdtemp(prefix="sa3_ctrl_")
         data_dir = make_synth_data(tmp, n=4, dur_s=a.duration, sr=sample_rate)
 
@@ -120,27 +179,87 @@ def train(a):
     print(f"[train] lora layers attached: {n_lora} (include={lora_config['include']})")
     assert n_lora > 0, "no LoRA layers attached -- include matched nothing"
 
-    steps = 1 if dry else a.steps
+    steps = a.smoke_steps if a.smoke else (1 if dry else a.steps)
+    timer = StepTimer() if a.smoke else None
+    if a.smoke and torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
     trainer = pl.Trainer(
         devices=1, accelerator=("cpu" if device.type == "cpu" else "gpu"), strategy="auto",
         # T4 has no bf16 tensor cores -> FP16 mixed on GPU (LoRA params stay fp32); fp32 on CPU dry-run
         precision=("32-true" if device.type == "cpu" else "16-mixed"),
-        accumulate_grad_batches=1, callbacks=[], logger=False,
+        accumulate_grad_batches=1, callbacks=([timer._cb()] if timer else []), logger=False,
         max_steps=steps, enable_checkpointing=False, enable_progress_bar=False,
         num_sanity_val_steps=0, log_every_n_steps=a.log_every,
     )
+    _t_fit = _time.perf_counter()
     trainer.fit(wrapper, dataloader)
+    fit_wall_s = _time.perf_counter() - _t_fit
 
     # export the trained LoRA (fp16 + embedded config)
     os.makedirs(os.path.dirname(os.path.abspath(a.save)), exist_ok=True)
     wrapper.export_lora_safetensors(a.save)
-    # verify a non-zero trained weight actually landed
     from stable_audio_3.models.lora.utils import load_lora_checkpoint
     sd, cfg = load_lora_checkpoint(a.save)
     max_b = max((float(v.float().norm()) for k, v in sd.items() if k.endswith(".lora_B")), default=0.0)
     print(f"[train] saved {a.save}: {len(sd)} tensors, config include={cfg.get('include')}, "
           f"max|lora_B|={max_b:.4e} steps={steps} device={device.type}")
-    return 0 if (n_lora > 0 and len(sd) > 0) else 1
+
+    if not a.smoke:
+        return 0 if (n_lora > 0 and len(sd) > 0) else 1
+
+    # ---- SMOKE: metrics + cost projection + export->reload->effect (INFRA ONLY, not scientific) ----
+    import gc, json, statistics
+    vram_peak_gb = (torch.cuda.max_memory_allocated() / 1e9) if torch.cuda.is_available() else None
+    times = timer.times[1:] if len(timer.times) > 1 else timer.times   # drop warmup step
+    sec_step = statistics.median(times) if times else float("nan")
+    losses = timer.losses
+    losses_finite = bool(losses) and all(l == l and abs(l) != float("inf") for l in losses)
+    # free the training graph before the reload model
+    del wrapper, model, trainer; gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    state_file = a.state_file
+    if not state_file:
+        import glob as _g
+        cands = sorted(_g.glob(os.path.join(a.state_store, "state_*.pt")))
+        state_file = cands[0] if cands else None
+    reload_info = {}
+    if state_file:
+        reload_info = reload_effect_check(a.save, state_file, device, half=(device.type == "cuda"))
+
+    def proj(n_steps):
+        gpu_h = (n_steps * sec_step) / 3600.0
+        return {"gpu_hours": round(gpu_h, 4), "credits": round(gpu_h * CR_PER_GPU_HOUR, 4)}
+    load_h = load_wall_s / 3600.0
+    one_ctrl = {"steps": 1000, "sec_step": sec_step,
+                "gpu_hours": round(load_h + 1000 * sec_step / 3600.0, 4),
+                "credits": round((load_h + 1000 * sec_step / 3600.0) * CR_PER_GPU_HOUR, 4)}
+    two_ctrl_credits = round(2 * one_ctrl["credits"], 4)
+    smoke = {
+        "phase": "train_smoke", "SYNTHETIC_INFRA_ONLY": True,
+        "note": "synthetic data; NOT for any scientific conclusion / control / RQ2",
+        "device": device.type, "gpu_name": (torch.cuda.get_device_name(0) if torch.cuda.is_available() else None),
+        "precision": ("16-mixed" if device.type == "cuda" else "32-true"),
+        "base_precision": a.base_precision, "block": a.block, "rank": a.rank,
+        "steps_measured": steps, "n_lora_layers": n_lora,
+        "sec_per_step_median": sec_step, "step_times_s": timer.times,
+        "vram_peak_gb": vram_peak_gb, "load_wall_s": round(load_wall_s, 2), "fit_wall_s": round(fit_wall_s, 2),
+        "loss_first": (losses[0] if losses else None), "loss_last": (losses[-1] if losses else None),
+        "losses_finite": losses_finite, "max_lora_B": max_b, "lora_B_updated": bool(max_b > 0),
+        "reload_effect": reload_info,
+        "projection": {"cr_per_gpu_hour": CR_PER_GPU_HOUR, "per_1000_steps_compute_only": proj(1000),
+                       "one_control_incl_load": one_ctrl, "two_controls_L6_L13_credits": two_ctrl_credits},
+        "git_commit": subprocess.getoutput("git rev-parse HEAD"),
+    }
+    os.makedirs(os.path.dirname(os.path.abspath(a.smoke_out)), exist_ok=True)
+    json.dump(smoke, open(a.smoke_out, "w"), indent=2)
+    print("SMOKE_JSON_BEGIN"); print(json.dumps(smoke)); print("SMOKE_JSON_END")
+    ok = (n_lora > 0 and max_b > 0 and losses_finite
+          and (not reload_info or reload_info.get("effect_nonzero")))
+    print(f"[smoke] sec/step={sec_step:.4f} vram_peak_gb={vram_peak_gb} loss_finite={losses_finite} "
+          f"lora_B={max_b:.3e} effect_nonzero={reload_info.get('effect_nonzero')} "
+          f"proj_1000={one_ctrl['credits']}cr proj_L6+L13={two_ctrl_credits}cr OK={ok}")
+    return 0 if ok else 1
 
 
 def main():
@@ -162,9 +281,16 @@ def main():
     ap.add_argument("--log_every", type=int, default=100)
     ap.add_argument("--save", required=True)
     ap.add_argument("--expect-commit", default=None)
+    # infra micro-smoke (synthetic data; NOT scientific)
+    ap.add_argument("--smoke", action="store_true", help="infra micro-smoke: measure VRAM/sec-step/loss "
+                    "+ export→reload→effect + 1000-step cost projection (synthetic data)")
+    ap.add_argument("--smoke-steps", type=int, default=25)
+    ap.add_argument("--state-store", default="artifacts/sa3/pilot_states_dry")
+    ap.add_argument("--state-file", default=None)
+    ap.add_argument("--smoke-out", default="artifacts/sa3/train_smoke.json")
     a = ap.parse_args()
-    if not a.dry_run_cpu and not a.data_dir:
-        ap.error("--data_dir is required for a real run (or use --dry-run-cpu)")
+    if not a.dry_run_cpu and not a.smoke and not a.data_dir:
+        ap.error("--data_dir is required for a real run (or use --dry-run-cpu / --smoke)")
     return train(a)
 
 
