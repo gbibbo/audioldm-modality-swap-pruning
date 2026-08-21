@@ -77,31 +77,45 @@ def main():
             common = [x for x in aids if x in pp]  # prompts present in both
             full_atan = atan_values(ppp, common, list(range(n_u)), kf, blocks)
             full_dp = dp_crit_values(pp, common, "D_P", pblocks)
+            Ncom = len(common); half = Ncom // 2; uhalf = max(1, n_u // 2)
+            N_MAIN_DP = 32  # D_P removal sets are stable only at N>=32 (N=64 sizing)
+            underpowered = Ncom < N_MAIN_DP
             gate = {}
             for k in ks:
                 delta = GG.set_divergence(removal_set(full_atan, k), removal_set(full_dp, k))
-                # floors: bootstrap within-criterion disagreement
+                # DISJOINT-pair floor at size `half` (the largest disjoint size available); this is a
+                # size-(N//2) floor -> a CONSERVATIVE (loose/upper) reference for the size-N delta.
                 fa, fd = [], []
                 for _ in range(a.B):
-                    permP = rng.permutation(len(common))
-                    Pa = [common[i] for i in permP]; Pb = [common[i] for i in rng.permutation(len(common))]
-                    permU = rng.permutation(n_u)
-                    ua = list(permU); ub = list(rng.permutation(n_u))
+                    permP = rng.permutation(Ncom); Pa = [common[i] for i in permP[:half]]; Pb = [common[i] for i in permP[half:2*half]]
+                    permU = rng.permutation(n_u); ua = list(permU[:uhalf]); ub = list(permU[uhalf:2*uhalf])
                     fa.append(GG.set_divergence(removal_set(atan_values(ppp, Pa, ua, kf, blocks), k),
                                                 removal_set(atan_values(ppp, Pb, ub, kf, blocks), k)))
                     fd.append(GG.set_divergence(removal_set(dp_crit_values(pp, Pa, "D_P", pblocks), k),
                                                 removal_set(dp_crit_values(pp, Pb, "D_P", pblocks), k)))
-                floor = max(float(np.percentile(fa, 95)), float(np.percentile(fd, 95)))
-                gate[k] = {"delta_Atan_DP": delta, "floor": floor, "divergence_real": bool(delta > floor)}
+                floor_half = max(float(np.percentile(fa, 95)), float(np.percentile(fd, 95)))
+                # a divergence is only credibly real if delta exceeds even the (looser) size-N/2 floor
+                # AND N is large enough for D_P to be stable
+                real = bool(delta > floor_half) and not underpowered
+                gate[k] = {"delta_Atan_DP": delta, "floor_sizeNhalf": floor_half,
+                           "delta_gt_looseFloor": bool(delta > floor_half), "credibly_real": real}
+            out["gate_underpowered_N_lt_32"] = underpowered
             out["decision_gate_Atan_vs_DP"] = gate
-            out["gate_verdict"] = ("A_tan DIVERGES from D_P (real) -> RQ2 worth pursuing with real adapters"
-                                   if any(v["divergence_real"] for v in gate.values())
-                                   else "A_tan ~= D_P (no real divergence) -> close adapter-compatible-pruning before training LoRAs")
+            if underpowered:
+                out["gate_verdict"] = ("UNDERPOWERED at N=%d: D_P removal sets are not stable below N_main=32, "
+                                       "so the observed 1-2 block A_tan-vs-D_P divergence is comparable to D_P's "
+                                       "own sampling noise and CANNOT be declared real. Resolve with A_tan at N>=32."
+                                       % Ncom)
+            elif any(v["credibly_real"] for v in gate.values()):
+                out["gate_verdict"] = "A_tan DIVERGES from D_P (credible) -> RQ2 worth the real held-out-adapter test"
+            else:
+                out["gate_verdict"] = "A_tan ~= D_P -> close adapter-compatible-pruning before training LoRAs"
     json.dump(out, open(a.out, "w"), indent=2)
     print(f"n_u ladder {rungs} -> n_u_main={out['n_u_main']}  qualifies={out['n_u_qualifies']}")
     if "decision_gate_Atan_vs_DP" in out:
         for k, v in out["decision_gate_Atan_vs_DP"].items():
-            print(f"  GATE k={k}: delta(A_tan,D_P)={v['delta_Atan_DP']} floor={v['floor']:.2f} real={v['divergence_real']}")
+            print(f"  GATE k={k}: delta(A_tan,D_P)={v['delta_Atan_DP']} loose_floor(N/2)={v['floor_sizeNhalf']:.2f} delta>floor={v['delta_gt_looseFloor']} credibly_real={v['credibly_real']}")
+        print("underpowered (N<32):", out.get("gate_underpowered_N_lt_32"))
         print("VERDICT:", out["gate_verdict"])
     print(f"wrote {a.out}")
     return 0
