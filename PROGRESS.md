@@ -41,7 +41,7 @@
 
 ## OPEN ITEMS
 
-0. **DECISION PENDING (Gabriel): severity sweep before Gate E, or close the experimental line.** `docs/severity_sweep_proposal.md` — option A ≈ 13 cr / A+ ≈ 23.5 / B ≈ 6.7 (under-powered) / C ≈ 26 (decisive at δ≈0.10). If adopted: record DECISION-V4-08 in the ledger, then CPU engineering (`tier0_screening.py --prompts` + per-system `channel_mult`; overdispersion test in `tier0_screen_eval.py`; dry-run; tests) before any GPU job. Gate E / Tranche 1-E (`docs/tier1_proposal.md`) stays NOT authorized.
+0. **DECISION PENDING (Gabriel): (a) close AudioLDM1 as a negative + de-risk a pivot to Stable Audio Open Small (depth pruning × few-step × LoRA recovery; ledger PIVOT-ASSESSMENT: gated/community license, `base_model.ckpt`+`model.ckpt` present, ARC = 100k it × batch 256 × 8×H100 ⇒ prune→ARC infeasible here, `stable-audio-tools` has generator-LoRA + ARC, needs torch ≥ 2.5 venv; ICASSP 2027 deadline 2026-09-16 = 27 days), (b) severity sweep before Gate E, or (c) stop.** `docs/severity_sweep_proposal.md` — option A ≈ 13 cr / A+ ≈ 23.5 / B ≈ 6.7 (under-powered) / C ≈ 26 (decisive at δ≈0.10). If adopted: record DECISION-V4-08 in the ledger, then CPU engineering (`tier0_screening.py --prompts` + per-system `channel_mult`; overdispersion test in `tier0_screen_eval.py`; dry-run; tests) before any GPU job. Gate E / Tranche 1-E (`docs/tier1_proposal.md`) stays NOT authorized.
 1. **Request the recovered full-FT `(1,2,3,1)` checkpoint from Arshdeep today** — the public search is finished and the artifact is proven absent. Also ask him to confirm the pre-recovery reading of `l1_audioldm-m-full_p1.ckpt`, and (new, AUDIT-M3-001) whether the seam conventions found in the published pruned checkpoint are intentional: 4 tensors deviate from his public script, and the artifact is internally inconsistent at `output_blocks.0/1` (consumer selects by ranking, producer outputs positional channels) and at `output_blocks.2.0.in_layers.2` (weight positional, bias ranked).
 2. **M1 GPU acceptance (only remaining M1 item, blocked on GPU + CG):** apply the minimal upstream patch (`setup_peft`/`build_peft_optimizer`/EMA/resume per `docs/integration_notes.md`), then run several hundred real optimization steps and record VRAM, sec/step and a resume test in `docs/compute_budget.md`. M1 CPU acceptance is COMPLETE (M1-005/006/007; F1–F8 all addressed).
 
@@ -79,6 +79,10 @@
 <!-- FIN-ESTADO -->
 
 ## LOG
+
+### 2026-08-20 21:30 | Pivot assessment (SAOS few-step × pruning × LoRA) — facts verified, no decision
+
+* Verified externally: SAOS repo gated (community license, research OK), both `base_model.ckpt` and `model.ckpt` present (genealogy unconfirmed); ARC post-training cost 100k it × 256 × 8×H100 (variant prune→ARC out of reach); `stable-audio-tools` supports generator LoRA inside ARC, needs PyTorch ≥ 2.5 (separate venv); ICASSP 2027 deadline 2026-09-16 (27 days). Assessment delivered in-session; ledger PIVOT-ASSESSMENT. Nothing authorized; plan v4 unchanged.
 
 ### 2026-08-20 21:00 | Severity-sweep proposal (pre-Gate-E falsification of generic capacity loss) — NOT authorized
 
