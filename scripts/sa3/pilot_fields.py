@@ -64,6 +64,7 @@ def main():
     ap.add_argument("--n", type=int, default=None)
     ap.add_argument("--blocks", default=None, help="comma list; default all 20")
     ap.add_argument("--greedy", action="store_true"); ap.add_argument("--kmax", type=int, default=6)
+    ap.add_argument("--with-dep", action="store_true", help="also compute I_PT_dep (base deploy/CFG field; ~doubles pass-2)")
     ap.add_argument("--expect-commit", default=None)
     ap.add_argument("--field-store", default=None)
     ap.add_argument("--out", default="artifacts/sa3/pilot_fields.json")
@@ -101,6 +102,7 @@ def main():
         aid = it["audiocap_id"]; cap = it["caption"]; seed = S.derive_seed(0, aid, "init", 0)
         tr = states.capture_trajectory(sa, cap, SECONDS, seed, steps=8, cfg_scale=1.0, apg_scale=1.0)
         sts = tr["states"]  # [(tau, x_cpu)]
+        print(f"[pilot] pass1 post prompt {aid}", flush=True)
         cc = F.prepare_conditioning(post, cap, SECONDS, dev, latent_len=sts[0][1].shape[-1], dtype=dtype)
         FP = []; FPmg = {g: [] for g in blocks}
         for tau, x in sts:
@@ -144,6 +146,11 @@ def main():
     if dev == "cuda":
         torch.cuda.empty_cache()
 
+    # partial write (D_P + greedy survive even if pass 2 is interrupted)
+    R_partial = dict(R); R_partial.update({"D_P": D_P, "greedy_D_P": greedy_out, "stage": "pass1_done"})
+    os.makedirs(os.path.dirname(a.out), exist_ok=True)
+    json.dump(R_partial, open(a.out, "w"), indent=2)
+
     # ---------------- PASS 2: BASE ----------------
     base, bcfg, base_st = load("base", dev, half)
     db_num = {g: 0.0 for g in blocks}; fb_den = 0.0
@@ -155,6 +162,7 @@ def main():
         rec = torch.load(os.path.join(store, f"post_{aid}.pt"))
         sts = rec["states"]
         cc = F.prepare_conditioning(base, cap, SECONDS, dev, latent_len=sts[0][1].shape[-1], dtype=dtype)
+        print(f"[pilot] pass2 base prompt {aid}", flush=True)
         for i, (tau, x) in enumerate(sts):
             xt = x.to(dev, dtype); tt = torch.full((xt.shape[0],), tau, device=dev, dtype=dtype)
             fb = F.raw_field(base, xt, tt, cc); fb_den += F.state_sq_norm(fb).item()
@@ -163,25 +171,27 @@ def main():
             lvl = min(i, 7)
             ipt_den[lvl] += F.state_sq_norm(delta).item()
             fp_sq_lvl[lvl] += F.state_sq_norm(fp).item()
-            fbdep = F.deploy_field(base, xt, tt, cc, cfg_scale=7.0, apg_scale=1.0)
-            delta_dep = fp - fbdep
-            iptdep_den[lvl] += F.state_sq_norm(delta_dep).item()
+            if a.with_dep:
+                fbdep = F.deploy_field(base, xt, tt, cc, cfg_scale=7.0, apg_scale=1.0)
+                delta_dep = fp - fbdep
+                iptdep_den[lvl] += F.state_sq_norm(delta_dep).item()
             for g in blocks:
                 with block_mask(base, [g]):
                     fbg = F.raw_field(base, xt, tt, cc)
                 db_num[g] += F.diff_sq_norm(fb, fbg).item()
                 delta_g = rec["FPmg"][g][i].to(dev, dtype) - fbg
                 ipt_num[g][lvl] += F.diff_sq_norm(delta, delta_g).item()
-                with block_mask(base, [g]):
-                    fbgdep = F.deploy_field(base, xt, tt, cc, cfg_scale=7.0, apg_scale=1.0)
-                delta_gdep = rec["FPmg"][g][i].to(dev, dtype) - fbgdep
-                iptdep_num[g][lvl] += F.diff_sq_norm(delta_dep, delta_gdep).item()
+                if a.with_dep:
+                    with block_mask(base, [g]):
+                        fbgdep = F.deploy_field(base, xt, tt, cc, cfg_scale=7.0, apg_scale=1.0)
+                    delta_gdep = rec["FPmg"][g][i].to(dev, dtype) - fbgdep
+                    iptdep_num[g][lvl] += F.diff_sq_norm(delta_dep, delta_gdep).item()
     D_B = {g: db_num[g] / fb_den for g in blocks}
     # eta guard: use the smoke's eta_max if available else 0
     eta_max = 6.7e-5
     eta_by_level = [eta_max] * 8
     ipt = M.i_pt(ipt_num, ipt_den, fp_sq_lvl, eta_by_level)
-    iptdep = M.i_pt(iptdep_num, iptdep_den, fp_sq_lvl, eta_by_level)
+    iptdep = M.i_pt(iptdep_num, iptdep_den, fp_sq_lvl, eta_by_level) if a.with_dep else None
     del base; gc.collect()
 
     # W(g)
@@ -190,7 +200,8 @@ def main():
     R.update({
         "D_P": D_P, "D_B_common": D_B,
         "I_PT_raw": {str(g): ipt["per_block"][g] for g in blocks}, "I_PT_raw_excluded_levels": ipt["excluded_levels"],
-        "I_PT_dep": {str(g): iptdep["per_block"][g] for g in blocks}, "I_PT_dep_excluded_levels": iptdep["excluded_levels"],
+        "I_PT_dep": ({str(g): iptdep["per_block"][g] for g in blocks} if a.with_dep else None),
+        "I_PT_dep_excluded_levels": (iptdep["excluded_levels"] if a.with_dep else None),
         "W": W, "greedy_D_P": greedy_out,
         "note": "PILOT sizing only; no section-8 decision. eta_max from smoke (6.7e-5).",
         "wall_s": round(time.time() - t_start, 1),
