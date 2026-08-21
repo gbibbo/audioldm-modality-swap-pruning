@@ -28,7 +28,7 @@ Disjoint-pair bootstrap (protocol §2.3, B=1000) over the persisted per-prompt s
 **I_PT provides no decision-relevant criterion distinct from D_P** (identical at k=4; ±1 near-tied
 interior at k=2/6) and is strictly less stable. **The PT-specific-criterion idea is closed** (per
 Gabriel's rule "si I_PT sigue colapsado sobre D_P, cerrar"). RQ1's structural amplification stays
-real (erratum E6); **D_P alone identifies the removable interior blocks {9–14}**, stable at N=32.
+real (erratum E6); **D_P stably identifies the least field-sensitive interior blocks (concentrated around 9–14)**, stable at N=32 — **end-to-end removability remains unresolved** (a field ranking, not a removability claim).
 
 ## The A_tan decision gate (job `sa3-atan-1`, RUNNING)
 
@@ -61,7 +61,7 @@ distinct from `D_P`?** Primary probe family only (U_gen = standard LoRA r16), n_
 
 ## Corrected bottom line (round 2)
 
-* **RQ1:** amplification real (E6); **D_P alone identifies removable interiors {9–14}, stable at N=32**;
+* **RQ1:** amplification real (E6); **D_P stably identifies the least field-sensitive interiors (around 9–14), stable at N=32; end-to-end removability unresolved**;
   **I_PT redundant with D_P and noisier → PT-specific criterion closed.**
 * **RQ2/A_tan:** machinery validated (batched, verified, linearity ≈ 2.0, n_u=8); **the A_tan-vs-D_P
   gate is UNDERPOWERED at N=16 — not resolved.** Next single step: A_tan at N=32 to decide whether
