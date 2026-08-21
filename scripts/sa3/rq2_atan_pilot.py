@@ -81,54 +81,50 @@ def main():
     pp = {}   # per_prompt_probe sufficient stats
     lin_checks = []
 
+    def batched(sts):
+        xs = torch.cat([x for _, x in sts], dim=0).to(dev, dtype)          # (S,256,T)
+        ts = torch.tensor([tau for tau, _ in sts], device=dev, dtype=dtype)
+        return xs, ts
+
+    def rep_cc(cc, B):
+        return {k: (v.repeat(B, *([1] * (v.ndim - 1))) if torch.is_tensor(v) else v) for k, v in cc.items()}
+
     for sf in state_files:
         aid = os.path.basename(sf).split("_")[1].split(".")[0]
-        d = torch.load(sf); sts = d["states"]; cap = d["caption"]
-        cc = F.prepare_conditioning(post, cap, SECONDS, dev, latent_len=sts[0][1].shape[-1], dtype=dtype)
+        d = torch.load(sf); sts = d["states"]; cap = d["caption"]; Sn = len(sts)
+        cc0 = F.prepare_conditioning(post, cap, SECONDS, dev, latent_len=sts[0][1].shape[-1], dtype=dtype)
+        cc = rep_cc(cc0, Sn)
+        bx, bt = batched(sts)
         print(f"[atan] prompt {aid}", flush=True)
-        # baselines (probe OFF): F_P and F_P^{-g}
-        FP = []; FPmg = {g: [] for g in blocks}
-        for tau, x in sts:
-            xt = x.to(dev, dtype); tt = torch.full((xt.shape[0],), tau, device=dev, dtype=dtype)
-            FP.append(F.raw_field(post, xt, tt, cc).detach())
-            for g in blocks:
-                with block_mask(post, [g]):
-                    FPmg[g].append(F.raw_field(post, xt, tt, cc).detach())
+        # baselines (probe OFF), batched over states
+        FP = F.raw_field(post, bx, bt, cc).detach()                        # (S,256,T)
+        FPmg = {}
+        for g in blocks:
+            with block_mask(post, [g]):
+                FPmg[g] = F.raw_field(post, bx, bt, cc).detach()
         prec = {}
         for u in range(a.n_u):
             for kf in kgrid:
                 P.build_probe(post, family="U_gen", kappa=a.kappa * kf, rank=a.rank, seed=1000 + u)
                 P.set_strength(post, 1.0)
-                # dF(u) and num_tan per block
-                denom = 0.0; num_tan = {g: 0.0 for g in blocks}
-                dFu = []
-                for i, (tau, x) in enumerate(sts):
-                    xt = x.to(dev, dtype); tt = torch.full((xt.shape[0],), tau, device=dev, dtype=dtype)
-                    fpu = F.raw_field(post, xt, tt, cc)
-                    dfu = (fpu.float() - FP[i].float())
-                    dFu.append(dfu.detach()); denom += sq(dfu)
+                dFu = (F.raw_field(post, bx, bt, cc).float() - FP.float())  # (S,256,T)
+                denom = float(F.state_sq_norm(dFu).sum().item())
+                num_tan = {}
                 for g in blocks:
-                    # dF^{-g}(u_{-g}) = F^{-g}_{P+u_{-g}} - F^{-g}_P ; restrict probe off block g, remove block g
                     P.restrict_to_surviving(post, removed_block=g)
-                    for i, (tau, x) in enumerate(sts):
-                        xt = x.to(dev, dtype); tt = torch.full((xt.shape[0],), tau, device=dev, dtype=dtype)
-                        with block_mask(post, [g]):
-                            fpu_mg = F.raw_field(post, xt, tt, cc)
-                        dfu_mg = (fpu_mg.float() - FPmg[g][i].float())
-                        num_tan[g] += sq(dFu[i] - dfu_mg)
-                    P.set_strength(post, 1.0)  # restore full probe for next g
-                # linearity at the smallest kappa multiplier
+                    with block_mask(post, [g]):
+                        fpu_mg = F.raw_field(post, bx, bt, cc)
+                    dfu_mg = fpu_mg.float() - FPmg[g].float()
+                    num_tan[str(g)] = float(F.state_sq_norm(dFu - dfu_mg).sum().item())
+                    P.set_strength(post, 1.0)
                 if kf == min(kgrid):
-                    base_norm = sum(sq(v) for v in dFu) ** 0.5
+                    base_norm = denom ** 0.5
                     P.probe_scale(post, 2.0)
-                    d2 = 0.0
-                    for i, (tau, x) in enumerate(sts):
-                        xt = x.to(dev, dtype); tt = torch.full((xt.shape[0],), tau, device=dev, dtype=dtype)
-                        d2 += sq(F.raw_field(post, xt, tt, cc).float() - FP[i].float())
+                    d2 = float(F.state_sq_norm(F.raw_field(post, bx, bt, cc).float() - FP.float()).sum().item())
                     ratio = (d2 ** 0.5) / base_norm if base_norm > 0 else float("nan")
                     lin_checks.append({"aid": aid, "u": u, "kappa": a.kappa * kf, "ratio_2u_over_u": ratio})
                 P.remove_probe(post)
-                prec[f"{u}|{kf}"] = {"denom": denom, "num_tan": {str(g): num_tan[g] for g in blocks}}
+                prec[f"{u}|{kf}"] = {"denom": denom, "num_tan": num_tan}
         pp[aid] = prec
         gc.collect()
     del post; gc.collect()
