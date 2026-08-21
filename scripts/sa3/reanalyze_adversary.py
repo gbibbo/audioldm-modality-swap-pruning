@@ -59,28 +59,40 @@ def main():
     nearest = min(bracket, key=lambda d: abs(LAT[d] - skip_lat))
     comp_clap = {d: float(np.mean([S[f"{d}_s0"]["CLAP_per"][a] for a in aids])) for d in bracket}
 
+    # paired bootstrap CI of the CLAP deficit vs the NEAREST comparator (protocol section 9.2 3-way rule)
+    def boot_deficit(comp_id, sid, B=2000, seed=20260818):
+        rng = np.random.default_rng(seed)
+        paired = np.array([S[comp_id]["CLAP_per"][a] - S[sid]["CLAP_per"][a] for a in aids])  # per-prompt deficit
+        idx = rng.integers(0, len(paired), size=(B, len(paired)))
+        means = paired[idx].mean(1)
+        return float(paired.mean()), float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))
+
+    comp_id = f"{nearest}_s0"
     verdicts = {}
-    inferior_vs_nearest = []; inferior_vs_both = []
+    inferior = []; noninferior = []; indeterminate = []
     for sid in S:
         if not sid.startswith("skip"):
             continue
         g = int(sid.replace("skip", ""))
         sc = float(np.mean([S[sid]["CLAP_per"][a] for a in aids]))
-        def_vs = {d: comp_clap[d] - sc for d in bracket}  # CLAP deficit vs each bracket member
-        inf_near = def_vs[nearest] > m_CLAP
-        inf_both = all(def_vs[d] > m_CLAP for d in bracket)
-        verdicts[sid] = {"block": g, "CLAP": sc,
-                         "clap_deficit_vs_dense7": def_vs["dense7"],
-                         "clap_deficit_vs_dense8": def_vs["dense8"],
-                         "inferior_vs_nearest(%s)" % nearest: inf_near,
-                         "inferior_vs_both_bracket": inf_both}
-        if inf_near:
-            inferior_vs_nearest.append(g)
-        if inf_both:
-            inferior_vs_both.append(g)
+        m, lo, hi = boot_deficit(comp_id, sid)
+        # 3-way non-inferiority (X=skip_g vs Y=nearest dense): inferior iff lower CI of deficit > margin;
+        # non-inferior iff upper CI <= margin; else indeterminate.
+        if lo > m_CLAP:
+            verdict = "inferior"; inferior.append(g)
+        elif hi <= m_CLAP:
+            verdict = "non_inferior"; noninferior.append(g)
+        else:
+            verdict = "indeterminate"; indeterminate.append(g)
+        verdicts[sid] = {"block": g, "CLAP": sc, "comparator": comp_id,
+                         "deficit_mean": m, "deficit_ci95": [lo, hi], "m_CLAP": m_CLAP,
+                         "verdict": verdict}
+    inferior_vs_nearest = sorted(inferior)  # kept name for downstream
 
     mids = list(range(2, 19))
-    mids_within = [g for g in mids if g not in inferior_vs_nearest]
+    mids_inf = [g for g in mids if g in inferior]
+    mids_within = [g for g in mids if g in noninferior]
+    mids_indet = [g for g in mids if g in indeterminate]
     out = {
         "source": SRC,
         "OLD_INVALID_margins": r["margins"],
@@ -102,9 +114,8 @@ def main():
                                "comparator_panel_CLAP": comp_clap},
         "verdicts": verdicts,
         "inferior_vs_nearest": sorted(inferior_vs_nearest),
-        "inferior_vs_both_bracket": sorted(inferior_vs_both),
-        "middle_blocks_2_18_within_margin_vs_nearest": mids_within,
-        "middle_blocks_2_18_INFERIOR_vs_nearest": [g for g in mids if g in inferior_vs_nearest],
+        "non_inferior_blocks": sorted(noninferior), "indeterminate_blocks": sorted(indeterminate),
+        "middle_blocks_2_18_INFERIOR": mids_inf, "middle_blocks_2_18_NON_INFERIOR": mids_within, "middle_blocks_2_18_INDETERMINATE": mids_indet,
         "caveat": "point estimates, no bootstrap CIs (pilot, N=16). CLAP primary; KL floor small-sample; "
                   "FD deferred (rank-deficient at N=16). NOT a main-panel CASE-E decision.",
     }
@@ -115,14 +126,14 @@ def main():
     print(f"  OLD (invalid) m_CLAP = {r['margins']['m_CLAP']:.4f}")
     print(f"  r_KL (4-sample max) = {r_KL_smallsample:.3f}   m_KL = {m_KL:.3f}")
     print(f"\n=== comparator: skip@8={skip_lat:.3f}s nearest={nearest} (bracket dense7={LAT['dense7']}, dense8={LAT['dense8']}) ===")
-    print(f"{'blk':>3} {'CLAP':>6} {'def_v7':>7} {'def_v8':>7} {'inf_near':>9} {'inf_both':>9}")
+    print(f"{'blk':>3} {'CLAP':>6} {'defmean':>8} {'ci_lo':>7} {'ci_hi':>7}  verdict (vs %s, m_CLAP=%.3f)" % (comp_id, m_CLAP))
     for sid in sorted(verdicts, key=lambda s: verdicts[s]['block']):
         x = verdicts[sid]
-        print(f"{x['block']:>3} {x['CLAP']:6.3f} {x['clap_deficit_vs_dense7']:7.3f} {x['clap_deficit_vs_dense8']:7.3f} "
-              f"{str(x['inferior_vs_nearest(%s)'%nearest]):>9} {str(x['inferior_vs_both_bracket']):>9}")
-    print(f"\ninferior vs nearest({nearest}): {sorted(inferior_vs_nearest)}")
-    print(f"inferior vs BOTH bracket members: {sorted(inferior_vs_both)}")
-    print(f"middle blocks 2-18 INFERIOR vs nearest: {[g for g in mids if g in inferior_vs_nearest]}")
+        print(f"{x['block']:>3} {x['CLAP']:6.3f} {x['deficit_mean']:8.4f} {x['deficit_ci95'][0]:7.4f} {x['deficit_ci95'][1]:7.4f}  {x['verdict']}")
+    print(f"\nINFERIOR (lower CI>margin): {sorted(inferior)}")
+    print(f"NON-INFERIOR (upper CI<=margin): {sorted(noninferior)}")
+    print(f"INDETERMINATE: {sorted(indeterminate)}")
+    print(f"middle 2-18: inferior={mids_inf} non_inf={mids_within} indeterminate={mids_indet}")
     print(f"wrote {OUT}")
     return 0
 

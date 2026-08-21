@@ -23,16 +23,25 @@ now reports the bracket {dense7, dense8}, marks dense-8 as nearest, and gives de
 (Latency is only measured for skip-5@8 in the smoke; treated as representative for all single-block
 removals — a small approximation, flagged; per-block latency would need a GPU pass.)
 
-## E3 — Corrected single-block verdict (CLAP, point estimates, no CI)
+## E3 — Corrected single-block verdict (CLAP, PAIRED BOOTSTRAP CI, protocol 3-way rule)
 
-With `m_CLAP = 0.040` and the nearest comparator (dense-8), **9/20 blocks are inferior on CLAP**:
-boundary **0, 1, 19** (CLAP → ≈0) **plus interior 5, 6, 7, 9, 17, 18** (deficits 0.05–0.10 > 0.040).
-Blocks still within margin: 2, 3, 4, 8, 10–16 (deficits ≤ 0.04, several borderline: 2/8/12 ≈ 0.03–0.04).
+With `m_CLAP = 0.040`, the nearest comparator (dense-8), and the protocol §9.2 rule applied to the
+paired CLAP-deficit bootstrap CI (B=2000 over the 16 prompts) — inferior iff **lower** CI > margin;
+non-inferior iff **upper** CI ≤ margin; else indeterminate:
 
-**This overturns the overnight read** ("only 0/1/19 inferior; middle blocks within margin"), which was
-an artifact of the 4×-too-loose floor. **CASE-E direction is stronger than reported** — 6 interior
-blocks fail on CLAP alone against the latency-matched comparator. Still: point estimates, no bootstrap
-CI (borderline blocks unresolved), CLAP-only, N=16 pilot — NOT a main-panel decision.
+* **INFERIOR: 0, 1, 6, 19** (3 boundary + interior block 6).
+* **NON-INFERIOR (removable): 13, 14, 16.**
+* **INDETERMINATE: 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 15, 17, 18 (13 blocks).**
+
+**Both prior reads were wrong.** The overnight read ("only 0/1/19 inferior") used a 4×-too-loose
+floor; my first correction ("9/20 inferior incl. 6 interior") used point estimates and ignored
+sampling uncertainty. **The honest answer with CIs: N=16 is UNDERPOWERED to decide CASE E for the
+middle blocks** — most are indeterminate. Only boundary blocks + interior block 6 are confidently
+inferior; blocks 13/14/16 are confidently removable. This is direct evidence for task 8 (size
+`N_main` before any CASE-E call). **Coherent cross-check:** block 6 is the single most field-amplified
+interior block (non-normalized 10.2×, E6) and it is the one confidently-inferior interior block;
+the confidently-removable 13/14/16 have low D_P/D_B — so D_P/D_B tracks the end-to-end verdict where
+the pilot has resolution. CLAP-only; FD via the paired drift (E4); NOT a main-panel decision.
 
 ## E4 — FD-OpenL3 at N=16 is rank-deficient; use paired per-prompt drift (task 4)
 
