@@ -43,3 +43,6 @@ __pycache__/
 .pytest_cache/
 .venv/
 .agent-kit-backup-*/
+.venv-sa3
+.venv-sa3/
+data/sa3/
