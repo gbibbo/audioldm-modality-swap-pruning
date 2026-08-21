@@ -177,6 +177,11 @@ def main():
                         fbgdep = F.deploy_field(base, xt, tt, cc, cfg_scale=7.0, apg_scale=1.0)
                     delta_gdep = recf["FPmg"][g][i].to(dev, dtype) - fbgdep
                     r["iptdep_num"][g][lvl] += F.diff_sq_norm(delta_dep, delta_gdep).item()
+        # incremental partial write (cap-kill safety): prompts with COMPLETE stats
+        complete = [x for x in pp if "db_num" in pp[x]]
+        os.makedirs(os.path.dirname(a.out), exist_ok=True)
+        json.dump({**R, "per_prompt": {x: pp[x] for x in complete}, "complete_prompts": complete,
+                   "partial": True}, open(a.out, "w"), indent=2)
     del base; gc.collect()
 
     # ---- aggregates from per-prompt stats + self-check ----

@@ -42,15 +42,19 @@ def removal_set(vals, k):
 
 
 def bootstrap_ladder(pp, blocks, crits=("D_P", "I_PT"), ks=(2, 4, 6), B=1000, seed=20260818):
+    """DISJOINT-pair bootstrap (protocol 2.3 'without replacement within a pair'): each pair uses
+    2*N_j distinct prompts, so a rung N_j is only valid when 2*N_j <= N. Ladder capped at N//2."""
     aids = sorted(pp, key=lambda x: int(x)); N = len(aids)
     rng = np.random.default_rng(seed)
-    ladder = [r for r in SS.ladder(N)] or [N]
-    # rung -> criterion -> k -> [disagreements over B pairs]
+    ladder = [r for r in SS.ladder(N) if 2 * r <= N]
+    if not ladder:
+        ladder = [N // 2] if N >= 2 else [N]
     dis = {r: {c: {k: [] for k in ks} for c in crits} for r in ladder}
     for r in ladder:
         for _ in range(B):
-            a = [aids[i] for i in rng.choice(N, size=r, replace=False)]
-            b = [aids[i] for i in rng.choice(N, size=r, replace=False)]
+            perm = rng.permutation(N)
+            a = [aids[i] for i in perm[:r]]
+            b = [aids[i] for i in perm[r:2 * r]]  # DISJOINT from a
             for c in crits:
                 va, vb = crit_values(pp, a, c, blocks), crit_values(pp, b, c, blocks)
                 for k in ks:
