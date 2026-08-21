@@ -63,7 +63,7 @@ distinct from `D_P`?** Primary probe family only (U_gen = standard LoRA r16), n_
 
 κ micro-calibrated to **0.01** first (CPU, `kappa_calibration.py`: all 8 probes' mean linearity ∈
 [1.956,2.012], precision 7.79e-4 ≥ floor; smaller κ fail precision) — so this is NOT a non-linearity
-artifact. N=32, n_u=8, linearity now fully in range (median 1.98). **n_u_main=4** (very stable).
+artifact. N=32, n_u=8, linearity now fully in range (median 1.98). **n_u_main=4** re-derived on this fuller data (very stable) — **reported as a diagnostic only; n_u stays FROZEN at 8** (SA3-ATAN-001); the N=32 experiment used n_u=8, so 4 does not retroactively replace it.
 
 | k | R_Atan (removable) | R_DP | δ | robust? |
 |---|---|---|---|---|
@@ -77,11 +77,17 @@ differ by 2 blocks at k=6 ⇒ the divergence is **real**, not sampling noise. Sp
 overall (both rank the boundaries critical) — but the DECISION-RELEVANT removable tail diverges:
 **A_tan systematically prefers the higher-index interiors (13–16); D_P prefers the lower ones (9–14).**
 
-**⇒ RQ2 SURVIVES the cheap gate.** This is the anticipated positive outcome: adaptability
-(`A_tan`) occupies structural resources **distinct** from standalone field sensitivity (`D_P`) — the
-adaptability-aware removable set (13–16) differs stably from the deployment one (9–14), strongest and
-robust at k=6. Caveat: a fully same-scale disjoint floor for A_tan would need N=64 A_tan prompts
-(Gabriel: do NOT auto-escalate); the cross-N stability + the N=32 D_P stability carry the claim.
+**⇒ RQ2's structural pre-gate survives — NOT RQ2 itself** (Gabriel, 2026-08-21). What is shown: the
+**synthetic LoRA-tangent sensitivity proxy `A_tan` exhibits a stable structural ranking difference
+from standalone field sensitivity `D_P`**, robust in the k=6 tail; **whether this reflects real
+adapter compatibility remains untested** (that needs `A_eco` on trained held-out adapters, §3.4).
+Two caveats that bound the claim: **(i)** the sets `{11–16}` and `{9–14}` are **LOO-ranking candidate
+tails** (`removal_set()` = the k lowest single-block scores), **NOT** the protocol's sequential-greedy
+masks `R_X^greedy(k)` (§3.5: 105 evals, re-evaluated from the new architecture at each step because
+pruning is non-additive) — they are two candidate structural tails, not "the adaptability-aware mask
+vs the deployment mask"; **(ii)** a fully same-scale disjoint floor for A_tan would need N=64 A_tan
+prompts (Gabriel: do NOT auto-escalate) — the cross-N stability + the N=32 D_P stability carry the
+ranking-difference claim. **Next: the real-LoRA validation phase, `docs/sa3/rq2_validation_protocol.md`.**
 
 **Next step (Gabriel's call — the FIRST expensive step): real held-out adapters (case C).** Train a
 few standard `lora` r16 adapters on distinct SFX domains (CC0 44.1 kHz data), and test whether the
@@ -94,9 +100,30 @@ but now for a scientifically interesting reason, not underpowering.
 
 * **RQ1:** amplification real (E6); **D_P stably identifies the least field-sensitive interiors (around 9–14), stable at N=32; end-to-end removability unresolved**;
   **I_PT redundant with D_P and noisier → PT-specific criterion closed.**
-* **RQ2/A_tan:** RESOLVED at N=32 (κ=0.01 frozen) — **A_tan carries structure distinct from D_P**
-  (stable removable-tail divergence 9–14 vs 13–16, robust at k=6; identical N=16→N=32). **RQ2 survives.**
-  Next (Gabriel's call, first expensive step): real held-out adapters (case C) to test whether the
-  divergence predicts real-adapter survival.
+* **RQ2/A_tan PRE-GATE:** RESOLVED at N=32 (κ=0.01 frozen) — **the tangent proxy `A_tan` has a
+  stable ranking difference from `D_P`** (candidate tails 9–14 vs 13–16, robust at k=6; identical
+  N=16→N=32). **This is RQ2's structural pre-gate, not RQ2:** "A_tan is *adaptability*" is untested
+  until `A_tan → A_eco → ΔT_L` on trained held-out adapters. Next (Gabriel's GO, 2026-08-21): the
+  real-LoRA validation phase — positive controls `L_6`/`L_13` FIRST, then ≤2 ecological adapters
+  (`docs/sa3/rq2_validation_protocol.md`); NOT CASE C, NOT RQ3.
 * No CASE E demonstrated; no main-panel work; N_main(D_P)=32 / n_u=8 are the frozen sizes.
 
+## Framing correction (2026-08-21 17:52, Gabriel's GO for the validation phase)
+
+Three corrections applied above; the pre-registration is `docs/sa3/rq2_validation_protocol.md`.
+
+1. **What survived is RQ2's *structural pre-gate*, not RQ2.** `A_tan` is a synthetic tangent-regime
+   proxy computed blind to real adapters. The claim retired: "adaptability occupies distinct
+   structural resources." The claim kept: "the tangent proxy has a stable ranking difference from
+   `D_P`." Calling it *adaptability* requires the ecological link `A_tan → A_eco → ΔT_L`.
+2. **`{11–16}` vs `{9–14}` are LOO-ranking candidate tails, not greedy masks.** The cheap gate used
+   `removal_set()` (k lowest single-block scores). The protocol's decision sets are sequential greedy
+   `R_X^greedy(k)` (§3.5), re-evaluated at each step because pruning is non-additive. The gate stays
+   valid as a cheap structural pre-gate; the two tails are candidates, not the deployment/adaptability
+   masks.
+3. **`n_u` stays frozen at 8.** `n_u_main=4` (re-derived on N=32) is a diagnostic, not a retroactive
+   change; the experiment used 8.
+
+**Mandatory step not to be skipped:** before any ecological adapter is interpreted, the pre-registered
+positive controls `L_6`/`L_13` (§5.1) must be trained and must pass localisation. GO is for the
+validation phase, **not** for RQ3 or a CASE-C declaration.
