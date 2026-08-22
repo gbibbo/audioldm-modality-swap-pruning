@@ -13,7 +13,16 @@
 > **identical** results — the endpoint was **not** the cause; the code uses `/apiv2/search/`. **No clip
 > IDs were observed or selected in the failed first attempt.** Everything else (downloads_desc, N=40,
 > N_min=20, duration, silence, dedup, captions, split, resample, 10 s crop) is unchanged. Unit-tested:
-> `tests/sa3/test_freesound_url.py`. Ledger SA3-FREESOUND-APIFIX-001.
+> `tests/sa3/test_freesound_url.py`.
+>
+> **Second API-semantics fix (same erratum):** after the query fix, the dry-list still returned 0 —
+> the API returns the **`license` field as a URL** (`http://creativecommons.org/publicdomain/zero/
+> 1.0/`), not the string "Creative Commons 0", so the defensive client-side license re-check dropped
+> every clip. Fixed with `_is_cc0()` (accepts the CC0 URL **and** string forms; the Solr `filter`
+> already guarantees CC0). **Validated:** `impact_percussion --dry-list` now returns **40 qualifying
+> clips** (≥ N_min=20) — coherent in-domain (impacts/hits/knocks/claps/crashes/drops), mixed native
+> SR (32/44.1/48/96 kHz) handled by the deterministic resample-to-44.1. No fallback domain needed.
+> Ledger SA3-FREESOUND-APIFIX-001.
 
 **Written BEFORE any Freesound page is opened (rule S4).** Fixes every degree of freedom in turning a
 domain name into a trained-adapter dataset, so no clip, caption, or split is chosen after seeing

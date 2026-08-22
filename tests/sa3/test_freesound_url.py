@@ -50,9 +50,21 @@ def t4_all_domains_build():
     return ok
 
 
+def t5_cc0_license_url_and_string():
+    # THE second API-semantics bug: the API returns license as a URL, not "Creative Commons 0".
+    ok = FS._is_cc0("http://creativecommons.org/publicdomain/zero/1.0/") is True   # URL form (real API)
+    ok = ok and FS._is_cc0("https://creativecommons.org/publicdomain/zero/1.0/") is True
+    ok = ok and FS._is_cc0("Creative Commons 0") is True                            # string form
+    ok = ok and FS._is_cc0("http://creativecommons.org/licenses/by/4.0/") is False  # CC-BY rejected
+    ok = ok and FS._is_cc0("") is False and FS._is_cc0(None) is False
+    print(f"    T5 _is_cc0 accepts URL+string CC0, rejects CC-BY/empty")
+    return ok
+
+
 def main():
     checks = [("T1", t1_filter_string_exact), ("T2", t2_query_empty_or_in_filter_not_query),
-              ("T3", t3_endpoint_path), ("T4", t4_all_domains_build)]
+              ("T3", t3_endpoint_path), ("T4", t4_all_domains_build),
+              ("T5", t5_cc0_license_url_and_string)]
     ok_all = True
     for name, fn in checks:
         ok = fn(); ok_all &= ok

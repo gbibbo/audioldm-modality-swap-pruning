@@ -37,6 +37,14 @@ DUR_MIN, DUR_MAX = 0.3, 12.0
 FIELDS = "id,name,tags,license,previews,duration,samplerate,channels,url,download"
 
 
+def _is_cc0(license_field) -> bool:
+    """rc1.2 fix: the API returns `license` as a URL (e.g. http://creativecommons.org/publicdomain/
+    zero/1.0/), NOT the string 'Creative Commons 0'. Accept both forms. (The Solr filter already
+    enforces CC0; this is a defensive re-check that must not use the wrong format.)"""
+    lic = str(license_field or "").lower()
+    return ("creative commons 0" in lic) or ("publicdomain/zero" in lic)
+
+
 def build_filter(domain: str) -> str:
     """FROZEN Solr filter: CC0 AND (any required domain tag). rc1.2 fix — the OR belongs in the
     `filter`, NOT the `query` (Freesound treats `query` terms as mandatory-AND by default, which is
@@ -88,7 +96,7 @@ def search_domain(domain, token, want):
                 continue
             if not (DUR_MIN <= float(r.get("duration", 0)) <= DUR_MAX):
                 continue
-            if "creative commons 0" not in str(r.get("license", "")).lower():
+            if not _is_cc0(r.get("license")):
                 continue
             kept.append(r)
             if len(kept) >= want:
