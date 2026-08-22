@@ -1,27 +1,32 @@
 #!/usr/bin/env python3
-"""Deterministically source one CC0 domain from Freesound per the FROZEN selection rule
-(`docs/sa3/freesound_selection_spec.md`, rc1.1 patch 5). Writes a curated dir of `<id>.wav` +
-`<id>.meta.json` that `build_domain_manifest.py` then freezes. NO manual clip picking.
+"""Deterministically STREAM-source one CC0 domain from Freesound per the FROZEN selection rule
+(`docs/sa3/freesound_selection_spec.md`). Writes the final ACCEPTED `<id>.wav` + `<id>.meta.json`
+plus a `sourcing_record.json` (full provenance) that `build_domain_manifest.py` then freezes.
 
-Auth: needs a Freesound API token in `$FREESOUND_TOKEN` (or --token / --token-file). The API key
-(token) authorises search + preview download; original-quality download needs OAuth2 (--use-original
-with $FREESOUND_OAUTH). Everything is resampled to 44.1 kHz mono at manifest time anyway (spec §3).
+Final-N discipline (spec §2–§3): candidates are streamed in `downloads_desc`, each is downloaded +
+decoded, and the FULL §3 filter set — duration + silence/corruption + 44.1k-mono dedup — is applied
+via `build_domain_manifest.clip_accept` (ONE source of truth). The stream continues PAST candidate
+#40 when some are rejected, until `N_TAKE` are finally accepted or candidates are exhausted. So the
+final N is after all filters, with backfill. `--dry-list` prints only the first N *metadata
+candidates* (pre-download; label makes clear it is not the final accepted selection).
 
-Determinism: the frozen query + `sort=downloads_desc` + take-first-N give a reproducible selection;
-no randomness, no human choice. `--dry-list` does search-only (cheap) and prints exactly which clips
-WOULD be taken, for validation before downloading.
+Acquisition representation is FROZEN to Freesound **`preview-hq-mp3`** (token-authorised; no OAuth /
+original-download branch for this experiment). Provenance records API-side
+`source_original_samplerate/channels/duration` SEPARATELY from the actual `fetched_samplerate/
+channels` of the decoded preview — the fetched preview is never called "original".
 
-Run:  FREESOUND_TOKEN=... .venv-metrics/bin/python scripts/sa3/fetch_freesound_domain.py \
-          --domain impact_percussion --out data/sa3/adapters/impact_percussion [--dry-list]
+Run:  .venv-metrics/bin/python scripts/sa3/fetch_freesound_domain.py --domain impact_percussion \
+          --out data/sa3/adapters/impact_percussion --token-file <path> [--dry-list]
 """
 from __future__ import annotations
-import argparse, json, os, sys, time, urllib.parse, urllib.request
+import argparse, hashlib, json, os, subprocess, sys, time, urllib.parse, urllib.request
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build_domain_manifest as BDM   # clip_accept + §3 constants (single source of truth)
 
 API = "https://freesound.org/apiv2"
-SEARCH_PATH = "/search/"   # rc1.2: current endpoint; `/search/text/` is equivalent (both return 200,
-                           # identical results) — the 0-results bug was the query semantics, not the path.
+SEARCH_PATH = "/search/"
+ACQ_REPR = "preview-hq-mp3"   # FROZEN acquisition representation (spec erratum rc1.3)
 
-# FROZEN per spec §1-§3 (do not edit without a ledger entry). Selection is by DOMAIN TAGS only.
 DOMAINS = {
     "impact_percussion": {"tags": ["impact", "hit", "percussion", "clap", "knock"]},
     "water_liquid":      {"tags": ["water", "splash", "liquid", "drip", "pour"]},
@@ -33,30 +38,21 @@ LICENSE_FILTER = 'license:"Creative Commons 0"'
 SORT = "downloads_desc"
 N_TAKE = 40
 N_MIN = 20
-DUR_MIN, DUR_MAX = 0.3, 12.0
-FIELDS = "id,name,tags,license,previews,duration,samplerate,channels,url,download"
+FIELDS = "id,name,tags,license,previews,duration,samplerate,channels,url"
 
 
 def _is_cc0(license_field) -> bool:
-    """rc1.2 fix: the API returns `license` as a URL (e.g. http://creativecommons.org/publicdomain/
-    zero/1.0/), NOT the string 'Creative Commons 0'. Accept both forms. (The Solr filter already
-    enforces CC0; this is a defensive re-check that must not use the wrong format.)"""
     lic = str(license_field or "").lower()
     return ("creative commons 0" in lic) or ("publicdomain/zero" in lic)
 
 
 def build_filter(domain: str) -> str:
-    """FROZEN Solr filter: CC0 AND (any required domain tag). rc1.2 fix — the OR belongs in the
-    `filter`, NOT the `query` (Freesound treats `query` terms as mandatory-AND by default, which is
-    why the first authenticated dry-list returned 0). See docs/sa3/freesound_selection_spec.md."""
-    tags = " OR ".join(DOMAINS[domain]["tags"])
-    return f'{LICENSE_FILTER} tag:({tags})'
+    """FROZEN Solr filter: CC0 AND (any required domain tag). OR belongs in the filter, not query."""
+    return f'{LICENSE_FILTER} tag:({" OR ".join(DOMAINS[domain]["tags"])})'
 
 
 def build_search_params(domain: str, page_size: int = 150) -> dict:
-    """Deterministic tag-based selection: empty query, tags+license in the filter, downloads_desc."""
-    return {"query": "", "filter": build_filter(domain), "sort": SORT,
-            "fields": FIELDS, "page_size": page_size}
+    return {"query": "", "filter": build_filter(domain), "sort": SORT, "fields": FIELDS, "page_size": page_size}
 
 
 def search_url(domain: str, page_size: int = 150, base: str = API) -> str:
@@ -68,70 +64,120 @@ def _token(a):
     if not tok and a.token_file and os.path.exists(a.token_file):
         tok = open(a.token_file).read().strip()
     if not tok:
-        raise SystemExit("no Freesound token: set $FREESOUND_TOKEN or --token/--token-file "
-                         "(search+preview need the API token; original download needs OAuth2)")
+        raise SystemExit("no Freesound token: set $FREESOUND_TOKEN or --token/--token-file")
     return tok
 
 
-def _get(url, token):
+def _get_page(url, token):
+    """Return (json_dict, response_page_sha256) — the sha is provenance (§6)."""
     req = urllib.request.Request(url, headers={"Authorization": f"Token {token}"})
     with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+        raw = r.read()
+    return json.loads(raw), hashlib.sha256(raw).hexdigest()
 
 
-def search_domain(domain, token, want):
-    """Return the FIRST `want` qualifying results in the frozen sort order (deterministic)."""
-    spec = DOMAINS[domain]
-    tagset = set(t.lower() for t in spec["tags"])
+def stream_candidates(domain, token, prov):
+    """Yield metadata-prefiltered candidates in downloads_desc order (CC0 + tag + API-duration in
+    range + has preview-hq-mp3), recording each response page's sha256 into prov['pages']."""
+    tagset = set(t.lower() for t in DOMAINS[domain]["tags"])
     url = search_url(domain, page_size=150)
-    kept, seen = [], set()
-    while url and len(kept) < want:
-        data = _get(url, token)
+    rank, seen = 0, set()
+    while url:
+        data, psha = _get_page(url, token)
+        prov["pages"].append({"page": len(prov["pages"]), "sha256": psha,
+                              "count": len(data.get("results", [])), "has_next": bool(data.get("next"))})
         for r in data.get("results", []):
             if r["id"] in seen:
                 continue
             seen.add(r["id"])
-            rtags = set(t.lower() for t in (r.get("tags") or []))
-            if not (tagset & rtags):
-                continue
-            if not (DUR_MIN <= float(r.get("duration", 0)) <= DUR_MAX):
-                continue
             if not _is_cc0(r.get("license")):
                 continue
-            kept.append(r)
-            if len(kept) >= want:
-                break
+            if not (tagset & set(t.lower() for t in (r.get("tags") or []))):
+                continue
+            if not (BDM.DUR_MIN <= float(r.get("duration", 0)) <= BDM.DUR_MAX):
+                continue
+            prev = (r.get("previews") or {}).get(ACQ_REPR)
+            if not prev:
+                continue
+            yield {"rank": rank, "id": r["id"], "name": r.get("name", ""), "tags": r.get("tags", []) or [],
+                   "domain": domain, "preview_url": prev, "permalink": r.get("url"),
+                   "source_original_samplerate": r.get("samplerate"),
+                   "source_original_channels": r.get("channels"),
+                   "source_original_duration": r.get("duration")}
+            rank += 1
         url = data.get("next")
         time.sleep(0.2)
-    return kept
 
 
-def download_clip(r, out_dir, token, use_original=False, oauth=None):
-    """Download the preview (token) or original (OAuth2) and save as `<id>.wav` (resample happens at
-    manifest time). Returns the saved wav path."""
-    import numpy as np, soundfile as sf, librosa
-    cid = f"fs{r['id']}"
-    if use_original:
-        if not oauth:
-            raise SystemExit("--use-original needs $FREESOUND_OAUTH (OAuth2 access token)")
-        src = r["download"]; hdr = {"Authorization": f"Bearer {oauth}"}
-    else:
-        src = r["previews"]["preview-hq-mp3"]; hdr = {"Authorization": f"Token {token}"}
-    raw = os.path.join(out_dir, f"{cid}.src")
-    req = urllib.request.Request(src, headers=hdr)
-    with urllib.request.urlopen(req, timeout=120) as resp, open(raw, "wb") as fh:
-        fh.write(resp.read())
-    w, sr = librosa.load(raw, sr=None, mono=True)     # decode as-is; manifest resamples to 44.1
-    wav = os.path.join(out_dir, f"{cid}.wav")
-    sf.write(wav, w.astype("float32"), sr)
-    os.remove(raw)
-    meta = {"license": "Creative Commons 0", "name": r.get("name", ""), "tags": r.get("tags", []),
-            "domain_tags": [t for t in DOMAINS[r["_domain"]]["tags"] if t in set(x.lower() for x in (r.get("tags") or []))],
-            "permalink": r.get("url"), "id": r["id"], "freesound_id": r["id"],
-            "original_samplerate": r.get("samplerate"), "original_channels": r.get("channels"),
-            "native_duration": r.get("duration"), "download_kind": "original" if use_original else "preview-hq-mp3"}
-    json.dump(meta, open(os.path.join(out_dir, f"{cid}.meta.json"), "w"), indent=2)
-    return wav
+def stream_accept(candidates, decode_fn, want, seen_shas=None):
+    """PURE + testable. Iterate candidates in order; decode each via decode_fn(cand)->w44 (or None on
+    failure); apply BDM.clip_accept (duration+silence+dedup); ACCEPT until `want` accepted or the
+    stream is exhausted — BACKFILLING past rejected candidates. Returns (accepted, decisions)."""
+    seen = set(seen_shas or [])
+    accepted, decisions = [], []
+    for cand in candidates:
+        if len(accepted) >= want:
+            break
+        w44 = decode_fn(cand)
+        ok, reason, sha = BDM.clip_accept(w44, cand.get("source_original_duration") or 0.0, seen)
+        decisions.append({"rank": cand.get("rank"), "id": cand.get("id"), "accepted": bool(ok),
+                          "reason": reason, "audio_sha256_44k_mono": sha})
+        if ok:
+            seen.add(sha)
+            c = dict(cand); c["_audio_sha"] = sha
+            accepted.append(c)
+    return accepted, decisions
+
+
+def download_decode(cand, token):
+    """Download the preview-hq-mp3 and decode to (w44_mono float32, fetched_sr, fetched_channels)."""
+    import tempfile, soundfile as sf, librosa
+    req = urllib.request.Request(cand["preview_url"], headers={"Authorization": f"Token {token}"})
+    data = urllib.request.urlopen(req, timeout=120).read()
+    tf = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False); tf.write(data); tf.close()
+    try:
+        info = sf.info(tf.name)
+        fetched_sr, fetched_ch = int(info.samplerate), int(info.channels)
+        w44 = librosa.load(tf.name, sr=BDM.TARGET_SR, mono=True)[0].astype("float32")
+    finally:
+        os.remove(tf.name)
+    return w44, fetched_sr, fetched_ch
+
+
+def source_domain(domain, token, out_dir, want, prov):
+    """Stream + accept-with-backfill + write accepted <id>.wav/.meta.json. Returns accepted list."""
+    import soundfile as sf
+    os.makedirs(out_dir, exist_ok=True)
+    stash = {}
+
+    def decode_fn(cand):
+        try:
+            w44, fsr, fch = download_decode(cand, token)
+            stash[cand["id"]] = (w44, fsr, fch)
+            return w44
+        except Exception as e:
+            prov["errors"].append({"id": cand["id"], "error": f"{type(e).__name__}: {e}"})
+            return None
+
+    accepted, decisions = stream_accept(stream_candidates(domain, token, prov), decode_fn, want)
+    prov["candidates"] = decisions
+    for c in accepted:
+        w44, fsr, fch = stash[c["id"]]
+        cid = f"fs{c['id']}"
+        sf.write(os.path.join(out_dir, f"{cid}.wav"), w44, BDM.TARGET_SR)
+        meta = {
+            "license": "Creative Commons 0", "name": c["name"], "tags": c["tags"],
+            "domain_tags": [t for t in DOMAINS[domain]["tags"] if t in set(x.lower() for x in c["tags"])],
+            "permalink": c["permalink"], "id": c["id"], "freesound_id": c["id"],
+            "acquisition_representation": ACQ_REPR,
+            "source_original_samplerate": c["source_original_samplerate"],
+            "source_original_channels": c["source_original_channels"],
+            "source_original_duration": c["source_original_duration"],
+            "fetched_samplerate": fsr, "fetched_channels": fch,
+            "audio_sha256_44k_mono": c["_audio_sha"], "candidate_rank": c["rank"],
+        }
+        json.dump(meta, open(os.path.join(out_dir, f"{cid}.meta.json"), "w"), indent=2)
+    return accepted
 
 
 def main():
@@ -140,33 +186,40 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--token", default=None); ap.add_argument("--token-file", default=None)
     ap.add_argument("--n-take", type=int, default=N_TAKE)
-    ap.add_argument("--use-original", action="store_true")
-    ap.add_argument("--dry-list", action="store_true", help="search only; print the frozen selection, download nothing")
+    ap.add_argument("--dry-list", action="store_true",
+                    help="metadata candidates only (pre-download; NOT the final accepted selection)")
     a = ap.parse_args()
     token = _token(a)
-    results = search_domain(a.domain, token, a.n_take)
-    for r in results:
-        r["_domain"] = a.domain
-    print(f"[freesound] {a.domain}: {len(results)} qualifying clips (frozen query/sort/filters)")
-    if len(results) < N_MIN:
-        print(f"[freesound] WARNING: < N_MIN={N_MIN} — domain FAILS, use the frozen fallback order (spec §2)")
+    prov = {"domain": a.domain, "endpoint": API + SEARCH_PATH, "query": "", "filter": build_filter(a.domain),
+            "sort": SORT, "page_size": 150, "acquisition_representation": ACQ_REPR, "n_take": a.n_take,
+            "git_commit": subprocess.getoutput("git rev-parse HEAD"),
+            "pages": [], "candidates": [], "errors": []}
+
     if a.dry_list:
-        for r in results:
-            print(f"  fs{r['id']}  dur={r.get('duration'):.2f}s  sr={r.get('samplerate')}  "
-                  f"tags={r.get('tags')[:4]}  name={r.get('name')[:40]!r}")
+        cands = []
+        for c in stream_candidates(a.domain, token, prov):
+            cands.append(c)
+            if len(cands) >= a.n_take:
+                break
+        print(f"[freesound] {a.domain}: {len(cands)} METADATA candidates (pre-download; final selection "
+              f"additionally applies silence/corruption/dedup after decode — NOT final N)")
+        for c in cands:
+            print(f"  #{c['rank']:02d} fs{c['id']}  dur={float(c['source_original_duration']):.2f}s  "
+                  f"src_sr={c['source_original_samplerate']}  tags={c['tags'][:4]}  name={c['name'][:40]!r}")
         return 0
+
     os.makedirs(a.out, exist_ok=True)
-    oauth = os.environ.get("FREESOUND_OAUTH")
-    n = 0
-    for r in results:
-        try:
-            download_clip(r, a.out, token, use_original=a.use_original, oauth=oauth)
-            n += 1
-        except Exception as e:
-            print(f"  [skip] fs{r['id']}: {type(e).__name__}: {e}")
-    print(f"[freesound] wrote {n} clips to {a.out}; next: build_domain_manifest.py --dir {a.out} "
-          f"--domain {a.domain} (run in .venv-metrics)")
-    return 0
+    accepted = source_domain(a.domain, token, a.out, a.n_take, prov)
+    prov["n_accepted"] = len(accepted)
+    prov["n_rejected"] = sum(1 for d in prov["candidates"] if not d["accepted"])
+    prov["_self_sha256"] = hashlib.sha256(json.dumps(prov, sort_keys=True).encode()).hexdigest()
+    json.dump(prov, open(os.path.join(a.out, "sourcing_record.json"), "w"), indent=2)
+    status = "OK" if len(accepted) >= N_MIN else f"BELOW N_MIN={N_MIN} — domain FAILS (use frozen fallback)"
+    print(f"[freesound] {a.domain}: {len(accepted)} ACCEPTED (of {len(prov['candidates'])} streamed, "
+          f"{prov['n_rejected']} rejected) -> {a.out}  [{status}]")
+    print(f"[freesound] provenance: {a.out}/sourcing_record.json ; next: build_domain_manifest.py "
+          f"--dir {a.out} --domain {a.domain} (run in .venv-metrics)")
+    return 0 if len(accepted) >= N_MIN else 1
 
 
 if __name__ == "__main__":

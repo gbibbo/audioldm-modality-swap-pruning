@@ -23,6 +23,26 @@
 > clips** (≥ N_min=20) — coherent in-domain (impacts/hits/knocks/claps/crashes/drops), mixed native
 > SR (32/44.1/48/96 kHz) handled by the deterministic resample-to-44.1. No fallback domain needed.
 > Ledger SA3-FREESOUND-APIFIX-001.
+>
+> **rc1.3 (2026-08-22, pre-data implementation patch — before any download).** Three
+> implementation/spec alignments (Gabriel's review), none of which changes the frozen INTENT:
+> **(a) Final N=40 is counted AFTER every §3 filter.** Sourcing now STREAMS candidates in
+> `downloads_desc`, downloads+decodes each, and applies duration + silence/corruption + 44.1k-mono
+> dedup via a single `clip_accept()` (shared by fetcher and manifest), **continuing past candidate
+> #40 (backfill) until 40 are finally accepted or candidates are exhausted**. `--dry-list` shows only
+> *metadata candidates* (pre-download), explicitly labelled — not the final selection.
+> **(b) `prompts_L` is 100% automatic** — after the deterministic split, `prompts_L =`
+> captions(`eval_L`) (train-collisions removed) `+` the generic domain prompt (`"a {noun} sound"`),
+> via frozen `derive_caption()`. The manual `--prompts-file` is removed for scientific manifests.
+> **(c) Sourcing provenance is persisted** to `sourcing_record.json`: endpoint, exact
+> query/filter/sort/page_size, per-response-page SHA256, per-candidate rank/id/decision/reason/
+> audio-sha, git commit, and acquisition representation. **(d) Acquisition representation FROZEN to
+> Freesound `preview-hq-mp3`** (token-only; no OAuth/original branch this experiment). Per clip the
+> manifest records API-side `source_original_samplerate/channels/duration` SEPARATELY from the
+> decoded preview's `fetched_samplerate/channels` — the preview is never labelled "original". All
+> adapters use exactly this representation. Manifest schema bumped to `/2`. Unit-tested:
+> `tests/sa3/{test_sourcing_stream.py (backfill/auto-prompts/provenance), test_freesound_url.py}` +
+> `build_domain_manifest.py --selftest`. Ledger SA3-FREESOUND-STREAM-002.
 
 **Written BEFORE any Freesound page is opened (rule S4).** Fixes every degree of freedom in turning a
 domain name into a trained-adapter dataset, so no clip, caption, or split is chosen after seeing
