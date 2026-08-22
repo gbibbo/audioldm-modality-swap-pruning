@@ -1,5 +1,20 @@
 # Freesound intra-domain selection — FROZEN pre-registration (2026-08-21 18:52, rc1.1 patch 5)
 
+> **ERRATUM rc1.2 (2026-08-22, API-semantics repair — pre-data, not dataset tuning).** The first
+> authenticated `--dry-list impact_percussion` returned **0 qualifying clips**. Cause: the frozen
+> **`query`** strings below (`impact OR hit OR …`) don't match current Freesound semantics — `query`
+> terms are **mandatory-AND** by default, so no clip matched all of them. `OR` belongs in the Solr
+> **`filter`**, not `query`. **Repair (the frozen INTENT is unchanged — CC0 AND any-one required
+> tag):** send `query=""` and
+> `filter=license:"Creative Commons 0" tag:(impact OR hit OR percussion OR clap OR knock)`.
+> Empirically (token-authenticated) this returns 27 938 candidates for `impact_percussion`. **The
+> `query` column in §1 is SUPERSEDED by this tag-filter; the `required tags` column is authoritative
+> and unchanged.** Endpoint note: both `/apiv2/search/` and `/apiv2/search/text/` return http 200 with
+> **identical** results — the endpoint was **not** the cause; the code uses `/apiv2/search/`. **No clip
+> IDs were observed or selected in the failed first attempt.** Everything else (downloads_desc, N=40,
+> N_min=20, duration, silence, dedup, captions, split, resample, 10 s crop) is unchanged. Unit-tested:
+> `tests/sa3/test_freesound_url.py`. Ledger SA3-FREESOUND-APIFIX-001.
+
 **Written BEFORE any Freesound page is opened (rule S4).** Fixes every degree of freedom in turning a
 domain name into a trained-adapter dataset, so no clip, caption, or split is chosen after seeing
 results. Domains and fallback order were frozen in `rq2_validation_protocol.md` rc1

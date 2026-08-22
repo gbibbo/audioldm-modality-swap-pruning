@@ -18,19 +18,16 @@ from __future__ import annotations
 import argparse, json, os, sys, time, urllib.parse, urllib.request
 
 API = "https://freesound.org/apiv2"
+SEARCH_PATH = "/search/"   # rc1.2: current endpoint; `/search/text/` is equivalent (both return 200,
+                           # identical results) — the 0-results bug was the query semantics, not the path.
 
-# FROZEN per spec §1-§3 (do not edit without a ledger entry)
+# FROZEN per spec §1-§3 (do not edit without a ledger entry). Selection is by DOMAIN TAGS only.
 DOMAINS = {
-    "impact_percussion": {"query": "impact OR hit OR percussion OR clap",
-                          "tags": ["impact", "hit", "percussion", "clap", "knock"]},
-    "water_liquid":      {"query": "water OR splash OR liquid OR drip",
-                          "tags": ["water", "splash", "liquid", "drip", "pour"]},
-    "mechanical":        {"query": "machine OR motor OR mechanical OR engine",
-                          "tags": ["machine", "motor", "mechanical", "engine"]},
-    "animal":            {"query": "animal OR bird OR dog OR cat",
-                          "tags": ["animal", "bird", "dog", "cat"]},
-    "ambience":          {"query": "ambience OR atmosphere OR room tone",
-                          "tags": ["ambience", "atmosphere", "ambient"]},
+    "impact_percussion": {"tags": ["impact", "hit", "percussion", "clap", "knock"]},
+    "water_liquid":      {"tags": ["water", "splash", "liquid", "drip", "pour"]},
+    "mechanical":        {"tags": ["machine", "motor", "mechanical", "engine"]},
+    "animal":            {"tags": ["animal", "bird", "dog", "cat"]},
+    "ambience":          {"tags": ["ambience", "atmosphere", "ambient"]},
 }
 LICENSE_FILTER = 'license:"Creative Commons 0"'
 SORT = "downloads_desc"
@@ -38,6 +35,24 @@ N_TAKE = 40
 N_MIN = 20
 DUR_MIN, DUR_MAX = 0.3, 12.0
 FIELDS = "id,name,tags,license,previews,duration,samplerate,channels,url,download"
+
+
+def build_filter(domain: str) -> str:
+    """FROZEN Solr filter: CC0 AND (any required domain tag). rc1.2 fix — the OR belongs in the
+    `filter`, NOT the `query` (Freesound treats `query` terms as mandatory-AND by default, which is
+    why the first authenticated dry-list returned 0). See docs/sa3/freesound_selection_spec.md."""
+    tags = " OR ".join(DOMAINS[domain]["tags"])
+    return f'{LICENSE_FILTER} tag:({tags})'
+
+
+def build_search_params(domain: str, page_size: int = 150) -> dict:
+    """Deterministic tag-based selection: empty query, tags+license in the filter, downloads_desc."""
+    return {"query": "", "filter": build_filter(domain), "sort": SORT,
+            "fields": FIELDS, "page_size": page_size}
+
+
+def search_url(domain: str, page_size: int = 150, base: str = API) -> str:
+    return base + SEARCH_PATH + "?" + urllib.parse.urlencode(build_search_params(domain, page_size))
 
 
 def _token(a):
@@ -60,9 +75,7 @@ def search_domain(domain, token, want):
     """Return the FIRST `want` qualifying results in the frozen sort order (deterministic)."""
     spec = DOMAINS[domain]
     tagset = set(t.lower() for t in spec["tags"])
-    params = {"query": spec["query"], "filter": LICENSE_FILTER, "sort": SORT,
-              "fields": FIELDS, "page_size": 150}
-    url = f"{API}/search/text/?" + urllib.parse.urlencode(params)
+    url = search_url(domain, page_size=150)
     kept, seen = [], set()
     while url and len(kept) < want:
         data = _get(url, token)
