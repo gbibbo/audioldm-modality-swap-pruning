@@ -8,6 +8,7 @@ The hard cap of **5 cr applies to TOTAL billable Lightning spend** (GPU + CPU).
 | sa3-adversary-1 | T4 | Completed | 0.2161 |
 | sa3-atan-1 | T4 | Completed | 0.5044 |
 | sa3-atan-n32-1 | T4 | Completed | 0.5175 |
+| sa3-l6-1 | T4 | Stopped | 0.1557 |
 | sa3-pilot-fields-1 | T4 | Stopped | 0.0357 |
 | sa3-pilot-fields-2 | T4 | Completed | 0.3253 |
 | sa3-pilot-n64-1 | T4 | Completed | 0.5096 |
@@ -16,8 +17,8 @@ The hard cap of **5 cr applies to TOTAL billable Lightning spend** (GPU + CPU).
 | sa3-smoke-t4-1 | T4 | Stopped | 0.1609 |
 
 ## Counters
-* **SA3_GPU_credits** = 2.4255
+* **SA3_GPU_credits** = 2.5812
 * **SA3_CPU_credits** = 0.0526
-* **SA3_TOTAL_Lightning_credits** = 2.4781
-* hard cap (TOTAL) = 5.0  →  headroom = **2.5219 cr**
-* jobs reconciled = 9
+* **SA3_TOTAL_Lightning_credits** = 2.6338
+* hard cap (TOTAL) = 5.0  →  headroom = **2.3662 cr**
+* jobs reconciled = 10
