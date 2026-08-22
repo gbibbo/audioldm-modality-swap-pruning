@@ -18,6 +18,13 @@ CPU dry-run: OPENBLAS_CORETYPE=Haswell .venv-sa3/bin/python scripts/sa3/train_co
 """
 from __future__ import annotations
 import argparse, json, os, subprocess, sys, tempfile
+# Disable Weights & Biases BEFORE the training stack imports it (stable_audio_3.training.utils imports
+# wandb at module load). wandb spawns non-daemon threads that block a clean interpreter exit, which on
+# Lightning leaves the JOB "Running" and billing after the real work is done (bit us on sa3-smoke-t4-1).
+# This neutralises it for BOTH the smoke and real L6/L13 training runs.
+os.environ.setdefault("WANDB_MODE", "disabled")
+os.environ.setdefault("WANDB_DISABLED", "true")
+os.environ.setdefault("WANDB_SILENT", "true")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
                                 "_external", "stable-audio-3"))
@@ -292,11 +299,12 @@ def main():
     if not a.dry_run_cpu and not a.smoke and not a.data_dir:
         ap.error("--data_dir is required for a real run (or use --dry-run-cpu / --smoke)")
     ret = train(a)
-    # HARD EXIT after a GPU smoke: wandb (imported by the training stack) spawns non-daemon
-    # threads that block a clean interpreter exit, so the Lightning JOB stays "Running" and keeps
-    # billing after the ~35 s of real compute. This bit us on sa3-smoke-t4-1 (job idled to 0.141 cr).
-    # os._exit bypasses those threads; results are already flushed to disk + stdout above.
-    if a.smoke and not a.dry_run_cpu:
+    # HARD EXIT after ANY real (non-dry) run — smoke AND real L6/L13 training. Belt-and-suspenders
+    # with WANDB_DISABLED above: even if some other stray non-daemon thread lingers, os._exit
+    # terminates the process immediately so the Lightning job cannot idle-bill after training +
+    # export finished. All results are flushed to disk + stdout before this point. The external
+    # watchdog (scripts/sa3/job_watchdog.py) is the second safety net.
+    if not a.dry_run_cpu:
         sys.stdout.flush(); sys.stderr.flush()
         os._exit(ret)
     return ret

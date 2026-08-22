@@ -301,6 +301,13 @@ Infra micro-smoke (synthetic data, `L_6` single-block, standard `lora` r16, back
 * model load ≈ 13 s; 495 K trainable LoRA params of 568 M.
 * **Projection @ ~0.89 cr/GPU-h:** 1000 steps ≈ 0.070 GPU-h ≈ **0.066 cr/control** (incl. load);
   **`L_6` + `L_13` ≈ 0.132 cr**. Synthetic infra numbers only — not a scientific result.
+* **Budget conservatively (Gabriel, 2026-08-22): 0.08–0.10 cr per control**, NOT 0.066 as a hard
+  expectation — real data adds I/O + step-time variance, and the Lightning **job lifecycle can
+  dominate compute cost on short runs** (see SA3-SMOKE-T4-001: a hung job idle-billed past its
+  compute). Always attach `scripts/sa3/job_watchdog.py` with a `--max-cost` ceiling to real jobs.
+* **Budget accounting:** the SA3 5-cr hard cap is on **TOTAL** billable Lightning (GPU + CPU), not
+  GPU-only — CPU jobs bill too. Reconciled counters live in `docs/sa3/budget_reconciliation.md`
+  (`scripts/sa3/reconcile_budget.py`).
 * **Ops caveat:** the T4 job kept billing after compute finished (wandb non-daemon threads block a
   clean exit); `train_control_loras.py --smoke` now `os._exit()`s to prevent idle billing. For long
   training jobs, poll cost and/or set a max runtime.
