@@ -1,0 +1,305 @@
+{
+  "domain": "impact_percussion",
+  "endpoint": "https://freesound.org/apiv2/search/",
+  "query": "",
+  "filter": "license:\"Creative Commons 0\" tag:(impact OR hit OR percussion OR clap OR knock)",
+  "sort": "downloads_desc",
+  "page_size": 150,
+  "acquisition_representation": "preview-hq-mp3",
+  "n_take": 40,
+  "git_commit": "242b1a2d1015da8f4cff3ef3984b5be7772d0e1a",
+  "pages": [
+    {
+      "page": 0,
+      "sha256": "6363f3dedcd7fbcb09a271bf3833ada80137be73627c1de56a2daa7d7d32d5ca",
+      "count": 150,
+      "has_next": true
+    }
+  ],
+  "candidates": [
+    {
+      "rank": 0,
+      "id": 118513,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "26695b953eb4dc007b9de726bad215122e0d5db8360c3d3f00a93d2343b5e0f8"
+    },
+    {
+      "rank": 1,
+      "id": 460509,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "a2b128f2dfbe708b9ad1e94a8af5cbb7874588cfdd508b640f1187d1696756e2"
+    },
+    {
+      "rank": 2,
+      "id": 267931,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "23d6de93c6d96186bf999fbfe5471a68c12c1ea498401c7875853271c932b9e5"
+    },
+    {
+      "rank": 3,
+      "id": 40158,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "c40e2bb4923da9677615cde8dabfdc75d5305922d878dcd5cc4e9f8520d89d4f"
+    },
+    {
+      "rank": 4,
+      "id": 177242,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "02fbaf8a15be9d273b183d68c8e17bb1a75280f5e5c3fbc9db0c31717f23dcc9"
+    },
+    {
+      "rank": 5,
+      "id": 194081,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "b1505d2410874cc94340a9f6b50a0b081ff545cdf7cafe90b8c3b1f7c61f5fdb"
+    },
+    {
+      "rank": 6,
+      "id": 256513,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "43aae8d8dffb8e7dbe609c81a50daa8107241d5ea62199a8a6db1c4a526646fd"
+    },
+    {
+      "rank": 7,
+      "id": 222517,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "f9e38dd354c9f592d11e50918ba5370dd53298470d8069cc3c5be0562ed48ff8"
+    },
+    {
+      "rank": 8,
+      "id": 36847,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "e86ec5105a236558b615c5dd6aea7286262a4cf6f9f507b279da729537ba3199"
+    },
+    {
+      "rank": 9,
+      "id": 333404,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "17697a7d87d8abc6fa3bc4207eb6d6dc44a0b45114f081ea302f5e25d01c86fd"
+    },
+    {
+      "rank": 10,
+      "id": 19433,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "75f1df1a95beebfcc357399e88a822f6a3c52c700f2594abff116cb526217041"
+    },
+    {
+      "rank": 11,
+      "id": 277021,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "be045541a9bf39019b80126c14ef421885f9e11151ecf78b68370fece258ccb8"
+    },
+    {
+      "rank": 12,
+      "id": 266915,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "520361454a617311a6995ec24de8b42dbf48277332ffa30a3ea8a195ed4a69cc"
+    },
+    {
+      "rank": 13,
+      "id": 127197,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "774286ba583aaca42f05e36f42beb7a8a42a427567308b3fcee2e509c544525e"
+    },
+    {
+      "rank": 14,
+      "id": 277020,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "df56be5ce23a694a55cb32ff5a118a62181890761a9e7d20d2d48e8d9e8ed794"
+    },
+    {
+      "rank": 15,
+      "id": 277022,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "14fa0bd40da0c4982dfa1bf1e7c2628645463efbe8d120c5ad634530e5f45cd9"
+    },
+    {
+      "rank": 16,
+      "id": 277019,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "9fa28b47246ee6d1614bc79d13a82551816aa1fcafb3eeff5637355eedcef8f1"
+    },
+    {
+      "rank": 17,
+      "id": 32260,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "4cd31857a04888ff572dbad4af5b9468785dc89cd9d909ed524b4b0c187d749a"
+    },
+    {
+      "rank": 18,
+      "id": 240712,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "8e3695b84d6ae30bd211674f83147bd1bd3f7cdf094c7b9e7d07276ed8336b94"
+    },
+    {
+      "rank": 19,
+      "id": 151624,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "a95df81748ed3d4a406a61a3131598a58c12858a616d9ec0bca07ab8f3a627d0"
+    },
+    {
+      "rank": 20,
+      "id": 59540,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "eee4ea7a8583daedf629d849c394ddb00f82af92f998fcc00e36e7d29e9c86df"
+    },
+    {
+      "rank": 21,
+      "id": 592388,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "7af1e8fd757c36936929b7d77dbd8e2f4024100011ab0dcdde653ec44a022927"
+    },
+    {
+      "rank": 22,
+      "id": 208695,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "3f1409444e4305502cd7cd885266637bec63f635c321cc99e486cff001dff414"
+    },
+    {
+      "rank": 23,
+      "id": 325270,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "3da53b7cdd61886db74c72e716839e39355e5ae5624fc516c7aa3025e605bbf6"
+    },
+    {
+      "rank": 24,
+      "id": 504626,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "6d8de56d1251d916065b463b3ec6b83bc750abdc4fa13fbb8948e59880a6b144"
+    },
+    {
+      "rank": 25,
+      "id": 348244,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "8f29b213d24e34adc94ac6d19ec04c70dbb43dcaddc24b843805b59adcd8eeba"
+    },
+    {
+      "rank": 26,
+      "id": 221567,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "6ce3fa22d8bfb5f27cdffcb088bac098472b97d68c6b3fd8ba325c162e8cfbbc"
+    },
+    {
+      "rank": 27,
+      "id": 320521,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "81708a194b9f728ad82dd9da71bff59df88b0a2d3aca05d9ef8a4706dc8db49a"
+    },
+    {
+      "rank": 28,
+      "id": 271945,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "ceae1bcfafd0a8b815ee1fe0b03685fcb0e531a65a207cbaed9abd315e2eb4c6"
+    },
+    {
+      "rank": 29,
+      "id": 205938,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "3c1f186dca91e15d56113024e07d6886459c86d7d956727ba4dca3a2a4383b50"
+    },
+    {
+      "rank": 30,
+      "id": 325269,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "51add8f50fa046c7f44538ea5b7d47e3b28408dc2f032887cf9b20cd5921218f"
+    },
+    {
+      "rank": 31,
+      "id": 36846,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "ef01c5716f2d3bcb799da35f71e8cac899f49c0ff8e8bd88706c615eeed21779"
+    },
+    {
+      "rank": 32,
+      "id": 82027,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "62dd4b2a8017d507305ddf6498d286d0cf5b049c6e6c705a9d1c16fcf6750c58"
+    },
+    {
+      "rank": 33,
+      "id": 243400,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "08f5cb6829fcb6f3570252e4be8d83f938b5c0bbaacf3f371c7fdbc20c11931d"
+    },
+    {
+      "rank": 34,
+      "id": 268500,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "473861a361bade2e5da2fb71bd97d46b7cd356b0a9310a1ec84946cb5de90a0b"
+    },
+    {
+      "rank": 35,
+      "id": 274119,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "e262b8eb79ec6053951d35fb7e27156970b95d34a00a17b81e6a9c53d785975d"
+    },
+    {
+      "rank": 36,
+      "id": 72191,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "1018d2c274c46b365395531f8100e4dfd4df28f0d67530709e1a3afaca34b07d"
+    },
+    {
+      "rank": 37,
+      "id": 339114,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "5b266e13b5c23030b440c896001a9bdf5b0752cc5c6b3e5b804fe35d8140ab5b"
+    },
+    {
+      "rank": 38,
+      "id": 147597,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "5c41878f6efe8daeb059dee3de566445f263546326a12ac2fc71fe09552e6407"
+    },
+    {
+      "rank": 39,
+      "id": 348241,
+      "accepted": true,
+      "reason": "accepted",
+      "audio_sha256_44k_mono": "ccca23f34af44e7048cc4abb92b3459ee31279b14e42f54bc59a5c5f75f653ee"
+    }
+  ],
+  "errors": [],
+  "n_accepted": 40,
+  "n_rejected": 0,
+  "_self_sha256": "b5fe0878bc8d1e3471f752287885d5e691dd8803f1271bdae273a313a500a4e9"
+}
