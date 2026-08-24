@@ -1,0 +1,75 @@
+{
+  "phase": "positive_control_field_eval",
+  "states": "pilot_states N=32",
+  "eta_source": "artifacts/sa3/smoke_t4.json (eta_max)",
+  "controls": {
+    "L_6": {
+      "host_block": 6,
+      "precision_ok": true,
+      "den_dFL_sq": 758.9399519509869,
+      "fp_sq": 73610.04284460108,
+      "precision_ratio": 0.010310277274979896,
+      "floor_10eta": 0.0006667290645242449,
+      "A_eco_host": 1.0,
+      "host_top1": false,
+      "host_rank": 10,
+      "top5": [
+        [
+          0,
+          16.781
+        ],
+        [
+          1,
+          14.684
+        ],
+        [
+          17,
+          3.471
+        ],
+        [
+          2,
+          2.323
+        ],
+        [
+          4,
+          2.014
+        ]
+      ],
+      "field_portion": "PASS (precision_ok AND A_eco_host~1); host NOT top-1 = descriptive (rc1.1 vindicated)"
+    },
+    "L_13": {
+      "host_block": 13,
+      "precision_ok": true,
+      "den_dFL_sq": 369.1356891256297,
+      "fp_sq": 73610.04284460108,
+      "precision_ratio": 0.005014746288151413,
+      "floor_10eta": 0.0006667290645242449,
+      "A_eco_host": 1.0,
+      "host_top1": false,
+      "host_rank": 9,
+      "top5": [
+        [
+          0,
+          33.416
+        ],
+        [
+          17,
+          9.31
+        ],
+        [
+          1,
+          4.83
+        ],
+        [
+          2,
+          1.425
+        ],
+        [
+          19,
+          1.218
+        ]
+      ],
+      "field_portion": "PASS (precision_ok AND A_eco_host~1); host NOT top-1 = descriptive (rc1.1 vindicated)"
+    }
+  }
+}
