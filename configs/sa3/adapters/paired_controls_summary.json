@@ -1,0 +1,43 @@
+{
+  "phase": "paired_controls",
+  "blocks_requested": [
+    6,
+    13
+  ],
+  "blocks_completed": [
+    6,
+    13
+  ],
+  "all_ok": true,
+  "results": {
+    "6": {
+      "ok": true,
+      "save": "data/sa3/adapters/L_6.safetensors",
+      "verify": {
+        "exists": true,
+        "n_tensors": 18,
+        "max_lora_B": 2.01030883734728,
+        "nonzero_B": true,
+        "include": [
+          "transformer.layers.6."
+        ],
+        "include_ok": true
+      }
+    },
+    "13": {
+      "ok": true,
+      "save": "data/sa3/adapters/L_13.safetensors",
+      "verify": {
+        "exists": true,
+        "n_tensors": 18,
+        "max_lora_B": 1.8553556758593417,
+        "nonzero_B": true,
+        "include": [
+          "transformer.layers.13."
+        ],
+        "include_ok": true
+      }
+    }
+  },
+  "git_commit": "dadee7286ac452da6470cd79cae47135708c82af"
+}

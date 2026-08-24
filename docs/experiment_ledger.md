@@ -1410,3 +1410,10 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
 * **Budget amendment (operational only):** the 0.12 cr/job ceiling is retired as empirically infeasible for 1000 steps. Paired-job: expected ~0.25–0.30 cr; **watchdog trigger 0.40 cr**; absolute settled envelope 0.45. If the watchdog hits 0.40 before BOTH checkpoints exist → STOP (do NOT shorten training).
 * **Same frozen recipe:** impact_percussion train_L (32 clips), 10 s crop, standard `lora` r16/alpha16, base fp16 / `16-mixed`.
 * **Acceptance / gate decision:** launching the paired job now with the cost watchdog. After both checkpoints: reconcile settled cost, then run ONLY the pre-registered positive-control evaluation (A_eco(b) CI∋1 + precision guard + ΔT(post^{-b}) CI∋0 + ≥1 external removal positive uplift; top-1 descriptive). Then STOP and report. No ecological adapters. Budget pre-launch: SA3_TOTAL 2.6338, headroom 2.3662.
+
+### 2026-08-24 00:34 | SA3-CONTROL-PAIRED-002 (result) | L6+L13 trained in ONE job, within budget
+
+* **`sa3-controls-1` Completed, settled 0.2608 cr** (watchdog 0.40 not triggered; `os._exit` → no idle billing; finished at 18.9 min). Both controls, 1000 steps each, T4 fp16/16-mixed, impact_percussion train_L.
+* **L_6:** 1000 steps, block 6 only, **max|lora_B|=2.01** (real adapter; cf. 1-step toy 0.036), 18 tensors, include_ok. **L_13:** 1000 steps, block 13 only, **max|lora_B|=1.86**, include_ok. Parent verify all_ok. Checkpoints (`data/sa3/adapters/L_{6,13}.safetensors`, gitignored) retrieved to Studio; `paired_controls_summary.json` tracked in `configs/sa3/adapters/`.
+* **Budget reconciled:** SA3_GPU 2.842, CPU 0.0526, **SA3_TOTAL 2.8946** → headroom **2.1054**. The discarded `sa3-l6-1` (0.1557, incomplete) stays as operational cost; it did NOT contaminate this pristine L6.
+* **Acceptance / gate decision:** both controls exist + verified within the 0.45 envelope. Next: pre-registered positive-control evaluation (A_eco field on the 64 persisted states + ΔT on prompts_L), then STOP + report.
