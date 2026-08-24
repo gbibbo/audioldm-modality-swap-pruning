@@ -1,0 +1,75 @@
+{
+  "phase": "positive_control_verdict",
+  "controls": {
+    "L_6": {
+      "field_ok": true,
+      "precision_ok": true,
+      "A_eco_host": 1.0,
+      "task": {
+        "block_b": 6,
+        "pass": false,
+        "verdict": "TASK_FAIL",
+        "cond1_base_uplift_positive": false,
+        "cond2_post_uplift_positive": false,
+        "cond3_host_removal_collapses_to_0": true,
+        "cond4_external_uplift_positive": true,
+        "external_positive_blocks": [
+          13
+        ],
+        "dT_base_ci": [
+          -0.046608634293079376,
+          0.05608586221933365
+        ],
+        "dT_post_ci": [
+          -0.1478596841916442,
+          0.09621809236705303
+        ],
+        "dT_host_ci": [
+          -8.495617657899857e-05,
+          5.284510552883148e-05
+        ],
+        "note": "rc1.4: only \u0394T_AA sustains the functional claim; primary paired audio-audio."
+      },
+      "dT_AA_base": 0.004738613963127136,
+      "dT_AA_post": -0.016674510203301907,
+      "post_over_base_retention": -3.5188581161184014,
+      "OVERALL": "FAIL"
+    },
+    "L_13": {
+      "field_ok": true,
+      "precision_ok": true,
+      "A_eco_host": 1.0,
+      "task": {
+        "block_b": 13,
+        "pass": false,
+        "verdict": "TASK_FAIL",
+        "cond1_base_uplift_positive": false,
+        "cond2_post_uplift_positive": false,
+        "cond3_host_removal_collapses_to_0": true,
+        "cond4_external_uplift_positive": true,
+        "external_positive_blocks": [
+          14
+        ],
+        "dT_base_ci": [
+          -0.11573948711156845,
+          0.00012120604515075684
+        ],
+        "dT_post_ci": [
+          -0.13745772652328014,
+          0.07895498722791672
+        ],
+        "dT_host_ci": [
+          -0.0006593950092792511,
+          0.00011481437832117081
+        ],
+        "note": "rc1.4: only \u0394T_AA sustains the functional claim; primary paired audio-audio."
+      },
+      "dT_AA_base": -0.06430937349796295,
+      "dT_AA_post": -0.016017038840800524,
+      "post_over_base_retention": 0.2490622745890671,
+      "OVERALL": "FAIL"
+    }
+  },
+  "all_controls_pass": false,
+  "consequence": "A control FAILED task observability \u2192 STOP RQ2 (do NOT train ecological adapters)."
+}
