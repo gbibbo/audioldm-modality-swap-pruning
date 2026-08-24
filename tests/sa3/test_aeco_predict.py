@@ -98,9 +98,44 @@ def a5_control_stop_cases():
     return ok
 
 
+def a6_paired_bootstrap_ci():
+    # all-positive paired deltas -> lower CI > 0; centered-at-0 deltas -> CI contains 0
+    pos = AP.paired_bootstrap_ci([0.10, 0.12, 0.08, 0.11, 0.09, 0.13, 0.10, 0.09], B=2000)
+    zero = AP.paired_bootstrap_ci([0.02, -0.02, 0.01, -0.01, 0.0, 0.015, -0.015, 0.005], B=2000)
+    ok = pos["lo"] > 0 and pos["mean"] > 0
+    ok = ok and zero["lo"] <= 0 <= zero["hi"]
+    # determinism (frozen seed)
+    ok = ok and AP.paired_bootstrap_ci([0.10, 0.12, 0.08, 0.11], B=2000) == AP.paired_bootstrap_ci([0.10, 0.12, 0.08, 0.11], B=2000)
+    print(f"    A6 bootstrap pos.lo={pos['lo']:.3f} zero.ci=[{zero['lo']:.3f},{zero['hi']:.3f}] deterministic")
+    return ok
+
+
+def a7_task_control_verdict():
+    # PASS: base+post uplift lower CI>0, host CI∋0, one external (11) positive
+    r = AP.task_control_verdict(6, dT_base_ci=(0.03, 0.09), dT_post_ci=(0.02, 0.08),
+                                dT_host_ci=(-0.005, 0.006),
+                                dT_external_ci={11: (0.01, 0.07), 12: (-0.02, 0.03), 13: (-0.01, 0.02)})
+    p = r["verdict"] == "TASK_PASS" and r["external_positive_blocks"] == [11]
+    # FAIL: host uplift does NOT collapse (CI strictly positive)
+    r2 = AP.task_control_verdict(6, (0.03, 0.09), (0.02, 0.08), (0.02, 0.06),
+                                 {11: (0.01, 0.07)})
+    f1 = r2["verdict"] == "TASK_FAIL" and not r2["cond3_host_removal_collapses_to_0"]
+    # FAIL: no external positive
+    r3 = AP.task_control_verdict(6, (0.03, 0.09), (0.02, 0.08), (-0.005, 0.006),
+                                 {11: (-0.02, 0.03), 12: (-0.03, 0.01)})
+    f2 = r3["verdict"] == "TASK_FAIL" and not r3["cond4_external_uplift_positive"]
+    # FAIL: post uplift not positive (adapter doesn't transfer to post)
+    r4 = AP.task_control_verdict(6, (0.03, 0.09), (-0.02, 0.04), (-0.005, 0.006), {11: (0.01, 0.07)})
+    f3 = r4["verdict"] == "TASK_FAIL" and not r4["cond2_post_uplift_positive"]
+    ok = p and f1 and f2 and f3
+    print(f"    A7 task PASS={p} host-survive-FAIL={f1} no-ext-FAIL={f2} post-FAIL={f3}")
+    return ok
+
+
 def main():
     checks = [("A1", a1_helpers), ("A2", a2_prediction_verdict), ("A3", a3_prediction_check_confirm),
-              ("A4", a4_control_pass_even_when_b_not_top1), ("A5", a5_control_stop_cases)]
+              ("A4", a4_control_pass_even_when_b_not_top1), ("A5", a5_control_stop_cases),
+              ("A6", a6_paired_bootstrap_ci), ("A7", a7_task_control_verdict)]
     ok_all = True
     for name, fn in checks:
         ok = fn(); ok_all &= ok

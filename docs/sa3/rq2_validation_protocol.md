@@ -256,3 +256,48 @@ ecological adapters before §7 confirms; converting a negative into a new hypoth
   **`16-mixed` + base fp16** (not bf16); (5) intra-domain selection frozen in
   `docs/sa3/freesound_selection_spec.md` (queries/tags/sort/N/duration/silence/dedup/caption/resample,
   training crop 10 s) — **before** any Freesound page is opened.
+
+---
+
+## 11. rc1.4 — task-level positive-control gate + primary scalar `T_AA` FROZEN (2026-08-23)
+
+**Written BEFORE generating any control task audio (rule S4). Retraction:** the field result
+(precision_ok, `A_eco(host)=1.0000`, host-not-top-1) is **mechanistic evidence only** and is NOT a
+control PASS. `A_eco(host)=1` is largely an algebraic consequence of the LoRA living in that block; a
+large field change can yield **zero** measurable semantic-metric improvement. **Only `ΔT` sustains
+the functional claim** (§4.3). All THREE §5.1/rc1.1 conditions are mandatory, including task-level
+observability.
+
+**Primary scalar `T_AA` — paired held-out CLAP audio–audio (frozen).** For each of the **8 `eval_L`
+clips** `j` (the generic domain prompt is EXCLUDED — no unique audio reference; it stays in the
+secondary text-audio metric only): generate from that clip's own held-out derived prompt and
+
+  `s_j(S) = cosine( CLAP_audio(y_j^S), CLAP_audio(x_j^eval) )`,   `T_AA(S) = mean_j s_j(S)`.
+
+NOT all-pairs, NOT nearest/max, NOT a domain centroid — the natural prompt↔eval-audio pairing avoids
+an arbitrary aggregation. Identical prompts + seeds with/without `L`; paired
+`Δ_j = s_j(S+L) − s_j(S)`, `ΔT_AA = mean_j Δ_j`. **Fixed paired bootstrap over the 8 eval units**
+(seed 20260824, B=10000, both frozen before scores) → 95% CI. No clip-wise or seed-wise
+cherry-picking. Secondary/descriptive: CLAP text-audio; `FD_openl3` descriptive only. **No new metric
+may rescue a failed primary `T_AA`.**
+
+**Dense-transfer sanity:** measure `ΔT_AA(dense base)` and `ΔT_AA(dense post)`; both must have
+positive paired lower CIs. Report the **post/base retention ratio continuously** — do NOT invent a
+retention threshold now.
+
+**Host-removal identity:** for the host block `b`, generate `post^{−b}` with `L` on/off and require
+waveform/embedding **identity** (deterministic). `ΔT=0` is algebraic; the identity check verifies the
+generation implementation actually respects it.
+
+**External panel `G_ext(b)` FROZEN (adapter-blind, from the frozen N=32 `D_P`, `rq1_reanalysis.json`,
+chosen BEFORE any task output):** the three lowest-`D_P` blocks excluding `b`.
+D_P ascending = 12, 13, 11, 14, 10, 9, … ⇒ **`G_ext(6) = {11,12,13}`**, **`G_ext(13) = {11,12,14}`**.
+
+**Control `L_b` PASSES task observability iff ALL hold:**
+1. `ΔT_AA(dense base)` paired lower 95% CI `> 0`;
+2. `ΔT_AA(dense post)` paired lower 95% CI `> 0`;
+3. `ΔT_AA(post^{−b})` CI contains 0 (uplift collapses; identity check passes);
+4. **at least one** pre-frozen external `g ∈ G_ext(b)` has `ΔT_AA(post^{−g})` paired lower 95% CI `> 0`.
+
+Combined with the field conditions (precision_ok AND `A_eco(b)≈1`), all give the full §5.1 control
+verdict. **No ecological-adapter training until BOTH controls have a complete PASS.**

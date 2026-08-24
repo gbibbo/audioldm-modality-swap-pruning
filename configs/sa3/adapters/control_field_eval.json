@@ -35,7 +35,7 @@
           2.014
         ]
       ],
-      "field_portion": "PASS (precision_ok AND A_eco_host~1); host NOT top-1 = descriptive (rc1.1 vindicated)"
+      "field_portion": "FIELD conditions met (precision_ok AND A_eco(host)~1). NOT a control PASS: A_eco is mechanistic evidence only; ONLY task-level \u0394T_AA sustains the functional claim. host-not-top-1 FAVOURS the rc1.1 decision but does NOT vindicate it until the task gate passes."
     },
     "L_13": {
       "host_block": 13,
@@ -69,7 +69,9 @@
           1.218
         ]
       ],
-      "field_portion": "PASS (precision_ok AND A_eco_host~1); host NOT top-1 = descriptive (rc1.1 vindicated)"
+      "field_portion": "FIELD conditions met (precision_ok AND A_eco(host)~1). NOT a control PASS: A_eco is mechanistic evidence only; ONLY task-level \u0394T_AA sustains the functional claim. host-not-top-1 FAVOURS the rc1.1 decision but does NOT vindicate it until the task gate passes."
     }
-  }
+  },
+  "status": "FIELD-ONLY (partial). Task-level \u0394T_AA gate (rc1.4) REQUIRED before any control PASS.",
+  "overclaim_retracted": "removed 'rc1.1 vindicated' and 'task effect near-certain' (2026-08-23, Gabriel): a large field change can yield zero measurable semantic-metric improvement \u2014 that is exactly why the chain is A_tan->A_eco->\u0394T_L, not A_tan->A_eco."
 }

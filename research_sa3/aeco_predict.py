@@ -141,6 +141,55 @@ def _ci(x):
     return (lo, hi) if lo <= hi else (hi, lo)
 
 
+def paired_bootstrap_ci(deltas, seed: int = 20260824, B: int = 10000, alpha: float = 0.05):
+    """Paired bootstrap 95% CI of mean(deltas) — resample the units (eval clips) with replacement.
+    Deterministic given `seed`/`B` (frozen before scores, rc1.4). Pure (uses random, not numpy)."""
+    import random as _r
+    n = len(deltas)
+    if n == 0:
+        return {"mean": float("nan"), "lo": float("nan"), "hi": float("nan"), "n": 0, "B": B}
+    mean = sum(deltas) / n
+    rng = _r.Random(seed)
+    means = []
+    for _ in range(B):
+        s = sum(deltas[rng.randrange(n)] for _ in range(n))
+        means.append(s / n)
+    means.sort()
+    lo = means[int((alpha / 2) * (B - 1))]
+    hi = means[int((1 - alpha / 2) * (B - 1))]
+    return {"mean": mean, "lo": lo, "hi": hi, "n": n, "B": B, "seed": seed}
+
+
+def task_control_verdict(block_b: int, dT_base_ci, dT_post_ci, dT_host_ci,
+                         dT_external_ci: Dict[int, tuple]) -> dict:
+    """rc1.4 TASK-LEVEL positive-control gate on the primary scalar ΔT_AA. PASS iff ALL hold:
+      1. ΔT_AA(dense base)  paired lower 95% CI > 0   (adapter uplift observable on base)
+      2. ΔT_AA(dense post)  paired lower 95% CI > 0   (observable on post)
+      3. ΔT_AA(post^{-b})   CI contains 0             (uplift collapses when host block removed)
+      4. at least one pre-frozen external g ∈ G_ext(b) has ΔT_AA(post^{-g}) lower CI > 0
+    `dT_*_ci` are (lo, hi) paired-bootstrap CIs; `dT_external_ci` maps g -> (lo, hi). Only ΔT
+    sustains the functional claim (§4.3); A_eco is mechanistic evidence, checked separately."""
+    b_lo, b_hi = _ci(dT_base_ci)
+    p_lo, p_hi = _ci(dT_post_ci)
+    h_lo, h_hi = _ci(dT_host_ci)
+    c1 = b_lo > 0
+    c2 = p_lo > 0
+    c3 = h_lo <= 0.0 <= h_hi
+    ext_pos = sorted(g for g, ci in dT_external_ci.items() if _ci(ci)[0] > 0)
+    c4 = len(ext_pos) > 0
+    passed = c1 and c2 and c3 and c4
+    return {
+        "block_b": block_b, "pass": bool(passed), "verdict": "TASK_PASS" if passed else "TASK_FAIL",
+        "cond1_base_uplift_positive": bool(c1),
+        "cond2_post_uplift_positive": bool(c2),
+        "cond3_host_removal_collapses_to_0": bool(c3),
+        "cond4_external_uplift_positive": bool(c4),
+        "external_positive_blocks": ext_pos,
+        "dT_base_ci": [b_lo, b_hi], "dT_post_ci": [p_lo, p_hi], "dT_host_ci": [h_lo, h_hi],
+        "note": "rc1.4: only ΔT_AA sustains the functional claim; primary paired audio-audio.",
+    }
+
+
 def control_localization_verdict(
     block_b: int,
     a_eco_b_ci,                      # (lo, hi) CI on A_eco(b; L_b)
