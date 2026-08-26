@@ -1,9 +1,12 @@
 # Publication Decision Memo — ICASSP 2027 pivot
 
-**Status: COMPLETE (2026-08-26 02:31–02:47). Verdict: GO-AUDIOLDM (§5) — pending Gabriel's
-review of `docs/master_plan_v4_amendment_icassp.md`.** All three audits (Gate-0 substrate,
-seam inventory + executable proof, novelty collisions) are done. Nothing in this memo
-authorizes GPU. Ledger: ICASSP-PIVOT.
+**Status: COMPLETE, rev4 (2026-08-26 02:31–02:58). Verdict: GO-AUDIOLDM (§5) — accepted by
+Gabriel as the working thesis; §5 revised with the five binding rev4 corrections (standalone
+non-inferiority gate; prompt-level clustered statistics; held-out prompt battery; falsifier vs
+completion-tranche split with adapter-B prioritized over the oracle; recovered-backbone baseline;
+softened novelty wording). Adoption of `docs/master_plan_v4_amendment_icassp.md` (rev4) as
+DECISION-V4-09 is pending Gabriel.** All three audits done. Nothing in this memo authorizes GPU.
+Ledger: ICASSP-PIVOT / ICASSP-PIVOT-REV4.
 
 **Binding constraints (directive, Gabriel via external reviewer, 2026-08-26):** optimization
 target = probability of a defensible ICASSP-2027 paper by **2026-09-16** (CFP-verified; 21 days);
@@ -197,11 +200,15 @@ every seam — no learned parameters needed anywhere.** Details and honest flags
 ## 4. Novelty-collision audit — COMPLETE (2026-08-26; ~12 query formulations across arXiv,
 OpenReview, Semantic Scholar, GitHub, HF; full agent report in ledger provenance)
 
-**Kill-criterion outcome: NO direct collision found.** No published work performs deterministic
-mask-induced slicing of dense-trained LoRA adapters onto a structured-pruned backbone with zero
-retraining and zero adapter-data access; none asks whether pruning can be made adapter-compatible
-without seeing the adapters; and **no study in any domain measures the differential-fragility
-phenomenon** (adapter utility vs standalone quality under compression severity).
+**Kill-criterion outcome: NO direct collision found.** Within this audit's scope (~12 query
+formulations across arXiv, OpenReview, Semantic Scholar, GitHub, HF), **we found no prior work**
+that performs deterministic mask-induced slicing of dense-trained LoRA adapters onto a
+structured-pruned backbone with zero retraining and zero adapter-data access; none that asks
+whether pruning can be made adapter-compatible without seeing the adapters; and **we found no
+prior work** that measures the differential-fragility phenomenon (adapter utility vs standalone
+quality under compression severity). *Paper-facing wording rule (Gabriel, rev4):* claim only "we
+found no prior work that…", never the categorical "no study in any domain" — the latter requires
+a systematic-review level of coverage this audit does not assert.
 
 Closest neighbors (all must be cited and contrasted in the paper):
 
@@ -262,47 +269,109 @@ scoring/pruning machinery verified in-repo); the two remaining unknowns (real ad
 differential fragility) are precisely what the ≤2.5-cr falsifying chain tests.
 
 **Exact abstract-level claim (if the chain passes):** "Structured pruning of a text-to-audio
-latent diffusion backbone can preserve standalone generation quality while disproportionately
-destroying the benefit of legacy LoRA adapters trained on the dense model and transferred by
-deterministic mask-induced slicing — without adapter retraining or adapter data. We quantify
-this differential fragility across compression severity on AudioLDM, identifying unseen-adapter
-compatibility as a distinct, previously unmeasured axis of compression quality." (Phenomenon/
-analysis-led; a simple mitigation is added only if it follows naturally and fits the reserve.)
+latent diffusion backbone can preserve **standalone text-audio semantic alignment** while
+disproportionately destroying the benefit of legacy LoRA adapters trained on the dense model and
+transferred by deterministic mask-induced slicing — without adapter retraining or adapter data.
+We quantify this differential fragility across compression severity on AudioLDM, identifying
+unseen-adapter compatibility as a distinct axis of compression quality that standard recovery
+metrics do not capture." (Phenomenon/analysis-led; a simple mitigation is added only if it
+follows naturally and fits the reserve.) *Claim-scope rule (rev4):* the preserved quantity is
+**text-audio semantic alignment (CLAP)**, not "generation quality" in general — the broader word
+is used only if FAD/KAD independently corroborate; CLAP is the gated primary, FAD/KAD are
+corroborative and cannot rescue a failed CLAP gate.
 
 **Scenario: B** (strict). Scenario A appears only as the "retrain-on-pruned" oracle baseline.
+
+**Statistical unit = prompt, never generated clip (rev4).** The 64 prompts × 3 seeds are
+*clustered* observations, not 192 independent samples. Frozen analysis for Gate 0 and every
+severity comparison: for each prompt compute its paired effect from its three matched seeds
+(seeds paired across conditions, then averaged within prompt); then **cluster bootstrap over the
+64 prompts**, resampling whole prompts and keeping all seeds/conditions of a prompt together
+(B=10000, frozen seed). Never bootstrap the 192 clips as independent. This is pre-registered
+before any generation.
 
 **Gate 0 (G0-M, ≤1 cr, precedes any severity work):** replicate the Kim et al. published
 task/recipe transposed to dense M-Full in our pipeline — LoRA on `to_q`/`to_v` of all attention
 layers (substring filters), **r8/α16** (their headline config), lr 1e-5, AdamW, their public
-193-clip hip-hop dataset, 4-s crops, **200 epochs** (their first published checkpoint; within
-their own best band, §2b), batch 2 for fidelity (batch 4 + 16-mixed only as a logged deviation
-if the smoke requires it). **Powered evaluation replacing their 1-prompt protocol:** frozen
-pre-registered battery of 64 hip-hop prompts × 3 seeds, 4-s, DDIM S=50, default guidance
-(mirroring their validation code path); primary endpoint **ΔCLAP** = paired mean(adapter −
-base) with the LAION-CLAP fused checkpoint (their scorer); paired bootstrap CI, B=10000, frozen
-seed. **SESOI = +0.025** (half their claimed +0.0498). **PASS = point ≥ SESOI AND lower CI95 >
-0.** The paper labels this "our powered replication of the published recipe" — never "their
-adapter". FAIL ⇒ the AudioLDM thesis dies immediately; no adapter iteration.
+193-clip hip-hop dataset, 4-s crops, **200 epochs**. *200 epochs is chosen because it is the
+first published checkpoint and the affordable pre-registered operating point — not because the
+noisy single-prompt trajectory establishes a scientifically meaningful "best band". We reproduce
+a published recipe point on M-Full; we do not claim exact replication of Kim et al.'s S-Full
+headline.* **Effective batch size = 2 (locked for fidelity).** Mixed precision is allowed only
+as an implementation choice validated numerically against fp32 on a few steps; **switching to
+batch 4 (or any other scientific-optimization change) requires review, and is never triggered
+merely to fit the cost ceiling** — if the smoke projects Gate 0 > 1 cr, that is STOP-0, report
+the measured numbers. **Held-out evaluation replacing their 1-prompt protocol:** a frozen,
+pre-registered **held-out** prompt battery (see next paragraph) × 3 seeds, 4-s, DDIM S=50,
+default guidance (mirroring their validation code path); primary endpoint **ΔCLAP** = paired
+mean(adapter − base) with the LAION-CLAP fused checkpoint (their scorer), aggregated by the
+cluster-bootstrap above. **SESOI = +0.025** (half their claimed +0.0498). **PASS = point ≥ SESOI
+AND lower CI95 > 0.** The paper labels this "our powered replication of the published recipe" —
+never "their adapter". FAIL ⇒ the AudioLDM thesis dies immediately; no adapter iteration.
 
-**Cheapest phenomenon test (post-Gate-0, generation only, no training):** severities {dense,
-(1,2,3,4) −23.7 %, (1,2,3,1) −65 % = the published Arshdeep artifact}, systems {backbone,
-backbone + mask-sliced legacy LoRA} (dense pair reused from Gate 0) — 2 pruned backbones × 2
-systems × 64 prompts × 3 seeds. **Pre-registered differential-fragility criterion:** with
-C(s) = standalone CLAP and ΔCLAP(s) = paired adapter uplift at severity s, define
-**D(s) = ΔCLAP(0) − ΔCLAP(s)** (adapter benefit lost) and **E(s) = C(0) − C(s)** (standalone
-degradation, same scale). The phenomenon exists at s iff **D(s) − E(s) ≥ 0.025 with paired
-bootstrap lower CI95 > 0**. "Adapter score went down" alone is nothing. Secondary (non-binding):
-FAD vs the 193-clip reference; their CLAP-MMD. If no severity shows the phenomenon ⇒
-pre-registered negative ⇒ STOP (no method work, no reframing).
+**Held-out Gate-0 prompt battery (rev4, frozen before the smoke).** The ~64 evaluation prompts
+must be **disjoint from the 193 training clips/captions**: a deterministic sample of
+hip-hop-relevant captions drawn from **MusicCaps outside the released 193-example training
+subset** (text only — CLAP/generation need no audio, so no scraping), under a rule committed
+before the smoke (source CSV + seed + hip-hop/rap filter + exact IDs), plus an exact/near-
+duplicate check against the 193 training captions. No hand-written or post-result prompt
+curation. This makes Gate 0 a test of the published recipe's **generalization**, not
+reconstruction of its training captions — closing an obvious memorization/leakage objection.
 
-**Central figure:** x = parameter reduction {0, 23.7, 65}% (MACs/latency later if measured);
-y1 = C(s) with CI; y2 = ΔCLAP(s) with CI; inset/table: D(s) − E(s) with CI. The interesting
-regime: y1 flat while y2 collapses.
+**Cheapest phenomenon test = the falsifier (post-Gate-0, generation only, no training):**
+severities {dense, (1,2,3,4) −23.7 %, (1,2,3,1) −65 % = the published Arshdeep artifact}, systems
+{backbone, backbone + mask-sliced legacy LoRA} (dense pair reused from Gate 0) — 2 pruned
+backbones × 2 systems × battery × 3 seeds. **Pre-registered dual criterion (rev4):** with
+C(s) = standalone CLAP, ΔCLAP(s) = paired adapter uplift at severity s, define
+**E(s) = C(0) − C(s)** (standalone degradation), **D(s) = ΔCLAP(0) − ΔCLAP(s)** (adapter benefit
+lost), **F(s) = D(s) − E(s)** (excess adapter loss). A severity **establishes the primary
+phenomenon iff BOTH hold** (cluster-bootstrap CIs):
+(i) **standalone non-inferiority:** upper-CI95[E(s)] ≤ 0.025 (semantic alignment preserved within
+tolerance); AND
+(ii) **differential fragility:** point F(s) ≥ 0.025 AND lower-CI95[F(s)] > 0.
+If F(s) is positive but (i) fails, that point is **descriptive only** and cannot support the main
+claim (it is generic capacity loss, not a compatibility problem). "Adapter score went down" alone
+is nothing. Secondary (non-binding): FAD vs the 193-clip reference; their CLAP-MMD — corroborate
+that the effect is not a CLAP artefact, but cannot rescue a failed gate. If no severity satisfies
+both ⇒ pre-registered negative ⇒ STOP (no method work, no reframing).
+
+**Central figure:** x = parameter reduction {0, 23.7, 65}% (full 5-point ladder if the completion
+tranche runs; MACs/latency later if measured); y1 = C(s) with cluster-bootstrap CI; y2 = ΔCLAP(s)
+with CI; a shaded standalone non-inferiority band (E ≤ 0.025); inset/table: F(s) with CI. The
+interesting regime: y1 within tolerance while y2 collapses.
 
 **Mandatory baselines:** (a) dense ± adapter; (b) pruned standalone per severity (the Arshdeep
-axis); (c) pruned + sliced legacy adapter (the object); (d) **Scenario-A oracle** — LoRA
-retrained on the pruned backbone at the moderate point (quantifies "why not just retrain");
-optional (e) random-slicing control (slice with random kept-sets; tests that alignment matters).
+axis); (c) pruned + sliced legacy adapter (the object); (d) **independent-replicate adapter B**
+(see completion tranche — the anti-"one-adapter-accident" baseline, *higher priority than the
+oracle*); (e) **Scenario-A oracle** — LoRA retrained on the pruned backbone at the qualifying
+severity (quantifies "why not just retrain"), budget-permitting; optional (f) random-slicing
+control (slice with random kept-sets; tests that alignment matters).
+
+**Falsifier vs paper-completion (rev4 — do NOT conflate).** One adapter + three severities is the
+**cheapest falsifier**, not the final experiment. It stays first and ≤2.5 cr. **If it PASSES**,
+the minimum ICASSP-completion tranche (re-costed after the smoke, authorized separately, not now)
+is: **adapter A** — extend generation to the full existing nested ladder {0, 23.7, 42.5, 56.2,
+65}% (a real severity curve); **adapter B** — train ONE independent replicate under the same
+frozen Gate-0 recipe (different seed/data-shuffle) and evaluate it only at {dense + the qualifying
+severity} (evidence the effect is not a single-adapter accident). This is the efficient design —
+no full cross-product. **Priority under budget pressure: adapter B + completion of the severity
+curve BEFORE the Scenario-A oracle** — a reviewer forgives a limited oracle, not a contribution
+resting on a single realization of a single adapter. The oracle is budget-permitting after the
+primary phenomenon is shown robust.
+
+**Recovered-backbone baseline (rev4 — zero-cost priority, high upside).** Everything in the ladder
+today is **pre-recovery** pruning (the published p1 artifact is proven never-finetuned). Arshdeep
+is answering email, so at zero compute cost we request his **post-finetuning/recovered** pruned
+checkpoint — at minimum (1,2,3,1), ideally the other published severities
+(`docs/arshdeep_recovered_checkpoint_request.md`). If obtained, we additionally test the frozen
+dense-trained/sliced LoRA on the **recovered** compressed backbone. The strong result would be:
+**recovery restores standalone alignment but does NOT restore legacy-adapter utility** — i.e.
+standard recovery metrics can declare a compressed model "successful" while silently breaking a
+downstream capability never observed during compression. That is a materially stronger, more
+deployment-relevant story than breaking adapters on a freshly-pruned backbone. **Time-box:** do
+not block Gate 0 or the falsifier waiting; if no recovered artifact is in hand by the phenomenon
+stage, the paper states explicitly that the primary compression experiment concerns
+**pre-recovery structural pruning**, and flags this as a hostile-review limitation.
 
 **Hostile review ("why not spend 10 minutes retraining?"):** the compression provider does not
 own the adapters — no training data (rights/privacy; most community LoRAs publish weights, not
@@ -311,26 +380,36 @@ must serve existing adapters (FLUX-lite/SSD-1B breakage is documented user pain)
 specifically the ecosystem motivation is **prospective and must be stated as such** (n=1 LoRA
 today; MusicGen ~196 shows the audio trajectory). Independent scientific value: differential
 fragility is compression damage invisible to standalone metrics (Hooker-style hidden harm on a
-new axis), and the oracle baseline (d) quantifies the retraining comparison instead of dodging
-it. Remaining honest weaknesses: single substrate, single task/genre, adapter is our (powered)
-replication rather than a wild third-party artifact — all stated as limitations.
+new axis), and the Scenario-A oracle baseline (e) quantifies the retraining comparison instead of
+dodging it. Remaining honest weaknesses: single substrate, single task/genre, adapter is our
+(powered) replication rather than a wild third-party artifact, and (unless Arshdeep's checkpoint
+arrives) pre-recovery pruning — all stated as limitations.
 
-**Budget through Sep 10 (DERIVED — every figure re-anchored by a ≤0.1-cr smoke before any
-launch; measured anchors: 0.89 cr/GPU-h, Ttrain 0.56 s/step@b2/10-s, Tgen 8.4 s/clip@S=50/10-s,
-4-s scale ≈ ×0.39):** smoke 0.1; Gate-0 training ~0.5–1.0 + eval generation ~0.3; phenomenon
-generation ~0.6–0.8; Scenario-A oracle ~0.5–0.7; rescoring/contingency ~0.4. **Total ≈ 2.4–3.3
-cr, hard cap 3.5 cr** → ≥ 2 cr of the ~6-cr balance stays in reserve. First falsifying chain
-(smoke + Gate 0 + phenomenon) ≈ **1.5–2.2 cr ≤ 2.5 ✓**.
+**Budget, split into an authorized falsifier and a re-costed completion tranche (rev4).**
+Anchors are DERIVED and re-anchored by a ≤0.1-cr smoke before any launch (measured: 0.89 cr/GPU-h,
+Ttrain 0.56 s/step@b2/10-s, Tgen 8.4 s/clip@S=50/10-s, 4-s scale ≈ ×0.39).
+* **Falsifying chain (the only thing this GO puts on the near-term table):** smoke 0.1 +
+  Gate-0 training ~0.5–1.0 + Gate-0 eval generation ~0.3 + 3-severity phenomenon generation
+  ~0.6–0.8 ≈ **1.5–2.2 cr ≤ 2.5 ✓**.
+* **Completion tranche (ONLY if the falsifier passes; re-costed after the smoke; authorized
+  separately, NOT now):** adapter B training + full-ladder + qualifying-severity generation
+  ~1.0–1.5; Scenario-A oracle ~0.5–0.7 (budget-permitting, after adapter B).
+* **Hard cap for the whole ICASSP effort: 3.5 cr**, ≥ 2 cr of the ~6-cr balance held in reserve.
+  **Do not raise the overall ICASSP spend now** — after a positive phenomenon result, return with
+  the measured remaining balance and the cheapest confirmation plan.
 
-**Schedule:** Aug 26–27 amendment review (Gabriel) + prompt battery frozen + CPU wiring (CLAP
-scorer path, trainer data path, transfer op) with dry-runs; Aug 28 smoke → Gate-0 launch;
-Aug 29–30 Gate-0 scoring + verdict; Aug 31–Sep 2 phenomenon generation + scoring; Sep 3–5
-oracle baseline + CIs + figure; **Sep 5 paper skeleton starts** (v3 discipline); **Sep 10
-central figure frozen**; Sep 10–16 writing + internal hostile review; submit only if the
-phenomenon claim is powered ("do not submit underpowered" stands).
+**Schedule:** Aug 26–27 amendment rev4 review (Gabriel) + held-out prompt battery frozen + CPU
+wiring (CLAP scorer path, trainer data path, transfer op, cluster-bootstrap) with dry-runs;
+Aug 28 smoke → Gate-0 launch; Aug 29–30 Gate-0 scoring + verdict; Aug 31–Sep 2 phenomenon
+falsifier generation + scoring; **if positive:** Sep 3–5 completion tranche (adapter B + full
+severity curve, then oracle if budget) + CIs + figure; **Sep 5 paper skeleton starts** (v3
+discipline); **Sep 10 central figure frozen**; Sep 10–16 writing + internal hostile review;
+submit only if the phenomenon claim is powered ("do not submit underpowered" stands).
 
-**Terminal STOPs:** **STOP-0** smoke projects Gate 0 > 1 cr → re-cost to Gabriel before launch.
-**STOP-1** Gate 0 FAIL → AudioLDM thesis dead; decision GO-ALTERNATIVE vs NO-GO-ICASSP goes to
-Gabriel with the evidence then in hand. **STOP-2** phenomenon absent → pre-registered negative;
-no method work; venue-fallback decision. **STOP-3** 3.5-cr cap reached → stop and report.
+**Terminal STOPs:** **STOP-0** smoke projects Gate 0 > 1 cr → re-cost to Gabriel before launch
+(never auto-shrink fidelity to fit). **STOP-1** Gate 0 FAIL → AudioLDM thesis dead; decision
+GO-ALTERNATIVE vs NO-GO-ICASSP goes to Gabriel with the evidence then in hand. **STOP-2**
+phenomenon absent (no severity satisfies BOTH gate conditions) → pre-registered negative; no
+method work; venue-fallback decision. **STOP-3** 3.5-cr cap reached → stop and report.
+**Completion tranche is authorized separately after a positive falsifier, not by this GO.**
 No mitigation/method design before the phenomenon is confirmed.
