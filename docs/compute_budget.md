@@ -376,3 +376,62 @@ complete; the watchdog prevented open-ended idle billing. **Balance endpoint sti
   point); (3) fp16/bf16 (Gabriel: separate decision, numerics-equivalence validation required; buys
   speed not memory); (4) fewer seeds/prompts (battery frozen for statistical power). **No fidelity or
   recipe change was made — STOP-0 is reported and the line stops for Gabriel's decision.**
+
+## Balance reconciliation + PRE-GATE0 ADMINISTRATIVE budget amendment (2026-08-26 ~19:28 MVD)
+
+**Context:** Gabriel reports the account was **topped up to ~10 credits**. This supersedes the budget
+premise the old effective cap rested on. This is an **administrative** amendment — **no scientific
+parameter changed, and nothing changed because of the smoke result.**
+
+### Authoritative billing query (2026-08-26 ~19:28 MVD)
+
+| Field | Value | Source |
+|---|---|---|
+| `balance` | **5.0** *(unchanged)* | `LightningClient().billing_service_get_user_balance()` |
+| `total_spent` | **55.802705** | same |
+| account_id | `371a6f4c-1280-40b9-8bb0-d97a49597756` | same |
+| `billing_service_get_account_balance()` | auth error (unchanged) | — |
+| **Funded balance (owner-reported)** | **~10 cr** | Gabriel, 2026-08-26 |
+
+**Honest discrepancy, recorded not smoothed over:** the queryable `balance` field returns **5.0** and did
+**not** move across either the top-up **or** the 0.183-cr smoke spend — so that field is a static
+allowance, **not** the live funded pool. Only `total_spent` moves (55.62 → 55.80 = the smoke). The
+funded pool (~10 cr) is **not exposed** by the accessible SDK endpoint; `billing_service_get_account_balance()`
+still auth-fails. No "10" reading was fabricated. Operate against Gabriel's **explicit authorization**
+below, tracking spend via `total_spent` deltas + settled per-job cost.
+
+### The old effective cap is OBSOLETE
+
+`effective_cap = min(3.5, 5.0 − 2.0) = 3.0 cr` (DECISION-V4-10) rested on a 5.0-cr balance premise that
+has changed. **It no longer governs.** (Preserved above for history; not deleted.)
+
+### Amendment (DECISION-V4-13, administrative — NOT scientific)
+
+* Prior **STOP-0 = FAIL** was a **budgetary feasibility** verdict under the previous 1.0-cr Gate-0
+  ceiling — **not** a scientific failure. **That history stands and is preserved** (Gate-0 smoke section
+  above; ledger GATE0-SMOKE-T4-RUN). The top-up makes that 1.0-cr **feasibility** ceiling obsolete.
+* **The scientific Gate-0 recipe is UNCHANGED.** No SESOI, battery, seeds, rank/α, LR, epochs, precision,
+  guidance, DDIM, or scorer changed. **Nothing changed because of the smoke result** — the smoke only
+  measured throughput/cost.
+* **Authorized: up to 5.0 cr from this point for the central ICASSP chain** (Gate 0 + the pre-registered
+  phenomenon falsifier), **including lifecycle/provisioning/idle contingency.** Do **not** spend beyond
+  5.0 cr without returning for authorization.
+* **Path preference (Gabriel):** on-demand T4 + FP32 + exact preregistered 200-epoch recipe. **No**
+  interruptible, fp16/bf16, shorter horizon, fewer prompts/seeds, or loss-vs-steps probe. Periodic resume
+  checkpoints are engineering insurance only (on-demand ⇒ preemption-resume equivalence is not required).
+
+### Re-cost of the central chain (measured smoke values; 0.89 cr/GPU-h)
+
+| Stage | Work | GPU-h | Credits |
+|---|---:|---:|---:|
+| Gate-0 train (adapter) | 19,400 × 0.30735 s | 1.656 | **1.474** |
+| Gate-0 generation | 384 (64×3×2: dense ± LoRA) × 7.143 s | 0.762 | **0.678** |
+| **Gate-0 subtotal** | | 2.418 | **≈ 2.152** |
+| Falsifier generation | **768** (4 systems × 64 × 3) × 7.143 s | 1.523 | **≈ 1.356** |
+| **Central chain total** | | 3.941 | **≈ 3.508** |
+
+* **WAV reuse (Gabriel):** if Gate 0 PASSES, the **384 dense ± LoRA WAVs are reused** in the phenomenon
+  experiment — **do not regenerate.** The falsifier then adds only the 4 downstream systems
+  (`p1_pruned_ema_reconstructed` ± sliced LoRA, `p1_recovered` ± sliced LoRA) = **768** generations.
+* **≈ 3.51 cr + lifecycle overhead + essentially-free CPU CLAP scoring** fits inside the authorized 5.0-cr
+  envelope with headroom for provisioning/idle. CLAP scoring runs on Studio CPU (0 cr).
