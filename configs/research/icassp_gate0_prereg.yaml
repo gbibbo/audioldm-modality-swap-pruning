@@ -32,6 +32,18 @@ gate0:
     name: adamw
     lr: 1.0e-5
     effective_batch_size: 2               # LOCKED (fidelity); no auto-shrink to fit cost -> STOP-0
+    # --- code-derived from Kim's train_audioldm_lora.py (github 2025-comprehensive-design/AudioLDM-with-LoRA) ---
+    gradient_accumulation_steps: 1        # Kim: gradient_accumulation_steps = 1
+    shuffle: true                         # Kim DataLoader shuffle=True (we seed it for determinism)
+    drop_last: false                      # Kim DataLoader has NO drop_last -> ceil(193/2)=97 steps/epoch
+    steps_per_epoch: 97                   # = ceil(193/2); Kim max_train_steps=97000 = 97*1000 confirms drop_last=False
+    optimizer_updates_200ep: 19400        # EXACT: 97 * 200 (not 19.2k). The last batch each epoch is size 1.
+    lr_scheduler:                         # Kim: get_scheduler("polynomial", warmup 0, num_training_steps=97000)
+      type: polynomial                    # diffusers default power=1.0 (linear), lr_end=1e-7
+      num_warmup_steps: 0
+      num_training_steps: 97000           # Kim's FULL 1000-epoch horizon; our 200-ep run uses its first 19400 steps
+      power: 1.0
+      lr_end: 1.0e-7
   data:
     name: kim-hiphop-193                  # Rofla/AudioLDM-with-LoRA-Hiphop-subgenre (HF, Apache-2.0)
     n_clips: 193
