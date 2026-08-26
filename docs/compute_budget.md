@@ -333,3 +333,46 @@ Infra micro-smoke (synthetic data, `L_6` single-block, standard `lora` r16, back
 * **Ops caveat:** the T4 job kept billing after compute finished (wandb non-daemon threads block a
   clean exit); `train_control_loras.py --smoke` now `os._exit()`s to prevent idle billing. For long
   training jobs, poll cost and/or set a max runtime.
+
+## Gate-0 (ICASSP Scenario B) M-Full smoke — MEASURED (Tesla T4, 2026-08-26, job `gate0-smoke-1`, commit `8850417`)
+
+First real GPU numbers for the ICASSP Gate-0 recipe on **DENSE AudioLDM-M-Full + LoRA** (r8/α16 on
+`to_q`/`to_v`), **FP32**, EMA convention (V4-12), latent_t=96 (3.84 s). Bounded executions of the
+PRODUCTION trainer (`gate0_trainer.train_one_step`) and PRODUCTION generator (`gate0_generator.generate`)
+via `scripts/research/gate0_smoke.py`. Raw: `artifacts/icassp_gate0/smoke_t4_measured.json`
+(md5 `cd956ee423df5337a39b97b471362845`), reproduced verbatim in the job log; preflight passed
+(`--expect-commit 8850417…`, `--expect-gpu T4`, dirty=false). **Settled cost: 0.1835 cr** (running
+0.1511; `total_spent` 55.62→55.80 = +0.183). The script `os._exit(0)`ed after persisting, but the job
+status flipped Running→Pending and idled ~40 s until the **watchdog stopped it at the 12-min ceiling**
+(`job_watchdog.py --max-cost 0.20 --max-minutes 12`, `killed=True`) — the measurement was already
+complete; the watchdog prevented open-ended idle billing. **Balance endpoint still returns `balance=5.0`
+(a fixed allowance field); `total_spent` is the live usage tracker.**
+
+* **GPU:** Tesla T4 *(measured)*
+* **TRAIN_SEC_PER_STEP:** **0.30735** s/step *(measured; batch 2, dense M-Full + LoRA, FP32, 10 timed after 3 warmup)*
+* **PEAK_TRAIN_VRAM_GB:** **5.376** *(measured, FP32; 34 % of the 16 GB T4 — the recipe is NOT memory-bound, so mixed precision would buy speed, not headroom)*
+* **GEN_SEC_PER_CLIP:** **7.143** s/clip *(measured; 50 DDIM, guidance 2.5, eta 0.0, latent_t 96, dense, batch 1, warmup-discarded: 3 timed after 1 warmup)*
+* **PEAK_GENERATION_VRAM_GB:** **5.336** *(measured)*
+
+### Gate-0 cost projection (at 0.89 cr/GPU-h) — STOP-0 TRIPPED
+
+| Component | Units | GPU-h | Credits |
+|---|---:|---:|---:|
+| Train (adapter) | 19,400 updates × 0.30735 s | 1.656 | **1.474** |
+| Generation | 384 clips (64×3×2) × 7.143 s | 0.762 | **0.678** |
+| **Gate-0 total** | | **2.418** | **≈ 2.152** |
+
+* **STOP-0 (frozen Gate-0 ceiling 1.0 cr): FAIL — projected 2.152 cr > 1.0 cr.** The FP32 200-epoch
+  faithful recipe costs ~2.15 cr for Gate 0 alone. The smoke did exactly its job: caught this before
+  the paid run.
+* Gate 0 fits under the 3.0-cr effective cap in isolation (leaves ~2.85), **but** Gate 0 (2.15) + the
+  phenomenon falsifier (~1.5–2.2) together exceed the 3.0-cr spendable → the programme does not fit as-is.
+* Projection is a **floor**: excludes per-job model-load/provisioning (~0.03–0.05 cr) and per-epoch
+  dataloading/checkpoint overhead. **CLAP scoring is free** (Studio CPU / `.venv-metrics`; ~2–3 min for
+  384 clips; Gate-0 3.84-s clips never reach the CLAP >10-s fusion path) — 0 cr, not in the GPU projection.
+* **Dominant driver = training (68 % of the cost).** Levers, **each an EXPLICIT decision, none applied
+  here:** (1) interruptible T4 (~½ price, exact resume proven → Gate 0 ≈ 1.08 cr) — no fidelity/recipe
+  change; (2) shorter train horizon than Kim's 200 ep (recipe deviation from the published operating
+  point); (3) fp16/bf16 (Gabriel: separate decision, numerics-equivalence validation required; buys
+  speed not memory); (4) fewer seeds/prompts (battery frozen for statistical power). **No fidelity or
+  recipe change was made — STOP-0 is reported and the line stops for Gabriel's decision.**
