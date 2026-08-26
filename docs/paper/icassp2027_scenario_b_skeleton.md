@@ -49,7 +49,12 @@ isolating an *excess, adapter-specific* fragility beyond generic capacity loss.
 - **Legacy adapter** `A`: a LoRA on the dense backbone's attention `to_q`/`to_v` (Kim et al. recipe).
 - **Pruned backbone** `B_s` at severity `s`: L1 structured channel pruning (Arshdeep's published
   artifact); (1,2,3,1) = −65 % U-Net params (145.674 M). Pure selection of dense weights (bit-exact,
-  never finetuned — verified).
+  never finetuned — verified). **Inference-weight note (DECISION-V4-12):** upstream inference uses EMA
+  weights, but the published p1 artifact's *stored* EMA is structurally stale — its merge replaces
+  only `model.diffusion_model.*` and leaves a dense-shaped EMA (238 mismatched tensors). The
+  pre-recovery generation backbone is therefore the **`p1_pruned_ema_reconstructed`** condition: the
+  same published L1 selection applied to the *dense EMA* weights (EMA-consistent), **not** the
+  artifact's stored EMA nor the literal "published p1 checkpoint".
 - **Recovered backbone** `B_s^rec`: `B_s` + published 1M-step recovery (Zenodo 21977996).
 - **Scenario B transfer** `A ↦ A_s`: slice each LoRA factor to the kept-channel set of `B_s`.
 
@@ -73,11 +78,18 @@ isolating an *excess, adapter-specific* fragility beyond generic capacity loss.
   (near-4-s M-Full transposition; latent_t=96, U-Net divisibility-forced). Primary endpoint **ΔCLAP**
   (LAION-CLAP fused, Kim's scorer) on a **held-out 64-prompt MusicCaps battery**, prompt-clustered
   bootstrap (B=10 000, seed 20260826). SESOI +0.025; PASS = point ≥ SESOI AND lower-CI95 > 0.
-- **Phenomenon falsifier (generation only):** severities {dense, p1 pruned-only, p1 recovered} ×
-  {backbone, backbone + sliced legacy LoRA}. Dual gate per severity: (i) standalone non-inferiority
-  `upper-CI95[E(s)] ≤ 0.025`; (ii) differential fragility `F(s)=D(s)−E(s)`, point ≥ 0.025 AND
-  lower-CI95 > 0.
+- **Phenomenon falsifier (generation only):** severities {dense, `p1_pruned_ema_reconstructed`,
+  `p1_recovered`} × {backbone, backbone + sliced legacy LoRA}. Dual gate per severity: (i) standalone
+  non-inferiority `upper-CI95[E(s)] ≤ 0.025`; (ii) differential fragility `F(s)=D(s)−E(s)`, point
+  ≥ 0.025 AND lower-CI95 > 0.
 - Guidance `2.5` (Diffusers 0.32.2 AudioLDM default), 50 DDIM steps, 3.84 s generations, 3 seeds.
+- **Primary recovered-backbone claim (scope, pre-registered):** the strong claim compares the
+  **published recovered EMA backbone against the dense EMA backbone** — standalone alignment is
+  preserved / non-inferior while the legacy sliced-LoRA uplift is disproportionately damaged. The
+  `p1_pruned_ema_reconstructed` point supplies **mechanistic context**, not a literal before/after
+  weight pair with the published recovered checkpoint (the two are not the same weight state pre/post
+  recovery, since Arshdeep's stored p1 EMA is stale — §3). No claim depends on treating them as a
+  matched recovery pair.
 - Table 1 [TEMPLATE]: per-severity C, ΔCLAP, E, D, F with cluster-bootstrap CIs. [values blank]
 - Figure 2 [TEMPLATE — CENTRAL FIGURE]: E(s) vs F(s) across severities, with the non-inferiority and
   fragility thresholds drawn. [blank until data]

@@ -8,11 +8,11 @@ recipe from prereg v4. Refuses to write a measurement without CUDA (no invented 
 `--dry-run-cpu` exercises the SAME logic on CPU and produces NO measurement.
 
 Reports: GPU model; FP32 peak VRAM; warmup-discarded sec/train-step; #timed train steps;
-sec/generated clip @ 50 DDIM / guidance 2.5 / eta 0.0 / latent_t=96; projected cost of 19,400
+warmup-discarded sec/generated clip @ 50 DDIM / guidance 2.5 / eta 0.0 / latent_t=96; projected cost of 19,400
 training updates; projected cost of 64×3×2=384 Gate-0 generations; projected Gate-0 total;
 projected remaining budget under the effective 3.0-cr cap.
 """
-import argparse, json, os, sys, time
+import argparse, json, os, subprocess, sys, time
 import torch
 import yaml
 
@@ -29,24 +29,49 @@ def peak_gb():
     return torch.cuda.max_memory_allocated() / 1024**3 if torch.cuda.is_available() else 0.0
 
 
+def _git(*a):
+    try:
+        return subprocess.check_output(["git", *a], text=True).strip()
+    except Exception:
+        return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--train-warmup", type=int, default=3)
     ap.add_argument("--train-timed", type=int, default=10)
+    ap.add_argument("--gen-warmup", type=int, default=1)
     ap.add_argument("--gen-clips", type=int, default=3)
     ap.add_argument("--cr-per-gpu-hour", type=float, default=0.89)  # T4 anchor; re-anchored per compute_budget
     ap.add_argument("--dry-run-cpu", action="store_true")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--expect-gpu", default="T4")
+    ap.add_argument("--expect-commit", default=None)
+    ap.add_argument("--allow-dirty", action="store_true")
     args = ap.parse_args()
     if args.dry_run_cpu and args.out:
         raise SystemExit("--dry-run-cpu writes no measurement; drop --out")
     if not args.dry_run_cpu and not torch.cuda.is_available():
         raise SystemExit("PREFLIGHT FAIL: no CUDA and not --dry-run-cpu (refusing to invent smoke numbers)")
 
+    # provenance + preflight: a paid measurement must be traceable to a clean commit on the right GPU.
+    commit = _git("rev-parse", "HEAD"); branch = _git("rev-parse", "--abbrev-ref", "HEAD")
+    dirty = bool(_git("status", "--porcelain"))
+    if not args.dry_run_cpu:
+        if args.expect_commit and commit != args.expect_commit:
+            raise SystemExit(f"PREFLIGHT FAIL: expected commit {args.expect_commit}, found {commit}")
+        if dirty and not args.allow_dirty:
+            raise SystemExit("PREFLIGHT FAIL: dirty tree; measurement would not be traceable to a commit "
+                             "(commit first or pass --allow-dirty)")
+        gname = torch.cuda.get_device_name(0)
+        if args.expect_gpu and args.expect_gpu.lower() not in gname.lower():
+            raise SystemExit(f"PREFLIGHT FAIL: expected a {args.expect_gpu}, found {gname}")
+
     pre = yaml.safe_load(open(PREREG))
     g0, bat = pre["gate0"], pre["battery"]
     device = torch.device("cpu" if args.dry_run_cpu else "cuda")
     R = {"dry_run_cpu": args.dry_run_cpu, "measured": not args.dry_run_cpu,
+         "provenance": {"commit": commit, "branch": branch, "dirty": dirty},
          "recipe": {"ddim": bat["ddim_steps"], "guidance": bat["guidance_scale"],
                     "eta": bat.get("ddim_eta", 0.0), "latent_t": g0["data"]["latent_t_size"],
                     "mixed_precision": g0["optim"]["mixed_precision"],
@@ -91,17 +116,25 @@ def main():
     _oi = _ddim.DDIMSampler.__init__
     _ddim.DDIMSampler.__init__ = lambda s, m, schedule="linear", device=None, **k: _oi(s, m, schedule=schedule, device=(torch.device("cpu") if args.dry_run_cpu else device), **k)
     model.eval(); model._gate0_config = config; model.latent_t_size = g0["data"]["latent_t_size"]
-    prompts = json.load(open(BATTERY))["prompts"][: args.gen_clips]
+    all_prompts = json.load(open(BATTERY))["prompts"]
+    warm_prompts = all_prompts[: args.gen_warmup]
+    timed_prompts = all_prompts[args.gen_warmup : args.gen_warmup + args.gen_clips]
     C, T, F = 8, g0["data"]["latent_t_size"], 16
     ddim = 6 if args.dry_run_cpu else bat["ddim_steps"]
+    # WARMUP (discarded): same production generate() path/recipe as timed clips (DDIM=50, guidance 2.5,
+    # eta 0.0, latent_t=96). CUDA context + DDIM schedule init must not inflate the timed sec/clip.
+    for p in warm_prompts:
+        x_T = GG.make_x_T(p["ytid"], 0, C, T, F).to(device)
+        GG.generate(model, p["caption"], x_T, ddim, bat["guidance_scale"], bat.get("ddim_eta", 0.0))
     if not args.dry_run_cpu: torch.cuda.reset_peak_memory_stats(); torch.cuda.synchronize()
     tg = time.perf_counter()
-    for i, p in enumerate(prompts):
+    for p in timed_prompts:
         x_T = GG.make_x_T(p["ytid"], 0, C, T, F).to(device)
         GG.generate(model, p["caption"], x_T, ddim, bat["guidance_scale"], bat.get("ddim_eta", 0.0))
     if not args.dry_run_cpu: torch.cuda.synchronize()
-    sec_clip = (time.perf_counter() - tg) / len(prompts)
-    R["gen"] = {"clips": len(prompts), "ddim_steps": ddim, "sec_per_clip": sec_clip, "gen_peak_vram_gb": peak_gb()}
+    sec_clip = (time.perf_counter() - tg) / len(timed_prompts)
+    R["gen"] = {"clips": len(timed_prompts), "gen_warmup_discarded": len(warm_prompts),
+                "ddim_steps": ddim, "sec_per_clip": sec_clip, "gen_peak_vram_gb": peak_gb()}
 
     # ---------- projections ----------
     rate = args.cr_per_gpu_hour
@@ -125,9 +158,12 @@ def main():
     print(out)
     if args.dry_run_cpu:
         print("\nSMOKE DRY-RUN (CPU) — wiring only, NOT a measurement")
-    elif args.out:
+        return 0
+    if args.out:
         open(args.out, "w").write(out); print("\nMEASUREMENT written to", args.out)
-    return 0
+    # hard-exit after persisting: no lingering thread can idle-bill the GPU job (SA3-SMOKE-T4-001).
+    sys.stdout.flush(); sys.stderr.flush()
+    os._exit(0)
 
 
 if __name__ == "__main__":
