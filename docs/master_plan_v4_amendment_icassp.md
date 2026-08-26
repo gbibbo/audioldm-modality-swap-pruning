@@ -86,9 +86,14 @@ and cannot rescue a failed CLAP gate; the broader word "quality" appears only if
   the 193 training captions. No hand-written or post-result curation. Gate 0 thus tests the
   recipe's **generalization**, not reconstruction of its training captions.
 
-* **Phenomenon falsifier (generation only, no training):** severities {dense, (1,2,3,4) −23.7 %,
-  (1,2,3,1) −65 %}; systems {backbone, backbone + mask-sliced legacy LoRA}. **A severity
-  establishes the primary phenomenon iff BOTH (cluster-bootstrap CIs) (correction 1):**
+* **Phenomenon falsifier (generation only, no training) — REVISED V4-11 (DECISION, PRE-DATA):**
+  severities {dense, **p1 pruned-only (1,2,3,1)**, **p1 recovered (1,2,3,1)+published 1M-step recovery**};
+  systems {backbone, backbone + mask-sliced legacy LoRA}. The mild (1,2,3,4) is REMOVED from the cheap
+  falsifier (returns only in the post-PASS full curve); same system count (3×2=6), no budget increase.
+  Recovered p1 is a CPU-validated public artifact (Zenodo 21977996; strict-loads, differs 200/200 from
+  pruned-only, forwards at latent_t=96). The strong question: does published recovery restore STANDALONE
+  alignment (E non-inferior) while legacy-adapter uplift stays disproportionately damaged (F fragile)?
+  **A severity establishes the primary phenomenon iff BOTH (cluster-bootstrap CIs) (correction 1):**
   (i) **standalone non-inferiority:** `upper-CI95[E(s)] ≤ 0.025`; AND
   (ii) **differential fragility:** `point F(s) ≥ 0.025` AND `lower-CI95[F(s)] > 0`.
   If F(s) > 0 but (i) fails, the point is **descriptive only** (generic capacity loss, not a

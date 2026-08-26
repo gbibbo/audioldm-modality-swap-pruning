@@ -122,14 +122,32 @@ ci:
   impl: research_pruning/eval/cluster_bootstrap.py
 
 # --- Phenomenon falsifier (post-Gate-0, generation only, no training) ---
+# V4-11 (DECISION, PRE-DATA): the cheap falsifier's three states are dense -> pruned-only ->
+# RECOVERED, each +/- the same sliced dense-trained LoRA. The mild (1,2,3,4) is REMOVED from the
+# cheap falsifier and returns ONLY in the post-PASS full severity curve. Same system count as before
+# (3 severities x 2 = 6), so no budget increase. Recovered p1 is a PUBLIC third-party artifact
+# (Zenodo 21977996, md5 cfb7ca3f…, CPU-validated: U-Net strict-loads 690/690 into the (1,2,3,1) arch,
+# 200/200 tensors differ from pruned-only => genuinely finetuned, forwards at latent_t=96).
 phenomenon:
-  severities: ["dense", "1_2_3_4", "1_2_3_1"]   # 0 / -23.7% / -65% (published Arshdeep artifact)
-  systems: ["backbone", "backbone_plus_sliced_lora"]
+  severities: ["dense", "p1_pruned_only", "p1_recovered"]   # 0 / -65% selection / -65% + published 1M-step recovery
+  severity_defs:
+    dense: "audioldm-m-full base (1,2,3,5)"
+    p1_pruned_only: "l1_audioldm-m-full_p1 = (1,2,3,1) pure selection of dense (pre-recovery, never finetuned)"
+    p1_recovered: "l1_p1_finetuned_global_step_999999 = (1,2,3,1) + published 1M-step recovery (Zenodo 21977996)"
+  deferred_to_full_curve_only: ["1_2_3_4", "1_2_3_3", "1_2_3_2"]   # mild+ladder return post-PASS
+  systems: ["backbone", "backbone_plus_sliced_lora"]   # sliced LoRA maps by kept-index onto each backbone's arch
+  sliced_lora_note: "the dense-trained LoRA is sliced to the (1,2,3,1) kept-set; on p1_recovered it lands on the SAME architecture/kept-set but RECOVERED (non-selection) weights — reported honestly."
   definitions:
-    E: "C(0) - C(s)      # standalone CLAP degradation"
-    D: "dCLAP(0) - dCLAP(s)  # adapter uplift lost"
-    F: "D(s) - E(s)      # excess adapter loss"
-  gate:
+    C: "C(s) = standalone CLAP of backbone s alone"
+    dCLAP: "dCLAP(s) = mean over prompts of (backbone_s + sliced_LoRA) - (backbone_s)"
+    E: "E(s) = C(dense) - C(s)          # standalone degradation of backbone s"
+    D: "D(s) = dCLAP(dense) - dCLAP(s)  # adapter uplift lost at s"
+    F: "F(s) = D(s) - E(s)              # EXCESS adapter loss beyond standalone loss"
+  recovered_p1_bookkeeping:            # the strong deployment question, defined BEFORE data:
+    E_recovered: "E(p1_recovered) = C(dense) - C(p1_recovered). SMALL E => recovery restored standalone alignment."
+    F_recovered: "F(p1_recovered) = D(p1_recovered) - E(p1_recovered). LARGE positive F => legacy-adapter utility disproportionately lost."
+    strong_claim: "phenomenon on p1_recovered = standard recovery restores STANDALONE alignment (E non-inferior) YET the legacy adapter's uplift is disproportionately damaged (F fragile) — a broken downstream capability that standalone recovery metrics silently pass."
+  gate:                                # identical dual gate applies to EVERY severity incl. recovered
     standalone_preserved: "upper_CI95[E(s)] <= 0.025"
     differential_fragility: "point F(s) >= 0.025 AND lower_CI95[F(s)] > 0"
     phenomenon: "standalone_preserved AND differential_fragility"
