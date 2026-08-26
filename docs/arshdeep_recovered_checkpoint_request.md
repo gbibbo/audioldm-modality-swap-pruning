@@ -1,50 +1,28 @@
-# DRAFT — request to Arshdeep Singh for the recovered pruned checkpoint
+# Arshdeep recovered-checkpoint request — CANCELLED (checkpoint is public)
 
-**Status: DRAFT for Gabriel to review and send. Not sent by the agent.** Zero compute cost;
-high scientific upside (memo §5 recovered-backbone baseline, correction 5). Two asks bundled:
-the recovered checkpoint(s), and confirmation of the published-artifact seam conventions
-(AUDIT-M3-001, already logged as an open question in PROGRESS.md).
+**Status: CANCELLED / DO-NOT-SEND (2026-08-26). No email is needed.**
 
----
+Reason: the recovered/finetuned **(1,2,3,1)** checkpoint is publicly downloadable at
+**Zenodo 21977996** ("Pruned and finetuned Models", published 2026-08-17, CC-BY-4.0), which
+supersedes 21376822 as a strict superset (all 6 old files keep identical md5s):
 
-**Subject:** AudioLDM-M pruning — request for the recovered (post-finetuning) checkpoint + a seam question
+* recovered **(1,2,3,1)** — `l1_p1_finetuned_global_step_999999.ckpt`, md5
+  `cfb7ca3f8c712850f5a4bfe2162f5d1c`, 4,446,514,762 B,
+  `https://zenodo.org/api/records/21977996/files/l1_p1_finetuned_global_step_999999.ckpt/content`
+* recovered **(1,2,1,1)** — `l1_p1_dp1_finetuned_global_step_999999.ckpt`, md5
+  `5d7da1504280913a6a91c76b13d0ff79`, 3,244,099,100 B
+* no recovered checkpoint for **(1,2,2,2) p2_dp2** (only a pruned-only U-Net there)
 
-Hi Arshdeep,
+**Caveat before use:** the `_finetuned_global_step_999999` files are larger than their pruned-only
+counterparts; they may be full Lightning checkpoints with optimizer/EMA state rather than
+weights-only exports — verify on download.
 
-We're building on your structured-pruning work on AudioLDM-M-Full (Zenodo 21376822 /
-arXiv 2607.13330). We've reproduced your published `l1_audioldm-m-full_p1.ckpt` exactly: our
-materializer equals it bit-for-bit on all 690 U-Net tensors, and we've confirmed it is the
-**pre-recovery** (pruned-only, never finetuned) artifact — all same-shape tensors are identical
-to the dense checkpoint.
+**Provenance corrected in:** `PROGRESS.md` OPEN ITEM #1, `docs/HANDOFF.md` §9.3, memo §5 and
+amendment §D recovered-backbone baseline, ledger ARSHDEEP-RECOVERED-PUBLIC.
 
-Two requests, if it's easy on your side:
+**Still open (separate, non-blocking, ask later — NOT bundled with anything):** the AUDIT-M3-001
+seam-convention question (4 tensors deviate from Arshdeep's public script; `output_blocks.0/1`
+positional-vs-ranked; `output_blocks.2.0.in_layers.2` weight-positional/bias-ranked).
 
-1. **The recovered / post-finetuning checkpoint(s).** You report recovering quality with
-   lightweight finetuning after pruning; the released artifact is pre-recovery. Would you be able
-   to share the **recovered** pruned model — at minimum the `(1,2,3,1)` (−65 %) severity, and
-   ideally any other severities you finetuned (e.g. the `p2_dp2` point)? Full-pipeline `.ckpt` or
-   U-Net-only both work for us. It would let us study a downstream question your paper doesn't
-   touch, and we'd of course cite and credit your checkpoints.
-
-2. **A seam-convention sanity check.** Reproducing your `p1` artifact bit-exactly, we found a few
-   tensors that don't follow the ranking convention used elsewhere, and one internal
-   inconsistency we wanted to confirm is intentional rather than a quirk of the release:
-   - `output_blocks.0/1.0.in_layers.2.weight` are kept **positionally** (not by L1 ranking);
-   - `input_blocks.10.0.in_layers.2.weight` keeps input columns in **identity** order;
-   - `output_blocks.2.0.in_layers.2`: the **weight** rows are positional but the **bias** rows are
-     ranked (so bias values attach to different channels than the kept weight rows).
-
-   Are these the intended conventions from your pruning script, or an artifact of how the release
-   was exported? No urgency — it only affects how we describe the exact pruning map.
-
-Happy to share what we find. Thanks a lot,
-
-Gabriel
-
----
-
-*Internal note:* if (1) arrives, run the frozen dense-trained/sliced LoRA on the recovered
-backbone as an extra system in the phenomenon test; the target result is "recovery restores
-standalone CLAP but not legacy-adapter uplift." If it does not arrive by the phenomenon stage,
-the paper states the primary experiment is pre-recovery pruning (limitation), per the memo's
-time-box.
+*(Historical: this file previously drafted a request for a checkpoint believed absent; the belief
+was based on the pre-2026-08-17 state of the upstream record.)*

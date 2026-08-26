@@ -1,8 +1,11 @@
-# Master Plan v4 — Amendment: ICASSP-2027 publication pivot (rev4, PROPOSED)
+# Master Plan v4 — Amendment: ICASSP-2027 publication pivot (rev4, ADOPTED = DECISION-V4-09)
 
-**Status: rev4 PROPOSED (2026-08-26), pending Gabriel's review. Becomes DECISION-V4-09 only on
-his explicit adoption. NO GPU until then.** Evidence base: `docs/publication_decision_memo.md`
-(verdict GO-AUDIOLDM, §5 revised to rev4); ledger ICASSP-PIVOT / ICASSP-PIVOT-REV4.
+**Status: rev4 ADOPTED by Gabriel 2026-08-26 03:02 as DECISION-V4-09 (binding; commit 63b11e3).**
+Evidence base: `docs/publication_decision_memo.md` (verdict GO-AUDIOLDM, §5 rev4); ledger
+ICASSP-PIVOT / ICASSP-PIVOT-REV4 / DECISION-V4-09. Authorization now in force is exactly §H
+(CPU wiring + frozen held-out 64-prompt manifest + CPU dry-runs + ONE ≤0.1-cr GPU smoke); Gate 0
+stays behind STOP-0; nothing downstream is authorized. Two implementation details frozen at
+adoption are in §C (CI construction; exact sample size).
 
 **rev4 = rev-PROPOSED + Gabriel's five binding reviewer-facing corrections (2026-08-26):**
 (1) a standalone non-inferiority gate is now *required alongside* differential fragility;
@@ -37,11 +40,25 @@ Define, per severity s (s=0 is dense):
 * `D(s) = ΔCLAP(0) − ΔCLAP(s)` — adapter benefit lost.
 * `F(s) = D(s) − E(s)` — **excess** adapter loss beyond standalone loss.
 
-**Statistical unit = prompt (correction 2).** Evaluation is ~64 held-out prompts × 3 seeds. Per
-prompt, compute its paired effect from its three matched seeds (seeds paired across conditions,
-averaged within prompt); then **cluster bootstrap over the 64 prompts** (resample whole prompts,
-keep all seeds/conditions together; B=10000; frozen seed). The 192 generations are NEVER treated
-as independent. Same principle for Gate 0 and every severity comparison.
+**Statistical unit = prompt (correction 2).** Evaluation is **exactly 64** held-out prompts × 3
+seeds. Per prompt, compute its paired effect from its three matched seeds (seeds paired across
+conditions, averaged within prompt); then **cluster bootstrap over the 64 prompts** (resample
+whole prompts, keep all seeds/conditions together). The 192 generations are NEVER treated as
+independent. Same principle for Gate 0 and every severity comparison.
+
+**FROZEN AT ADOPTION (DECISION-V4-09, 2026-08-26) — do not change after seeing data:**
+
+* **CI construction (ONE definition everywhere — Gate-0 ΔCLAP, E(s), F(s), every severity):**
+  cluster **percentile** bootstrap, two-sided **95 %** interval (2.5/97.5 pctiles), **B = 10000**,
+  **fixed RNG seed = 20260826**. Resampling unit = **prompt**; the three generation seeds stay
+  clustered inside each resampled prompt. No other interval method (BCa/normal/t) and no switching
+  after data. Implemented once in `research_pruning/eval/cluster_bootstrap.py`; every gate calls it.
+* **Sample size (exact, not "approximately"):** the Gate-0 / falsifier primary battery is
+  **exactly 64 held-out prompts × 3 paired generation seeds** = 192 generations per system. Any
+  deviation is a protocol change requiring Gabriel, not an implementation detail.
+* **Smoke measures execution/cost ONLY.** SESOI (+0.025), effective batch (2), epochs (200),
+  rank (8), alpha (16), LR (1e-5), the prompt filter, and the primary scorer (LAION-CLAP fused)
+  are fixed and are **not** tuned from smoke results.
 
 **Claim-scope rule (correction 1, wording):** the preserved quantity is **standalone text-audio
 semantic alignment (CLAP)**, not "generation quality" in general. FAD/KAD are corroborative only
@@ -92,14 +109,18 @@ and cannot rescue a failed CLAP gate; the broader word "quality" appears only if
 * **Scenario-A oracle (baseline (e), budget-permitting, after primary robustness):** LoRA
   retrained on the pruned backbone at the qualifying severity — quantifies "why not just retrain".
 
-* **Recovered-backbone baseline (correction 5, zero-cost priority):** request Arshdeep's
-  post-finetuning/recovered pruned checkpoint (min (1,2,3,1), ideally other severities;
-  `docs/arshdeep_recovered_checkpoint_request.md`). If obtained, also test the frozen sliced LoRA
-  on the **recovered** backbone; the strong result is *recovery restores standalone alignment but
-  not legacy-adapter utility* — standard recovery metrics silently passing a broken downstream
-  capability. **Time-box:** never block Gate 0/falsifier waiting; if absent by the phenomenon
-  stage, the paper states the primary experiment is **pre-recovery** pruning and flags it as a
-  limitation.
+* **Recovered-backbone baseline (correction 5; UPGRADED 2026-08-26 — checkpoint is PUBLIC):**
+  Arshdeep's recovered/finetuned **(1,2,3,1)** checkpoint is publicly downloadable at Zenodo
+  **21977996** (`l1_p1_finetuned_global_step_999999.ckpt`, md5 `cfb7ca3f8c712850f5a4bfe2162f5d1c`,
+  4.45 GB, CC-BY-4.0; recovered (1,2,1,1) also public; no recovered p2_dp2). **The Arshdeep email
+  is CANCELLED.** This becomes an in-scope, reproducible system: apply the frozen sliced LoRA to
+  the **published recovered** backbone; the strong result is *recovery restores standalone
+  alignment but not legacy-adapter utility* — standard recovery metrics silently passing a broken
+  downstream capability. **Caveats:** verify the file is weights-only vs optimizer/EMA state on
+  download (it is larger than pruned-only p1); the sliced LoRA lands on the same pruned
+  architecture/kept-set but recovered (non-selection) weights — reported honestly. **Time-box
+  (scheduling only):** fetch at the phenomenon stage, never block Gate 0; if download/state-verify
+  slips, fall back to the pre-recovery statement as a limitation.
 
 * **Baselines:** (a) dense ± adapter; (b) pruned standalone per severity; (c) pruned + sliced
   legacy adapter; (d) independent-replicate adapter B; (e) Scenario-A oracle; (f) optional

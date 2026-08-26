@@ -139,11 +139,16 @@ own reported best band.
 4. Alternative independently-published AudioLDM-family adapters found (fallback Gate-0 substrates,
    NOT yet audited to the same depth): **AP-Adapter** (ISMIR 2024, arXiv:2407.16564 — AudioLDM2,
    22 M-param attention adapters, code public; not LoRA, AudioLDM2 ≠ our substrate) and **Guitar
-   Tone Morphing** (APSIPA ASC 2025, arXiv:2510.07908 — LoRA r=2 on AudioLDM, code public; weights
-   unverified). MusicGen LoRA ecosystems (ylacombe/musicgen-dreamboothing community checkpoints)
-   remain the GO-ALTERNATIVE candidate but require full substrate bring-up (autoregressive stack,
-   no pruning machinery, unmeasured costs) — prima facie incompatible with 21 days / 6 cr unless
-   the incumbent dies.
+   Tone Morphing** (APSIPA ASC 2025, arXiv:2510.07908 — LoRA r=2 on AudioLDM, code public).
+   **Guitar Tone Morphing is NOT a ready replacement positive control (recorded 2026-08-26,
+   DECISION-V4-09):** its official release lacks the paper-trained LoRA checkpoints and its private
+   dataset, and its reconstructable AudioLDM route uses `audioldm-s-full-v2`, not our M-Full
+   substrate — so, like Kim et al., it would be our own replication on a mismatched backbone, with
+   *less* public scaffolding (no hosted dataset) than Kim. This is **supporting evidence for
+   GO-AUDIOLDM (Kim remains the best-scaffolded substrate), not a new branch.** MusicGen LoRA
+   ecosystems (ylacombe/musicgen-dreamboothing community checkpoints) remain the GO-ALTERNATIVE
+   candidate but require full substrate bring-up (autoregressive stack, no pruning machinery,
+   unmeasured costs) — prima facie incompatible with 21 days / 6 cr unless the incumbent dies.
 
 ## 3. Seam inventory (Scenario-B mappability on M-Full) — COMPLETE (2026-08-26, CPU repo audit)
 
@@ -359,19 +364,26 @@ curve BEFORE the Scenario-A oracle** — a reviewer forgives a limited oracle, n
 resting on a single realization of a single adapter. The oracle is budget-permitting after the
 primary phenomenon is shown robust.
 
-**Recovered-backbone baseline (rev4 — zero-cost priority, high upside).** Everything in the ladder
-today is **pre-recovery** pruning (the published p1 artifact is proven never-finetuned). Arshdeep
-is answering email, so at zero compute cost we request his **post-finetuning/recovered** pruned
-checkpoint — at minimum (1,2,3,1), ideally the other published severities
-(`docs/arshdeep_recovered_checkpoint_request.md`). If obtained, we additionally test the frozen
-dense-trained/sliced LoRA on the **recovered** compressed backbone. The strong result would be:
-**recovery restores standalone alignment but does NOT restore legacy-adapter utility** — i.e.
-standard recovery metrics can declare a compressed model "successful" while silently breaking a
-downstream capability never observed during compression. That is a materially stronger, more
-deployment-relevant story than breaking adapters on a freshly-pruned backbone. **Time-box:** do
-not block Gate 0 or the falsifier waiting; if no recovered artifact is in hand by the phenomenon
-stage, the paper states explicitly that the primary compression experiment concerns
-**pre-recovery structural pruning**, and flags this as a hostile-review limitation.
+**Recovered-backbone baseline (rev4; UPGRADED 2026-08-26 — the recovered checkpoint is PUBLIC).**
+The ladder we materialize is **pre-recovery** pruning (the published p1 artifact is proven
+never-finetuned). **Correction to the earlier plan:** Arshdeep's **recovered/finetuned (1,2,3,1)**
+checkpoint is now publicly downloadable — Zenodo **21977996** (`l1_p1_finetuned_global_step_999999.ckpt`,
+md5 `cfb7ca3f8c712850f5a4bfe2162f5d1c`, 4.45 GB, CC-BY-4.0), which supersedes 21376822 as a strict
+superset; a recovered (1,2,1,1) is also public (no recovered p2_dp2). **No email to Arshdeep is
+needed** (that request is CANCELLED). This turns the recovered-backbone comparison from a
+best-effort ask into an **in-scope, reproducible system**: test the frozen dense-trained/sliced
+LoRA on the **published recovered** backbone. The strong result would be: **recovery restores
+standalone alignment but does NOT restore legacy-adapter utility** — i.e. standard recovery
+metrics can declare a compressed model "successful" while silently breaking a downstream
+capability never observed during compression; a materially stronger, more deployment-relevant
+story than breaking adapters on a freshly-pruned backbone, and now runnable on a third-party
+published artifact (not our own materialization). **Caveats:** (1) the `_finetuned_global_step_999999`
+file may carry optimizer/EMA state (it is larger than the pruned-only p1) — verify weights-only on
+download before use; (2) the recovered backbone applies the sliced LoRA to *recovered* (not
+pure-selection) weights, so the transfer is still onto the SAME pruned architecture/kept-set but
+the underlying weights differ — a scientifically interesting, honestly-reported condition. **Still
+time-boxed** for scheduling (fetched at the phenomenon stage, not before Gate 0); if the download
+or state-verification slips, the paper falls back to the pre-recovery statement as a limitation.
 
 **Hostile review ("why not spend 10 minutes retraining?"):** the compression provider does not
 own the adapters — no training data (rights/privacy; most community LoRAs publish weights, not

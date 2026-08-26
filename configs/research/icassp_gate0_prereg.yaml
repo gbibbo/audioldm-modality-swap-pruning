@@ -1,0 +1,86 @@
+# ICASSP-2027 Scenario-B pre-registration — FROZEN at DECISION-V4-09 (2026-08-26).
+# Single source of truth for the frozen numbers. Code reads this; do not change any value
+# after seeing data. The smoke measures execution/cost ONLY and never tunes these.
+# Contract: docs/master_plan_v4_amendment_icassp.md (rev4, ADOPTED), docs/publication_decision_memo.md §5.
+
+decision: DECISION-V4-09
+adopted_utc_montevideo: "2026-08-26 03:02"
+substrate: audioldm-m-full            # dense, channel_mult (1,2,3,5)
+
+# --- Gate 0: powered replication of the Kim et al. (Appl. Sci. 2025) recipe on dense M-Full ---
+gate0:
+  lora:
+    target_substrings: ["to_q", "to_v"]   # all attention layers, mirror Kim
+    rank: 8
+    alpha: 16
+    dropout: 0.0
+  optim:
+    name: adamw
+    lr: 1.0e-5
+    effective_batch_size: 2               # LOCKED (fidelity); no auto-shrink to fit cost -> STOP-0
+  data:
+    name: kim-hiphop-193                  # Rofla/AudioLDM-with-LoRA-Hiphop-subgenre (HF, Apache-2.0)
+    n_clips: 193
+    kim_source_clip_seconds: 4.0          # Kim's clips are 4 s
+    train_clip_seconds: 10.24             # SUBSTRATE-FORCED: M-Full latent is fixed at 256 frames
+                                          # = 10.24 s; 4 s cannot be set without breaking the
+                                          # pretrained VAE/U-Net alignment. We pad the 4 s sources
+                                          # to 10.24 s (loader pad_wav). DEVIATION from Kim, forced
+                                          # by the substrate, not an optimization. FLAGGED for
+                                          # Gabriel's acknowledgment (ledger KIM-CLIP-LENGTH).
+  epochs: 200                             # first published checkpoint = affordable operating point
+                                          # (NOT a "best band"; reproduction, not exact replication)
+  primary_scorer: laion-clap-htsat-fused  # Kim's scorer
+  endpoint: delta_clap_dense              # paired mean(adapter - base) on the held-out battery
+  SESOI: 0.025                            # = half Kim's reported +0.0498
+  pass_rule: "point >= SESOI AND lower_CI95 > 0"
+  fail_action: STOP-1                     # thesis dead; no adapter iteration
+
+# --- Held-out evaluation battery (frozen before the smoke) ---
+battery:
+  n_prompts: 64                           # EXACT, not "approximately"
+  n_seeds: 3                              # paired generation seeds
+  generations_per_system: 192
+  source: musiccaps                       # text only; no audio scraping needed
+  rule: "deterministic hip-hop/rap-filtered sample of MusicCaps captions DISJOINT from the 193 training captions"
+  disjoint_from: kim-hiphop-193
+  dedup: "exact + near-duplicate check against the 193 training captions"
+  ddim_steps: 50
+  guidance: default                       # AudioLDMPipeline default, mirroring Kim's val path
+  gen_clip_seconds: 10.24                 # substrate-native generation length (see gate0.data note);
+                                          # CLAP text-audio cosine is length-robust across our gens
+  no_hand_curation: true
+
+# --- CI construction: ONE definition everywhere (Gate 0, E(s), F(s), every severity) ---
+ci:
+  method: cluster_percentile_bootstrap
+  interval: two_sided_95
+  B: 10000
+  seed: 20260826
+  resampling_unit: prompt                 # seeds stay clustered inside each resampled prompt
+  impl: research_pruning/eval/cluster_bootstrap.py
+
+# --- Phenomenon falsifier (post-Gate-0, generation only, no training) ---
+phenomenon:
+  severities: ["dense", "1_2_3_4", "1_2_3_1"]   # 0 / -23.7% / -65% (published Arshdeep artifact)
+  systems: ["backbone", "backbone_plus_sliced_lora"]
+  definitions:
+    E: "C(0) - C(s)      # standalone CLAP degradation"
+    D: "dCLAP(0) - dCLAP(s)  # adapter uplift lost"
+    F: "D(s) - E(s)      # excess adapter loss"
+  gate:
+    standalone_preserved: "upper_CI95[E(s)] <= 0.025"
+    differential_fragility: "point F(s) >= 0.025 AND lower_CI95[F(s)] > 0"
+    phenomenon: "standalone_preserved AND differential_fragility"
+    descriptive_only_if: "F positive but standalone_preserved false (generic capacity loss)"
+  claim_scope: "standalone text-audio semantic alignment (CLAP); FAD/KAD corroborative only"
+  fail_action: STOP-2                      # pre-registered negative; no method work
+
+# --- Budget / STOPs ---
+budget:
+  smoke_ceiling_cr: 0.1
+  gate0_ceiling_cr: 1.0                    # STOP-0: if smoke projects Gate 0 > this, re-cost to Gabriel
+  falsifying_chain_ceiling_cr: 2.5
+  icassp_hard_cap_cr: 3.5
+  reserve_cr: 2.0
+  completion_tranche: "re-costed AFTER a positive falsifier; adapter B + full ladder BEFORE oracle"

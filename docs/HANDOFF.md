@@ -482,12 +482,21 @@ same-shape tensors of `l1_audioldm-m-full_p1.ckpt` are bit-identical to
 `audioldm-m-full.ckpt`. It is pure prune-and-merge output, i.e. the
 **pre-recovery** checkpoint. This is proven, not inferred.
 
-**9.3 — recovered full-FT `(1,2,3,1)` checkpoint is NOT publicly available.**
-The public search is complete: no GitHub releases on either repository, and
-Zenodo 10.5281/zenodo.21376822 contains only pre-recovery artifacts. Gabriel is
-handling the request to Arshdeep directly. **This does not block M0.** Until it
-arrives, RQ3 is downgraded to a published-reference comparison and **no exact
-percentage-of-full-FT recovery may be claimed** from cross-pipeline numbers.
+**9.3 — recovered full-FT `(1,2,3,1)` checkpoint IS NOW PUBLICLY AVAILABLE
+(CORRECTED 2026-08-26, ledger ARSHDEEP-RECOVERED-PUBLIC).** The earlier "not
+publicly available" statement is stale: Arshdeep updated the PruningAudioLDM README
+on 2026-08-17 to a NEW Zenodo record **10.5281/zenodo.21977996** ("Pruned **and
+finetuned** Models"), which supersedes 21376822 (same concept `21376821`) as a
+**strict superset** — the 6 old files keep identical md5s, plus **2 recovered
+checkpoints**: `l1_p1_finetuned_global_step_999999.ckpt` (recovered **(1,2,3,1)**,
+md5 `cfb7ca3f8c712850f5a4bfe2162f5d1c`, 4,446,514,762 B) and
+`l1_p1_dp1_finetuned_global_step_999999.ckpt` (recovered **(1,2,1,1)**, md5
+`5d7da1504280913a6a91c76b13d0ff79`). No recovered checkpoint exists for `p2_dp2`
+(1,2,2,2). **Caveat:** the `_finetuned_global_step_999999` files are larger than
+their pruned-only counterparts and may be full Lightning checkpoints with
+optimizer/EMA state — verify weights-only vs training-state on download before use.
+The Arshdeep email is CANCELLED. Not yet fetched locally (needed only at the
+phenomenon stage, not Gate 0).
 
 **9.4 — the L1 baseline ranks only 28 conv layers.** `sorted_indexes_dict.pkl`
 covers `input_blocks.7..11` (9), `middle_block` (4), `output_blocks.0..6` (15) at
