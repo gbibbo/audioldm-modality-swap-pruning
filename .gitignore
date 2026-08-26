@@ -48,3 +48,6 @@ __pycache__/
 data/sa3/
 .venv-metrics
 .venv-metrics/
+
+# stray lock from ephemeral `uv run --no-project` invocations (project env is poetry.lock-based)
+uv.lock
