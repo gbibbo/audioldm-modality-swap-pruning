@@ -4,6 +4,21 @@ Do not invent GPU-hour estimates. Every number below is either **MEASURED** on r
 hardware or **DERIVED** from measured values by the master-plan §7.3 formulas, and each is
 labelled. Anything still unmeasured says so.
 
+## Account balance — AUTHORITATIVE (measured via Lightning SDK, 2026-08-26)
+
+**2026-08-26 16:27 UTC — user credit balance = `5.0` credits** (lifetime `total_spent` = 55.62;
+account_id `371a6f4c-1280-40b9-8bb0-d97a49597756`). **Source:** authenticated `LightningClient`
+→ `BillingServiceApi.billing_service_get_user_balance()` (SDK `lightning_sdk 2026.06.08`,
+`LIGHTNING_USER_ID e15d0a91-ceaa-44c7-813c-41819348adc7`), run read-only from the CPU Studio.
+Reproduce: `/home/zeus/miniconda3/envs/cloudspace/bin/python -c "from lightning_sdk.lightning_cloud.rest_client import LightningClient; print(LightningClient().billing_service_get_user_balance())"`.
+(`billing_service_get_account_balance()` returned an auth error; the user-balance endpoint is the
+authoritative one here.)
+
+This figure **SUPERSEDES the stale "~9.6 credits" line further down** (that reflects the M3-era
+state on 2026-08-19 and must not be treated as current) and matches Gabriel's externally-reported
+"~6 cr" to within measurement. The ICASSP hard cap (3.5 cr, ≥2 cr reserve) is unchanged; against a
+`5.0`-cr balance the falsifying chain (~1.5–2.2 cr) fits with the reserve intact.
+
 **How these numbers were produced.** One Lightning **Job** (the interactive Studio stays on
 free CPU — see `docs/HANDOFF.md`):
 
