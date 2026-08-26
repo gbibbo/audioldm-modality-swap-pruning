@@ -167,13 +167,14 @@ def derive_prompts_L(records: list, train_ids: list, eval_ids: list, domain: str
 
 
 def build_manifest(domain: str, records: list, seed: int, prompts_L=None,
-                   source: str = "freesound-cc0", sourcing_record: dict = None) -> dict:
+                   source: str = "freesound-cc0", sourcing_record: dict = None,
+                   eval_frac: float = EVAL_FRAC) -> dict:
     if len(records) < N_MIN_CLIP:
         raise ValueError(f"{len(records)} clips < N_MIN_CLIP={N_MIN_CLIP} for domain {domain} (§4)")
     ids = [r["id"] for r in records]
     if len(set(ids)) != len(ids):
         raise ValueError("duplicate clip ids")
-    train_ids, eval_ids = deterministic_split(ids, seed)
+    train_ids, eval_ids = deterministic_split(ids, seed, eval_frac=eval_frac)
     if set(train_ids) & set(eval_ids):
         raise AssertionError("train_L ∩ eval_L != ∅")
     auto = prompts_L is None
@@ -197,7 +198,7 @@ def build_manifest(domain: str, records: list, seed: int, prompts_L=None,
         "acquisition_representation": (sourcing_record or {}).get("acquisition_representation", "preview-hq-mp3"),
         "sample_rate_target": TARGET_SR,
         "split_seed": seed,
-        "constants": {"eval_frac": EVAL_FRAC, "min_eval": MIN_EVAL, "n_min_clip": N_MIN_CLIP,
+        "constants": {"eval_frac": eval_frac, "min_eval": MIN_EVAL, "n_min_clip": N_MIN_CLIP,
                       "dur_min": DUR_MIN, "dur_max": DUR_MAX},
         "n_clips": len(records),
         "clips": sorted(records, key=lambda r: r["id"]),
@@ -287,6 +288,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir"); ap.add_argument("--domain"); ap.add_argument("--seed", type=int, default=20260821)
     ap.add_argument("--out"); ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--eval-frac", type=float, default=EVAL_FRAC,
+                    help=f"eval_L fraction (default {EVAL_FRAC}; RQ2b mechanical uses 0.4 -> 96/64 of 160)")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
@@ -295,7 +298,8 @@ def main():
     sr_path = os.path.join(a.dir, "sourcing_record.json")
     sourcing = json.load(open(sr_path)) if os.path.exists(sr_path) else None
     recs = build_clip_records(a.dir, domain=a.domain)
-    man = build_manifest(a.domain, recs, seed=a.seed, sourcing_record=sourcing)   # AUTO prompts
+    man = build_manifest(a.domain, recs, seed=a.seed, sourcing_record=sourcing,
+                         eval_frac=a.eval_frac)   # AUTO prompts
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     json.dump(man, open(a.out, "w"), indent=2)
     print(f"wrote {a.out}: {man['n_clips']} clips, train={len(man['split']['train_L'])} "
