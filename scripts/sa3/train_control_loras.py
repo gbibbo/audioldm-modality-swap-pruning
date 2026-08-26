@@ -98,6 +98,39 @@ def include_for(block, backbone):
     return [f"transformer.layers.{int(block)}."]
 
 
+import re as _re
+_BLK_RE = _re.compile(r"\.layers\.(\d+)\.")
+EXPECTED_BACKBONE_BLOCKS = set(range(20))   # DiT transformer depth = 20 (step0 EXPECTED_DEPTH)
+
+
+def blocks_from_names(names):
+    return sorted({int(m.group(1)) for n in names for m in [_BLK_RE.search(n)] if m})
+
+
+def attached_report(lora_layers, backbone, block):
+    """Report + ASSERT the exact modules a LoRA attaches to BEFORE training (Gabriel F1 invariant).
+    Every attached module must live under the transformer backbone (`.layers.<i>.`) and NOTHING in the
+    conditioner / pretransform. For --backbone, all 20 blocks must be represented; for single-block,
+    exactly {block}."""
+    names = [n for n, _ in lora_layers]
+    blocks = blocks_from_names(names)
+    outside = [n for n in names
+               if (".layers." not in n) or ("conditioner" in n) or ("pretransform" in n)]
+    rep = {"n_modules": len(names), "blocks": blocks, "n_blocks": len(blocks),
+           "outside_backbone": outside[:5], "name_sample": names[:3]}
+    print(f"[attach] {len(names)} LoRA modules across {len(blocks)} blocks {blocks}")
+    print(f"[attach] sample module names: {names[:3]}")
+    assert names, "no LoRA modules attached -- include matched nothing"
+    assert not outside, f"LoRA attached OUTSIDE the transformer backbone: {outside[:5]}"
+    if backbone:
+        assert set(blocks) == EXPECTED_BACKBONE_BLOCKS, \
+            f"backbone LoRA must cover all 20 blocks; got {blocks}"
+    elif block is not None:
+        assert set(blocks) == {int(block)}, f"single-block LoRA must be only block {block}; got {blocks}"
+    rep["assert_ok"] = True
+    return rep
+
+
 def make_synth_data(dir_, n, dur_s, sr):
     """Tiny wav+txt pairs for the CPU dry-run (no external data)."""
     import numpy as np, soundfile as sf
@@ -182,9 +215,11 @@ def train(a):
         base_precision=(None if dry else a.base_precision),
     )
     from stable_audio_3.models.lora import get_lora_layers
-    n_lora = len(get_lora_layers(wrapper.diffusion))
+    lora_layers = get_lora_layers(wrapper.diffusion)
+    n_lora = len(lora_layers)
     print(f"[train] lora layers attached: {n_lora} (include={lora_config['include']})")
     assert n_lora > 0, "no LoRA layers attached -- include matched nothing"
+    attach_rep = attached_report(lora_layers, a.backbone, a.block)
 
     steps = a.smoke_steps if a.smoke else (1 if dry else a.steps)
     timer = StepTimer() if a.smoke else None
@@ -208,11 +243,21 @@ def train(a):
     from stable_audio_3.models.lora.utils import load_lora_checkpoint
     sd, cfg = load_lora_checkpoint(a.save)
     max_b = max((float(v.float().norm()) for k, v in sd.items() if k.endswith(".lora_B")), default=0.0)
+    ckpt_blocks = blocks_from_names(list(sd.keys()))
     print(f"[train] saved {a.save}: {len(sd)} tensors, config include={cfg.get('include')}, "
-          f"max|lora_B|={max_b:.4e} steps={steps} device={device.type}")
+          f"max|lora_B|={max_b:.4e} blocks={ckpt_blocks} steps={steps} device={device.type}")
+    # Export verification: nonzero LoRA + the intended blocks are represented in the saved file.
+    # (dry-run does 1 step -> lora_B may be ~0; only require nonzero B on a real run.)
+    export_ok = len(sd) > 0 and (a.dry_run_cpu or max_b > 0)
+    if a.backbone:
+        export_ok = export_ok and (set(ckpt_blocks) == EXPECTED_BACKBONE_BLOCKS)
+    elif a.block is not None:
+        export_ok = export_ok and (set(ckpt_blocks) == {int(a.block)})
 
     if not a.smoke:
-        return 0 if (n_lora > 0 and len(sd) > 0) else 1
+        if not export_ok:
+            print(f"[train] EXPORT VERIFY FAILED: blocks={ckpt_blocks} max|lora_B|={max_b:.3e}")
+        return 0 if (n_lora > 0 and export_ok) else 1
 
     # ---- SMOKE: metrics + cost projection + export->reload->effect (INFRA ONLY, not scientific) ----
     import gc, json, statistics

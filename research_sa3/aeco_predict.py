@@ -228,3 +228,31 @@ def control_localization_verdict(
         "external_observable_blocks": sorted(ext_ok_blocks),
         "note": "rc1.1: decided from measured CIs only; top-1 ranking of A_eco(b) is descriptive.",
     }
+
+
+def f1_functional_verdict(base_delta, post_delta, sesoi: float = 0.075):
+    """RQ2b F1/F2 SYMMETRIC functional gate (Gabriel rev3.1). Each of base and post independently must
+    have paired-bootstrap lower-CI > 0 AND point ΔT_AA >= SESOI. `base_delta`/`post_delta` are dicts with
+    keys {"dT_AA" (point), "lo", "hi"} (as emitted by scripts/sa3/score_taa.py). MDE is a sizing quantity
+    and is NEVER the PASS threshold; the bar is the preregistered SESOI.
+
+    Terminal verdicts:
+      base fails               -> STOP_RQ2B_BASE_FAIL  (task/training/measurement chain unqualified)
+      base ok but post fails   -> STOP_RQ2B_POST_FAIL  (meaningful base->post transfer not qualified)
+      both pass                -> F1_PASS              (F2 eligible)
+    """
+    def gate(d):
+        lo = float(d["lo"]); pt = float(d["dT_AA"])
+        return {"dT_AA": pt, "lo": lo, "hi": float(d["hi"]),
+                "lowerCI_gt_0": lo > 0.0, "point_ge_sesoi": pt >= sesoi,
+                "pass": (lo > 0.0) and (pt >= sesoi)}
+    b = gate(base_delta); p = gate(post_delta)
+    if not b["pass"]:
+        verdict = "STOP_RQ2B_BASE_FAIL"
+    elif not p["pass"]:
+        verdict = "STOP_RQ2B_POST_FAIL"
+    else:
+        verdict = "F1_PASS"
+    retention = (p["dT_AA"] / b["dT_AA"]) if b["dT_AA"] not in (0, 0.0) else None
+    return {"sesoi": sesoi, "base": b, "post": p, "pass": b["pass"] and p["pass"],
+            "verdict": verdict, "post_over_base_retention": retention}

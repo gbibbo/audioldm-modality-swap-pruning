@@ -132,10 +132,37 @@ def a7_task_control_verdict():
     return ok
 
 
+def a8_f1_functional_verdict():
+    # RQ2b symmetric gate: both base and post need lower-CI>0 AND point>=SESOI(0.075).
+    strong = {"dT_AA": 0.11, "lo": 0.06, "hi": 0.16}     # passes
+    weak_pt = {"dT_AA": 0.05, "lo": 0.02, "hi": 0.09}    # positive but point < SESOI
+    weak_ci = {"dT_AA": 0.09, "lo": -0.01, "hi": 0.18}   # point>=SESOI but CI contains 0
+    # both strong -> F1_PASS
+    r = AP.f1_functional_verdict(strong, strong)
+    ok = r["verdict"] == "F1_PASS" and r["pass"] and r["base"]["pass"] and r["post"]["pass"]
+    # base point below SESOI -> STOP base (even though CI>0)
+    r2 = AP.f1_functional_verdict(weak_pt, strong)
+    ok = ok and r2["verdict"] == "STOP_RQ2B_BASE_FAIL" and not r2["base"]["point_ge_sesoi"]
+    # base ok, post CI contains 0 -> STOP post
+    r3 = AP.f1_functional_verdict(strong, weak_ci)
+    ok = ok and r3["verdict"] == "STOP_RQ2B_POST_FAIL" and not r3["post"]["lowerCI_gt_0"]
+    # base ok, post point below SESOI (positivity alone insufficient) -> STOP post
+    r4 = AP.f1_functional_verdict(strong, weak_pt)
+    ok = ok and r4["verdict"] == "STOP_RQ2B_POST_FAIL" and r4["post"]["lowerCI_gt_0"] and not r4["post"]["point_ge_sesoi"]
+    # exact-boundary point == SESOI passes (>=)
+    edge = {"dT_AA": 0.075, "lo": 0.001, "hi": 0.15}
+    r5 = AP.f1_functional_verdict(edge, edge)
+    ok = ok and r5["verdict"] == "F1_PASS"
+    print(f"    A8 F1 verdict PASS={r['verdict']} base<SESOI={r2['verdict']} postCI0={r3['verdict']} "
+          f"post<SESOI={r4['verdict']} edge={r5['verdict']}")
+    return ok
+
+
 def main():
     checks = [("A1", a1_helpers), ("A2", a2_prediction_verdict), ("A3", a3_prediction_check_confirm),
               ("A4", a4_control_pass_even_when_b_not_top1), ("A5", a5_control_stop_cases),
-              ("A6", a6_paired_bootstrap_ci), ("A7", a7_task_control_verdict)]
+              ("A6", a6_paired_bootstrap_ci), ("A7", a7_task_control_verdict),
+              ("A8", a8_f1_functional_verdict)]
     ok_all = True
     for name, fn in checks:
         ok = fn(); ok_all &= ok
