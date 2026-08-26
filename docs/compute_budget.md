@@ -16,8 +16,15 @@ authoritative one here.)
 
 This figure **SUPERSEDES the stale "~9.6 credits" line further down** (that reflects the M3-era
 state on 2026-08-19 and must not be treated as current) and matches Gabriel's externally-reported
-"~6 cr" to within measurement. The ICASSP hard cap (3.5 cr, ≥2 cr reserve) is unchanged; against a
-`5.0`-cr balance the falsifying chain (~1.5–2.2 cr) fits with the reserve intact.
+"~6 cr" to within measurement.
+
+**Effective ICASSP spend cap = 3.0 cr (BINDING; arithmetic correction DECISION-V4-10).** With a
+5.0-cr balance the nominal 3.5-cr hard cap and the ≥2-cr reserve cannot both hold, so the binding
+ceiling is **min(3.5, 5.0 − 2.0) = 3.0 cr** and STOP-3 fires there. The nominal 3.5 is kept only as a
+reference. This is arithmetic, not a scientific amendment. The falsifying chain (~1.5–2.2 cr) fits
+with the reserve intact; the completion tranche (adapter B + full ladder + oracle) is **not
+guaranteed** to fit under 3.0 and must be re-costed only after a positive falsifier using actual
+smoke costs — do not assume it remains affordable.
 
 **How these numbers were produced.** One Lightning **Job** (the interactive Studio stays on
 free CPU — see `docs/HANDOFF.md`):

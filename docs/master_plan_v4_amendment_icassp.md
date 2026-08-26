@@ -132,12 +132,24 @@ and cannot rescue a failed CLAP gate; the broader word "quality" appears only if
   0.5–1.0 + Gate-0 eval 0.3 + 3-severity phenomenon gen 0.6–0.8 ≈ **1.5–2.2 cr ≤ 2.5 ✓**.
 * **Completion tranche (only after a positive falsifier, re-costed post-smoke):** adapter B +
   ladder + oracle ≈ 1.5–2.2 cr.
-* **Hard cap 3.5 cr for the whole ICASSP effort; ≥ 2 cr reserve.** Do not raise the overall spend
-  now — after a positive phenomenon result, return with the measured balance and the cheapest
-  confirmation plan. Watchdog `--max-cost` on every job; CPU dry-run first.
+* **Effective spend cap = 3.0 cr (BINDING; arithmetic correction DECISION-V4-10, 2026-08-26).**
+  The measured balance is **5.0 cr** (`docs/compute_budget.md`), so the nominal 3.5-cr hard cap and
+  the ≥2-cr reserve cannot both hold: **effective cap = min(3.5, 5.0 − 2.0) = 3.0 cr** while the
+  balance is 5.0 and the reserve stays binding. The nominal 3.5 is kept only as a reference ceiling.
+  Do not raise the overall spend now — after a positive phenomenon result, return with the measured
+  balance and the cheapest confirmation plan. Watchdog `--max-cost` on every job; CPU dry-run first.
+* **Clip length (DECISION-V4-10, 2026-08-26, PRE-DATA):** Gate 0 + all downstream ICASSP work run at
+  **3.84 s / latent_t=96**, not 10.24 s. The earlier "256-fixed → must pad" premise was REFUTED by an
+  executable audit (`scripts/research/kim_clip_length_audit.py`): the only constraint is latent_t
+  divisible by 8; 3.84 s is the nearest shorter valid duration, strict-loads the same weights, has a
+  valid loss, and leaves pruning + Scenario-B LoRA transfer unchanged. Deterministic **center** crop of
+  each 4-s Kim clip (frozen; Kim released no boundary convention). Paper-facing: a **near-4-s M-Full
+  transposition** of Kim's recipe, NOT an exact S-Full replication. Frozen in
+  `configs/research/icassp_gate0_prereg.yaml` v2 (v1 preserved at `…_v1_superseded.yaml`).
 * **STOP-0** smoke projects Gate 0 > 1 cr → re-cost to Gabriel (no fidelity auto-shrink).
   **STOP-1** Gate 0 FAIL → thesis dead; GO-ALTERNATIVE vs NO-GO-ICASSP decision to Gabriel.
-  **STOP-2** phenomenon absent → pre-registered negative; venue fallback. **STOP-3** 3.5-cr cap.
+  **STOP-2** phenomenon absent → pre-registered negative; venue fallback. **STOP-3** effective cap
+  (3.0 cr) reached.
 
 ## F. Frozen technical facts this amendment relies on (verified, CPU, committed)
 

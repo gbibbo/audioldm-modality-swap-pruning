@@ -1,10 +1,24 @@
-# ICASSP-2027 Scenario-B pre-registration — FROZEN at DECISION-V4-09 (2026-08-26).
+# ICASSP-2027 Scenario-B pre-registration — v2, FROZEN at DECISION-V4-09 + V4-10 (2026-08-26).
 # Single source of truth for the frozen numbers. Code reads this; do not change any value
 # after seeing data. The smoke measures execution/cost ONLY and never tunes these.
 # Contract: docs/master_plan_v4_amendment_icassp.md (rev4, ADOPTED), docs/publication_decision_memo.md §5.
+#
+# VERSIONED — v1 preserved verbatim at configs/research/icassp_gate0_prereg_v1_superseded.yaml
+# (sha256 bfddd527…). These are PRE-DATA protocol corrections, not result-driven tuning:
+#   v2 changelog (DECISION-V4-10 + arithmetic budget correction, 2026-08-26, no compute):
+#     - clip length: train_clip_seconds 10.24 -> 3.84 ; add latent_t_size 96 ; add mel_target_length 384.
+#       Rationale: KIM-CLIP-LENGTH audit (scripts/research/kim_clip_length_audit.py) — the U-Net
+#       requires latent_t divisible by 8; exact 4.0 s (latent 100) fails; 3.84 s (latent 96) is the
+#       nearest shorter VALID duration, strict-loads the SAME weights, has a valid loss, and leaves
+#       pruning + Scenario-B LoRA transfer unchanged. NOT the "256-fixed / must pad to 10.24 s" premise
+#       (refuted). This is a near-4-s M-Full transposition of Kim, NOT an exact S-Full replication.
+#     - add crop_policy: deterministic CENTER crop (Kim released no preprocessing/boundary convention;
+#       fixed center crop is the default; FROZEN — never change after training begins).
+#     - budget: hard cap 3.5 stays as a ceiling but the EFFECTIVE cap is min(3.5, balance-reserve)
+#       = min(3.5, 5.0-2.0) = 3.0 cr while balance=5.0 and reserve>=2.0 bind (arithmetic, not scientific).
 
-decision: DECISION-V4-09
-adopted_utc_montevideo: "2026-08-26 03:02"
+decision: DECISION-V4-09 + DECISION-V4-10
+adopted_utc_montevideo: "2026-08-26 03:02 (V4-09); 2026-08-26 13:48 (V4-10 clip-length)"
 substrate: audioldm-m-full            # dense, channel_mult (1,2,3,5)
 
 # --- Gate 0: powered replication of the Kim et al. (Appl. Sci. 2025) recipe on dense M-Full ---
@@ -21,13 +35,17 @@ gate0:
   data:
     name: kim-hiphop-193                  # Rofla/AudioLDM-with-LoRA-Hiphop-subgenre (HF, Apache-2.0)
     n_clips: 193
-    kim_source_clip_seconds: 4.0          # Kim's clips are 4 s
-    train_clip_seconds: 10.24             # SUBSTRATE-FORCED: M-Full latent is fixed at 256 frames
-                                          # = 10.24 s; 4 s cannot be set without breaking the
-                                          # pretrained VAE/U-Net alignment. We pad the 4 s sources
-                                          # to 10.24 s (loader pad_wav). DEVIATION from Kim, forced
-                                          # by the substrate, not an optimization. FLAGGED for
-                                          # Gabriel's acknowledgment (ledger KIM-CLIP-LENGTH).
+    kim_source_clip_seconds: 4.0          # Kim's clips are 4 s (HF audio at 44.1 kHz)
+    train_clip_seconds: 3.84              # DECISION-V4-10: nearest shorter VALID duration under the
+                                          # U-Net latent_t-divisible-by-8 constraint (audit-proven).
+                                          # True near-4-s training; NO padding. 3.84 s @ 16 kHz.
+    latent_t_size: 96                     # 3.84 s -> mel 384 frames -> VAE /4 -> latent time 96 (div 8)
+    mel_target_length: 384                # data-pipeline mel target = int(3.84 * 16000 / 160) = 384
+    crop_policy: center                   # FROZEN deterministic center crop of each resampled 16 kHz
+                                          # clip to exactly 61440 samples (3.84 s); clips shorter than
+                                          # 3.84 s -> symmetric zero-pad. NO random offset. Kim released
+                                          # no preprocessing/boundary convention -> center is the default.
+                                          # NEVER change after training begins (ledger DECISION-V4-10).
   epochs: 200                             # first published checkpoint = affordable operating point
                                           # (NOT a "best band"; reproduction, not exact replication)
   primary_scorer: laion-clap-htsat-fused  # Kim's scorer
@@ -47,8 +65,9 @@ battery:
   dedup: "exact + near-duplicate check against the 193 training captions"
   ddim_steps: 50
   guidance: default                       # AudioLDMPipeline default, mirroring Kim's val path
-  gen_clip_seconds: 10.24                 # substrate-native generation length (see gate0.data note);
-                                          # CLAP text-audio cosine is length-robust across our gens
+  gen_clip_seconds: 3.84                  # DECISION-V4-10: generate at the adapter's TRAINED length
+                                          # (latent_t 96), matching gate0.data.train_clip_seconds; 3.84 s
+                                          # < CLAP's 10 s audio window so no scorer truncation
   no_hand_curation: true
 
 # --- CI construction: ONE definition everywhere (Gate 0, E(s), F(s), every severity) ---
@@ -81,6 +100,11 @@ budget:
   smoke_ceiling_cr: 0.1
   gate0_ceiling_cr: 1.0                    # STOP-0: if smoke projects Gate 0 > this, re-cost to Gabriel
   falsifying_chain_ceiling_cr: 2.5
-  icassp_hard_cap_cr: 3.5
-  reserve_cr: 2.0
-  completion_tranche: "re-costed AFTER a positive falsifier; adapter B + full ladder BEFORE oracle"
+  icassp_hard_cap_cr: 3.5                  # nominal ceiling (kept for reference)
+  reserve_cr: 2.0                          # binding
+  account_balance_cr: 5.0                  # MEASURED 2026-08-26 16:27 UTC (lightning_sdk); see compute_budget.md
+  effective_cap_cr: 3.0                    # BINDING = min(icassp_hard_cap_cr, account_balance_cr - reserve_cr)
+                                           # = min(3.5, 5.0-2.0) = 3.0 while balance=5.0 and reserve>=2.0.
+                                           # Arithmetic correction (DECISION-V4-10), not a scientific amendment.
+                                           # STOP-3 fires at this effective cap.
+  completion_tranche: "re-costed AFTER a positive falsifier with ACTUAL smoke costs; adapter B + full ladder BEFORE oracle; NOT guaranteed to fit under 3.0 cr"

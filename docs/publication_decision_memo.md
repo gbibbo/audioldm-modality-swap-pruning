@@ -406,9 +406,13 @@ Ttrain 0.56 s/step@b2/10-s, Tgen 8.4 s/clip@S=50/10-s, 4-s scale ≈ ×0.39).
 * **Completion tranche (ONLY if the falsifier passes; re-costed after the smoke; authorized
   separately, NOT now):** adapter B training + full-ladder + qualifying-severity generation
   ~1.0–1.5; Scenario-A oracle ~0.5–0.7 (budget-permitting, after adapter B).
-* **Hard cap for the whole ICASSP effort: 3.5 cr**, ≥ 2 cr of the ~6-cr balance held in reserve.
-  **Do not raise the overall ICASSP spend now** — after a positive phenomenon result, return with
-  the measured remaining balance and the cheapest confirmation plan.
+* **Effective cap for the whole ICASSP effort: 3.0 cr** (arithmetic correction DECISION-V4-10,
+  2026-08-26). Balance MEASURED at **5.0 cr** (`docs/compute_budget.md`), so 3.5-cr nominal cap and
+  ≥2-cr reserve cannot both hold → **effective = min(3.5, 5.0−2.0) = 3.0 cr**. The nominal 3.5 stays
+  only as a reference ceiling. **Do not raise the overall ICASSP spend now** — after a positive
+  phenomenon result, return with the measured remaining balance and the cheapest confirmation plan.
+  The falsifying chain (~1.5–2.2 cr) fits; the completion tranche is NOT guaranteed to fit under 3.0
+  and must be re-costed only after a positive falsifier using actual smoke costs.
 
 **Schedule:** Aug 26–27 amendment rev4 review (Gabriel) + held-out prompt battery frozen + CPU
 wiring (CLAP scorer path, trainer data path, transfer op, cluster-bootstrap) with dry-runs;
@@ -422,6 +426,6 @@ submit only if the phenomenon claim is powered ("do not submit underpowered" sta
 (never auto-shrink fidelity to fit). **STOP-1** Gate 0 FAIL → AudioLDM thesis dead; decision
 GO-ALTERNATIVE vs NO-GO-ICASSP goes to Gabriel with the evidence then in hand. **STOP-2**
 phenomenon absent (no severity satisfies BOTH gate conditions) → pre-registered negative; no
-method work; venue-fallback decision. **STOP-3** 3.5-cr cap reached → stop and report.
+method work; venue-fallback decision. **STOP-3** effective cap (3.0 cr) reached → stop and report.
 **Completion tranche is authorized separately after a positive falsifier, not by this GO.**
 No mitigation/method design before the phenomenon is confirmed.
