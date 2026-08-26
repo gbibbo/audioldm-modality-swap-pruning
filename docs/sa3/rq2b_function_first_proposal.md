@@ -3,7 +3,8 @@
 **Status:** **PREREGISTRATION FROZEN** (Gabriel signed off 2026-08-25). F0 + data sourcing are **GO**;
 GPU F1 proceeds only after the CPU/data invariants and the final n=64 cost estimate are green. F2 only
 if F1 fully passes. Ecological work is **not** authorized by this document.
-**Revised:** 2026-08-25 (Montevideo 22:21), rev3 = Gabriel's four sign-off edits on rev2.
+**Revised:** 2026-08-25 (Montevideo 22:21 rev3 = four sign-off edits; 22:35 rev3.1 = two final gate
+clarifications — n_eval frozen at 64 before data, symmetric base/post SESOI gate).
 **Supersedes** the rev1 "Design A / Design B" framing. It does **not** alter RQ2's closed verdict
 (`235f344`) or L6/L13, which remain failed positive controls with no retrospective rescue.
 
@@ -94,15 +95,18 @@ established (as limiting). F0→F1→F2 is designed to separate them without ass
   demand a non-trivial learned adaptation. It is **not** anchored to ext14 (=+0.047, which only
   establishes detectability, not practical relevance). This is a scientific bar set by judgment, not
   derived from the noise floor.
-- **Planning noise (to be re-estimated on fresh data):** σ_base≈0.08, σ_post≈0.19 (from L6/L13).
-- **Sample-size rule:** choose n so MDE = 2.8·σ/√n is **comfortably** ≤ SESOI at 80 % power, two-sided
-  α=0.05. **n_eval = 64** ⇒ MDE_base 0.028, **MDE_post 0.067 < 0.075 with margin** (the noisy post
-  condition is the binding constraint; base is heavily overpowered). n=48 was rejected — its MDE_post
-  0.077 ≈ SESOI is not "comfortably below." If the re-estimated σ_post is materially larger, n is raised
-  before generation, not after.
-- **Functional PASS (frozen):** paired bootstrap (seed 20260824, B=10000) over the n eval units,
-  `lower-CI > 0` **and** point estimate ≥ SESOI. **FAIL / STOP** otherwise. No metric may be swapped in
-  after seeing a result.
+- **Planning noise (conservative prior, from L6/L13):** σ_base≈0.08, σ_post≈0.19.
+- **Sample size — FROZEN NOW at n_eval = 64** (not to be re-estimated after seeing F1 outputs). Using the
+  conservative prior σ_post≈0.19: planned MDE = 2.8·0.19/√64 = **0.067 < SESOI 0.075 with margin**
+  (MDE_base 0.028; the noisy post condition is binding, base is heavily overpowered). n=48 was rejected
+  (MDE_post 0.077 ≈ SESOI, not "comfortably below").
+  **Why n is frozen, not adaptive:** the relevant σ is the variance of the *paired adapter uplift*, which
+  **cannot** be estimated from the 64 reference clips alone — it only exists once F1 generations exist,
+  and resizing n on it would be resizing after seeing results. Descriptive properties of the fresh eval
+  set may be **reported**, but they must **not** resize n or alter the gate after F1 generations exist.
+- **Functional PASS (frozen):** paired bootstrap (seed 20260824, B=10000) over the 64 eval units,
+  `lower-CI > 0` **and** point estimate ≥ SESOI (0.075). **FAIL / STOP** otherwise. No metric may be
+  swapped in after seeing a result. MDE is a sizing quantity, never the PASS threshold.
 
 ---
 
@@ -110,7 +114,8 @@ established (as limiting). F0→F1→F2 is designed to separate them without ass
 
 - Re-run `score_taa.py --selftest` and add unit tests pinning the paired aggregation and bootstrap
   determinism on the fresh manifest shape.
-- Recompute the power/MDE table on the **fresh** eval σ once F1/F2 data exists (before generating).
+- Emit the **frozen** n=64 power table (σ prior 0.19 → MDE 0.067). This table is descriptive/for the
+  record; it does **not** resize n (n is frozen per §1).
 - A synthetic audio-perturbation check (reference vs artificially degraded) is admissible **only** as an
   implementation/sensitivity unit test of the scorer. It is **explicitly not** evidence that T_AA is
   valid for *learned SA3 adaptations* — that validity is what F1 establishes. F0 cannot, by itself,
@@ -136,17 +141,22 @@ and does it transfer base→post? No structural inspection whatsoever.
   bootstrap seed 20260824 / B=10000. Recipe frozen and committed **before** training; not made more
   generous than L6/L13's.
 - **Configs (4):** `base_noL`, `base_Lfull`, `post_noL`, `post_Lfull` (× 64 eval = 256 gens).
-- **Functional gate (before ANY structural analysis):**
-  - **base uplift:** ΔT_AA(`base_Lfull` − `base_noL`) lower-CI > 0 **and** ≥ SESOI;
-  - **base→post transfer:** ΔT_AA(`post_Lfull` − `post_noL`) lower-CI > 0 (robust positivity at
-    powered n); report retention ΔT(post)/ΔT(base).
+- **Functional gate (before ANY structural analysis) — symmetric base/post:**
+  - **base uplift:** ΔT_AA(`base_Lfull` − `base_noL`) lower-CI > 0 **and** point ≥ SESOI (0.075);
+  - **base→post transfer:** ΔT_AA(`post_Lfull` − `post_noL`) lower-CI > 0 **and** point ≥ SESOI (0.075);
+    report retention R_L = ΔT(post)/ΔT(base).
+  - **Why post must also clear SESOI (not just positivity):** the pruning-compatibility question turns on
+    the retention ratio R_L = ΔT_pruned/ΔT_dense; if ΔT_post is tiny, R_L is numerically unstable and
+    there is little meaningful adapter function to preserve. A retention ratio is only interpretable once
+    the dense adapter contribution clears a preregistered minimum functional effect. (This is exactly the
+    footing on which we answer Arshdeep on prune+LoRA retention.)
 
 **Terminal STOP branches:**
-- **base uplift fails** → the task / training / measurement chain is **not qualified**. STOP RQ2b.
-  (SA3 could not learn a detectable adaptation even with full backbone + ample data + powered eval → the
-  microscope, not a single block, is the problem.)
-- **base passes, post fails** → the **base→post adapter-transfer contract that motivates the whole
-  project does not hold for this task.** STOP RQ2b.
+- **base fails** (lower-CI ≤ 0 or point < 0.075) → the task / training / measurement chain is **not
+  qualified** under the frozen recipe. STOP RQ2b. (Modest conclusion only — no inference about which
+  component, no iteration.)
+- **base passes but post fails** (post lower-CI ≤ 0 **or** post point < 0.075) → the **meaningful
+  base→post adapter-transfer contract is not qualified.** STOP RQ2b.
 - **both pass** → the task **and** the functional metric are qualified on a learned adaptation. Only then
   is F2 eligible.
 
@@ -178,8 +188,9 @@ behave?
   `post_Lband`, `post^{−band}_noL`, `post^{−band}_Lband`, and an **architectural-only, symmetric**
   external panel g ∈ **{3, 16}** (outside the band, chosen by position — not by D_P): `post^{−3}_noL`,
   `post^{−3}_Lband`, `post^{−16}_noL`, `post^{−16}_Lband` (× 64 = 512 gens).
-- **F2 functional gate (before structural read-out):** same as F1 — ΔT_AA(`base_Lband`) lower-CI > 0 and
-  ≥ SESOI, and ΔT_AA(`post_Lband`) lower-CI > 0.
+- **F2 functional gate (before structural read-out):** same symmetric criterion as F1 —
+  ΔT_AA(`base_Lband`) lower-CI > 0 **and** point ≥ SESOI (0.075), **and** ΔT_AA(`post_Lband`)
+  lower-CI > 0 **and** point ≥ SESOI (0.075).
 - **Structural / algebraic read-out (only after the functional gate passes):** verify (1)–(3) above; i.e.
   band removal collapses ΔT to 0, and ≥1 external removal retains a positive uplift.
 
@@ -238,7 +249,10 @@ behave?
   held-out functional gate passes (F1 for existence, F2 for the band).
 - **Known parameter support is not known functional localisation:** the band's ground truth is algebraic
   (support removal), never an `A_eco` ranking expectation.
-- **SESOI is scientific, MDE is for sizing:** PASS = lower-CI > 0 and ≥ SESOI; never lower-CI > MDE.
+- **SESOI is scientific, MDE is for sizing:** PASS = lower-CI > 0 and point ≥ SESOI, for **both** base
+  and post; never lower-CI > MDE.
+- **n is frozen at 64 before data:** the paired-uplift σ cannot be estimated from reference clips; fresh
+  eval σ is reported descriptively only and never resizes n or moves the gate after F1 generations exist.
 - **No retrospective rescue:** any metric / n / SESOI / recipe choice applies only to this fresh phase,
   never to L6/L13.
 - **Freeze before generating:** domain manifest, SESOI, n, seeds, band, external panel and all gates
@@ -251,21 +265,27 @@ behave?
 ## 8. Sign-offs (RESOLVED, Gabriel 2026-08-25 — preregistration frozen)
 
 1. **SESOI = 0.075** ✓ — accepted as a conservative ex-ante threshold (ext14 anchoring removed).
-2. **n_eval = 64** ✓ — so MDE_post ≈ 0.067 is comfortably below SESOI (n=48 rejected).
+2. **n_eval = 64, FROZEN NOW** ✓ — planned MDE_post ≈ 0.067 < SESOI on the conservative prior σ≈0.19;
+   **not** re-estimated/resized after F1 outputs (the paired-uplift σ does not exist until F1 generates).
 3. **Qualification domain = `mechanical`, 160/96/64** ✓ — fresh RQ2b manifest, `water_liquid` not reused.
 4. **Band = {8,9,10,11}** ✓ (architectural centre, criterion-exogenous); **external panel {3,16}** ✓
    (architectural, symmetric).
 5. **Recipe = standard LoRA r16/α16, 1000 steps, frozen** ✓ for both F1 and F2 — not made more generous.
+6. **Symmetric base/post gate** ✓ — both base AND post require lower-CI>0 AND point ≥ 0.075 (post
+   positivity alone is insufficient; retention R_L is only interpretable above a preregistered minimum).
 
 ## 9. Next steps (authorization state)
 
-- **GO now (CPU, 0 cr):** F0 scorer/power qualification; source + freeze the `mechanical` 160/96/64
-  manifest; freeze this preregistration; re-estimate σ on the fresh eval and confirm n=64 still powers
-  SESOI; produce the final cost estimate.
-- **GO after CPU/data invariants + final cost are green:** GPU F1 (full-backbone sentinel).
+- **GO now (CPU, 0 cr):** F0 scorer/unit tests + emit the frozen n=64 power table; stream-source the
+  `mechanical` domain until **160 clips pass all audio filters** and freeze the 96/64 manifest (sha,
+  auto-prompts, provenance); update the cost estimate against the actual 256-generation F1 design.
+  **n stays frozen at 64; fresh-eval σ is descriptive only, never a resize.**
+- **GPU F1 is GO automatically** iff all manifest/F0 invariants pass **and** the revised projected spend
+  keeps the whole qualification chain inside the 1.63-cr envelope. Watchdog mandatory.
 - **Conditional:** F2 only if F1 fully passes; ecological work is **not** authorized here.
 
-**Frozen F1 terminal gates:** base ΔT lower-CI ≤ 0 **or** point estimate < 0.075 → STOP RQ2b; base
-passes but post lower-CI ≤ 0 → base→post transfer contract fails → STOP; both pass → F2 eligible.
+**Frozen F1/F2 terminal gates (symmetric):** base lower-CI ≤ 0 **or** base point < 0.075 → STOP RQ2b;
+base passes but post lower-CI ≤ 0 **or** post point < 0.075 → meaningful base→post transfer contract not
+qualified → STOP; both pass → F2 eligible (F2 applies the identical base+post criterion).
 **If F1 fails, the conclusion is modest:** the task/training/measurement chain failed qualification under
 the frozen standard recipe — no inference about which component, no iteration.
