@@ -47,7 +47,6 @@
 1. **Recovered full-FT `(1,2,3,1)` checkpoint is NOW PUBLIC (CORRECTED 2026-08-26, ledger ARSHDEEP-RECOVERED-PUBLIC) — no request needed.** Arshdeep's README (updated 2026-08-17) points at Zenodo **21977996** ("Pruned and finetuned Models"), superseding 21376822 as a strict superset (old files keep identical md5s) + adding recovered **(1,2,3,1)** `l1_p1_finetuned_global_step_999999.ckpt` (md5 `cfb7ca3f…`, 4.45 GB, CC-BY-4.0) and recovered **(1,2,1,1)** `l1_p1_dp1_finetuned_...ckpt`. No recovered p2_dp2. **Caveat:** `_finetuned_global_step_999999` files may carry optimizer/EMA state (larger than pruned-only) — verify weights-only on download. Not yet fetched (needed at the phenomenon stage, not Gate 0). Arshdeep email CANCELLED. **Still open (separate, non-blocking):** the AUDIT-M3-001 seam-convention question (4 tensors deviate from his public script; `output_blocks.0/1` positional-vs-ranked; `output_blocks.2.0.in_layers.2` weight-positional/bias-ranked) — ask later, not bundled with anything.
 2. **M1 GPU acceptance (only remaining M1 item, blocked on GPU + CG):** apply the minimal upstream patch (`setup_peft`/`build_peft_optimizer`/EMA/resume per `docs/integration_notes.md`), then run several hundred real optimization steps and record VRAM, sec/step and a resume test in `docs/compute_budget.md`. M1 CPU acceptance is COMPLETE (M1-005/006/007; F1–F8 all addressed).
 
-
 ## RUN RECIPES
 
 * Full resume context: `docs/HANDOFF.md`
