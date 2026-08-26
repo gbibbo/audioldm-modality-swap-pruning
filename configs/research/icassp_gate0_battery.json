@@ -1,0 +1,297 @@
+{
+ "name": "icassp_gate0_held_out_battery",
+ "decision": "DECISION-V4-09 (battery) + DECISION-V4-10 (clip length)",
+ "n_prompts": 64,
+ "n_seeds": 3,
+ "source": "google/MusicCaps public CSV (CC-BY-SA-4.0)",
+ "musiccaps_csv_sha256": "8cc109ac507b5e5aed8ea73a5c8f897a9d0793f7397427e000adf4c05f6021c7",
+ "kim_captions_ref": {
+  "file": "configs/research/kim193_captions_unique.json",
+  "sha256": "4279c624ac745cdd22b2487da0e87cf15551259db3357fc47da88d786b20c8f5",
+  "n_unique": 45
+ },
+ "rule": {
+  "keywords": [
+   "hip[\\s-]?hop",
+   "rap",
+   "rapping",
+   "rapper",
+   "rappers",
+   "trap beat",
+   "boom bap",
+   "gangsta"
+  ],
+  "near_dup_jaccard": 0.85,
+  "seed_salt": "icassp-gate0-battery-20260826",
+  "order": "sha256(seed_salt|ytid) ascending, first N",
+  "normalization": "lowercase, strip non-word chars, collapse whitespace"
+ },
+ "diagnostics": {
+  "musiccaps_rows": 5521,
+  "keyword_filtered": 235,
+  "dropped_exact_dup_vs_kim": 0,
+  "dropped_neardup_vs_kim": 35,
+  "candidates_after_disjoint_and_selfdedup": 200,
+  "selected": 64,
+  "kim_unique_captions": 45
+ },
+ "prompts": [
+  {
+   "ytid": "8rCYRgePG-4",
+   "caption": "A female vocalist sings this spirited Latin Rap. The tempo is medium fast with keyboard harmony , infectious drumming, groovy basslines and digital beats. The song is upbeat, youthful, catchy, energetic, emphatic, melodic and vivacious with a dance groove. This song is a Latin Urbano."
+  },
+  {
+   "ytid": "PFX2OO75sRQ",
+   "caption": "The Hip Hop/Rap song features a flat male vocal with filtered, background male vocals, rapping over repetitive plucked synth melody and addictive synth lead melody, followed by distorted 808 bass, snaps and some offbeat hi hats. The whole sound is distorted and everything is in mono, which makes the song low quality."
+  },
+  {
+   "ytid": "KxZ0yDfyaJw",
+   "caption": "This is a hardcore hip-hop/gangsta rap music piece. There are male vocals taking turns rapping and when they are not rapping they are shouting ad-libs. There is a fuzzy synth bass playing the repeated melodic theme of the beat while the rhythm consists of an electronic drum beat with gunshot effects every now and then. The atmosphere is urban and violent. This piece could be included in the soundtrack of a crime movie that takes place in the big city. It could also be used in the soundtrack of a crime video game."
+  },
+  {
+   "ytid": "NsR60ehkHGA",
+   "caption": "This is a Swiss rap music piece. There is a male vocal rapping in the German language. The melody consists of a repeating theme played by a synth sound. A low-to-medium range string sample can be heard every now and then. The rhythmic background consists of an electronic drum beat which contains very faint clicking sounds added for texture. It is an urban sounding piece. This piece would fit perfectly in the soundtrack of a crime movie that takes place in the ghettos of a German-speaking city."
+  },
+  {
+   "ytid": "rVymW4Nb4NU",
+   "caption": "The low quality recording features an alarm beeping sound effect, after which the hip hop song starts playing and it has a stuttering DJ scratching sound effect. The recording is noisy and in mono."
+  },
+  {
+   "ytid": "uE3BHXXiCFs",
+   "caption": "The low quality recording features an afrobeats song that consists of a flat male vocal rapping over punchy 808 bass, strings melody, shimmering hi hats, claps and some snare rolls. It sounds addictive, bouncy and groovy thanks to that rhythm."
+  },
+  {
+   "ytid": "6EwEo0JQkTg",
+   "caption": "This is the live recording of a DJ performance. The DJ is modifying a hip-hop beat with the use of a turntable through the scratching technique. A repeated sitar sample can be heard in the beat. There is a strong and groovy bass line in the background. The rhythmic structure consists of a slightly fast-paced hip-hop electronic drum beat. There is a modern sounding, urban feel to it. This piece could be playing in the background at a sportswear shop. It could also be played at sports venues."
+  },
+  {
+   "ytid": "VAqPLAgn9NI",
+   "caption": "This is a Hungarian hip-hop music piece. There is a male vocal rapping in the Hungarian language. There is a piano sample in the melodic background. There is also a strong bass sound. The rhythmic background has an electronic drum beat. The atmosphere is gloomy and urban. This piece could be used in the soundtrack of a crime movie or a TV series that takes place in Hungary."
+  },
+  {
+   "ytid": "D8zK7PHIkgA",
+   "caption": "A male vocalist sings this enthusiastic hip-hop song. The tempo is medium fast with a lively keyboard harmony, slick drumming, subtle drumming, cymbals, synthesiser arrangements and enthusiastic vocal backup. The song is lively, spirited, youthful, passionate, emotional and persuasive. It talks about love, peace, freedom,harmony and kindness towards humankind. This song is a Reggae Fusion/ Hip-Hop song."
+  },
+  {
+   "ytid": "M-RX7LqL50A",
+   "caption": "A male vocalist sings this energetic Rap. The tempo is fast with the vocalist singing a Hip-Hop song with Acapella . No instrumentation is used apart from the vocal percussive beats. The song is a youthful, enthusiastic,engaging, insistent, passionate , groovy, rhythmic patter with slangy lyrics and a dance groove. This song is contemporary Hip-Hop/Rap."
+  },
+  {
+   "ytid": "zNgRUFOj3HI",
+   "caption": "The low quality recording features a DJ scratching the vinyl of a hip hop instrumental that consists of punchy kick and snare hits and sustained filter modulated bass. The recording is muffled, noisy, mono and muddy, as it was probably recorded with a phone."
+  },
+  {
+   "ytid": "aUvHaURNgY8",
+   "caption": "A low sounding male voice is rapping over a fast paced drums playing a reggaeton beat along with a bass. Something like a guitar is playing the melody along. This recording is of poor audio-quality. In the background a laughter can be noticed. This song may be playing in a bar."
+  },
+  {
+   "ytid": "Jk2mvFrdZTU",
+   "caption": "A male vocalist sings this energetic pop song. The tempo is fast with piano accompaniment, bright digital drumming, synthesiser arrangements and groovy bass lines. The song is youthful, fresh, catchy, vivacious, upbeat, sprightly and buoyant with a dance groove. This song is a Hip-Hop Pop song."
+  },
+  {
+   "ytid": "6xxu6f0f0e4",
+   "caption": "This hip-hop song features a male voice singing the main melody. As the voice sings the higher register, he starts to sing in falsetto. After his line, other voices sing a line in harmony. This is accompanied by programmed percussion playing a trap beat. Synth pads play an epic fill in the background. The bass plays the root notes of the chords. The mood of this song is motivational. This song can be played in a sports themed movie."
+  },
+  {
+   "ytid": "A_oaLt-n4fQ",
+   "caption": "The low quality recording features a hip hop song that contains boomy bass, punchy snare layered with claps, DJ scratching sound effects, addictive staccato violin melody and haunting female vocals melody in the background. The recording is in mono and it sounds energetic and addictive, regardless of the quality of the recording."
+  },
+  {
+   "ytid": "uYCMVgUAwnM",
+   "caption": "A male voice is rapping/singing in a higher pitch. His voice is strongly processed with effects. Also with autotune. The instrumental contains digital drums with a strong kick with a subbass. With every hit a synthesizer pad is playing along. This is an amateur recording. This song may be playing in a recording studio."
+  },
+  {
+   "ytid": "9STauy5DsC8",
+   "caption": "A male rapper sings this exciting melody. The tempo is fast with a groovy bass line, grunge keyboard tones, strong drumming rhythm, various percussion hits and beeping tones. The song is pulsating and energetic. The audio quality is very poor."
+  },
+  {
+   "ytid": "6sWVG6GyJBU",
+   "caption": "This song contains a piano playing a melody in the mid range and also in the higher register. A flute is adding another melody in the mid range. A digital drum is holding a simple groove before dropping out completely. A male voice is softly rapping/talking in the mid range then another male with an effect takes over singing in a higher pitch. In the background you can hear strings underlaying chords. This song may be playing with headphones daydreaming."
+  },
+  {
+   "ytid": "_GQnXfIGNKY",
+   "caption": "This is a live performance of an alternative R&B music piece. There is a female vocalist singing in a seductive manner in the lead. Later on, a male vocalist starts rapping. There is a groovy bass line in the background. The DJ is scratching the turntable. The rhythmic background is provided by an R&B acoustic drum beat. The atmosphere is sensual and the sound is urban. Sounds of the crowd cheering can be heard in the recording."
+  },
+  {
+   "ytid": "We-bFXFjWaM",
+   "caption": "The low quality recording features a percussive shoe tapping over hip hop beat playing in the background. The beat consists of shimmering shakers, hard 808 bass and punchy snare. At one point the shoe tapper gets a little bit sloppy. It sounds a bit muffled, boomy and reverberant."
+  },
+  {
+   "ytid": "3KdyWJ6wTOw",
+   "caption": "This song features a male voice rapping the lyrics. Female voices sing vocables in the background. This is accompanied by programmed percussion playing a trap beat. The bass plays a groovy bassline by sliding to notes rather than pausing in between notes. A synth plays a repetitive melody in the background. This song can be played in a gangster movie."
+  },
+  {
+   "ytid": "sOSU7p9pLjs",
+   "caption": "An acoustic guitar is strumming chords along with a male voice rapping that gets backing vocals from a female voice for a moment. A lot of people are clapping and cheering. This song may be playing at a live concert."
+  },
+  {
+   "ytid": "TakkuFZJsis",
+   "caption": "A male rapper sings this groovy melody. The song is medium tempo with a steady drumming rhythm, groovy bass line, a melancholic flute countermelody, keyboard harmony and guitar accompaniment. The song is exciting and passionate. The song is a modern Russian rap song with a story telling nature."
+  },
+  {
+   "ytid": "-jpbCWcz2pk",
+   "caption": "This is a comedic hip-hop music piece. There is a male vocal rapping in the lead. The melody in the beat is being played by the piano and the electric guitar while a bass guitar plays in the background. The rhythm is provided by an electronic drum beat. The piece has an amusing aura to it. It could be used in the background of funny social media content."
+  },
+  {
+   "ytid": "nv1hWkBbG0g",
+   "caption": "This song contains digital drums with percussive elements such as a cowbell and synth sounds used as short percussion in a higher pitch and also a high pitched voice sample. A male voice is rapping in a higher pitch. This song may be playing while driving in your car."
+  },
+  {
+   "ytid": "WiAFUo2nxIk",
+   "caption": "This is a DJ performance recording of two kids scratching a turntable. The turntable is being scratched over a hip-hop breakbeat that consists of a loud electronic drum beat. The atmosphere is danceable and there is an urban sound. This piece could be played at sports venues. It could also be sampled for use in beat-making."
+  },
+  {
+   "ytid": "0Ubu4BqSWmU",
+   "caption": "A male vocalist sings this mellow rap. The tempo is medium with a groovy bass line, keyboard harmony , slick drumming and vocal backup. The song is youthful, story telling, passionate, impactful, compelling and engaging. This song is contemporary Hip-Hop/Rap."
+  },
+  {
+   "ytid": "bcybO-SMY5E",
+   "caption": "This rap song features a male voice rapping the words. This is accompanied by programmed percussion playing a rap beat. The sound of a cash register is played in the background. The voice has a defiant feel. A harmonic sound is played in the background which sounds like octaves being played on an overdriven guitar. This song can be used at the entrance of a WWE star."
+  },
+  {
+   "ytid": "ZkmtfBzpQlI",
+   "caption": "This song contains a male voice rapping over an instrumental containing a drumbeat with a sub bass. A brass sample is playing a melody also used as a rhythmic element. An organ is panned to the right side of the speakers. Other sound samples such as a male voice singing a melody are being used. This song may be playing loud when having or needing a good elevating mood."
+  },
+  {
+   "ytid": "J_Raltj-6dk",
+   "caption": "This is a Christmas music piece in the style of hip-hop. There is a child voice announcing the arrival of Santa. The male vocalist is rapping. There is a groovy bass line in the beat. The rhythmic background is provided by an electronic drum beat that has sleigh bells in it. The atmosphere is festive and amusing at the same time. This piece could be used in the soundtrack of a comedic Christmas movie."
+  },
+  {
+   "ytid": "NQXQsVawPhU",
+   "caption": "This is an excerpt from a music show. There is a female voice narrating an event that took place. In the background, there is hip-hop music playing. A male vocal can be heard rapping. The melody is being played by a synth sound. There is a strong bass in the piece. The rhythm is played by the electronic drums. This piece could be used as an advertisement jingle for a sportswear or automobile company."
+  },
+  {
+   "ytid": "jd94Ox7KJ9Q",
+   "caption": "The Afrobeats song features a fruity male vocal rapping over stuttering and echoing siren sounds effects, echoing laser effects, punchy kick and snare hits, shimmering hi hats, smooth bass and short strings hits. It sounds groovy, energetic and chaotic due to the many siren sound effects."
+  },
+  {
+   "ytid": "RXGDlFry3Vo",
+   "caption": "The low quality recording features a hip hop track that consists of flat male vocal rapping over smooth bass, high pitched female vocal, mellow piano melody, shimmering tambourine layered with punchy snare, followed by soft kick and crash cymbal hits. It sounds groovy and emotional, even though the recording is muffled and kind of dull, due to the bad mixing."
+  },
+  {
+   "ytid": "1ToIyrmWFjw",
+   "caption": "This is a Turkish arabesque rap music piece. There is a female vocalist singing in a melancholic manner in the Turkish language. The beat has a string sample and a flute sample in the melody. There is a very loud electronic drum beat in the rhythmic background. The song has a depressive atmosphere. This piece could be used in the background of sad Turkish social media content."
+  },
+  {
+   "ytid": "KiFQFxJphjI",
+   "caption": "This song is full of a digital key/pad sound taking a lot of space with a harmonic melody slightly panned to the right side of the speakers. The drums are a simple kick and clapping snare sound. Accompanied by a digital one note hit on the kick. A male doubled and panned voice is singing as backing vocals when a male mid ranged voice starts rapping. This song may be playing during a relaxing car ride with friends."
+  },
+  {
+   "ytid": "Q_3GACs__Xs",
+   "caption": "This is a low quality recording. This folk dance song is a fusion of traditional folk song with contemporary dance music. Traditional percussion instruments are played at the beginning of the clip. A female voice sings the main melody. The percussion continues to play in the background. This song has a hip-hop feel. A quirky voice sings high pitched sounds in the background. Other instruments cannot be identified due to the low quality of recording. This song can be played in a club."
+  },
+  {
+   "ytid": "2ZYzviKuq9w",
+   "caption": "This is a hip-hop music piece. There is a female vocalist singing in a rap-like manner. There is a strong bass in the background. For the rhythm, there is a simple electronic drum beat with heavy use of claps. The keyboard is playing occasional tunes. The atmosphere is groovy. This piece could be playing in the background at a nightclub or at a dance club."
+  },
+  {
+   "ytid": "J2BDMndrvhA",
+   "caption": "This song has a typical trap-beat with a very overdriven kick/bassline. A synthesizer key sound is playing a melody that repeats itself an octave higher. The male rapper sounds aggressive and is almost shouting along with ad-lips. This song may be playing while working out."
+  },
+  {
+   "ytid": "WmTDKYYH5OU",
+   "caption": "The low quality recording features a flat male vocal rapping over sustained strings melody, punchy kick, mellow snare, groovy bass and some commentary that can be heard in the background. It sounds emotional, energetic and the recording is noisy."
+  },
+  {
+   "ytid": "WgZ8KAnnTb8",
+   "caption": "The low quality recording features a compilation that, in the first half, contains muffled hip hop song and in the second half sad, soft rock song. The rock song contains an arpeggiated acoustic guitar melody located in the right channel of the stereo image - which makes it unbalanced, and reverberant soft male vocal singing over it. It sounds emotional."
+  },
+  {
+   "ytid": "32iayLTRmxg",
+   "caption": "This song contains a digital drum with a soft subbass. A male voice is rapping along to a repeating male and also female voice sample. The male voice sample uses a harmonizer effect. A riser is preparing the next part of the song. A metallophone/marimba melody is repeating itself through the duration of the whole song. This song may be playing in an urban bar."
+  },
+  {
+   "ytid": "hqQvatf1RUY",
+   "caption": "A male voice is rapping in a higher pitch while having backing voices creating a harmony. There is some delay in his voice. A synth melody/arpeggio is playing in the middle range getting louder while a warm digital kick sound is holding the rhythm. A cymbal sound is coming in to make it clear that the song will break into the next part. This song may be playing in a music video."
+  },
+  {
+   "ytid": "8oTTgXIO0-I",
+   "caption": "This song contains someone scratching over a Hip-Hop track. The track contains acoustic drums with a rim-shot as snare and congas playing along. The e-bass and an e-guitar are playing the same lines in the lower register. This song may be playing live at a scratching contest."
+  },
+  {
+   "ytid": "HS_ikHx4LIQ",
+   "caption": "The low quality recording features a hip hop song that consists bright, widely spread steel guitar melody, tinny muffled percussive elements, shimmering triangle, reverberant flute melody, claps, soft kick hits, mellow synth pad and groovy bass that glues everything together. It sounds kind of dull, but groovy, energetic and tropical - thanks to those flute and guitar melodies."
+  },
+  {
+   "ytid": "I06TOd9pXng",
+   "caption": "The low quality recording features hip hop song that contains a low pitched male vocal singing over some camera shuttering sound effects, after which an echoing male vocal starts rapping over punchy kick and snare hits, low toms, electric guitar melody, reversed crash cymbal riser and shimmering hi hats. It sounds groovy."
+  },
+  {
+   "ytid": "dwAo0dKCyBI",
+   "caption": "A male vocalist sings this rap. The tempo is medium with the keyboard harmony, digital drum rhythm and boomy bass. The song is passionate, youthful, emotional, buoyant, insightful, intense and story telling in a rhythmic patter. This song is contemporary Rap/Hip."
+  },
+  {
+   "ytid": "vEMNk-lbGTE",
+   "caption": "This hip-hop song features a male voice rapping the main lyrics. This is accompanied by programmed percussion playing a simple beat. Hand claps are played on every alternate count. The synth plays a repetitive melody in loop. The bass plays the root notes of the chords in harmony with the synth. This is a moderate tempo song. This song can be played in a club."
+  },
+  {
+   "ytid": "O5IulN0n6d0",
+   "caption": "A male rapper sings this cool melody with a backup singer in vocal harmony. The song is medium tempo with a groovy bass, keyboard playing harmony, stringed Asian instrument and a steady drumming rhythm. The song is story telling and passionate. The song is in poor audio quality and is a rap music video."
+  },
+  {
+   "ytid": "dsVzafZik3c",
+   "caption": "This is an R&B/hip-hop music piece. There is a female vocalist singing melodically. The melody is being played by the keyboard which has a crisp sound. There is a strong bass sound in the background. The rhythm is provided by a loud acoustic drum beat. The atmosphere is hip and urban. This piece could be used in the soundtrack of a drama movie that takes place in the big city."
+  },
+  {
+   "ytid": "w6MtzUCl4vM",
+   "caption": "This song contains digital drums playing a hiphop kinda feel along with a bassline. The most energy comes from the male voice singing with autotune and a lot of backing voices cheering and singing along: Then a male voice starts rapping. The backing voices are spread across the both sides of the speakers. This song may be playing outside chilling with your friends."
+  },
+  {
+   "ytid": "j43Dwqzd8w8",
+   "caption": "This beat contains a bassline that stands out also serving as melody. A rather complex digital drum is played along with male and female short vocal samples. A little tabla samples spices up the rhythm section along with a synthesizer hit. This instrumental is full of rhythmic elements. This song may be playing at home practicing rapping."
+  },
+  {
+   "ytid": "OZv8mtQEgA0",
+   "caption": "This audio clip features programmed percussion playing a trap beat. Hi-hats are played at a very fast tempo. The kick drum plays continuously in eighth notes. The sound of racing cars is the main point of focus in this clip. There are no voices. There are no other instruments and no melody."
+  },
+  {
+   "ytid": "RmDfwz0OG8E",
+   "caption": "The low quality recording features a hip hop song that consists of a wide reverberant flat male vocal rapping over synth lead melody, sire sound effects, punchy kick, boomy 808 bass, claps and shimmering hi hats. It sounds exciting, energetic and addictive - like something you would hear in clubs."
+  },
+  {
+   "ytid": "E3iPiZlT6f8",
+   "caption": "The song features a steelpan that creates the main melody. The sounds are bright and have a positive atmosphere. The track fits the afrobeat genre. In the background there are drums that play a mix between hip-hop and afrobeat patterns. A percussion synth creates a counter melody that contrasts the whole instrumental. This is a song you would play at a beach party in the caribbean at night."
+  },
+  {
+   "ytid": "CM2rKZmcR0I",
+   "caption": "This slow pop song features a male voice singing the main melody. Another male voice sings backing voices in harmony with the main melody. A synth plays the same melody as the main voice using staccato notes. This is accompanied by percussion playing a trap beat. The bass plays the root notes of the chords and flourishes during chord changes. The bass notes are played without pausing in between notes. Instead, the notes are slid into each other. The mood of this song is romantic. This song can be played in a heartbreak scene in a romantic movie."
+  },
+  {
+   "ytid": "40kbMyL2Wgo",
+   "caption": "This audio contains digital drums playing along to a male voice singing in a higher key while a synth bass sound and a lead sound are supporting the epic atmosphere. Then another male voice starts rapping with a lot of confidence and a little aggression in his voice. A male voice is providing backing vocals panned to both sides of the speakers. This song may be playing as a motivational mood enhancer."
+  },
+  {
+   "ytid": "iQAXwX28LLw",
+   "caption": "This is the intro part of a hip-hop beat. There is a rising pattern coming from a synth bass that has its low-pass filter getting dragged to higher frequencies. There is a hype feel to it. This part of the beat can be sampled and looped to be used in the soundtrack of a video game when the main character is simply walking around or exploring the area."
+  },
+  {
+   "ytid": "ZnBvXFDWpWo",
+   "caption": "Instrumental modern hip hop beat featuring a clap, low kick, and record scratching with virtuosity."
+  },
+  {
+   "ytid": "XjUmXwVlDDo",
+   "caption": "The low quality recording features a fruity male vocal, alongside processed background male vocal, with autotune and echoing effect on, rapping over repetitive synth melody, groovy synth bass, punchy kick and punchy snare hits. The song is uptempo and it sounds energetic."
+  },
+  {
+   "ytid": "N1Mxns_JJTk",
+   "caption": "The song is an advertisement jingle. A male singer sings rapping vocals, with a strong drumming rhythm, piano accompaniment, groovy bass line and a distorted guitar playing an aggressive lead. The song is high on adrenaline and energetic. The song is a soundtrack for an ad and is of poor audio quality."
+  },
+  {
+   "ytid": "hu6sChY-Yps",
+   "caption": "The low quality recording features a DJ scratching the vinyl of a hip hop song that consists of punchy kick and snare, repetitive wooden percussive elements, shimmering hi hats and open hats and soft crash cymbals. It sounds manic, energetic and kind of muffled, since it was probably recorded with a poor quality microphone."
+  },
+  {
+   "ytid": "0DizopdPMBw",
+   "caption": "The female voice sings in the mid range. The drums is playing a fast rock/hiphop groove along with an acoustic bass breaking along with it into another part of the song. One of the e-guitars is playing some chords running through a strong tremolo effect. While the other guitar sounds distorted and takes the lead. One is panned to the left, the other to the right side of the speakers. This song may be playing at a birthday party."
+  },
+  {
+   "ytid": "GRdzFvQezUE",
+   "caption": "This is a hip-hop music piece. There is a duo of one male and one female vocal singing in a way that resembles rapping. The beat has an electric guitar and a bass guitar playing a groovy tune. The rhythmic background consists of an electronic drum beat. The atmosphere is urban. This piece could be playing in the soundtrack of a crime movie where the characters are doubting their actions."
+  },
+  {
+   "ytid": "HEclHruM37s",
+   "caption": "This is a rap rock song that fuses elements from each genre. The rapper has a charismatic and fiery approach, and after his rap verse we hear a blues-rock electric guitar solo. There's a sustained warm synth with a flanger that supports the whole melodic aspect of the track. The mood of this song feels motivating."
+  }
+ ],
+ "prompts_sha256": "46ee42037470f725552babc4e3063d859c8e150a0ebf84ac12acb7dd6dfe844e"
+}
