@@ -99,13 +99,28 @@ def _dry_run(n=8):
     return 0 if ok else 1
 
 
+def score_json(in_path, out_path):
+    """Read {items:[{caption,wav}]} -> write {cosines:[...]} (per-item fused-CLAP text-audio cosine)."""
+    items = json.load(open(in_path))["items"]
+    sc = FusedClapScorer()
+    cos = sc.cosine([it["caption"] for it in items], [it["wav"] for it in items])
+    out = {"cosines": [float(x) for x in cos], "n": len(items), "model": MODEL_ID}
+    json.dump(out, open(out_path, "w"), indent=1)
+    print(json.dumps(out, indent=1))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--n", type=int, default=8)
+    ap.add_argument("--score-json", nargs=2, metavar=("IN", "OUT"),
+                    help="score an {items:[{caption,wav}]} manifest -> {cosines:[...]}")
     args = ap.parse_args()
     if args.dry_run:
         return _dry_run(args.n)
+    if args.score_json:
+        return score_json(args.score_json[0], args.score_json[1])
     print("Import FusedClapScorer and call .cosine(captions, wav_paths). Use --dry-run to self-test.")
     return 0
 
