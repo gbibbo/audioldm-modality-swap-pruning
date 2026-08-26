@@ -186,3 +186,19 @@ cluster-bootstrap analysis, **and the frozen held-out prompt manifest** — each
 dry-run; (3) **exactly one ≤0.1-cr smoke** is authorized. Gate 0 stays behind the smoke cost gate
 (STOP-0). No other GPU spend. The completion tranche and the oracle are authorized only later,
 after a positive falsifier, with fresh measured costs.
+
+## I. Fallback / anti-sunk-cost policy (DECISION-V4-11, frozen PRE-DATA)
+
+Frozen **before** any Gate-0 or falsifier result, so it cannot be rationalized after seeing data:
+
+* **STOP-1 (Gate 0 FAIL)** → the AudioLDM Scenario-B thesis is dead. **No forced ICASSP pivot from
+  this line.** Preserve the powered, pre-registered *negative replication* (the adapter uplift did
+  not clear the SESOI on M-Full under a faithful recipe) for arXiv / a workshop / a future venue.
+* **STOP-2 (phenomenon absent)** → same: preserve the pre-registered negative (no differential
+  fragility) for arXiv / workshop / future venue.
+* **Another ICASSP thesis is considered ONLY IF** it is *independently pre-validated* AND does **not**
+  require constructing another positive substrate from scratch to justify itself. We do **not** spend
+  the remaining balance hunting for the next substrate merely because credits remain.
+* This is recorded as an **anti-sunk-cost policy** — a rule about how we spend budget and attention,
+  **not** a claim that negative results are automatically publishable. The negative is preserved
+  because it is real and powered, not because a venue is guaranteed.
