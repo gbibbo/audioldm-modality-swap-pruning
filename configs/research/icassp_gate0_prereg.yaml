@@ -60,9 +60,12 @@ battery:
   n_seeds: 3                              # paired generation seeds
   generations_per_system: 192
   source: musiccaps                       # text only; no audio scraping needed
-  rule: "deterministic hip-hop/rap-filtered sample of MusicCaps captions DISJOINT from the 193 training captions"
+  manifest: configs/research/icassp_gate0_battery.json  # v2 (leakage-fixed)
+  frozen_prompts_sha256: ba4ebb5061959bc7a29137ac42c1c574133c35132fc2bb883b78b724c11308ad
+  rule: "hip-hop/rap-filtered MusicCaps; deterministic order sha256(seed|ytid); first 64"
   disjoint_from: kim-hiphop-193
-  dedup: "exact + near-duplicate check against the 193 training captions"
+  disjoint_rule: "PRIMARY = recovered Kim training-source ytid (kim193_source_ytids.json, 44 ytids); SECONDARY = caption exact + near-dup"
+  leakage_note: "Kim captions = MusicCaps captions + subgenre suffix; source recovered 45/45 to 44 ytids. v1 (sha 46ee4203) leaked ytid ZnBvXFDWpWo; v2 excludes by source ytid (0 leak)."
   ddim_steps: 50
   guidance: default                       # AudioLDMPipeline default, mirroring Kim's val path
   gen_clip_seconds: 3.84                  # DECISION-V4-10: generate at the adapter's TRAINED length

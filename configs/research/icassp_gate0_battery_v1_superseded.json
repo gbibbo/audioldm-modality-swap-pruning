@@ -1,8 +1,6 @@
 {
  "name": "icassp_gate0_held_out_battery",
- "version": 2,
  "decision": "DECISION-V4-09 (battery) + DECISION-V4-10 (clip length)",
- "changelog": "v2 (2026-08-26 leakage fix): exclude by RECOVERED SOURCE YTID (primary) + caption exact/near-dup (secondary). v1 (sha 46ee4203) leaked 1 source ytid (ZnBvXFDWpWo) via caption-only near-dup; preserved at ..._v1_superseded.json.",
  "n_prompts": 64,
  "n_seeds": 3,
  "source": "google/MusicCaps public CSV (CC-BY-SA-4.0)",
@@ -12,12 +10,7 @@
   "sha256": "4279c624ac745cdd22b2487da0e87cf15551259db3357fc47da88d786b20c8f5",
   "n_unique": 45
  },
- "kim_source_ytids_ref": {
-  "file": "configs/research/kim193_source_ytids.json",
-  "n": 44
- },
  "rule": {
-  "primary_exclusion": "MusicCaps ytid in recovered Kim training-source ytid set",
   "keywords": [
    "hip[\\s-]?hop",
    "rap",
@@ -36,14 +29,11 @@
  "diagnostics": {
   "musiccaps_rows": 5521,
   "keyword_filtered": 235,
-  "n_recovered_source_ytids": 44,
-  "dropped_by_source_ytid": 44,
   "dropped_exact_dup_vs_kim": 0,
-  "dropped_neardup_vs_kim": 0,
-  "candidates_after_disjoint_and_selfdedup": 191,
+  "dropped_neardup_vs_kim": 35,
+  "candidates_after_disjoint_and_selfdedup": 200,
   "selected": 64,
-  "kim_unique_captions": 45,
-  "selected_disjoint_from_source_ytids": true
+  "kim_unique_captions": 45
  },
  "prompts": [
   {
@@ -275,6 +265,10 @@
    "caption": "This is the intro part of a hip-hop beat. There is a rising pattern coming from a synth bass that has its low-pass filter getting dragged to higher frequencies. There is a hype feel to it. This part of the beat can be sampled and looped to be used in the soundtrack of a video game when the main character is simply walking around or exploring the area."
   },
   {
+   "ytid": "ZnBvXFDWpWo",
+   "caption": "Instrumental modern hip hop beat featuring a clap, low kick, and record scratching with virtuosity."
+  },
+  {
    "ytid": "XjUmXwVlDDo",
    "caption": "The low quality recording features a fruity male vocal, alongside processed background male vocal, with autotune and echoing effect on, rapping over repetitive synth melody, groovy synth bass, punchy kick and punchy snare hits. The song is uptempo and it sounds energetic."
   },
@@ -297,11 +291,7 @@
   {
    "ytid": "HEclHruM37s",
    "caption": "This is a rap rock song that fuses elements from each genre. The rapper has a charismatic and fiery approach, and after his rap verse we hear a blues-rock electric guitar solo. There's a sustained warm synth with a flanger that supports the whole melodic aspect of the track. The mood of this song feels motivating."
-  },
-  {
-   "ytid": "x6U1gX5a_4M",
-   "caption": "The low quality recording features a hip hop song that consists of a flat male vocal, alongside some background male vocals, rapping over punchy kick and snare hits, shimmering hi hats, funky electric guitar, brass melody, groovy synth keys melody and groovy bass. It sounds energetic, groovy and exciting."
   }
  ],
- "prompts_sha256": "ba4ebb5061959bc7a29137ac42c1c574133c35132fc2bb883b78b724c11308ad"
+ "prompts_sha256": "46ee42037470f725552babc4e3063d859c8e150a0ebf84ac12acb7dd6dfe844e"
 }
