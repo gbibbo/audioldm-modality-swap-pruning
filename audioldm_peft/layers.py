@@ -16,6 +16,17 @@ from torch import nn
 from torch.nn import functional as F
 
 
+def _init_lora_A(param: nn.Parameter, rank: int, mode: str) -> None:
+    """Initialize the lora_A factor. lora_B is always zeros (handled by the caller)."""
+    if mode == "kaiming":
+        nn.init.kaiming_uniform_(param, a=math.sqrt(5))
+    elif mode == "gaussian":
+        # peft init_lora_weights="gaussian" (peft 0.13.2): normal_(std=1/r), lora_B stays 0.
+        nn.init.normal_(param, mean=0.0, std=1.0 / float(rank))
+    else:
+        raise ValueError(f"unknown LoRA init mode {mode!r} (expected 'kaiming' or 'gaussian')")
+
+
 class _LoRABase(nn.Module):
     def __init__(self, rank: int, alpha: float, dropout: float):
         super().__init__()
@@ -44,7 +55,8 @@ class _LoRABase(nn.Module):
 
 
 class LoRALinear(_LoRABase):
-    def __init__(self, base: nn.Linear, rank: int = 8, alpha: float = 16.0, dropout: float = 0.0):
+    def __init__(self, base: nn.Linear, rank: int = 8, alpha: float = 16.0, dropout: float = 0.0,
+                 init: str = "kaiming"):
         super().__init__(rank, alpha, dropout)
         self.base = base
         # Create the adapters on the base layer's device/dtype (F9). Injection happens
@@ -54,7 +66,7 @@ class LoRALinear(_LoRABase):
         factory = {"device": base.weight.device, "dtype": base.weight.dtype}
         self.lora_A = nn.Parameter(torch.empty(rank, base.in_features, **factory))
         self.lora_B = nn.Parameter(torch.zeros(base.out_features, rank, **factory))
-        nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
+        _init_lora_A(self.lora_A, rank, init)
         self.base.weight.requires_grad = False
 
     def delta_weight(self):
@@ -77,7 +89,8 @@ class LoRAConv2d(_LoRABase):
     a kernel, keeping merge/unmerge exact. ``forward`` uses the factorised form.
     """
 
-    def __init__(self, base: nn.Conv2d, rank: int = 8, alpha: float = 16.0, dropout: float = 0.0):
+    def __init__(self, base: nn.Conv2d, rank: int = 8, alpha: float = 16.0, dropout: float = 0.0,
+                 init: str = "kaiming"):
         if base.groups != 1:
             raise ValueError("LoRAConv2d v1 supports groups=1 only")
         super().__init__(rank, alpha, dropout)
@@ -87,7 +100,7 @@ class LoRAConv2d(_LoRABase):
         factory = {"device": base.weight.device, "dtype": base.weight.dtype}   # F9, see LoRALinear
         self.lora_A = nn.Parameter(torch.empty(rank, flat_in, **factory))
         self.lora_B = nn.Parameter(torch.zeros(base.out_channels, rank, **factory))
-        nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
+        _init_lora_A(self.lora_A, rank, init)
         self.base.weight.requires_grad = False
 
     def delta_weight(self):

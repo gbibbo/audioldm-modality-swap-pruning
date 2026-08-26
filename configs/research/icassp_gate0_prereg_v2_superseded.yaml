@@ -1,4 +1,4 @@
-# ICASSP-2027 Scenario-B pre-registration — v3, FROZEN at DECISION-V4-09 + V4-10 + V4-11 (2026-08-26).
+# ICASSP-2027 Scenario-B pre-registration — v2, FROZEN at DECISION-V4-09 + V4-10 (2026-08-26).
 # Single source of truth for the frozen numbers. Code reads this; do not change any value
 # after seeing data. The smoke measures execution/cost ONLY and never tunes these.
 # Contract: docs/master_plan_v4_amendment_icassp.md (rev4, ADOPTED), docs/publication_decision_memo.md §5.
@@ -16,46 +16,21 @@
 #       fixed center crop is the default; FROZEN — never change after training begins).
 #     - budget: hard cap 3.5 stays as a ceiling but the EFFECTIVE cap is min(3.5, balance-reserve)
 #       = min(3.5, 5.0-2.0) = 3.0 cr while balance=5.0 and reserve>=2.0 bind (arithmetic, not scientific).
-#   v3 changelog (DECISION-V4-11 source-fidelity corrections, 2026-08-26, PRE-DATA, no GPU):
-#     Inspected Kim's public training source (github 2025-comprehensive-design/AudioLDM-with-LoRA,
-#     peft==0.13.2, diffusers==0.32.2, accelerate==1.0.1) and corrected avoidable deviations BEFORE
-#     any experimental data so a Gate-0 FAIL means "phenomenon does not generalize to M-Full", not
-#     "our reproduction drifted from Kim":
-#       - AdamW: add betas (0.9,0.999), weight_decay 1e-5 (was inheriting PyTorch 0.01 = 1000x), eps 1e-8.
-#       - add gradient clipping max_norm 1.0 (was absent).
-#       - LoRA init: gaussian (peft init_lora_weights="gaussian": lora_A ~ N(0,(1/r)^2), lora_B=0);
-#         audioldm_peft now supports it (was Kaiming uniform).
-#       - training conditioning: unconditional_prob_cfg 0.0 (Kim's peft LoRA loop always conditions on
-#         text; the 0.1 CFG dropout is M-Full-native, NOT part of Kim's recipe).
-#       - mixed_precision: fp32 (Kim Accelerator mixed_precision=None). Fidelity default; smoke tests
-#         fp32 FIRST; if it does not fit / trips STOP-0, REPORT it — never silently switch to fp16/bf16.
-#       - generation guidance: numeric 2.5 (Diffusers 0.32.2 AudioLDMPipeline default; Kim passes no
-#         guidance_scale) — replaces the audioldm_train config's 3.5. Do not let library defaults define it.
-#     r8/alpha16 is PAPER-derived (Kim Table 6: r8/a16 @200ep CLAP 0.6941 vs baseline 0.6497, +0.0444;
-#     the +0.0498 headline is the 800-epoch checkpoint). Training MECHANICS are code-derived. SESOI stays 0.025.
-#     v2 preserved at configs/research/icassp_gate0_prereg_v2_superseded.yaml (sha256 b40e942b…).
 
-decision: DECISION-V4-09 + DECISION-V4-10 + DECISION-V4-11
+decision: DECISION-V4-09 + DECISION-V4-10
 adopted_utc_montevideo: "2026-08-26 03:02 (V4-09); 2026-08-26 13:48 (V4-10 clip-length)"
 substrate: audioldm-m-full            # dense, channel_mult (1,2,3,5)
 
 # --- Gate 0: powered replication of the Kim et al. (Appl. Sci. 2025) recipe on dense M-Full ---
 gate0:
   lora:
-    target_substrings: ["to_q", "to_v"]   # all attention layers, mirror Kim (peft target_modules)
-    rank: 8                                # PAPER operating point (Kim Table 6 r8/a16 @200ep = +0.0444 CLAP)
-    alpha: 16                              # code hardcodes a demo r2/a2; r8/a16 is paper-derived, NOT from code
+    target_substrings: ["to_q", "to_v"]   # all attention layers, mirror Kim
+    rank: 8
+    alpha: 16
     dropout: 0.0
-    init: gaussian                         # V4-11: peft init_lora_weights="gaussian" (lora_A~N(0,(1/r)^2), lora_B=0)
   optim:
     name: adamw
     lr: 1.0e-5
-    betas: [0.9, 0.999]                    # V4-11 (Kim code)
-    weight_decay: 1.0e-5                   # V4-11 (Kim code) — NOT PyTorch's 0.01 default (was 1000x too high)
-    eps: 1.0e-8                            # V4-11 (Kim code)
-    grad_clip_max_norm: 1.0               # V4-11 (Kim accelerator.clip_grad_norm_(.,1.0)); absent before
-    mixed_precision: fp32                 # V4-11 (Kim Accelerator mixed_precision=None) — smoke tests fp32 FIRST
-    train_unconditional_prob_cfg: 0.0     # V4-11: Kim's peft LoRA loop always conditions on text; NO CFG dropout
     effective_batch_size: 2               # LOCKED (fidelity); no auto-shrink to fit cost -> STOP-0
     # --- code-derived from Kim's train_audioldm_lora.py (github 2025-comprehensive-design/AudioLDM-with-LoRA) ---
     gradient_accumulation_steps: 1        # Kim: gradient_accumulation_steps = 1
@@ -104,9 +79,7 @@ battery:
   disjoint_rule: "PRIMARY = recovered Kim training-source ytid (kim193_source_ytids.json, 44 ytids); SECONDARY = caption exact + near-dup"
   leakage_note: "Kim captions = MusicCaps captions + subgenre suffix; source recovered 45/45 to 44 ytids. v1 (sha 46ee4203) leaked ytid ZnBvXFDWpWo; v2 excludes by source ytid (0 leak)."
   ddim_steps: 50
-  guidance_scale: 2.5                     # V4-11 NUMERIC (verified: Diffusers 0.32.2 AudioLDMPipeline
-                                          # default guidance_scale=2.5; Kim passes none). Replaces the
-                                          # audioldm_train config's 3.5. Do not let library defaults define it.
+  guidance: default                       # AudioLDMPipeline default, mirroring Kim's val path
   gen_clip_seconds: 3.84                  # DECISION-V4-10: generate at the adapter's TRAINED length
                                           # (latent_t 96), matching gate0.data.train_clip_seconds; 3.84 s
                                           # < CLAP's 10 s audio window so no scorer truncation

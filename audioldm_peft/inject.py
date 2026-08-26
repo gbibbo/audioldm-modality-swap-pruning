@@ -65,9 +65,9 @@ def inject_lora(model: nn.Module, cfg: PeftConfig) -> List[str]:
             continue
         wrapper = None
         if cfg.target_linear and isinstance(module, nn.Linear):
-            wrapper = LoRALinear(module, cfg.rank, cfg.alpha, cfg.dropout)
+            wrapper = LoRALinear(module, cfg.rank, cfg.alpha, cfg.dropout, init=cfg.init_lora_weights)
         elif cfg.target_conv2d and isinstance(module, nn.Conv2d) and module.groups == 1:
-            wrapper = LoRAConv2d(module, cfg.rank, cfg.alpha, cfg.dropout)
+            wrapper = LoRAConv2d(module, cfg.rank, cfg.alpha, cfg.dropout, init=cfg.init_lora_weights)
         if wrapper is None:
             continue
         parts = local_name.split(".")

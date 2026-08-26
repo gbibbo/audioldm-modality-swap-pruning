@@ -25,6 +25,10 @@ class PeftConfig:
     root_path: str = "model.diffusion_model"
     include_name_substrings: Tuple[str, ...] = field(default_factory=tuple)
     exclude_name_substrings: Tuple[str, ...] = field(default_factory=tuple)
+    # LoRA A initialization: "kaiming" (default, our original) or "gaussian" (peft
+    # init_lora_weights="gaussian": lora_A ~ N(0, (1/rank)^2), lora_B = 0). Gate 0 uses
+    # "gaussian" to match Kim's peft==0.13.2 recipe. lora_B is always zeros either way.
+    init_lora_weights: str = "kaiming"
 
     def validate(self) -> None:
         if self.rank <= 0:
@@ -33,3 +37,5 @@ class PeftConfig:
             raise ValueError("alpha must be > 0")
         if not 0.0 <= self.dropout < 1.0:
             raise ValueError("dropout must be in [0, 1)")
+        if self.init_lora_weights not in ("kaiming", "gaussian"):
+            raise ValueError("init_lora_weights must be 'kaiming' or 'gaussian'")
