@@ -20,3 +20,17 @@ this budget".
 | EFF | Reported pruning/recovery efficiency is supported by measured runtime, VRAM, GPU-hours, and storage. | M1/M4/M5 (v4) | unresolved | `artifacts/m0_baseline_reproduction/architecture_check.log` | Parameter counts only are measured so far (U-Net 415.955 M -> 145.674 M, -65.0%; mild budget `(1,2,3,4)` 317.308 M, -23.7 %). Runtime, VRAM and GPU-hours partially measured (`docs/compute_budget.md`); no end-to-end efficiency claim yet. |
 
 No rejected or exploratory claim may be promoted to a headline claim.
+
+## SA3 line (stable-audio-3 modality-swap pruning) — CLOSED 2026-08-26
+
+Distinct sub-line (its own RQ numbering; not the AudioLDM v3/v4 rows above). Closure labels map:
+ESTABLISHED→methodological result held; FAILED→`rejected`; NOT TESTED→`unavailable` (NOT RUN, not TODO).
+Postmortem: `docs/sa3/sa3_postmortem.md`.
+
+| ID | Candidate claim | Status | Closure label | Evidence paths | Allowed wording |
+|---|---|---|---|---|---|
+| SA3-RQ1 | Adaptability occupies a distinct internal resource; `I_PT` carries structure beyond pruning damage `D_P`. | rejected | FAILED (closed) | `artifacts/sa3/rq1_reanalysis.json` (`IPT_collapses_onto_DP`), ledger SA3-RQ2VAL-001 | `I_PT` is redundant with `D_P`; no distinct adaptation-resource structure was established. |
+| SA3-RQ2 | Single-block LoRAs are algebraically localisable AND functionally useful; `A_tan` predicts real adapter compatibility better than `D_P`. | rejected | FAILED (closed) | `configs/sa3/adapters/control_verdict.json`, `control_taa_scores.json`, ledger SA3-CONTROL-TAA-004 | Controls L_6/L_13 passed field + host-collapse + external observability but FAILED the task-level ΔT_AA gate — a **field/function gap** (measurable, algebraically-localisable internal perturbation with no measurable dense task utility). The `A_tan`-vs-`D_P` prediction check was never reached. |
+| SA3-RQ2b | SA3 can learn a dense, functionally-useful adapter (the prerequisite worth preserving under pruning). | rejected | FAILED (closed) | `configs/sa3/adapters/f1_verdict.json`, `f1_taa_scores.json`, ledger SA3-RQ2B-F1-RUN | F1 full-backbone LoRA r16/α16 (all 20 blocks, `max\|lora_B\|=1.197`, 96 train / 1000 steps): ΔT_AA(base)=+0.0118 CI[−0.020,+0.043], ΔT_AA(post)=+0.0230 CI[−0.011,+0.058] — both **upper CI bounds below SESOI 0.075** → incompatible with a SESOI-magnitude effect. Under the frozen standard recipe the adapter failed to produce a functionally relevant paired T_AA uplift on either dense base or dense post. Do NOT generalize to "LoRA does not work on SA3" or "adapter-compatible pruning is false". |
+| SA3-STRUCT | `A_tan` and `D_P` show a stable structural ranking difference (δ=2 at k=6, robust N=16→N=32). | exploratory | ESTABLISHED (structural only) | `artifacts/sa3/rq1_reanalysis.json`, `docs/sa3/round2_results.md` | A structural difference exists but was **never linked to real functional adapters**; not promotable. |
+| SA3-F2 / ecological / RQ3 | Restricted-support (band) adapters; ecological adapters; A_eco/A_tan-vs-D_P against a qualified control. | unavailable | NOT RUN | — | Gated on an F1 PASS that did not occur. NOT RUN (not TODO). Any revival must first establish an independent adapter/benchmark with demonstrated dense functional uplift BEFORE pruning analysis. |
