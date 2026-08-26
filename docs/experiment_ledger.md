@@ -1507,3 +1507,16 @@ In every case report raw kept-set, prune-set, and chance-adjusted overlap; the g
   - `f1_accept.py` — fast CPU acceptance, **ALL PASS**: stage96; plan 4 systems×64 ids / 2 pairs; no structural tokens in gen driver; dirty-tree/expect-commit guards abort both drivers (rc=1); frozen SESOI/CI verdict rule.
 * **Heavy CPU dry-runs PASS:** trainer `--backbone` (20-block attach + export) and `f1_run.py --dry-run-cpu` end-to-end (train child rc=0, verify blocks_ok, gen child gen_ok). Decision-core suite `test_aeco_predict.py` A1–A8 ALL PASS.
 * **Cost/authorization:** projected F1 chain unchanged (~1.42 < 1.63). Per Gabriel's standing authorization, F1 T4 launch may proceed automatically now that the CPU dry-run is green + watchdog active; no further scientific sign-off requested. After F1: reconcile settled cost, score locally, run f1_verdict, **STOP + report before F2** (no structural inspection, no F2 in the same unattended job). 0 cr spent this entry (all CPU/local).
+
+### 2026-08-26 (MVD 2026-08-25 01:00) | SA3-RQ2B-F1-RUN | F1 functional sentinel FAILS -> STOP RQ2b
+
+* **Job `sa3-f1-1` (T4, Completed, settled 0.3223 cr, ~22 min, commit ede6f99, watchdog 0.80/70m not triggered).** One job: train full-backbone LoRA on mechanical train_L (96) then generate 4 systems x 64 eval. Outputs returned via `/teamspace/jobs/sa3-f1-1/artifacts/...`, copied to Studio paths (gitignored) for local scoring.
+* **Training verified:** standard LoRA r16/alpha16 over full `transformer.layers`, 1000 steps, fp16/16-mixed. Export: 360 tensors, **all 20 blocks [0-19]**, **max|lora_B|=1.197** (vs 0.036 at the 1-step dry-run) — the adapter is real and substantial. train_ok=gen_ok=true.
+* **Scored (local, .venv-metrics, 0 GPU):** frozen paired CLAP audio-audio T_AA, n=64, bootstrap seed 20260824. `configs/sa3/adapters/f1_taa_scores.json`.
+  - T_AA: base_noL 0.3932 / base_Lfull 0.4050 ; post_noL 0.1905 / post_Lfull 0.2135.
+  - **ΔT_AA(F1_base) = +0.0118, CI [-0.0197, +0.0427]** — CI contains 0, point << SESOI 0.075.
+  - **ΔT_AA(F1_post) = +0.0230, CI [-0.0105, +0.0576]** — CI contains 0, point << SESOI 0.075.
+* **VERDICT (symmetric gate, `f1_verdict.json`): `STOP_RQ2B_BASE_FAIL`.** base fails both lower-CI>0 AND point>=SESOI (post also fails both). `pass=false`.
+* **Interpretation (modest, mandated by prereg rev3.1):** the task / training / measurement chain is NOT qualified under the frozen standard recipe. A full-backbone LoRA (all 20 blocks, real large weight change, 96 training clips, powered n=64 eval) produced no functionally-relevant paired-audio uplift; the drift is positive (+0.012 base / +0.023 post) but an order of magnitude below the preregistered minimum and indistinguishable from 0. **Per the pre-registration we do NOT infer which of {task, training, measurement} is responsible and we do NOT iterate.** STOP RQ2b: no F2, no structural inspection (no A_eco / A_tan / D_P), no ecological work.
+* **This is the outcome Gabriel pre-flagged** ("si un LoRA full-backbone tampoco demuestra utilidad funcional, mi disposicion a seguir con SA3 bajaria radicalmente"). Scientific call is his; no autonomous next step.
+* **Budget:** SA3_GPU 3.3159 + 0.3223 = **3.6382**; SA3_CPU 0.0526; **SA3_TOTAL 3.6908 -> headroom 1.3092**. STOP GPU. No further compute.

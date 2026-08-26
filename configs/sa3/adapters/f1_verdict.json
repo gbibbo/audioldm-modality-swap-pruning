@@ -1,0 +1,24 @@
+{
+  "phase": "F1_functional_verdict",
+  "sesoi": 0.075,
+  "verdict": "STOP_RQ2B_BASE_FAIL",
+  "pass": false,
+  "base": {
+    "dT_AA": 0.011764307040721178,
+    "lo": -0.019701324170455337,
+    "hi": 0.042669895803555846,
+    "lowerCI_gt_0": false,
+    "point_ge_sesoi": false,
+    "pass": false
+  },
+  "post": {
+    "dT_AA": 0.022975866100750864,
+    "lo": -0.01050197723088786,
+    "hi": 0.05760651401942596,
+    "lowerCI_gt_0": false,
+    "point_ge_sesoi": false,
+    "pass": false
+  },
+  "post_over_base_retention": 1.9530148287716225,
+  "consequence": "F1 FAIL -> STOP RQ2b (no F2, no structural inspection)."
+}
