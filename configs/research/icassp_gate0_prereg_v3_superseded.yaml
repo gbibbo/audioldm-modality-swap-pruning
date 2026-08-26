@@ -1,4 +1,4 @@
-# ICASSP-2027 Scenario-B pre-registration — v4, FROZEN at DECISION-V4-09 + V4-10 + V4-11 + V4-12 (2026-08-26).
+# ICASSP-2027 Scenario-B pre-registration — v3, FROZEN at DECISION-V4-09 + V4-10 + V4-11 (2026-08-26).
 # Single source of truth for the frozen numbers. Code reads this; do not change any value
 # after seeing data. The smoke measures execution/cost ONLY and never tunes these.
 # Contract: docs/master_plan_v4_amendment_icassp.md (rev4, ADOPTED), docs/publication_decision_memo.md §5.
@@ -35,30 +35,7 @@
 #     the +0.0498 headline is the 800-epoch checkpoint). Training MECHANICS are code-derived. SESOI stays 0.025.
 #     v2 preserved at configs/research/icassp_gate0_prereg_v2_superseded.yaml (sha256 b40e942b…).
 
-#   v4 changelog (DECISION-V4-12 EMA weight convention, 2026-08-26, PRE-DATA, no GPU):
-#     AudioLDM's upstream inference uses the EMA U-Net (use_ema=True by default; generate_sample ->
-#     ema_scope), and raw model.diffusion_model.* differs MATERIALLY from the EMA shadow (audit:
-#     dense mean-rel ~2.4%, recovered ~5.1%; U-Net OUTPUT max|Δ| ~5.9 raw-vs-EMA). LitEma's runtime
-#     ema_scope is ALSO structurally invalid after PEFT (its name-map is frozen pre-injection ->
-#     KeyError on lora_A/lora_B). Therefore the WHOLE study uses ONE convention (weight_convention
-#     below): materialize the EMA inference weights into the ordinary U-Net BEFORE LoRA injection and
-#     DISABLE runtime EMA. Demonstrated CPU-side (scripts/research/ema_convention_demo.py PASS).
-#     v3 preserved at configs/research/icassp_gate0_prereg_v3_superseded.yaml (sha256 8f7d426b…).
-
-decision: DECISION-V4-09 + DECISION-V4-10 + DECISION-V4-11 + DECISION-V4-12
-
-# --- Weight convention (V4-12): EMA (inference) weights, materialized pre-LoRA, runtime EMA off ---
-weight_convention:
-  convention: ema
-  rationale: "upstream inference uses EMA (use_ema=True default, generate_sample->ema_scope); raw != EMA materially; runtime ema_scope invalid after PEFT"
-  disable_runtime_ema: true            # set model.use_ema=False; never call the broken ema_scope
-  materialize_before_lora: true        # copy EMA shadows into the U-Net BEFORE injecting LoRA
-  per_backbone:
-    dense: "materialize audioldm-m-full.ckpt model_ema.* into the U-Net (690/690 clean)"
-    p1_pruned: "(1,2,3,1) L1 selection of the DENSE EMA U-Net — the stored p1 EMA is BROKEN (238 tensors dense-shaped, not pruned), so it cannot be used; pruning the dense EMA gives the EMA-consistent pruned inference backbone (same L1 selection Arshdeep used, applied to EMA weights)"
-    p1_recovered: "materialize l1_p1_finetuned_global_step_999999.ckpt model_ema.* into the (1,2,3,1) arch (690/690 clean)"
-  impl: research_pruning/eval/ema_weights.py  # materialize_ema_into_unet / ema_unet_state_dict
-  note: "This changes which weights Gate-0 LoRA trains against (dense EMA, not raw) — a PRE-DATA protocol correction, hence v3->v4."
+decision: DECISION-V4-09 + DECISION-V4-10 + DECISION-V4-11
 adopted_utc_montevideo: "2026-08-26 03:02 (V4-09); 2026-08-26 13:48 (V4-10 clip-length)"
 substrate: audioldm-m-full            # dense, channel_mult (1,2,3,5)
 

@@ -166,6 +166,20 @@ def main():
     model, load_info = build_model(config, device)
     if pre["optim"]["mixed_precision"] == "fp32":
         model = model.float()
+
+    # V4-12 EMA convention: materialize dense EMA (inference weights) into the U-Net BEFORE LoRA,
+    # and disable runtime EMA (its name-map is frozen pre-injection and would KeyError after PEFT).
+    wc = yaml.safe_load(open(PREREG)).get("weight_convention", {})
+    if wc.get("convention") == "ema":
+        from research_pruning.eval.ema_weights import materialize_ema_into_unet
+        dsd = _orig_load("data/checkpoints/audioldm-m-full.ckpt", map_location="cpu")
+        dsd = dsd.get("state_dict", dsd)
+        n_ema, ema_unusable = materialize_ema_into_unet(model.model.diffusion_model, dsd, strict=True)
+        if wc.get("disable_runtime_ema"):
+            model.use_ema = False
+        R["report"]["ema_materialized"] = {"n": n_ema, "unusable": len(ema_unusable), "use_ema_disabled": True}
+        R["assertions"]["ema_convention_applied"] = (n_ema == 690 and len(ema_unusable) == 0 and model.use_ema is False)
+
     cfg = make_peft_cfg(pre)
     setup_peft(model, cfg)
     model.train()
