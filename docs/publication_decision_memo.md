@@ -1,7 +1,8 @@
 # Publication Decision Memo — ICASSP 2027 pivot
 
-**Status: DRAFT IN PROGRESS (2026-08-26 02:31). Verdict: PENDING** — awaiting (a) the M-Full
-per-seam inventory and (b) the novelty-collision audit (both in flight). Nothing in this memo
+**Status: COMPLETE (2026-08-26 02:31–02:47). Verdict: GO-AUDIOLDM (§5) — pending Gabriel's
+review of `docs/master_plan_v4_amendment_icassp.md`.** All three audits (Gate-0 substrate,
+seam inventory + executable proof, novelty collisions) are done. Nothing in this memo
 authorizes GPU. Ledger: ICASSP-PIVOT.
 
 **Binding constraints (directive, Gabriel via external reviewer, 2026-08-26):** optimization
@@ -114,6 +115,24 @@ authors' GitHub, HF APIs (see ledger ICASSP-PIVOT provenance; agent report 2026-
      hand-waved): G0-M trades backbone fidelity for a verified pruning substrate; G0-S trades the
      entire pruning substrate for backbone fidelity. Resolution criteria in §5 (verdict) once the
      seam inventory lands.
+**2b. Full score trajectories (fetched 2026-08-26 — decisive for Gate-0 design).** Table 6
+(CLAP) per checkpoint shows the published evidence is **extremely noisy**: r8/α16 runs
+0.6941 → 0.6451 → 0.5813 → 0.6995 → 0.6644 across 200–1000 epochs (swings ±0.11, including a
+point −0.068 *below* baseline at 600 ep); at 400 epochs **no configuration beats the 0.6497
+baseline**; only 3/8 configs beat it at 200 ep. The protocol behind these tables (from the paper
++ released code): **a single fixed prompt** ("hip hop music, The subgenre of hip-hop is boom
+bap."), **5 seeds averaged**, DDIM S=50, 4-s audio, default guidance; baseline appears once, with
+no per-checkpoint baseline row, no CIs, no tests. Table 7 (their custom CLAP-MMD "KAD") always
+beats baseline but worsens with rank (inverse to CLAP). **Honest conclusion: the published CLAP
+uplift is compatible with single-prompt evaluation noise.** Therefore Gate 0 must be a
+**replication with power** — same recipe, but a pre-registered multi-prompt battery, multiple
+seeds, paired bootstrap CIs and a SESOI — which either establishes the uplift rigorously (a
+small standalone contribution) or kills the substrate cheaply. This is exactly the failure mode
+that ended SA3 (modest effects vanishing under powered paired evaluation), now placed FIRST and
+cheap instead of last and expensive. Silver lining: their r8/α16 at **200 epochs** (0.6941) ≈
+their 800-epoch headline (0.6995), so the affordable 200-epoch replication point is within their
+own reported best band.
+
 4. Alternative independently-published AudioLDM-family adapters found (fallback Gate-0 substrates,
    NOT yet audited to the same depth): **AP-Adapter** (ISMIR 2024, arXiv:2407.16564 — AudioLDM2,
    22 M-param attention adapters, code public; not LoRA, AudioLDM2 ≠ our substrate) and **Guitar
@@ -123,15 +142,57 @@ authors' GitHub, HF APIs (see ledger ICASSP-PIVOT provenance; agent report 2026-
    no pruning machinery, unmeasured costs) — prima facie incompatible with 21 days / 6 cr unless
    the incumbent dies.
 
-## 3. Seam inventory (Scenario-B mappability on M-Full) — PENDING
+## 3. Seam inventory (Scenario-B mappability on M-Full) — COMPLETE (2026-08-26, CPU repo audit)
 
-To be filled from the repo audit: per-layer table of dims changed by the (1,2,3,x) ladder
-(attention q/k/v/out, proj_in/out, FF, convs, GroupNorm), whether selection indices are recorded
-and recoverable per layer, and an executable CPU check extending `test_lora_mask_transfer.py` to
-every real LoRA-target seam. Known already: AUDIT-M3-001 found 4 tensors in the published artifact
-deviating from Arshdeep's public script + internal inconsistencies at `output_blocks.0/1` and
-`output_blocks.2.0.in_layers.2` — the seam inventory must state whether any LoRA-target seam is
-affected.
+**Headline: every seam of the (1,2,3,x) ladder reduces to pure index selection with per-layer
+recoverable indices, so the mask-induced LoRA transfer is deterministic and shape-consistent at
+every seam — no learned parameters needed anywhere.** Details and honest flags:
+
+* **Ladder structure.** `channel_mult=(1,2,3,m₄)`, base (1,2,3,5): only the deepest U-Net stage
+  changes width (960 → 768/576/384/192). 238/690 tensors change shape; only the ten 960-wide
+  ranked layers are actually pruned (the 576/384-wide ranking entries keep k=full). Kept sets are
+  nested (verified). Params per level exact: 415.95 M → 317.31 M (−23.7 %) / 239.05 M (−42.5 %) /
+  182.17 M (−56.2 %) / 145.67 M (−65.0 %). **MACs are not recorded anywhere** → central-figure
+  x-axis = parameter reduction (exact) now; a CPU MAC counter is a later nice-to-have.
+* **Materialization is pure selection** (`random_masks.py`): ranked rows/cols `perm[:k]` for
+  LAYER_MAP tensors, positional truncation `[:k]` otherwise; no rescaling, no re-normalization,
+  no group-count change, no fusion. Strict-load (=`strict=True` + forward) committed-verified at
+  (1,2,3,4) and (1,2,3,1); (1,2,3,3)/(1,2,3,2) verified in-session only (re-verify before use).
+  The published p1 checkpoint is **pruned-only, never finetuned** (2061 same-shape tensors
+  bit-identical to dense; materialize == published, 690/690).
+* **Seams at LoRA targets.** Attention `to_q/to_k/to_v/to_out.0` (60 Linears), FF GEGLU, and
+  transformer `proj_in/out` at the 6 level-3 sites change both dims (960→192 at p1), positional
+  selection; ResBlock convs change out/in (ranked, with 3 documented positional exceptions);
+  `emb_layers.1` changes out only. Attention truncation is **head-boundary-aligned**
+  (`dim_head=32` fixed; heads 30→24/18/12/6) — clean slicing, head *count* changes.
+* **Honest flags (inherited from the published artifact's own conventions, not from our
+  transfer):** (1) at decoder **concat seams** the artifact's positional truncation takes input
+  columns only from the dense `h` segment, so the pruned `skip` segment consumes weights that
+  belonged to dense `h` channels — semantically scrambled (AUDIT-M3-001; question pending to
+  Arshdeep); (2) **GEGLU value/gate halves**: prefix truncation takes all rows from the dense
+  value half → the pruned gate half receives dense value rows; (3) **GroupNorm regrouping**:
+  num_groups fixed at 32 ⇒ channels/group 30→6 — normalization statistics repartition (a backbone
+  property, unrelated to the adapter map); (4) at **(1,2,3,3)** `input_blocks.10.0.skip_connection`
+  becomes `nn.Identity` — a dense LoRA on that conv has no target and is deterministically
+  dropped. **Resolution (frozen):** Scenario-B transfer uses *exactly the selections the backbone
+  itself used at each tensor* — unique, deterministic, zero learned repair — and therefore
+  inherits the artifact's misalignments; the phenomenon experiment measures adapter-uplift
+  survival under the *real published compression convention*, flags included and reported.
+* **Executable proof (not only analytic): `tests/research/test_scenario_b_seam_transfer.py`
+  S1–S6 PASS (CPU, 2026-08-26).** All 238 changed tensors identical across (1,2,3,4)/(1,2,3,1);
+  every one receives a deterministic shape-consistent selection (27 ranked / 211 positional);
+  the sliced-LoRA identity holds **exactly on every changed 2D (67) and 4D (33) tensor**; all
+  138 changed 1D aux tensors transfer by out-selection; the (1,2,3,3) module-drop is detected
+  and handled by a deterministic rule; the flattened `LoRAConv2d` layout round-trips. **Zero
+  learned parameters needed at any seam** — the directive's mappability precondition is met.
+* **Machinery fit.** Our PEFT layer attaches LoRA to exactly the Kim-recipe targets and more
+  (type-based injection; 284 modules = 185 Linear + 99 Conv2d proven on the real p1 U-Net;
+  merge/unmerge bit-exact; substring filters allow restricting to `to_q`/`to_v` to mirror Kim).
+  Engineering note: `LoRAConv2d.lora_A` is stored flattened `(r, in·kh·kw)` — reshape before
+  input-dim slicing. Scoring: LAION-CLAP text-audio cosine exists self-tested in `.venv-metrics`
+  (must be pointed at the fused checkpoint to mirror Kim's `laion/clap-htsat-fused`); Kim's "KAD"
+  is a custom CLAP-embedding MMD, implementable on CPU from cached embeddings if wanted as
+  secondary; FAD/FD/KL/PANNs machinery verified in-repo.
 
 ## 4. Novelty-collision audit — COMPLETE (2026-08-26; ~12 query formulations across arXiv,
 OpenReview, Semantic Scholar, GitHub, HF; full agent report in ledger provenance)
@@ -185,10 +246,91 @@ collision (HF discussion, Freepik/flux.1-lite-8B #6).
 motivation prospectively (by analogy to MusicGen and to the documented FLUX-lite/SSD-1B breakage),
 never imply an existing AudioLDM adapter economy.
 
-## 5. Verdict
+## 5. Verdict: **GO-AUDIOLDM**
 
-**PENDING** — will be exactly one of **GO-AUDIOLDM / GO-ALTERNATIVE / NO-GO-ICASSP + FALLBACK**,
-with: exact abstract-level claim; Scenario declaration; Gate-0 spec (backbone choice, primary
-metric, SESOI, power, ceiling); cheapest phenomenon test; central figure; mandatory baselines;
-novelty non-overlap statements; total budget through Sep 10; writing/evaluation schedule
-Sep 10–16; terminal STOPs.
+*(Recommendation to Gabriel; the GO authorizes the gated chain below upon his review of the
+amendment — it does not pre-authorize the paper or any GPU spend before that review.)*
+
+**Why GO-AUDIOLDM and not the alternatives.** GO-ALTERNATIVE (MusicGen, where ~196 real
+third-party LoRA checkpoints exist) is the scientifically richer ecosystem but requires full
+substrate bring-up (autoregressive stack, no pruning machinery, no measured costs) — not
+credible in 21 days / 6 cr; it is the natural *successor* substrate if the AudioLDM phenomenon
+is confirmed (or the fallback consideration if Gate 0 fails). NO-GO-ICASSP is premature: every
+precondition that can be established without GPU has been established (§2–§4: no novelty
+collision; deterministic transfer proven executable at every seam; public recipe + data; all
+scoring/pruning machinery verified in-repo); the two remaining unknowns (real adapter uplift;
+differential fragility) are precisely what the ≤2.5-cr falsifying chain tests.
+
+**Exact abstract-level claim (if the chain passes):** "Structured pruning of a text-to-audio
+latent diffusion backbone can preserve standalone generation quality while disproportionately
+destroying the benefit of legacy LoRA adapters trained on the dense model and transferred by
+deterministic mask-induced slicing — without adapter retraining or adapter data. We quantify
+this differential fragility across compression severity on AudioLDM, identifying unseen-adapter
+compatibility as a distinct, previously unmeasured axis of compression quality." (Phenomenon/
+analysis-led; a simple mitigation is added only if it follows naturally and fits the reserve.)
+
+**Scenario: B** (strict). Scenario A appears only as the "retrain-on-pruned" oracle baseline.
+
+**Gate 0 (G0-M, ≤1 cr, precedes any severity work):** replicate the Kim et al. published
+task/recipe transposed to dense M-Full in our pipeline — LoRA on `to_q`/`to_v` of all attention
+layers (substring filters), **r8/α16** (their headline config), lr 1e-5, AdamW, their public
+193-clip hip-hop dataset, 4-s crops, **200 epochs** (their first published checkpoint; within
+their own best band, §2b), batch 2 for fidelity (batch 4 + 16-mixed only as a logged deviation
+if the smoke requires it). **Powered evaluation replacing their 1-prompt protocol:** frozen
+pre-registered battery of 64 hip-hop prompts × 3 seeds, 4-s, DDIM S=50, default guidance
+(mirroring their validation code path); primary endpoint **ΔCLAP** = paired mean(adapter −
+base) with the LAION-CLAP fused checkpoint (their scorer); paired bootstrap CI, B=10000, frozen
+seed. **SESOI = +0.025** (half their claimed +0.0498). **PASS = point ≥ SESOI AND lower CI95 >
+0.** The paper labels this "our powered replication of the published recipe" — never "their
+adapter". FAIL ⇒ the AudioLDM thesis dies immediately; no adapter iteration.
+
+**Cheapest phenomenon test (post-Gate-0, generation only, no training):** severities {dense,
+(1,2,3,4) −23.7 %, (1,2,3,1) −65 % = the published Arshdeep artifact}, systems {backbone,
+backbone + mask-sliced legacy LoRA} (dense pair reused from Gate 0) — 2 pruned backbones × 2
+systems × 64 prompts × 3 seeds. **Pre-registered differential-fragility criterion:** with
+C(s) = standalone CLAP and ΔCLAP(s) = paired adapter uplift at severity s, define
+**D(s) = ΔCLAP(0) − ΔCLAP(s)** (adapter benefit lost) and **E(s) = C(0) − C(s)** (standalone
+degradation, same scale). The phenomenon exists at s iff **D(s) − E(s) ≥ 0.025 with paired
+bootstrap lower CI95 > 0**. "Adapter score went down" alone is nothing. Secondary (non-binding):
+FAD vs the 193-clip reference; their CLAP-MMD. If no severity shows the phenomenon ⇒
+pre-registered negative ⇒ STOP (no method work, no reframing).
+
+**Central figure:** x = parameter reduction {0, 23.7, 65}% (MACs/latency later if measured);
+y1 = C(s) with CI; y2 = ΔCLAP(s) with CI; inset/table: D(s) − E(s) with CI. The interesting
+regime: y1 flat while y2 collapses.
+
+**Mandatory baselines:** (a) dense ± adapter; (b) pruned standalone per severity (the Arshdeep
+axis); (c) pruned + sliced legacy adapter (the object); (d) **Scenario-A oracle** — LoRA
+retrained on the pruned backbone at the moderate point (quantifies "why not just retrain");
+optional (e) random-slicing control (slice with random kept-sets; tests that alignment matters).
+
+**Hostile review ("why not spend 10 minutes retraining?"):** the compression provider does not
+own the adapters — no training data (rights/privacy; most community LoRAs publish weights, not
+datasets), no pipelines, no per-adapter compute across an ecosystem; one compressed backbone
+must serve existing adapters (FLUX-lite/SSD-1B breakage is documented user pain). For AudioLDM
+specifically the ecosystem motivation is **prospective and must be stated as such** (n=1 LoRA
+today; MusicGen ~196 shows the audio trajectory). Independent scientific value: differential
+fragility is compression damage invisible to standalone metrics (Hooker-style hidden harm on a
+new axis), and the oracle baseline (d) quantifies the retraining comparison instead of dodging
+it. Remaining honest weaknesses: single substrate, single task/genre, adapter is our (powered)
+replication rather than a wild third-party artifact — all stated as limitations.
+
+**Budget through Sep 10 (DERIVED — every figure re-anchored by a ≤0.1-cr smoke before any
+launch; measured anchors: 0.89 cr/GPU-h, Ttrain 0.56 s/step@b2/10-s, Tgen 8.4 s/clip@S=50/10-s,
+4-s scale ≈ ×0.39):** smoke 0.1; Gate-0 training ~0.5–1.0 + eval generation ~0.3; phenomenon
+generation ~0.6–0.8; Scenario-A oracle ~0.5–0.7; rescoring/contingency ~0.4. **Total ≈ 2.4–3.3
+cr, hard cap 3.5 cr** → ≥ 2 cr of the ~6-cr balance stays in reserve. First falsifying chain
+(smoke + Gate 0 + phenomenon) ≈ **1.5–2.2 cr ≤ 2.5 ✓**.
+
+**Schedule:** Aug 26–27 amendment review (Gabriel) + prompt battery frozen + CPU wiring (CLAP
+scorer path, trainer data path, transfer op) with dry-runs; Aug 28 smoke → Gate-0 launch;
+Aug 29–30 Gate-0 scoring + verdict; Aug 31–Sep 2 phenomenon generation + scoring; Sep 3–5
+oracle baseline + CIs + figure; **Sep 5 paper skeleton starts** (v3 discipline); **Sep 10
+central figure frozen**; Sep 10–16 writing + internal hostile review; submit only if the
+phenomenon claim is powered ("do not submit underpowered" stands).
+
+**Terminal STOPs:** **STOP-0** smoke projects Gate 0 > 1 cr → re-cost to Gabriel before launch.
+**STOP-1** Gate 0 FAIL → AudioLDM thesis dead; decision GO-ALTERNATIVE vs NO-GO-ICASSP goes to
+Gabriel with the evidence then in hand. **STOP-2** phenomenon absent → pre-registered negative;
+no method work; venue-fallback decision. **STOP-3** 3.5-cr cap reached → stop and report.
+No mitigation/method design before the phenomenon is confirmed.
