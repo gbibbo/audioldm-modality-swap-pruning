@@ -117,7 +117,9 @@ gate0:
 # --- Held-out evaluation battery (frozen before the smoke) ---
 battery:
   n_prompts: 64                           # EXACT, not "approximately"
-  n_seeds: 3                              # paired generation seeds
+  n_seeds: 3                              # paired generation replicates per prompt
+  seed_derivation: "seed(ytid, r) = int(sha256('icassp-gate0-noise-20260826|'+ytid+'|'+str(r)).digest()[:8]); r in 0..2"
+  paired_noise: "x_T for (prompt, replicate) depends ONLY on (ytid, r) -> IDENTICAL initial latent across ALL compared systems (dense/pruned/recovered x +/-LoRA); with eta=0 this is a clean common-random-number design. impl: scripts/research/gate0_generator.py"
   generations_per_system: 192
   source: musiccaps                       # text only; no audio scraping needed
   manifest: configs/research/icassp_gate0_battery.json  # v2 (leakage-fixed)
@@ -127,6 +129,10 @@ battery:
   disjoint_rule: "PRIMARY = recovered Kim training-source ytid (kim193_source_ytids.json, 44 ytids); SECONDARY = caption exact + near-dup"
   leakage_note: "Kim captions = MusicCaps captions + subgenre suffix; source recovered 45/45 to 44 ytids. v1 (sha 46ee4203) leaked ytid ZnBvXFDWpWo; v2 excludes by source ytid (0 leak)."
   ddim_steps: 50
+  ddim_eta: 0.0                           # V4-12 NUMERIC: Diffusers 0.32.2 AudioLDMPipeline default eta=0.0
+                                          # (Kim passes none) — deterministic DDIM => clean common-random-number
+                                          # design (same x_T across all compared systems). Was implicitly 1.0 in
+                                          # audioldm_train generate_sample; frozen to 0.0 here.
   guidance_scale: 2.5                     # V4-11 NUMERIC (verified: Diffusers 0.32.2 AudioLDMPipeline
                                           # default guidance_scale=2.5; Kim passes none). Replaces the
                                           # audioldm_train config's 3.5. Do not let library defaults define it.

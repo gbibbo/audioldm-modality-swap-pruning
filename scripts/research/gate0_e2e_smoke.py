@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""End-to-end WIRING test for the Gate-0 pipeline (NOT science):
+"""WIRING REGRESSION ONLY — superseded as the scientific path by gate0_generator.py (production
+generator: EMA convention, guidance 2.5, eta 0.0, deterministic paired noise, provenance) +
+gate0_smoke.py. Kept because it exercises the trainer->generator->scorer->bootstrap chain end to end.
+DO NOT use for experimental generation.
+
+End-to-end WIRING test for the Gate-0 pipeline (NOT science):
     generator (DENSE M-Full + LoRA, 3.84 s/latent 96) -> fused-CLAP scorer -> prompt-clustered
     paired ΔCLAP + cluster bootstrap -> Gate0Verdict object.
 
