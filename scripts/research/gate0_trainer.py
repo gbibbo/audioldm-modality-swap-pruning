@@ -30,6 +30,16 @@ def _cpu_load(*a, **k):
     k.setdefault("map_location", "cpu"); return _orig_load(*a, **k)
 
 
+def _git_head():
+    try:
+        import subprocess
+        sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], text=True).strip())
+        return {"sha": sha, "dirty": dirty}
+    except Exception:
+        return None
+
+
 # --------------------------------------------------------------------------- scheduler
 def poly_lambda(sch, base_lr):
     """Polynomial decay == diffusers get_polynomial_decay_schedule_with_warmup (num_warmup=0)."""
@@ -129,9 +139,50 @@ def save_adapter(model, pre, config, global_step, opt, scheduler, losses, out_di
         "final_lr": scheduler.get_last_lr()[0], "last_losses": losses[-5:],
         "train_manifest": KIM_MANIFEST,
         "train_manifest_sha256": json.load(open(KIM_MANIFEST)).get("manifest_sha256"),
+        "commit": _git_head(),
     }
     json.dump(meta, open(os.path.join(out_dir, "gate0_adapter_meta.json"), "w"), indent=1)
     return wpath, sha, meta
+
+
+def _adapter_state(model):
+    from audioldm_peft.layers import LoRALinear, LoRAConv2d
+    sd = {}
+    for n, m in model.named_modules():
+        if isinstance(m, (LoRALinear, LoRAConv2d)):
+            sd[n + ".lora_A"] = m.lora_A.detach().cpu()
+            sd[n + ".lora_B"] = m.lora_B.detach().cpu()
+    return sd
+
+
+def save_resume_checkpoint(out_dir, next_epoch, global_step, model, opt, scheduler, losses):
+    """Periodic infra-insurance checkpoint at an EPOCH BOUNDARY (adapter + opt + sched + step).
+    Atomic replace so a crash mid-write cannot corrupt latest.pt. On-demand T4 => approximate resume
+    (post-resume shuffle differs); the recipe (200 epochs) and final 19,400-update count are preserved."""
+    rdir = os.path.join(out_dir, "resume"); os.makedirs(rdir, exist_ok=True)
+    ckpt = {"adapter": _adapter_state(model), "optimizer": opt.state_dict(),
+            "scheduler": scheduler.state_dict(), "next_epoch": int(next_epoch),
+            "global_step": int(global_step), "losses_tail": losses[-20:]}
+    tmp = os.path.join(rdir, "latest.pt.tmp"); final = os.path.join(rdir, "latest.pt")
+    torch.save(ckpt, tmp); os.replace(tmp, final)
+    return final, next_epoch, global_step
+
+
+def load_resume_checkpoint(resume_dir, model, opt, scheduler):
+    """Load <resume_dir>/resume/latest.pt if present; restore adapter+opt+sched. Returns (start_epoch, global_step).
+    Absent => (0, 0) = fresh start (a resume flag on a clean dir is a no-op, not an error)."""
+    from audioldm_peft.layers import LoRALinear, LoRAConv2d
+    path = os.path.join(resume_dir, "resume", "latest.pt")
+    if not os.path.exists(path):
+        return 0, 0
+    ck = _orig_load(path, map_location="cpu")
+    mods = {n: m for n, m in model.named_modules() if isinstance(m, (LoRALinear, LoRAConv2d))}
+    with torch.no_grad():
+        for n, m in mods.items():
+            m.lora_A.copy_(ck["adapter"][n + ".lora_A"].to(m.lora_A.device, m.lora_A.dtype))
+            m.lora_B.copy_(ck["adapter"][n + ".lora_B"].to(m.lora_B.device, m.lora_B.dtype))
+    opt.load_state_dict(ck["optimizer"]); scheduler.load_state_dict(ck["scheduler"])
+    return int(ck["next_epoch"]), int(ck["global_step"])
 
 
 def main():
@@ -141,6 +192,10 @@ def main():
     ap.add_argument("--max-updates", type=int, default=None,
                     help="cap optimizer updates (bounded modes / smoke); full run leaves it None")
     ap.add_argument("--out", default=CKPT_DIR)
+    ap.add_argument("--resume", default=None,
+                    help="resume dir (loads <dir>/resume/latest.pt if present); on-demand insurance, approximate")
+    ap.add_argument("--ckpt-every-epochs", type=int, default=10,
+                    help="save a resume checkpoint every K epochs (full GPU run only)")
     args = ap.parse_args()
     if not args.dry_run_cpu and not torch.cuda.is_available():
         raise SystemExit("refusing to run the full trainer without CUDA (use --dry-run-cpu)")
@@ -191,6 +246,12 @@ def main():
 
     opt, scheduler, lora_params = build_optimizer_scheduler(model, pre)
 
+    resume_start_epoch, resume_global_step = (0, 0)
+    if args.resume:
+        resume_start_epoch, resume_global_step = load_resume_checkpoint(args.resume, model, opt, scheduler)
+        R["report"]["resumed"] = {"from": args.resume, "start_epoch": resume_start_epoch,
+                                  "global_step": resume_global_step}
+
     # --- static assertions (recipe wiring) ---
     lora_names = [n for n, m in model.named_modules() if isinstance(m, (LoRALinear, LoRAConv2d))]
     R["assertions"]["lora_only_to_q_to_v"] = all(("to_q" in n or "to_v" in n) for n in lora_names)
@@ -228,9 +289,10 @@ def main():
     cap = args.max_updates if args.max_updates is not None else (4 if args.dry_run_cpu else planned_updates)
     b_ref = next(m.lora_B.detach().clone() for _, m in model.named_modules() if isinstance(m, LoRALinear))
     base_ref = next(m.base.weight.detach().clone() for _, m in model.named_modules() if isinstance(m, LoRALinear))
-    losses, global_step, t0 = [], 0, time.perf_counter()
+    losses, global_step, t0 = [], resume_global_step, time.perf_counter()
     stop = False
-    for epoch in range(pre["epochs"]):
+    is_full_run = (not args.dry_run_cpu) and (args.max_updates is None)
+    for epoch in range(resume_start_epoch, pre["epochs"]):
         for batch in loader:
             losses.append(train_one_step(model, batch, opt, scheduler, lora_params, pre))
             global_step += 1
@@ -238,9 +300,12 @@ def main():
                 stop = True; break
         if stop:
             break
+        # epoch-boundary infra-insurance checkpoint (full GPU run only)
+        if is_full_run and args.ckpt_every_epochs > 0 and (epoch + 1) % args.ckpt_every_epochs == 0:
+            save_resume_checkpoint(args.out, epoch + 1, global_step, model, opt, scheduler, losses)
     wall = time.perf_counter() - t0
     R["report"]["ran_updates"] = global_step
-    R["report"]["sec_per_step"] = wall / max(1, global_step)
+    R["report"]["sec_per_step"] = wall / max(1, global_step - resume_global_step)
     R["assertions"]["loss_finite"] = all(math.isfinite(l) for l in losses)
     b_new = next(m.lora_B.detach() for _, m in model.named_modules() if isinstance(m, LoRALinear))
     base_new = next(m.base.weight.detach() for _, m in model.named_modules() if isinstance(m, LoRALinear))
