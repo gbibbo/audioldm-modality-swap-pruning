@@ -128,7 +128,10 @@ def main():
     ap.add_argument("--dense-manifest", help="frozen Gate-0 both-manifest (dense)")
     ap.add_argument("--pruned-manifest")
     ap.add_argument("--recovered-manifest")
-    ap.add_argument("--wav-root", default="")
+    ap.add_argument("--wav-root", default="", help="applied to ALL manifests if the per-root flags are unset")
+    ap.add_argument("--dense-wav-root", default=None, help="root for the dense WAVs (gate0-gen-1 job dir)")
+    ap.add_argument("--downstream-wav-root", default=None,
+                    help="root for the pruned+recovered WAVs (gate0-phenom-1 job dir)")
     ap.add_argument("--out", default="artifacts/icassp_gate0/phenomenon_verdict.json")
     ap.add_argument("--self-test", action="store_true")
     args = ap.parse_args()
@@ -151,7 +154,12 @@ def main():
 
     # Frozen convention (Option B): ONE 192-item scorer call PER SYSTEM, order (prompt_index,
     # replicate_index), seed-once per system. Build 6 systems in a fixed order (primary first).
-    wav = lambda r: os.path.join(args.wav_root, r["wav"]) if args.wav_root else r["wav"]
+    # dense WAVs live in the gate0-gen-1 job dir; downstream in the gate0-phenom-1 job dir.
+    dense_root = args.dense_wav_root if args.dense_wav_root is not None else args.wav_root
+    down_root = args.downstream_wav_root if args.downstream_wav_root is not None else args.wav_root
+    def wav(r, backbone):
+        root = dense_root if backbone == "dense" else down_root
+        return os.path.join(root, r["wav"]) if root else r["wav"]
     SYSTEMS = [("dense", "off"), ("dense", "on"),
                ("p1_recovered", "off"), ("p1_recovered", "on"),
                ("p1_pruned_ema_reconstructed", "off"), ("p1_pruned_ema_reconstructed", "on")]
@@ -163,7 +171,7 @@ def main():
             raise SystemExit(f"system {bk}/{st} has {len(rows)} rows (expected 192)")
         sysrows[(bk, st)] = rows
         groups.append({"name": f"{bk}__{st}",
-                       "items": [{"caption": caps[r["prompt_index"]], "wav": wav(r)} for r in rows]})
+                       "items": [{"caption": caps[r["prompt_index"]], "wav": wav(r, bk)} for r in rows]})
     cos_by_name, scorer_prov = score_per_system(groups, os.path.dirname(args.out) or ".")
     grids = {(bk, st): to_grid(sysrows[(bk, st)], cos_by_name[f"{bk}__{st}"]) for bk, st in SYSTEMS}
 
