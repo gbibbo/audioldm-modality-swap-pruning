@@ -284,7 +284,7 @@ def main() -> int:
 TEMPLATE = r"""<title>Same Channels, Either Way</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root {{
   color-scheme: light;
@@ -293,7 +293,7 @@ TEMPLATE = r"""<title>Same Channels, Either Way</title>
   --grid:#e4e7ed; --axis:#c3c8d3; --rule:rgba(16,19,26,.10);
   --s1:#2a78d6; --s2:#eb6834; --refbar:#9aa2b1;
   --band:rgba(118,126,143,.20); --accent:#2a78d6;
-  --warn-bg:rgba(235,104,52,.09); --warn-ink:#a8431a;
+  --warn-bg:rgba(235,104,52,.10); --warn-ink:#a8431a;
 }}
 @media (prefers-color-scheme: dark) {{
   :root:not([data-theme="light"]) {{
@@ -303,7 +303,7 @@ TEMPLATE = r"""<title>Same Channels, Either Way</title>
     --grid:#232730; --axis:#3a3f4a; --rule:rgba(255,255,255,.11);
     --s1:#3987e5; --s2:#d95926; --refbar:#6d7482;
     --band:rgba(133,141,156,.24); --accent:#5c9df0;
-    --warn-bg:rgba(217,89,38,.13); --warn-ink:#e5926c;
+    --warn-bg:rgba(217,89,38,.14); --warn-ink:#e5926c;
   }}
 }}
 :root[data-theme="dark"] {{
@@ -313,59 +313,67 @@ TEMPLATE = r"""<title>Same Channels, Either Way</title>
   --grid:#232730; --axis:#3a3f4a; --rule:rgba(255,255,255,.11);
   --s1:#3987e5; --s2:#d95926; --refbar:#6d7482;
   --band:rgba(133,141,156,.24); --accent:#5c9df0;
-  --warn-bg:rgba(217,89,38,.13); --warn-ink:#e5926c;
+  --warn-bg:rgba(217,89,38,.14); --warn-ink:#e5926c;
 }}
 
 * {{ box-sizing:border-box; }}
+html {{ scroll-behavior:smooth; scroll-snap-type:y proximity; }}
+@media (prefers-reduced-motion: reduce) {{ html {{ scroll-behavior:auto; }} * {{ transition:none !important; }} }}
 body {{
   margin:0; background:var(--plane); color:var(--ink);
   font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
 }}
-.wrap {{ max-width:1000px; margin:0 auto; padding:56px 24px 96px; display:flex; flex-direction:column; gap:44px; }}
-p {{ margin:0; max-width:68ch; }}
+
+.slide {{
+  min-height:100vh; min-height:100svh; scroll-snap-align:start;
+  display:flex; flex-direction:column; justify-content:center;
+  gap:20px; padding:48px 40px 56px; max-width:1180px; margin:0 auto;
+  border-bottom:1px solid var(--rule);
+}}
+@media (max-width:720px) {{ .slide {{ padding:40px 20px 48px; min-height:auto; }} }}
+
 .eyebrow {{
-  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--ink-muted); margin:0 0 14px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-muted); margin:0;
 }}
 h1 {{
-  font-family:"IBM Plex Serif",Georgia,serif; font-weight:600; font-size:clamp(30px,4.6vw,46px);
-  line-height:1.12; letter-spacing:-.015em; margin:0 0 18px; text-wrap:balance; max-width:19ch;
+  font-family:"IBM Plex Serif",Georgia,serif; font-weight:600;
+  font-size:clamp(30px,5.2vw,54px); line-height:1.08; letter-spacing:-.02em;
+  margin:0; text-wrap:balance; max-width:17ch;
 }}
 h2 {{
-  font-family:"IBM Plex Serif",Georgia,serif; font-weight:600; font-size:23px; line-height:1.25;
-  margin:0; letter-spacing:-.01em; text-wrap:balance;
+  font-family:"IBM Plex Serif",Georgia,serif; font-weight:600;
+  font-size:clamp(26px,4.2vw,42px); line-height:1.1; letter-spacing:-.02em;
+  margin:0; text-wrap:balance; max-width:20ch;
 }}
-h3 {{ font-size:14px; font-weight:600; margin:0; letter-spacing:.01em; }}
-.lede {{ font-size:18.5px; color:var(--ink-2); max-width:64ch; }}
-.rule {{ height:1px; background:var(--rule); border:0; margin:0; }}
+.say {{
+  font-size:clamp(17px,1.9vw,21px); color:var(--ink-2); margin:0; max-width:60ch;
+  line-height:1.45;
+}}
+.say b {{ color:var(--ink); font-weight:600; }}
+.foot {{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-muted);
+  margin:0; max-width:90ch; line-height:1.6;
+}}
 
-/* stat row */
-.stats {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:10px; overflow:hidden; }}
-.stat {{ background:var(--surface); padding:20px 22px; display:flex; flex-direction:column; gap:6px; }}
-.stat .k {{ font-size:12.5px; color:var(--ink-muted); letter-spacing:.01em; }}
-.stat .v {{ font-size:34px; font-weight:600; line-height:1; letter-spacing:-.02em; }}
-.stat .n {{ font-size:12.5px; color:var(--ink-2); }}
-
-/* figure card */
-figure {{ margin:0; background:var(--surface); border:1px solid var(--rule); border-radius:12px; overflow:hidden; }}
-.fhead {{ padding:22px 26px 0; display:flex; flex-direction:column; gap:9px; }}
-.fnum {{ font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }}
-.take {{ color:var(--ink-2); font-size:15.5px; max-width:70ch; }}
-.legend {{ display:flex; flex-wrap:wrap; gap:18px; padding:16px 26px 0; }}
-.key {{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-2); }}
+.card {{ background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:14px 18px 8px; }}
+.plot {{ overflow-x:auto; }}
+.legend {{ display:flex; flex-wrap:wrap; gap:20px; padding:0 4px 10px; }}
+.key {{ display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-2); }}
 .swatch {{ width:11px; height:11px; border-radius:50%; flex:none; }}
 .swatch.s1 {{ background:var(--s1); }}
 .swatch.s2 {{ background:var(--s2); }}
 .swatch.ref {{ background:var(--refbar); border-radius:2px; }}
 .swatch.band {{ background:var(--band); border-radius:2px; width:20px; }}
-.plot {{ padding:10px 20px 4px; overflow-x:auto; }}
-.panels {{ display:grid; grid-template-columns:1fr; }}
-.panel + .panel {{ border-top:1px solid var(--rule); }}
-.ptitle {{ padding:18px 26px 0; font-size:13px; font-weight:600; }}
-.pnote {{ padding:2px 26px 0; font-size:13.5px; color:var(--ink-2); max-width:74ch; }}
-figcaption {{ padding:16px 26px 22px; font-size:13px; color:var(--ink-muted); border-top:1px solid var(--rule); margin-top:12px; }}
-figcaption code {{ font-family:"IBM Plex Mono",monospace; font-size:12px; }}
+
+.flag {{
+  display:inline-flex; align-self:flex-start; padding:6px 12px; border-radius:6px;
+  background:var(--warn-bg); color:var(--warn-ink); font-size:12.5px; font-weight:500;
+}}
+.pair {{ display:flex; flex-wrap:wrap; gap:12px 40px; align-items:baseline; }}
+.big {{ font-size:clamp(34px,5vw,52px); font-weight:600; letter-spacing:-.03em; line-height:1; }}
+.big span {{ font-size:15px; font-weight:400; color:var(--ink-muted); letter-spacing:0; display:block; margin-top:8px; }}
 
 svg.chart {{ display:block; width:100%; height:auto; min-width:560px; }}
 .grid {{ stroke:var(--grid); stroke-width:1; }}
@@ -389,249 +397,184 @@ text {{ font-family:"IBM Plex Sans",system-ui,sans-serif; }}
 .note {{ font-size:11.5px; fill:var(--ink-2); }}
 .axtitle {{ font-size:11.5px; fill:var(--ink-muted); }}
 
-.flag {{ display:inline-flex; align-items:center; gap:8px; align-self:flex-start; margin:0 26px; padding:7px 12px; border-radius:6px; background:var(--warn-bg); color:var(--warn-ink); font-size:12.5px; font-weight:500; }}
-
-details {{ border-top:1px solid var(--rule); }}
-summary {{ padding:13px 26px; font-size:13px; color:var(--ink-2); cursor:pointer; list-style:none; }}
-summary::-webkit-details-marker {{ display:none; }}
-summary::before {{ content:"▸ "; color:var(--ink-muted); }}
-details[open] summary::before {{ content:"▾ "; }}
-summary:focus-visible, a:focus-visible {{ outline:2px solid var(--accent); outline-offset:2px; border-radius:3px; }}
-.tablewrap {{ overflow-x:auto; padding:0 26px 22px; }}
+/* backup, below the deck */
+.backup {{ max-width:900px; margin:0 auto; padding:64px 40px 96px; display:flex; flex-direction:column; gap:32px; }}
+@media (max-width:720px) {{ .backup {{ padding:48px 20px 64px; }} }}
+.backup h3 {{ font-family:"IBM Plex Serif",Georgia,serif; font-size:20px; font-weight:600; margin:0; }}
+.backup p {{ margin:0; font-size:15px; color:var(--ink-2); max-width:66ch; }}
+.backup p strong {{ color:var(--ink); }}
+.backup .mono {{ font-family:"IBM Plex Mono",monospace; font-size:13px; }}
+.tablewrap {{ overflow-x:auto; }}
 table {{ border-collapse:collapse; font-size:12.5px; width:100%; }}
 th, td {{ text-align:right; padding:6px 12px; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }}
 th:first-child, td:first-child {{ text-align:left; font-family:"IBM Plex Mono",monospace; font-variant-numeric:normal; }}
 th {{ color:var(--ink-muted); font-weight:500; }}
+details summary {{ font-size:13.5px; color:var(--ink-2); cursor:pointer; list-style:none; padding:4px 0; }}
+summary::-webkit-details-marker {{ display:none; }}
+summary::before {{ content:"▸ "; color:var(--ink-muted); }}
+details[open] summary::before {{ content:"▾ "; }}
+summary:focus-visible {{ outline:2px solid var(--accent); outline-offset:2px; border-radius:3px; }}
 
-.read {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:26px; }}
-.read div {{ display:flex; flex-direction:column; gap:8px; }}
-.read p {{ font-size:15px; color:var(--ink-2); }}
-.aside {{ background:var(--sunk); border:1px solid var(--rule); border-radius:12px; padding:24px 26px; display:flex; flex-direction:column; gap:12px; }}
-.aside p {{ font-size:15px; color:var(--ink-2); }}
-ul {{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; font-size:15px; color:var(--ink-2); max-width:68ch; }}
-strong {{ color:var(--ink); font-weight:600; }}
-.mono {{ font-family:"IBM Plex Mono",monospace; font-size:13px; }}
-footer {{ font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-muted); line-height:1.85; }}
-footer b {{ color:var(--ink-2); font-weight:500; }}
+.nav {{
+  position:fixed; right:16px; bottom:16px; z-index:9; display:flex; gap:6px;
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-muted);
+  background:var(--surface); border:1px solid var(--rule); border-radius:20px; padding:6px 12px;
+}}
+@media (max-width:720px) {{ .nav {{ display:none; }} }}
 
 #tip {{
   position:fixed; z-index:10; pointer-events:none; opacity:0; transition:opacity .12s;
   background:var(--ink); color:var(--surface); font-size:12.5px; padding:6px 10px;
   border-radius:6px; max-width:280px; box-shadow:0 4px 16px rgba(0,0,0,.22);
 }}
-@media (prefers-reduced-motion: reduce) {{ * {{ transition:none !important; }} }}
 </style>
 
-<div class="wrap">
-
-  <header>
-    <p class="eyebrow">AudioLDM · structured pruning · modality swap</p>
-    <h1>Audio and text want the same channels cut</h1>
-    <p class="lede">We asked whether ranking a diffusion U-Net's channels under <em>audio</em>
-    conditioning instead of <em>text</em> conditioning changes which channels structured pruning
-    removes. Two pre-registered gates say no — and the difference we do measure is the same size
-    as the noise from re-drawing the calibration set.</p>
-  </header>
-
-  <div class="stats">
-    <div class="stat">
-      <span class="k">Rank agreement, audio vs text</span>
-      <span class="v">ρ = {rho_med}</span>
-      <span class="n">median over the 12 layers that decide the mask ({rho_lo}–{rho_hi})</span>
-    </div>
-    <div class="stat">
-      <span class="k">Channels kept in common</span>
-      <span class="v">{overlap_pct}%</span>
-      <span class="n">audio-only vs text-only criterion, at −65% U-Net</span>
-    </div>
-    <div class="stat">
-      <span class="k">Same figure from noise alone</span>
-      <span class="v">{null_med_pct}%</span>
-      <span class="n">median of {n_splits} calibration half-splits of one criterion</span>
-    </div>
-  </div>
-
-  <figure>
-    <div class="fhead">
-      <span class="fnum">Figure 1</span>
-      <h2>The instrument separates criteria, not modalities</h2>
-      <p class="take">Swap the conditioning modality and the channel ranking barely moves (blue).
-      Swap the <em>criterion</em> — first-order Taylor for plain L1 magnitude — and it moves a lot
-      (orange). Same layers, same run, same calibration data: the measurement is sensitive, the
-      modality effect is not there.</p>
-    </div>
+<section class="slide" id="s1">
+  <p class="eyebrow">AudioLDM · structured pruning · the modality swap</p>
+  <h1>Audio and text want the same channels cut</h1>
+  <div class="card">
     <div class="legend">
       <span class="key"><span class="swatch s1"></span>Audio-Taylor vs text-Taylor — the modality swap</span>
       <span class="key"><span class="swatch s2"></span>Audio-Taylor vs L1 magnitude — the control</span>
     </div>
-    <div class="panels">
-      <div class="panel">
-        <p class="ptitle">A · Do the two rankings agree, layer by layer?</p>
-        <p class="pnote">Each row is one of the 12 layers whose channel ranking actually determines the
-        pruned architecture. ρ = 1 means the two criteria order the channels identically.</p>
-        <div class="plot">{panel_a}</div>
-      </div>
-      <div class="panel">
-        <p class="ptitle">B · So how many channels does the swap actually change?</p>
-        <p class="pnote">Kept-set overlap at the published −65% budget. The pre-registered gate needed
-        the two modalities to disagree enough to push this <em>below 0.80</em>. Measured: {overlap} —
-        which is where the same criterion lands against itself when you just re-draw half the
-        calibration slots.</p>
-        <div class="plot">{panel_b}</div>
-      </div>
-    </div>
-    <figcaption>
-      Job <code>m3b-saliency-2</code>, Tesla T4. Channel-gate first-order Taylor saliency,
-      S<sub>c</sub> = mean<sub>slots</sub>|g<sub>c</sub>·∂L/∂g<sub>c</sub>|, on the dense
-      AudioLDM-M-Full U-Net (415.955 M → 145.674 M params). E = {e} calibration clips × K = {k}
-      timesteps, gradient budget matched across criteria (2,560 evaluations each), frozen manifest
-      <code>{manifest}…</code>, seed {seed}, commit <code>{sal_commit}</code>. The noise band is
-      {n_splits} random half-splits of the text-only criterion's stored per-slot contributions
-      (matched half size), computed on the enriched E = 512 pass.
-    </figcaption>
-    <details>
-      <summary>Data table · per-layer values</summary>
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th>Layer</th><th>channels</th><th>kept</th><th>ρ audio·text</th><th>ρ Taylor·L1</th><th>kept-set overlap</th></tr></thead>
-          <tbody>{tbl1}</tbody>
-        </table>
-      </div>
-    </details>
-  </figure>
-
-  <div class="read">
-    <div>
-      <h3>What Figure 1 rules out</h3>
-      <p>The hypothesis was that a text-to-audio model carries modality-specific structure: prune it
-      with a text-conditioned signal and you would damage the audio path, so a paired audio+text
-      criterion should pick a measurably different — and better — set of channels to keep. At
-      −65% there is no such set to pick. Out of 192 kept channels per layer, the two modalities
-      disagree on about ten, and re-drawing the calibration data disagrees by just as many.</p>
-    </div>
-    <div>
-      <h3>The second gate agrees</h3>
-      <p>An independent test asked the damage question rather than the ranking question: does the
-      pruned model lose more on one modality than a random mask of matched generic damage?
-      R<sub>mod</sub> = {r_l1} for the L1-pruned model against {r_rand} for the matched random null —
-      Δ<sub>swap</sub> = {delta_swap}, 95% bootstrap CI [{ci_lo}, {ci_hi}]. The interval contains zero.
-      Two different questions, one answer.</p>
-    </div>
+    <div class="plot">{panel_a}</div>
   </div>
+  <p class="say">Swap the conditioning <b>modality</b> and the channel ranking barely moves.
+  Swap the <b>criterion</b> and it moves a lot — so the instrument works; the effect isn't there.</p>
+  <p class="foot">12 layers that decide the pruned architecture · E = {e} clips × K = {k} timesteps ·
+  matched gradient budget · job m3b-saliency-2, T4</p>
+</section>
 
-  <figure>
-    <div class="fhead">
-      <span class="fnum">Figure 2</span>
-      <h2>And you can hear it in the generated audio</h2>
-      <p class="take">If the paired-modality criteria kept a genuinely better set of channels, they
-      would generate better audio than plain text-only Taylor. They do not: P2 and P3 sit
-      <em>behind</em> P1, and every pruned variant sits far from the dense model. Pre-recovery, at
-      this budget, the criterion barely matters.</p>
+<section class="slide" id="s2">
+  <p class="eyebrow">Gate B · kept-set overlap at −65 % U-Net</p>
+  <h2>The swap moves the mask as much as noise does</h2>
+  <div class="card">
+    <div class="legend">
+      <span class="key"><span class="swatch s1"></span>Measured, audio vs text</span>
+      <span class="key"><span class="swatch band"></span>Same criterion re-drawn on half the calibration set ({n_splits}×)</span>
     </div>
-    <span class="flag">Screening grade — 100 clips, 1 seed, no confidence intervals. Not a claim.</span>
+    <div class="plot">{panel_b}</div>
+  </div>
+  <div class="pair">
+    <p class="big">{overlap}<span>measured overlap</span></p>
+    <p class="big">{null_med}<span>calibration noise alone</span></p>
+    <p class="big">≤ 0.80<span>what the gate needed</span></p>
+  </div>
+  <p class="foot">Second gate, on damage instead of ranking, agrees: Δ_swap = {delta_swap},
+  95 % CI [{ci_lo}, {ci_hi}] — contains zero</p>
+</section>
+
+<section class="slide" id="s3">
+  <p class="eyebrow">Generation check</p>
+  <h2>The generated audio says the same</h2>
+  <span class="flag">Screening grade — 100 clips, 1 seed, no intervals. Not a claim.</span>
+  <div class="card">
     <div class="legend">
       <span class="key"><span class="swatch s1"></span>Taylor criteria</span>
       <span class="key"><span class="swatch s2"></span>L1 magnitude</span>
       <span class="key"><span class="swatch ref"></span>Dense reference</span>
     </div>
     <div class="plot">{fig2}</div>
-    <figcaption>
-      Fréchet Audio Distance (VGGish, 128-d) between 100 generated clips and 100 real AudioCaps
-      clips from the disjoint validation split. Job <code>m3-screening</code> re-scored on CPU with a
-      real-part eigenvalue Fréchet (self-distance control: FAD(ref,ref) = 0.000). 50 DDIM steps,
-      guidance 3.5, one seed. Recorded in the ledger as screening only and explicitly
-      <em>not promotable</em>: no seed variance, no interval, n = 100. Read the ordering as
-      consistent with Figure 1, never as an established ranking.
-    </figcaption>
-    <details>
-      <summary>Data table · FAD values</summary>
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th>System</th><th>FAD (VGGish)</th></tr></thead>
-          <tbody>{tbl2}</tbody>
-        </table>
-      </div>
-    </details>
-  </figure>
+  </div>
+  <p class="say">The paired-modality criteria (P2, P3) sit <b>behind</b> plain text-only Taylor.
+  Pre-recovery at this budget, the criterion barely matters.</p>
+  <p class="foot">FAD vs 100 real AudioCaps clips · 50 DDIM steps · recorded as screening only,
+  explicitly not promotable</p>
+</section>
 
-  <div class="aside">
-    <h2>One thing worth checking together</h2>
-    <p>The published L1 artifact sits at the bottom of Figure 2, and there may be a mechanical reason.
-    In every one of the 28 ranked layers, the released ranking correlates <strong>−1.000</strong> with
-    a conventional descending-L1 ranking: <code class="mono">np.argsort</code> is ascending and the
-    first <em>k</em> entries are kept, so the artifact keeps the <em>lowest</em>-magnitude filters. On
-    all 15 actually-pruned layers the kept set has lower mean L1 than the removed set.</p>
-    <p>We can reproduce the released checkpoint bit-exactly (690/690 tensors) from the base weights
-    plus <code class="mono">sorted_indexes_dict.pkl</code>, so this is a property of the artifact
-    itself, not of our reading of the code. Intentional, or a direction to flip? It changes what the
-    pre-recovery baseline means for everyone who builds on it.</p>
+<div class="backup">
+  <p class="eyebrow">Backup — not part of the walkthrough</p>
+
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <h3>One thing worth checking with Arshdeep</h3>
+    <p>In all 28 ranked layers the released ranking correlates <strong>−1.000</strong> with a
+    conventional descending-L1 ranking: <span class="mono">np.argsort</span> is ascending and the
+    first <em>k</em> entries are kept, so the published artifact keeps the <em>lowest</em>-magnitude
+    filters. On all 15 actually-pruned layers the kept set has lower mean L1 than the removed set.
+    We reproduce the released checkpoint bit-exactly (690/690 tensors) from the base weights plus
+    <span class="mono">sorted_indexes_dict.pkl</span>, so it is a property of the artifact, not of
+    our reading of the code. Intentional, or a direction to flip?</p>
   </div>
 
-  <div>
-    <h2>Where the paper goes</h2>
-    <p style="margin:12px 0 16px;color:var(--ink-2)">The modality-swap line is closed as a clean
-    negative — pre-registered, two gates, with a discriminating control proving the instrument
-    works. It is a publishable result, but not a four-page ICASSP story on its own. The submission
-    moved to the question the same machinery answers next:</p>
-    <ul>
-      <li><strong>Scenario B — legacy adapter transfer.</strong> A LoRA trained on the dense backbone
-      cannot load onto a pruned one: the channel geometry changed. We slice the adapter by the same
-      kept-index set, with zero retraining and zero adapter data, and measure whether its benefit
-      survives.</li>
-      <li><strong>Separating two failure modes</strong> usually conflated: the generic degradation the
-      pruned backbone suffers standalone (E), versus the excess degradation specific to the
-      transferred adapter (F = D − E).</li>
-      <li><strong>Pre-registered before any GPU spend:</strong> 64 held-out MusicCaps prompts × 3 seeds,
-      prompt-clustered bootstrap (B = 10,000, seed 20260826), SESOI +0.025, dual non-inferiority +
-      differential-fragility gate. Transfer operator already verified on CPU.</li>
-      <li><strong>Next:</strong> Gate 0 — reproduce the published adapter's uplift on the dense
-      backbone. If it fails, the line stops there, by pre-registration.</li>
-    </ul>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <h3>Where the paper goes</h3>
+    <p>The modality-swap line closes as a pre-registered negative with a working control. The
+    ICASSP-2027 submission moved to <strong>Scenario B</strong>: a LoRA trained on the dense backbone
+    can't load onto a pruned one, so we slice it by the same kept-index set — no retraining, no
+    adapter data — and measure whether its benefit survives, separating generic degradation (E) from
+    excess adapter-specific degradation (F = D − E). Pre-registered before any GPU spend: 64 held-out
+    prompts × 3 seeds, prompt-clustered bootstrap, SESOI +0.025. Next step is Gate 0.</p>
   </div>
 
-  <hr class="rule">
+  <details>
+    <summary>Data · Figure 1, per layer</summary>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Layer</th><th>channels</th><th>kept</th><th>ρ audio·text</th><th>ρ Taylor·L1</th><th>overlap</th></tr></thead>
+        <tbody>{tbl1}</tbody>
+      </table>
+    </div>
+  </details>
 
-  <footer>
-    <b>Provenance.</b> Figure 1: <code>artifacts/m3_pilot/m3b_saliency.pt</code> +
-    <code>m3b_saliency_result.json</code>, commit <code>{sal_commit}</code>; noise band
-    <code>gateb_null_distribution.json</code>. Damage gate: <code>m3a_result.json</code>, job
-    <code>m3a-diag-1</code>, commit <code>{m3a_commit}</code>. Figure 2:
-    <code>artifacts/m4_screening/rescore_frechet.json</code>.<br>
-    <b>Both gates failed to reject the null; both are recorded as rejected claims in the claims
-    matrix.</b> Every number on this page is recomputed from those artifacts at build time by
-    <code>scripts/research/build_meeting_figures.py</code>.
-  </footer>
+  <details>
+    <summary>Data · Figure 3, FAD</summary>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>System</th><th>FAD (VGGish)</th></tr></thead>
+        <tbody>{tbl2}</tbody>
+      </table>
+    </div>
+  </details>
+
+  <p class="foot">ρ audio·text median {rho_med} ({rho_lo}–{rho_hi}) vs control {ctl_med}
+  ({ctl_lo}–{ctl_hi}) over the 12 decision layers · damage gate R_mod {r_l1} vs random null {r_rand}
+  · saliency commit {sal_commit}, manifest {manifest}…, seed {seed} · damage commit {m3a_commit} ·
+  noise band {null_lo}–{null_hi} · sources: artifacts/m3_pilot/{{m3b_saliency.pt, m3a_result.json,
+  gateb_null_distribution.json}}, artifacts/m4_screening/rescore_frechet.json · rebuilt by
+  scripts/research/build_meeting_figures.py</p>
 </div>
 
+<div class="nav" aria-hidden="true">↑ ↓ to move</div>
 <div id="tip" role="status" aria-live="polite"></div>
 <script>
 (function () {{
   try {{
     var tip = document.getElementById("tip");
-    if (!tip) return;
-    function show(e) {{
-      var t = e.currentTarget.getAttribute("data-tip");
-      if (!t) return;
-      tip.textContent = t;
-      tip.style.opacity = "1";
-      move(e);
+    if (tip) {{
+      var show = function (e) {{
+        var t = e.currentTarget.getAttribute("data-tip");
+        if (!t) return;
+        tip.textContent = t; tip.style.opacity = "1"; move(e);
+      }};
+      var move = function (e) {{
+        var x = e.clientX + 14, y = e.clientY + 16, r = tip.getBoundingClientRect();
+        if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - 14;
+        if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - 16;
+        tip.style.left = x + "px"; tip.style.top = y + "px";
+      }};
+      var hide = function () {{ tip.style.opacity = "0"; }};
+      var marks = document.querySelectorAll("[data-tip]");
+      for (var i = 0; i < marks.length; i++) {{
+        marks[i].addEventListener("mouseenter", show);
+        marks[i].addEventListener("mousemove", move);
+        marks[i].addEventListener("mouseleave", hide);
+      }}
     }}
-    function move(e) {{
-      var x = e.clientX + 14, y = e.clientY + 16;
-      var r = tip.getBoundingClientRect();
-      if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - 14;
-      if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - 16;
-      tip.style.left = x + "px";
-      tip.style.top = y + "px";
-    }}
-    function hide() {{ tip.style.opacity = "0"; }}
-    var marks = document.querySelectorAll("[data-tip]");
-    for (var i = 0; i < marks.length; i++) {{
-      marks[i].addEventListener("mouseenter", show);
-      marks[i].addEventListener("mousemove", move);
-      marks[i].addEventListener("mouseleave", hide);
-    }}
-  }} catch (err) {{ /* tooltips are an enhancement; the chart stands without them */ }}
+    var slides = document.querySelectorAll(".slide");
+    document.addEventListener("keydown", function (e) {{
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "PageDown" && e.key !== "PageUp") return;
+      var dir = (e.key === "ArrowDown" || e.key === "PageDown") ? 1 : -1;
+      var y = window.scrollY, target = null;
+      for (var i = 0; i < slides.length; i++) {{
+        var top = slides[i].offsetTop;
+        if (dir > 0 && top > y + 8) {{ target = top; break; }}
+        if (dir < 0 && top < y - 8) {{ target = top; }}
+      }}
+      if (target === null) return;
+      e.preventDefault();
+      window.scrollTo({{ top: target, behavior: "smooth" }});
+    }});
+  }} catch (err) {{ /* enhancement only; the deck stands without it */ }}
 }})();
 </script>
 """
