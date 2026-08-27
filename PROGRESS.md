@@ -71,11 +71,11 @@
 * M3B Gate-B overlap tests (CPU, synthetic): `.venv/bin/python tests/research/test_overlap_gate_b.py`
 * M1 PEFT backward on the real U-Net (CPU, needs the pruned ckpt): `.venv/bin/python tests/research/test_peft_backward_real_unet.py`
 * Verify the Gate-B geometry / finding G1 on the real artifact: `.venv/bin/python scripts/research/verify_gate_b_geometry.py`
+* Meeting figure page (presentation only, no new science): `OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/build_meeting_figures.py` -> `artifacts/meeting/modality_result.html` (gitignored)
 * Review our patches to upstream: `git diff upstream-frozen -- audioldm_train/`
 * SA3 Step 0 (CPU, `.venv-sa3`): `.venv-sa3/bin/python scripts/sa3/step0_verify_pair.py --base-dir data/sa3/small-sfx-base [--post-dir data/sa3/small-sfx] --build --out artifacts/sa3/step0.json`; tests: `.venv-sa3/bin/python tests/sa3/test_blockskip.py`, `tests/sa3/test_loading_diff.py`
 * Agent kit verification: `python3 .claude/verify_agent_kit.py .`
-* Progress structure: `python3 .claude/hooks/check_progress.py PROGRESS.md`
-* Git state: `git status --short --branch`
+* Housekeeping: `python3 .claude/hooks/check_progress.py PROGRESS.md`; `git status --short --branch`
 
 <!-- FIN-ESTADO -->
 
