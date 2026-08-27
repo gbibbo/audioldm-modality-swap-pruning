@@ -454,3 +454,8 @@ has changed. **It no longer governs.** (Preserved above for history; not deleted
 * **4 systems = {p1_pruned_ema_reconstructed, p1_recovered} × {off, on} = 768 NEW WAVs** (dense 384 reused byte-for-byte, NOT regenerated). Sliced-adapter generation path built + CPU dry-run GREEN on both backbones (sliced adapter sha `5cc0a79a`; loads into pruned + recovered; OFF/ON generate; manifests validate 0 errors).
 * **Projected settled cost for exactly 768 WAVs:** pure-gen floor 768 × 7.143 s/clip @ 0.89 cr/GPU-h = **1.356 cr**; at the realized gate0-gen rate (0.8844/384 = 0.002303 cr/WAV incl. overhead) ≈ **1.77 cr**. **Central chain would reach ≈ 4.22–4.63 cr** (2.8648 spent + 1.36–1.77), within the authorized 5.0-cr envelope.
 * Entry: `scripts/research/run_phenomenon_gen.sh`. Launch (NOT executed): `lightning job run --machine T4 --studio gabriel-allgd-deploy-model-devbox --teamspace general --org independentaudioresearch "cd audioldm-modality-swap-pruning && bash scripts/research/run_phenomenon_gen.sh"` + `job_watchdog.py`. Falsifier NOT authorized; awaiting Gabriel.
+
+### Phenomenon falsifier ACTUAL settled cost (2026-08-27, job `gate0-phenom-1`)
+
+* **`gate0-phenom-1` COMPLETED clean** (killed=False), settled **1.6020 cr**, ~101 min, T4 FP32, 768 WAVs (watchdog max-cost 2.05 / max-min 150; not triggered). Projected 1.36–1.77; actual 1.602 (within band).
+* **Central chain (settled):** smoke 0.1835 + train 1.7969 + Gate-0 gen 0.8844 + phenom gen 1.6020 = **4.4668 / 5.0 cr**; remaining **0.5332 cr**. CLAP scoring free (Studio CPU). GPU stopped after the falsifier (STOP-2 negative; no further runs).
