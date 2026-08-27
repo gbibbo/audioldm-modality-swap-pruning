@@ -21,6 +21,9 @@
 #     UNCHANGED (frozen): margins (0.025), bootstrap method, B=10000, seed 20260826, battery, gen
 #     recipe, adapter, and every other scientific parameter. Only the statistic and hierarchy change.
 #     v4 preserved verbatim at configs/research/icassp_gate0_prereg_v4_superseded.yaml (sha256 e1c51244…).
+#     v5 scientific-body freeze sha256 = 231b98ed…; the `budget:` block was later ADMINISTRATIVELY
+#     reconciled (2026-08-27, DECISION-V4-13; NOT a scientific change) — see the reconciled block below
+#     and ledger DECISION-V4-13-BUDGET-RECONCILE for the resulting file sha256.
 #
 # VERSIONED — v1 preserved verbatim at configs/research/icassp_gate0_prereg_v1_superseded.yaml
 # (sha256 bfddd527…). These are PRE-DATA protocol corrections, not result-driven tuning:
@@ -215,16 +218,27 @@ phenomenon:
   claim_scope: "standalone text-audio semantic alignment (CLAP); FAD/KAD corroborative only"
   fail_action: STOP-2                      # pre-registered negative; no method work
 
-# --- Budget / STOPs ---
+# --- Budget / STOPs (ADMINISTRATIVE section) ---
+# RECONCILED 2026-08-27 under DECISION-V4-13 (administrative only — NOT a scientific prereg change;
+# every E/D gate, margin, adapter, battery, seed, generation recipe, scorer revision and endpoint
+# stays exactly as frozen in the v5 scientific body above). DECISION-V4-13 (account top-up) already
+# superseded the pre-top-up 5.0-balance / 3.0-effective-cap constraints BEFORE Gate 0; this block now
+# states the actual current authorization instead of the stale values.
 budget:
-  smoke_ceiling_cr: 0.1
-  gate0_ceiling_cr: 1.0                    # STOP-0: if smoke projects Gate 0 > this, re-cost to Gabriel
-  falsifying_chain_ceiling_cr: 2.5
-  icassp_hard_cap_cr: 3.5                  # nominal ceiling (kept for reference)
-  reserve_cr: 2.0                          # binding
-  account_balance_cr: 5.0                  # MEASURED 2026-08-26 16:27 UTC (lightning_sdk); see compute_budget.md
-  effective_cap_cr: 3.0                    # BINDING = min(icassp_hard_cap_cr, account_balance_cr - reserve_cr)
-                                           # = min(3.5, 5.0-2.0) = 3.0 while balance=5.0 and reserve>=2.0.
-                                           # Arithmetic correction (DECISION-V4-10), not a scientific amendment.
-                                           # STOP-3 fires at this effective cap.
-  completion_tranche: "re-costed AFTER a positive falsifier with ACTUAL smoke costs; adapter B + full ladder BEFORE oracle; NOT guaranteed to fit under 3.0 cr"
+  reconciliation: DECISION-V4-13            # administrative top-up; supersedes the pre-top-up constraints
+  owner_reported_funded_balance_cr: 10.0    # owner-reported funded balance (~10 cr after the top-up)
+  lightning_balance_field_caveat: "the queryable Lightning `balance` field is known to be STALE/STATIC
+    (it reported ~5.0 pre-top-up and does not reflect the funded ~10 cr) — do NOT treat it as authoritative"
+  central_chain_authorization_cr: 5.0       # ACTIVE binding cap for the ICASSP central chain (DECISION-V4-13)
+  central_chain_spent_cr: 2.8648            # settled before the falsifier (smoke 0.1835 + train 1.7969 + gen 0.8844)
+  central_chain_remaining_cr: 2.1352        # = 5.0 - 2.8648 (authorized envelope remaining before the falsifier)
+  # --- historical provenance ONLY (NOT active constraints) ---
+  historical_provenance:
+    smoke_ceiling_cr: 0.1
+    gate0_ceiling_cr: 1.0                    # old STOP-0 (budgetary); obsolete since DECISION-V4-13
+    falsifying_chain_ceiling_cr: 2.5
+    icassp_hard_cap_cr: 3.5                  # old nominal ceiling
+    reserve_cr: 2.0
+    account_balance_cr: 5.0                  # STALE lightning_sdk read 2026-08-26 16:27 UTC (pre-top-up)
+    effective_cap_cr: 3.0                    # old min(3.5, 5.0-2.0); obsolete (its 5.0 premise changed)
+  completion_tranche: "re-costed AFTER a positive falsifier with ACTUAL costs; adapter B + full ladder BEFORE oracle; bounded by the 5.0-cr central-chain authorization"
