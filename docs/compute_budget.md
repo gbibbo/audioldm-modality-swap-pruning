@@ -441,3 +441,10 @@ has changed. **It no longer governs.** (Preserved above for history; not deleted
 * **Training `gate0-train-1`: settled 1.7969 cr** (projected 1.474; +22% = settlement uplift + model load + epoch-boundary checkpoint writes). 19,400 updates, adapter sha `84a24a38`, commit e349d69, **Completed clean** (normal sys.exit). ~1.9 h wall.
 * **Generation `gate0-gen-1`: RUNNING** (projected 0.678 cr, 384 dense±LoRA). Settled cost to be recorded on completion.
 * **Spend to date:** smoke 0.1835 + train 1.7969 = **1.98 cr** of the authorized 5.0-cr central-chain envelope.
+
+### Gate-0 FINAL costs + verdict (2026-08-27)
+
+* **Training `gate0-train-1`: 1.7969 cr** (Completed clean). **Generation `gate0-gen-1`: 0.8844 cr** (Completed clean, 384 dense +/- LoRA, ~57 min). **Gate-0 total = 2.6813 cr.** CLAP scoring free (Studio CPU).
+* **Total spent (smoke 0.1835 + train 1.7969 + gen 0.8844) = 2.8648 cr; remaining under the 5.0-cr envelope = 2.1352 cr.**
+* **Gate 0 verdict: PASS** (ΔCLAP 0.0464, CI95 [0.0221, 0.0720]; `artifacts/icassp_gate0/gate0_verdict.json` md5 62cefa0b6e8e72f567e63bfa6f93f85c).
+* **Updated falsifier projection:** 768 gens at the realized gen rate (0.8844 cr / 384 incl. overhead) ~= 1.5-1.8 cr -> central chain ~4.3-4.7 cr, within 5.0. Needs the sliced-adapter generation path built first.
