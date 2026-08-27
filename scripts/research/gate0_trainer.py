@@ -34,7 +34,9 @@ def _git_head():
     try:
         import subprocess
         sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-        dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], text=True).strip())
+        # tracked-only: an unrelated untracked file must not mark a committed-code adapter "dirty"
+        dirty = bool(subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"],
+                                             text=True).strip())
         return {"sha": sha, "dirty": dirty}
     except Exception:
         return None
