@@ -435,3 +435,9 @@ has changed. **It no longer governs.** (Preserved above for history; not deleted
   (`p1_pruned_ema_reconstructed` ± sliced LoRA, `p1_recovered` ± sliced LoRA) = **768** generations.
 * **≈ 3.51 cr + lifecycle overhead + essentially-free CPU CLAP scoring** fits inside the authorized 5.0-cr
   envelope with headroom for provisioning/idle. CLAP scoring runs on Studio CPU (0 cr).
+
+### Gate-0 ACTUAL settled costs (2026-08-27)
+
+* **Training `gate0-train-1`: settled 1.7969 cr** (projected 1.474; +22% = settlement uplift + model load + epoch-boundary checkpoint writes). 19,400 updates, adapter sha `84a24a38`, commit e349d69, **Completed clean** (normal sys.exit). ~1.9 h wall.
+* **Generation `gate0-gen-1`: RUNNING** (projected 0.678 cr, 384 dense±LoRA). Settled cost to be recorded on completion.
+* **Spend to date:** smoke 0.1835 + train 1.7969 = **1.98 cr** of the authorized 5.0-cr central-chain envelope.
