@@ -31,6 +31,15 @@ Append every scientific run or gate decision, including failed and stopped runs.
 
 ## Entries
 
+### 2026-08-27 00:30 | GATEB-NULL-REDERIVE / PRESENTATION | Gate-B null overlaps re-derived on CPU (0 cr); exact reproduction, no gate touched
+
+* **Status:** completed (CPU, no credits, no generation, no model run). **No gate changed, no claim changed.** Purpose: a figure needs the 1000 individual null values, not only the stored summary.
+* **Command:** `research_pruning.paired_modality.gate_b_prime.null_split_overlaps` over the 12 ranking-driven layers of `artifacts/m3_pilot/gateb_perslot.pt` (5120 stored per-slot contributions), `n_splits=1000`, `seed=20260818` — the same call that produced the recorded summary. Runtime 34.5 s.
+* **Verification:** the re-derived distribution reproduces `artifacts/m3_pilot/gateb_null_distribution.json` **exactly** (median 0.9479166666666666, 5th pctile 0.9401041666666666, min 0.9309895833333334, max 0.9587673611111112; all |Δ| < 1e-12). Asserted in the run, not eyeballed.
+* **Derived (descriptive, from the recorded Gate-B statistic):** the observed audio-vs-text kept-set overlap 0.947483 sits at the **49.7th percentile** of that null (empirical p = 0.497) — a restatement of the recorded Gate-B FAIL, not a new test.
+* **Outputs:** `artifacts/m3_pilot/gateb_null_overlaps.json` (gitignored); figure `artifacts/meeting/fig_modality.{pdf,png}` + slide, built by `scripts/research/build_meeting_figures.py` (presentation only).
+* **Failure or uncertainty:** none. The null was pre-registered for Gate B′ (RQ3′) and is used here as the noise reference for the modality contrast; that framing is descriptive and is stated as such on the figure.
+
 ### 2026-08-18 00:55 | BOOTSTRAP-000 | Repository bootstrap and prior-state recovery attempt
 
 * **Status:** completed
