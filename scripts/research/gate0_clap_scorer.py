@@ -70,9 +70,13 @@ class FusedClapScorer:
 
     def audio_embed(self, wav_paths):
         wavs = [self._load(fp) for fp in wav_paths]
-        # DETERMINISM: CLAP-fused's `_random_mel_fusion` calls np.random for chunk selection when
-        # audio > ~10 s. Our Gate-0 gens are 3.84 s (no fusion path) so this is moot in production,
-        # but seed np.random so the tool is reproducible on any input.
+        # DETERMINISM (measured, 2026-08-27): CLAP-fused's mel-fusion DOES consume np.random even for
+        # our 3.84-s clips (an earlier "no fusion path at 3.84 s" note was WRONG — audio embeddings are
+        # batch/order-sensitive: max|Δemb|~0.08 when re-chunked). We seed np.random ONCE here, so a
+        # single fixed-order batch is fully reproducible; the Gate-0 verdict was scored exactly this way
+        # (one seed-once batch per system, 192 items). Scoring MUST keep this seed-once-per-batch,
+        # fixed-order arrangement (Option B, DECISION-V4-13/PHENOM-SCORING-B) — do NOT re-chunk a batch,
+        # or the fusion draws (hence the scores) change.
         np.random.seed(20260826)
         inp = self.proc(audios=wavs, sampling_rate=SR, return_tensors="pt",
                         padding=True, truncation="fusion")
@@ -126,19 +130,59 @@ def _git_sha():
         return None
 
 
+# FROZEN scoring convention (Option B, DECISION-V4-13 / PHENOM-SCORING-B, 2026-08-27):
+# The pinned fused-CLAP feature extractor (transformers 4.30.2) contains a BATCH-LEVEL stochastic
+# is_longer selection for short-audio batches (when all audios are shorter than the fusion window it
+# randomly marks ONE batch member is_longer=True). We therefore FREEZE the original Gate-0 evaluation
+# unit — exactly 192 samples per system, item order = (prompt_index, replicate_index), np.random.seed
+# 20260826 reset ONCE immediately before preprocessing each complete 192-item system — and apply the
+# identical convention to every experimental system. Batch size, order and RNG seed are PART OF the
+# frozen endpoint. Because the same seed restarts per system, the batch-level nuisance is paired by
+# position across all six systems. Do NOT score 1152 as one batch, in 32/64 chunks, or per-item.
+SCORING_CONVENTION = {
+    "unit": "one 192-item scorer call per system (64 prompts x 3 replicates)",
+    "order": "(prompt_index, replicate_index)",
+    "rng": "np.random.seed(20260826) reset once before each 192-item system",
+    "quirk": "transformers 4.30.2 CLAP-fused has a batch-level stochastic is_longer selection for "
+             "short-audio batches; frozen batch/order/seed makes it reproducible AND paired by "
+             "position across systems",
+    "revision": REVISION,
+}
+
+
+def _prov():
+    return {"model": MODEL_ID, "hf_revision": REVISION, "lib_versions": _lib_versions(),
+            "scoring_git_sha": _git_sha(), "sr": SR, "convention": SCORING_CONVENTION}
+
+
 def score_json(in_path, out_path):
     """Read {items:[{caption,wav}]} -> write {cosines:[...]} (per-item fused-CLAP text-audio cosine).
-    Stamps scorer provenance (model id, PINNED HF revision, library versions, scoring git SHA)."""
+    ONE seed-once batch (the frozen Gate-0 per-system convention). Stamps scorer provenance."""
     items = json.load(open(in_path))["items"]
     sc = FusedClapScorer()
     cos = sc.cosine([it["caption"] for it in items], [it["wav"] for it in items])
     out = {"cosines": [float(x) for x in cos], "n": len(items),
-           "model": MODEL_ID, "revision": REVISION,
-           "scorer_provenance": {"model": MODEL_ID, "hf_revision": REVISION,
-                                 "lib_versions": _lib_versions(), "scoring_git_sha": _git_sha(),
-                                 "sr": SR}}
+           "model": MODEL_ID, "revision": REVISION, "scorer_provenance": _prov()}
     json.dump(out, open(out_path, "w"), indent=1)
     print(json.dumps(out, indent=1))
+    return 0
+
+
+def score_groups(in_path, out_path):
+    """Read {groups:[{name, items:[{caption,wav}]}]} -> write {results:[{name, cosines, n}]}.
+    Model loaded ONCE; EACH group scored as one independent seed-once batch (the frozen Gate-0
+    per-system convention). This is the phenomenon scoring entry: one 192-item call per system,
+    never one 1152 batch and never arbitrary chunks."""
+    groups = json.load(open(in_path))["groups"]
+    sc = FusedClapScorer()                       # model loaded exactly once
+    results = []
+    for g in groups:
+        items = g["items"]
+        cos = sc.cosine([it["caption"] for it in items], [it["wav"] for it in items])
+        results.append({"name": g["name"], "n": len(items), "cosines": [float(x) for x in cos]})
+    out = {"results": results, "model": MODEL_ID, "revision": REVISION, "scorer_provenance": _prov()}
+    json.dump(out, open(out_path, "w"), indent=1)
+    print(f"scored {len(results)} systems, {sum(r['n'] for r in results)} items -> {out_path}")
     return 0
 
 
@@ -148,11 +192,16 @@ def main():
     ap.add_argument("--n", type=int, default=8)
     ap.add_argument("--score-json", nargs=2, metavar=("IN", "OUT"),
                     help="score an {items:[{caption,wav}]} manifest -> {cosines:[...]}")
+    ap.add_argument("--score-groups", nargs=2, metavar=("IN", "OUT"),
+                    help="score {groups:[{name,items}]} -> {results:[{name,cosines}]}; model once, "
+                         "one seed-once batch per group (frozen per-system convention)")
     args = ap.parse_args()
     if args.dry_run:
         return _dry_run(args.n)
     if args.score_json:
         return score_json(args.score_json[0], args.score_json[1])
+    if args.score_groups:
+        return score_groups(args.score_groups[0], args.score_groups[1])
     print("Import FusedClapScorer and call .cosine(captions, wav_paths). Use --dry-run to self-test.")
     return 0
 

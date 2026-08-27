@@ -25,9 +25,10 @@ SLICED="artifacts/icassp_gate0/sliced_adapter/gate0_sliced_adapter_1_2_3_1.pt"
 OUT="artifacts/icassp_gate0/gen_phenomenon"
 DEV="${DEV:-cuda}"
 
+PY="${PY:-.venv/bin/python}"   # torch 1.13.1+cu117 (same env as the gate0-gen job)
 for BACKBONE in p1_recovered p1_pruned_ema_reconstructed; do   # PRIMARY first, then SECONDARY
   echo "=== generating $BACKBONE (both) ==="
-  OPENBLAS_CORETYPE=Haswell python scripts/research/gate0_generator.py \
+  OPENBLAS_CORETYPE=Haswell "$PY" scripts/research/gate0_generator.py \
     --backbone "$BACKBONE" \
     --adapter "$SLICED" \
     --adapter-mode both \

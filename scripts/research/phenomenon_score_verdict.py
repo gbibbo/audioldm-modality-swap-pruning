@@ -3,9 +3,13 @@
 
 Consumes the FROZEN dense Gate-0 manifest plus the two downstream manifests
 (p1_pruned_ema_reconstructed, p1_recovered), validates all three with the ONE shared parametric
-validator, scores ALL WAVs (384 dense + 768 downstream) in a SINGLE unified run with the PINNED
-fused-CLAP revision (removes scorer/session drift between dense and downstream), then applies the
-pre-registered dual gate PER severity:
+validator, then scores the 6 systems with the FROZEN Option-B convention (PHENOM-SCORING-B): ONE
+192-item scorer call PER SYSTEM (order (prompt_index, replicate_index), np.random.seed 20260826 reset
+once per system), model loaded once, pinned fused-CLAP revision 365dea6e. NOT one 1152 batch, NOT
+arbitrary 32/64 chunks, NOT per-item seeding — the CLAP feature extractor has a batch-level stochastic
+is_longer selection for short-audio batches, so batch/order/seed are part of the frozen endpoint and,
+because the same seed restarts per system, the nuisance is PAIRED by position across all six systems.
+Then applies the pre-registered dual gate PER severity:
 
   standalone_preserved   iff upper_CI95[E(s)] <= 0.025
   differential_fragility  iff point D(s) >= 0.025 AND lower_CI95[D(s)] > 0     # D, never F
@@ -49,15 +53,17 @@ def to_grid(rows, cos):
     return arr
 
 
-def unified_score(all_items, out_dir):
-    """Score EVERY (caption,wav) across dense+downstream in ONE scorer call (pinned revision)."""
+def score_per_system(groups, out_dir):
+    """Score the 6 systems via ONE score_groups call (model loaded once; EACH system = one 192-item
+    seed-once batch, the frozen Gate-0 convention — Option B / PHENOM-SCORING-B). NOT one 1152 batch,
+    NOT arbitrary chunks, NOT per-item seeding. Returns {name: cosines np.array}, scorer_provenance."""
     os.makedirs(out_dir, exist_ok=True)
-    inp = os.path.join(out_dir, "_phenom_score_in.json"); out = os.path.join(out_dir, "_phenom_score_out.json")
-    json.dump({"items": all_items}, open(inp, "w"))
-    subprocess.run([METRICS_PY, SCORER, "--score-json", inp, out], check=True,
+    inp = os.path.join(out_dir, "_phenom_groups_in.json"); out = os.path.join(out_dir, "_phenom_groups_out.json")
+    json.dump({"groups": groups}, open(inp, "w"))
+    subprocess.run([METRICS_PY, SCORER, "--score-groups", inp, out], check=True,
                    env={**os.environ, "OPENBLAS_CORETYPE": "Haswell"}, stdout=subprocess.DEVNULL)
     d = json.load(open(out))
-    return np.array(d["cosines"], np.float64), d.get("scorer_provenance")
+    return {r["name"]: np.array(r["cosines"], np.float64) for r in d["results"]}, d.get("scorer_provenance")
 
 
 def severity(name, dense_off, dense_on, s_off, s_on):
@@ -143,19 +149,23 @@ def main():
     assert_valid(mans["p1_pruned_ema_reconstructed"], _spec(battery, {"p1_pruned_ema_reconstructed"}, on_id))
     assert_valid(mans["p1_recovered"], _spec(battery, {"p1_recovered"}, on_id))
 
-    # ONE unified scoring run over ALL 384+768 items.
+    # Frozen convention (Option B): ONE 192-item scorer call PER SYSTEM, order (prompt_index,
+    # replicate_index), seed-once per system. Build 6 systems in a fixed order (primary first).
     wav = lambda r: os.path.join(args.wav_root, r["wav"]) if args.wav_root else r["wav"]
-    index = []; items = []
-    for bk, man in mans.items():
-        for r in man["rows"]:
-            items.append({"caption": caps[r["prompt_index"]], "wav": wav(r)})
-            index.append((bk, r["adapter_state"], r))
-    cosines, scorer_prov = unified_score(items, os.path.dirname(args.out) or ".")
-
-    buckets = {}
-    for (bk, st, r), c in zip(index, cosines):
-        buckets.setdefault((bk, st), ([], []))[0].append(r); buckets[(bk, st)][1].append(c)
-    grids = {k: to_grid(rows, cos) for k, (rows, cos) in buckets.items()}
+    SYSTEMS = [("dense", "off"), ("dense", "on"),
+               ("p1_recovered", "off"), ("p1_recovered", "on"),
+               ("p1_pruned_ema_reconstructed", "off"), ("p1_pruned_ema_reconstructed", "on")]
+    groups = []; sysrows = {}
+    for bk, st in SYSTEMS:
+        rows = sorted([r for r in mans[bk]["rows"] if r["adapter_state"] == st],
+                      key=lambda r: (r["prompt_index"], r["replicate_index"]))
+        if len(rows) != 192:
+            raise SystemExit(f"system {bk}/{st} has {len(rows)} rows (expected 192)")
+        sysrows[(bk, st)] = rows
+        groups.append({"name": f"{bk}__{st}",
+                       "items": [{"caption": caps[r["prompt_index"]], "wav": wav(r)} for r in rows]})
+    cos_by_name, scorer_prov = score_per_system(groups, os.path.dirname(args.out) or ".")
+    grids = {(bk, st): to_grid(sysrows[(bk, st)], cos_by_name[f"{bk}__{st}"]) for bk, st in SYSTEMS}
 
     d_off, d_on = grids[("dense", "off")], grids[("dense", "on")]
     primary = severity("p1_recovered", d_off, d_on,
