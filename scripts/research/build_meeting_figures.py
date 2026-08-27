@@ -8,6 +8,11 @@ Presentation only, no new science. Sources (all frozen artifacts):
                                                   (regenerated from gateb_perslot.pt; reproduces
                                                    gateb_null_distribution.json exactly)
 
+Parameter counts on the slide (415.955 M -> 145.674 M, -65.0 %) are the in-repo measured
+values from `artifacts/m0_baseline_reproduction/architecture_check.log`, rounded. MACs are
+deliberately NOT quoted: they are recorded nowhere in this repository (see
+`docs/publication_decision_memo.md`), so any MAC figure would be unverifiable here.
+
 Panel (a): channel importance under the audio probe vs the text probe, with the
            criterion control (L1 magnitude) on the same normalised scale.
 Panel (b): the Gate-B statistic against its calibration-resampling null.
@@ -210,6 +215,13 @@ h1 {{
 }}
 .status .v {{ font-size:clamp(14px,1.4vw,16px); color:var(--ink-2); }}
 .status .v b {{ color:var(--ink); font-weight:600; }}
+.cite {{ color:var(--accent); font-size:.82em; vertical-align:.35em; font-weight:500; }}
+.paren {{ color:var(--ink-muted); font-size:.88em; white-space:nowrap; }}
+.refs {{
+  margin:0; font-size:11.5px; line-height:1.55; color:var(--ink-muted);
+  border-top:1px solid var(--rule); padding-top:12px;
+}}
+.refs em {{ font-style:italic; }}
 </style>
 
 <section class="slide">
@@ -217,15 +229,18 @@ h1 {{
   <h1>Changing the input modality barely changes the pruning mask</h1>
   <p class="q">Structured pruning ranks channels by importance under a probe. We tested whether
   probing with <b>audio instead of text</b> exposes modality-specific structure and produces a
-  meaningfully different mask, at the published 65&nbsp;% pruning budget on AudioLDM-M-Full.</p>
+  meaningfully different mask on AudioLDM-M-Full <a class="cite">[1]</a>, at the published
+  <b>(1,2,3,1) operating point: 65&nbsp;% fewer U-Net parameters</b> <a class="cite">[2]</a>
+  <span class="paren">(416M &rarr; 146M)</span>.</p>
 
   <div class="figure">
     <img src="{img}" alt="Panel a: per-channel importance under the audio probe against the text probe and against L1 magnitude, on log axes with the identity line. Panel b: histogram of the calibration-resampling null for kept-set overlap with the observed audio-versus-text value marked.">
     <p class="cap"><b>Fig. 1.</b> (a) Audio- vs text-derived per-channel importance is nearly
     identical ({n_points} channels, {n_layers} pruned layers), whereas switching to L1 magnitude
-    substantially changes the ranking. (b) The observed audio&ndash;text kept-set overlap
-    ({observed}) is indistinguishable from the overlap produced by resampling the calibration set
-    under a single probe (median {null_med}, <b>p&nbsp;=&nbsp;{p_val}</b>).</p>
+    substantially changes the ranking. (b) Audio&ndash;text kept-set overlap &mdash; the fraction of
+    retained channels shared by both masks &mdash; is <b>{observed}</b>; resampling the calibration
+    data <em>without changing modality</em> already gives a median overlap of <b>{null_med}</b>
+    (<b>p&nbsp;=&nbsp;{p_val}</b>).</p>
   </div>
 
   <div class="status">
@@ -238,6 +253,10 @@ h1 {{
       <span class="v">Does a <b>legacy LoRA adapter</b> survive pruning? &mdash; ICASSP 2027</span>
     </div>
   </div>
+
+  <p class="refs">[1] Liu et al., <em>AudioLDM: Text-to-Audio Generation with Latent Diffusion
+  Models</em>, ICML 2023. &nbsp; [2] Singh et al., <em>Efficient Text-to-Audio Generation via
+  Pruning</em>, arXiv:2607.13330, 2026.</p>
 </section>
 """
 
