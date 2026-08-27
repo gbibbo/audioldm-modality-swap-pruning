@@ -63,7 +63,7 @@ def build_backbone(backbone_id, config, device):
     if backbone_id == "dense":
         materialize_ema_into_unet(model.model.diffusion_model, dsd, strict=True)
         ck_sha = "dense_ema"
-    elif backbone_id == "p1_pruned":
+    elif backbone_id == "p1_pruned_ema_reconstructed":
         l1 = rm.load_l1_ranking(PKL)
         dense_ema_base, _ = ema_unet_state_dict(dsd)          # relative-key dense EMA
         pruned = rm.materialize(dense_ema_base, l1, config, channel_mult=[1, 2, 3, 1]).float()
@@ -109,9 +109,55 @@ def generate(model, caption, x_T, ddim_steps, guidance, eta):
     return np.asarray(wav).squeeze()
 
 
+def _select_device(dry_run_cpu):
+    if dry_run_cpu:
+        return torch.device("cpu")
+    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def inject_lora(model, pre):
+    """Inject the frozen Gate-0 LoRA (to_q/to_v r8/alpha16) into the backbone U-Net (lora_B=0 => identity)."""
+    import gate0_trainer as GT
+    from audioldm_peft import setup_peft
+    setup_peft(model, GT.make_peft_cfg(pre["gate0"]))
+
+
+def load_adapter(model, adapter_path):
+    """Load a trained adapter-only state dict (lora_A/lora_B keyed by module name) into the injected model."""
+    from audioldm_peft.layers import LoRALinear, LoRAConv2d
+    sd = _orig_load(adapter_path, map_location="cpu")
+    mods = {n: m for n, m in model.named_modules() if isinstance(m, (LoRALinear, LoRAConv2d))}
+    loaded = 0
+    with torch.no_grad():
+        for name, m in mods.items():
+            ka, kb = name + ".lora_A", name + ".lora_B"
+            if ka in sd and kb in sd:
+                m.lora_A.copy_(sd[ka].to(m.lora_A.device, m.lora_A.dtype))
+                m.lora_B.copy_(sd[kb].to(m.lora_B.device, m.lora_B.dtype))
+                loaded += 1
+    if loaded != len(mods) or loaded == 0:
+        raise SystemExit(f"adapter load mismatch: {loaded}/{len(mods)} modules loaded from {adapter_path}")
+    return loaded
+
+
+def adapter_sha_for(adapter_path):
+    """Prefer the sha recorded in the sibling meta; else hash the file."""
+    meta_p = os.path.join(os.path.dirname(adapter_path), "gate0_adapter_meta.json")
+    if os.path.exists(meta_p):
+        s = json.load(open(meta_p)).get("adapter_sha256")
+        if s:
+            return s
+    return sha_file(adapter_path)
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--backbone", default="dense", choices=["dense", "p1_pruned", "p1_recovered"])
+    ap.add_argument("--backbone", default="dense",
+                    choices=["dense", "p1_pruned_ema_reconstructed", "p1_recovered"])
+    ap.add_argument("--adapter", default=None, help="path to a trained gate0_adapter.pt (lora_A/lora_B)")
+    ap.add_argument("--adapter-mode", default="off", choices=["off", "on", "both"],
+                    help="off=backbone only; on=backbone+adapter; both=paired backbone AND backbone+adapter")
+    ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
     ap.add_argument("--out", default="artifacts/icassp_gate0/gen")
     ap.add_argument("--n-prompts", type=int, default=None)
     ap.add_argument("--replicates", type=int, default=None)
@@ -146,35 +192,60 @@ def main():
         return 0 if res["PASS"] else 1
 
     os.makedirs(args.out, exist_ok=True)
+    dev = (torch.device("cpu") if args.dry_run_cpu else
+           (torch.device("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto"
+            else torch.device(args.device)))
+    if dev.type == "cuda" and not torch.cuda.is_available():
+        raise SystemExit("PREFLIGHT FAIL: --device cuda but no CUDA available")
     torch.load = _cpu_load
     import audioldm_train.modules.latent_diffusion.ddim as _ddim
     _oi = _ddim.DDIMSampler.__init__
-    _ddim.DDIMSampler.__init__ = lambda s, m, schedule="linear", device=None, **k: _oi(s, m, schedule=schedule, device=torch.device("cpu"), **k)
+    _ddim.DDIMSampler.__init__ = lambda s, m, schedule="linear", device=None, **k: _oi(s, m, schedule=schedule, device=dev, **k)
 
     config = yaml.load(open(CONFIG), Loader=yaml.FullLoader)
     config["preprocessing"]["audio"]["duration"] = g0["data"]["train_clip_seconds"]
-    device = torch.device("cpu")
-    model, ck_sha = build_backbone(args.backbone, config, device)
+    model, ck_sha = build_backbone(args.backbone, config, dev)
     model._gate0_config = config
 
+    # adapter modes: off = backbone only; on = backbone+adapter; both = paired backbone AND backbone+adapter.
+    # Inject LoRA once (lora_B=0 => the 'off' pass is bit-identical to the pure backbone); the 'on' pass
+    # loads the trained adapter. x_T is deterministic per (ytid, replicate), so off/on are paired.
+    if args.adapter_mode in ("on", "both"):
+        if not args.adapter:
+            raise SystemExit("--adapter <path> is required for --adapter-mode on/both")
+        inject_lora(model, pre)
+        model = model.to(dev)
+        a_sha = adapter_sha_for(args.adapter)
+        passes = [("off", "none"), ("on", a_sha)] if args.adapter_mode == "both" else [("on", a_sha)]
+    else:
+        passes = [("off", "none")]
+
+    import soundfile as sf
     rows = []
-    for pi, p in enumerate(prompts):
-        for r in range(replicates):
-            x_T = make_x_T(p["ytid"], r, C, T, F)
-            w = generate(model, p["caption"], x_T, ddim, guidance, eta)
-            fn = f"{args.backbone}_p{pi}_r{r}.wav"
-            path = os.path.join(args.out, fn)
-            import soundfile as sf
-            sf.write(path, w.astype(np.float32), 16000, subtype="PCM_16")
-            rows.append({"ytid": p["ytid"], "prompt_index": pi, "replicate_index": r,
-                         "seed": paired_seed(p["ytid"], r), "backbone_id": args.backbone,
-                         "adapter_id": "none", "checkpoint": ck_sha, "ddim_steps": ddim,
-                         "eta": eta, "guidance": guidance, "latent_t": T,
-                         "wav": path, "wav_sha256": sha_file(path)})
-    man = {"backbone": args.backbone, "recipe": {"ddim": ddim, "eta": eta, "guidance": guidance,
-           "latent_t": T, "replicates": replicates, "weight_convention": "ema", "seed_salt": SEED_SALT},
+    for state, aid in passes:
+        if state == "on":
+            load_adapter(model, args.adapter)
+        model.eval()
+        for pi, p in enumerate(prompts):
+            for r in range(replicates):
+                x_T = make_x_T(p["ytid"], r, C, T, F).to(dev)
+                w = generate(model, p["caption"], x_T, ddim, guidance, eta)
+                tag = "adapter" if state == "on" else "noadapter"
+                fn = f"{args.backbone}_{tag}_p{pi}_r{r}.wav"
+                path = os.path.join(args.out, fn)
+                sf.write(path, w.astype(np.float32), 16000, subtype="PCM_16")
+                rows.append({"ytid": p["ytid"], "prompt_index": pi, "replicate_index": r,
+                             "seed": paired_seed(p["ytid"], r), "backbone_id": args.backbone,
+                             "adapter_state": state, "adapter_id": aid, "checkpoint": ck_sha,
+                             "ddim_steps": ddim, "eta": eta, "guidance": guidance, "latent_t": T,
+                             "device": str(dev), "wav": path, "wav_sha256": sha_file(path)})
+    tag = f"{args.backbone}_{args.adapter_mode}"
+    man = {"backbone": args.backbone, "adapter": args.adapter, "adapter_mode": args.adapter_mode,
+           "device": str(dev),
+           "recipe": {"ddim": ddim, "eta": eta, "guidance": guidance, "latent_t": T,
+                      "replicates": replicates, "weight_convention": "ema", "seed_salt": SEED_SALT},
            "n": len(rows), "rows": rows}
-    outman = os.path.join(args.out, f"gen_manifest_{args.backbone}.json")
+    outman = os.path.join(args.out, f"gen_manifest_{tag}.json")
     json.dump(man, open(outman, "w"), indent=1)
     print(f"generated {len(rows)} wavs -> {args.out}; manifest {outman}")
     print("GENERATOR", "PASS")

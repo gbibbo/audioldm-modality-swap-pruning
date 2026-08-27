@@ -55,7 +55,7 @@ weight_convention:
   materialize_before_lora: true        # copy EMA shadows into the U-Net BEFORE injecting LoRA
   per_backbone:
     dense: "materialize audioldm-m-full.ckpt model_ema.* into the U-Net (690/690 clean)"
-    p1_pruned: "(1,2,3,1) L1 selection of the DENSE EMA U-Net — the stored p1 EMA is BROKEN (238 tensors dense-shaped, not pruned), so it cannot be used; pruning the dense EMA gives the EMA-consistent pruned inference backbone (same L1 selection Arshdeep used, applied to EMA weights)"
+    p1_pruned_ema_reconstructed: "(1,2,3,1) L1 selection of the DENSE EMA U-Net — the stored p1 EMA is BROKEN (238 tensors dense-shaped, not pruned), so it cannot be used; pruning the dense EMA gives the EMA-consistent pruned inference backbone (same L1 selection Arshdeep used, applied to EMA weights)"
     p1_recovered: "materialize l1_p1_finetuned_global_step_999999.ckpt model_ema.* into the (1,2,3,1) arch (690/690 clean)"
   impl: research_pruning/eval/ema_weights.py  # materialize_ema_into_unet / ema_unet_state_dict
   note: "This changes which weights Gate-0 LoRA trains against (dense EMA, not raw) — a PRE-DATA protocol correction, hence v3->v4."
@@ -158,10 +158,12 @@ ci:
 # (Zenodo 21977996, md5 cfb7ca3f…, CPU-validated: U-Net strict-loads 690/690 into the (1,2,3,1) arch,
 # 200/200 tensors differ from pruned-only => genuinely finetuned, forwards at latent_t=96).
 phenomenon:
-  severities: ["dense", "p1_pruned_only", "p1_recovered"]   # 0 / -65% selection / -65% + published 1M-step recovery
+  # DECISION-V4-13 naming: the pre-recovery condition is the EMA-consistent reconstruction (published L1
+  # selection applied to the dense EMA), NOT the literal published p1 checkpoint (its stored EMA is stale).
+  severities: ["dense", "p1_pruned_ema_reconstructed", "p1_recovered"]   # 0 / -65% selection / -65% + published 1M-step recovery
   severity_defs:
     dense: "audioldm-m-full base (1,2,3,5)"
-    p1_pruned_only: "l1_audioldm-m-full_p1 = (1,2,3,1) pure selection of dense (pre-recovery, never finetuned)"
+    p1_pruned_ema_reconstructed: "(1,2,3,1) L1 selection applied to the DENSE EMA (EMA-consistent pre-recovery backbone); NOT the literal published p1 checkpoint (stored p1 EMA is stale/238-mismatched) — DECISION-V4-13"
     p1_recovered: "l1_p1_finetuned_global_step_999999 = (1,2,3,1) + published 1M-step recovery (Zenodo 21977996)"
   deferred_to_full_curve_only: ["1_2_3_4", "1_2_3_3", "1_2_3_2"]   # mild+ladder return post-PASS
   systems: ["backbone", "backbone_plus_sliced_lora"]   # sliced LoRA maps by kept-index onto each backbone's arch
