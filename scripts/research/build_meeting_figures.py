@@ -148,7 +148,7 @@ def main() -> int:
     return 0
 
 
-TEMPLATE = r"""<title>Same Channels, Either Way</title>
+TEMPLATE = r"""<title>Modality Swap, Falsified</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -214,30 +214,24 @@ h1 {{
 
 <section class="slide">
   <p class="eyebrow">AudioLDM &middot; structured pruning &middot; modality-swap hypothesis</p>
-  <h1>Audio and text select the same channels to prune</h1>
-  <p class="q">Structured pruning ranks channels by importance under a probe. The hypothesis:
-  probing with <b>audio</b> instead of <b>text</b> should expose modality-specific structure and
-  yield a different, better pruning mask. Measured on the dense AudioLDM-M-Full U-Net at the
-  published 65&nbsp;% budget.</p>
+  <h1>Changing the input modality barely changes the pruning mask</h1>
+  <p class="q">Structured pruning ranks channels by importance under a probe. We tested whether
+  probing with <b>audio instead of text</b> exposes modality-specific structure and produces a
+  meaningfully different mask, at the published 65&nbsp;% pruning budget on AudioLDM-M-Full.</p>
 
   <div class="figure">
     <img src="{img}" alt="Panel a: per-channel importance under the audio probe against the text probe and against L1 magnitude, on log axes with the identity line. Panel b: histogram of the calibration-resampling null for kept-set overlap with the observed audio-versus-text value marked.">
-    <p class="cap"><b>Fig. 1.</b> (a) Per-channel importance under the audio probe vs the text probe
-    (blue) and vs the L1-magnitude criterion (orange); {n_points} channels over {n_layers} pruned
-    layers, identity line dashed. Changing the <em>criterion</em> moves the estimate; changing the
-    <em>modality</em> does not. (b) Kept-set overlap between the audio- and text-derived masks
-    ({observed}) against the null obtained by resampling the calibration set under a single probe
-    (median {null_med}): <b>p&nbsp;=&nbsp;{p_val}</b>.</p>
+    <p class="cap"><b>Fig. 1.</b> (a) Audio- vs text-derived per-channel importance is nearly
+    identical ({n_points} channels, {n_layers} pruned layers), whereas switching to L1 magnitude
+    substantially changes the ranking. (b) The observed audio&ndash;text kept-set overlap
+    ({observed}) is indistinguishable from the overlap produced by resampling the calibration set
+    under a single probe (median {null_med}, <b>p&nbsp;=&nbsp;{p_val}</b>).</p>
   </div>
 
   <div class="status">
     <div>
-      <span class="k">Tested</span>
-      <span class="v">Two pre-registered gates &mdash; mask ranking <b>and</b> per-modality damage</span>
-    </div>
-    <div>
       <span class="k">Result</span>
-      <span class="v">Hypothesis <b>rejected</b>; both gates fail to separate the modalities</span>
+      <span class="v">Modality-specific pruning hypothesis <b>not supported</b></span>
     </div>
     <div>
       <span class="k">Next</span>
