@@ -11,22 +11,40 @@ Model: laion/clap-htsat-fused (prereg primary_scorer). Audio is resampled to 48 
 verifies matched (caption_i, wav_i) cosine beats mismatched (caption_i, wav_{shuffled}) on average
 — a sanity gate that the scorer discriminates, mirroring the paired ΔCLAP the gate will use.
 """
-import argparse, json, os, sys
+import argparse, hashlib, json, os, sys
+# E-BLAS guard: set before importing numpy so this CPU never hits the OpenBLAS wrong-result defect.
+os.environ.setdefault("OPENBLAS_CORETYPE", "Haswell")
 import numpy as np
 
 MODEL_ID = "laion/clap-htsat-fused"
+# PINNED HF revision (reproducibility control, prereg v5 item 4). Resolved from the Studio HF
+# cache refs/main on 2026-08-27; the exact snapshot that scored Gate 0. Frozen for Gate 0 AND
+# every phenomenon scoring run so no scorer-version/session drift enters the dense-vs-downstream
+# comparison. Do NOT bump without a new reproducibility control + Gabriel's sign-off.
+REVISION = "365dea6ef167def6676140ed93bbc43f84dabb28"
 SR = 48000
 AUDIOCAPS_BASE = "data/dataset/audioset"  # val manifest wav paths are relative to this
 
 
+def _lib_versions():
+    import torch, transformers
+    try:
+        import librosa; lv = librosa.__version__
+    except Exception:
+        lv = None
+    return {"torch": torch.__version__, "transformers": transformers.__version__, "librosa": lv}
+
+
 class FusedClapScorer:
-    def __init__(self, device="cpu"):
+    def __init__(self, device="cpu", revision=REVISION):
         import torch
         from transformers import ClapModel, ClapProcessor
         self.torch = torch
         self.device = device
-        self.model = ClapModel.from_pretrained(MODEL_ID).to(device).eval()
-        self.proc = ClapProcessor.from_pretrained(MODEL_ID)
+        self.revision = revision
+        # revision-pinned load; the snapshot is present in the HF cache so this resolves offline.
+        self.model = ClapModel.from_pretrained(MODEL_ID, revision=revision).to(device).eval()
+        self.proc = ClapProcessor.from_pretrained(MODEL_ID, revision=revision)
 
     @staticmethod
     def _l2(a):
@@ -99,12 +117,26 @@ def _dry_run(n=8):
     return 0 if ok else 1
 
 
+def _git_sha():
+    try:
+        import subprocess
+        return subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                       stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        return None
+
+
 def score_json(in_path, out_path):
-    """Read {items:[{caption,wav}]} -> write {cosines:[...]} (per-item fused-CLAP text-audio cosine)."""
+    """Read {items:[{caption,wav}]} -> write {cosines:[...]} (per-item fused-CLAP text-audio cosine).
+    Stamps scorer provenance (model id, PINNED HF revision, library versions, scoring git SHA)."""
     items = json.load(open(in_path))["items"]
     sc = FusedClapScorer()
     cos = sc.cosine([it["caption"] for it in items], [it["wav"] for it in items])
-    out = {"cosines": [float(x) for x in cos], "n": len(items), "model": MODEL_ID}
+    out = {"cosines": [float(x) for x in cos], "n": len(items),
+           "model": MODEL_ID, "revision": REVISION,
+           "scorer_provenance": {"model": MODEL_ID, "hf_revision": REVISION,
+                                 "lib_versions": _lib_versions(), "scoring_git_sha": _git_sha(),
+                                 "sr": SR}}
     json.dump(out, open(out_path, "w"), indent=1)
     print(json.dumps(out, indent=1))
     return 0

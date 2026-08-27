@@ -78,20 +78,31 @@ isolating an *excess, adapter-specific* fragility beyond generic capacity loss.
   (near-4-s M-Full transposition; latent_t=96, U-Net divisibility-forced). Primary endpoint **ΔCLAP**
   (LAION-CLAP fused, Kim's scorer) on a **held-out 64-prompt MusicCaps battery**, prompt-clustered
   bootstrap (B=10 000, seed 20260826). SESOI +0.025; PASS = point ≥ SESOI AND lower-CI95 > 0.
-- **Phenomenon falsifier (generation only):** severities {dense, `p1_pruned_ema_reconstructed`,
-  `p1_recovered`} × {backbone, backbone + sliced legacy LoRA}. Dual gate per severity: (i) standalone
-  non-inferiority `upper-CI95[E(s)] ≤ 0.025`; (ii) differential fragility `F(s)=D(s)−E(s)`, point
-  ≥ 0.025 AND lower-CI95 > 0.
+- **Phenomenon falsifier (generation only; prereg v5):** severities {dense,
+  `p1_pruned_ema_reconstructed`, `p1_recovered`} × {backbone, backbone + sliced legacy LoRA}.
+  Dual gate per severity: (i) standalone non-inferiority `upper-CI95[E(s)] ≤ 0.025`; (ii)
+  **differential fragility on the DECISION statistic `D(s)=ΔCLAP(0)−ΔCLAP(s)`** (point ≥ 0.025 AND
+  lower-CI95[D] > 0). D = (A0−As)−(C0−Cs) is the excess degradation of the adapter-equipped system
+  relative to standalone degradation. (The earlier `F=D−E` is deprecated: algebraically
+  `(A0−As)−2(C0−Cs)`, uninterpretable, and can manufacture a false positive when E<0 — ledger
+  PHENOM-STAT-D.)
+- **Inferential hierarchy (pre-registered):** PRIMARY confirmatory endpoint = **`p1_recovered`**
+  (single endpoint → no multiple-comparison correction); `p1_pruned_ema_reconstructed` is
+  SECONDARY / mechanistic context (larger generic capacity loss expected), not a second route to the
+  central claim.
 - Guidance `2.5` (Diffusers 0.32.2 AudioLDM default), 50 DDIM steps, 3.84 s generations, 3 seeds.
+  Scorer pinned to `laion/clap-htsat-fused` revision `365dea6e`; dense + downstream WAVs scored in
+  one unified run to remove scorer/session drift.
 - **Primary recovered-backbone claim (scope, pre-registered):** the strong claim compares the
   **published recovered EMA backbone against the dense EMA backbone** — standalone alignment is
-  preserved / non-inferior while the legacy sliced-LoRA uplift is disproportionately damaged. The
-  `p1_pruned_ema_reconstructed` point supplies **mechanistic context**, not a literal before/after
-  weight pair with the published recovered checkpoint (the two are not the same weight state pre/post
-  recovery, since Arshdeep's stored p1 EMA is stale — §3). No claim depends on treating them as a
-  matched recovery pair.
-- Table 1 [TEMPLATE]: per-severity C, ΔCLAP, E, D, F with cluster-bootstrap CIs. [values blank]
-- Figure 2 [TEMPLATE — CENTRAL FIGURE]: E(s) vs F(s) across severities, with the non-inferiority and
+  preserved / non-inferior while the legacy sliced-LoRA uplift is disproportionately damaged (D
+  fragile). The `p1_pruned_ema_reconstructed` point supplies **mechanistic context**, not a literal
+  before/after weight pair with the published recovered checkpoint (the two are not the same weight
+  state pre/post recovery, since Arshdeep's stored p1 EMA is stale — §3). No claim depends on
+  treating them as a matched recovery pair.
+- Table 1 [TEMPLATE]: per-severity C, ΔCLAP, E, D with cluster-bootstrap CIs (F reported only as
+  deprecated provenance, if at all). [values blank]
+- Figure 2 [TEMPLATE — CENTRAL FIGURE]: E(s) vs D(s) across severities, with the non-inferiority and
   fragility thresholds drawn. [blank until data]
 
 ## 6. Results — [PLACEHOLDER — DO NOT WRITE BEFORE DATA]

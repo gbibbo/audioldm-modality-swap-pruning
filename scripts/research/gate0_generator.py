@@ -51,6 +51,38 @@ def sha_file(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
+# Source checkpoint per backbone (item 8: stamp the real source checkpoint SHA256).
+SOURCE_CKPT = {
+    "dense": DENSE_CKPT,
+    "p1_pruned_ema_reconstructed": DENSE_CKPT,   # derived from the DENSE EMA (L1 selection)
+    "p1_recovered": RECOV_CKPT,
+}
+
+
+def _git_info():
+    import subprocess
+    def _q(args):
+        try:
+            return subprocess.check_output(args, stderr=subprocess.DEVNULL).decode().strip()
+        except Exception:
+            return None
+    sha = _q(["git", "rev-parse", "HEAD"])
+    dirty = _q(["git", "status", "--porcelain"])
+    return {"git_sha": sha, "git_dirty": bool(dirty) if dirty is not None else None}
+
+
+def _env_info(dev):
+    import platform
+    info = {"python": platform.python_version(), "torch": torch.__version__,
+            "cuda": getattr(torch.version, "cuda", None), "device": str(dev), "gpu": None}
+    try:
+        if dev.type == "cuda" and torch.cuda.is_available():
+            info["gpu"] = torch.cuda.get_device_name(0)
+    except Exception:
+        pass
+    return info
+
+
 def build_backbone(backbone_id, config, device):
     """Full LatentDiffusion pipeline with the backbone's U-Net under the EMA convention."""
     from measure_tgen import build_model
@@ -163,6 +195,8 @@ def main():
     ap.add_argument("--replicates", type=int, default=None)
     ap.add_argument("--dry-run-cpu", action="store_true")
     ap.add_argument("--verify-paired-noise", action="store_true")
+    ap.add_argument("--validate", action="store_true",
+                    help="after writing, validate the manifest with the shared parametric validator")
     args = ap.parse_args()
 
     pre = yaml.safe_load(open(PREREG))
@@ -240,14 +274,50 @@ def main():
                              "ddim_steps": ddim, "eta": eta, "guidance": guidance, "latent_t": T,
                              "device": str(dev), "wav": path, "wav_sha256": sha_file(path)})
     tag = f"{args.backbone}_{args.adapter_mode}"
+    # --- hardened provenance (item 8): git, env/GPU, source-ckpt + dense/sliced adapter SHAs ---
+    prov = {**_git_info(), **_env_info(dev)}
+    src_ckpt = SOURCE_CKPT.get(args.backbone)
+    prov["source_checkpoint"] = src_ckpt
+    if src_ckpt and os.path.exists(src_ckpt) and not args.dry_run_cpu:
+        prov["source_checkpoint_sha256"] = sha_file(src_ckpt)   # heavy hash; skipped on CPU dry-run
+    prov["checkpoint_convention"] = ck_sha
+    if args.adapter:
+        prov["adapter_path"] = args.adapter
+        prov["adapter_sha256"] = adapter_sha_for(args.adapter)
+        ameta = os.path.join(os.path.dirname(args.adapter),
+                             os.path.basename(args.adapter).replace(".pt", "_meta.json"))
+        # sliced-adapter meta records the dense ancestor; dense-adapter meta records itself.
+        for mp in (ameta, os.path.join(os.path.dirname(args.adapter), "gate0_adapter_meta.json")):
+            if os.path.exists(mp):
+                m = json.load(open(mp))
+                if m.get("dense_adapter_sha256"):
+                    prov["dense_adapter_sha256"] = m["dense_adapter_sha256"]
+                if m.get("sliced_adapter_sha256"):
+                    prov["sliced_adapter_sha256"] = m["sliced_adapter_sha256"]
+                if m.get("adapter_sha256") and "dense_adapter_sha256" not in prov:
+                    prov["dense_adapter_sha256"] = m["adapter_sha256"]
+                break
     man = {"backbone": args.backbone, "adapter": args.adapter, "adapter_mode": args.adapter_mode,
            "device": str(dev),
            "recipe": {"ddim": ddim, "eta": eta, "guidance": guidance, "latent_t": T,
                       "replicates": replicates, "weight_convention": "ema", "seed_salt": SEED_SALT},
+           "provenance": prov,
            "n": len(rows), "rows": rows}
     outman = os.path.join(args.out, f"gen_manifest_{tag}.json")
     json.dump(man, open(outman, "w"), indent=1)
     print(f"generated {len(rows)} wavs -> {args.out}; manifest {outman}")
+
+    if args.validate:
+        from research_pruning.manifest_validator import ManifestSpec, assert_valid
+        yt = {pi: p["ytid"] for pi, p in enumerate(prompts)}
+        state_ids = {st: ({"none"} if aid == "none" else {aid}) for st, aid in passes}
+        spec = ManifestSpec(
+            n_prompts=len(prompts), replicates=replicates, battery_ytids=yt,
+            backbones={args.backbone}, adapter_state_ids=state_ids,
+            recipe={"ddim_steps": ddim, "guidance": guidance, "eta": eta, "latent_t": T},
+            seed_salt=SEED_SALT)
+        summary = assert_valid(man, spec)
+        print("MANIFEST-VALIDATED", json.dumps(summary))
     print("GENERATOR", "PASS")
     return 0
 

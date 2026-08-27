@@ -10,8 +10,9 @@
                     many synthetic draws (sanity band 0.90-0.98).
     B5 GATE0        PASS when uplift strong+tight; FAIL when point<SESOI; FAIL when
                     lower-CI touches 0.
-    B6 SEVERITY     dual gate: phenomenon TRUE only when standalone preserved AND F
-                    clears; F-positive-but-standalone-broken -> descriptive only (False).
+    B6 SEVERITY     dual gate: phenomenon TRUE only when standalone preserved AND the
+                    DECISION statistic D clears (point>=margin AND lower-CI>0);
+                    standalone-broken -> descriptive only (False). D, not the deprecated F.
     B7 SHAPE-GUARDS mismatched shapes / 1-D inputs raise.
 
 Run: .venv/bin/python tests/research/test_cluster_bootstrap.py
@@ -107,11 +108,11 @@ def check_b6_severity():
     base_d = rng.normal(0.60, 0.04, (N, S))
     adpt_d = base_d + 0.05 + rng.normal(0, 0.004, (N, S))    # dense uplift 0.05
 
-    # CASE A: phenomenon — standalone preserved (E~0.01), adapter collapses (F large)
+    # CASE A: phenomenon — standalone preserved (E~0.01), adapter uplift collapses (D large)
     standalone_d = rng.normal(0.62, 0.03, (N, S))
     standalone_s = standalone_d - 0.01 + rng.normal(0, 0.003, (N, S))  # E ~ 0.01
     base_s = base_d.copy()
-    adpt_s = base_s + 0.0 + rng.normal(0, 0.004, (N, S))     # uplift collapses -> D~0.05, F~0.04
+    adpt_s = base_s + 0.0 + rng.normal(0, 0.004, (N, S))     # uplift collapses -> D~0.05
     va = severity_verdict("s", standalone_d, standalone_s, adpt_d, base_d, adpt_s, base_s)
 
     # CASE B: generic capacity loss — standalone ALSO drops a lot (E~0.06 > margin)
@@ -119,9 +120,10 @@ def check_b6_severity():
     vb = severity_verdict("s", standalone_d, standalone_s2, adpt_d, base_d, adpt_s, base_s)
 
     ok = (va.phenomenon and va.standalone_preserved and va.differential_fragility
+          and (va.D.point >= FRAGILITY_MARGIN) and (va.D.lo > 0.0)
           and (not vb.phenomenon) and (not vb.standalone_preserved))
     print(f"    B6 A phenomenon={va.phenomenon} (E.hi={va.E.hi:.3f}<= {NONINF_MARGIN}, "
-          f"F.pt={va.F.point:.3f}>= {FRAGILITY_MARGIN}, F.lo={va.F.lo:.3f}); "
+          f"D.pt={va.D.point:.3f}>= {FRAGILITY_MARGIN}, D.lo={va.D.lo:.3f}); "
           f"B phenomenon={vb.phenomenon} (E.hi={vb.E.hi:.3f}): {ok}")
     return ok
 

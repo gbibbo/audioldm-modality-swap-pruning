@@ -12,8 +12,22 @@ Frozen spec (do NOT change after seeing data):
   fixed RNG **seed = 20260826**. No BCa/normal/t; no method switch after data.
 
 Every gate calls `cluster_percentile_ci`; the verdict helpers below build the per-prompt
-scalars for Gate 0 (ΔCLAP), standalone non-inferiority E(s), and differential fragility
-F(s)=D(s)−E(s), and apply the pre-registered thresholds.
+scalars for Gate 0 (ΔCLAP), standalone non-inferiority E(s), and differential adapter
+fragility **D(s) = ΔCLAP(0) − ΔCLAP(s)**, and apply the pre-registered thresholds.
+
+STATISTIC CORRECTION (prereg v5, 2026-08-27, PRE-PHENOMENON-DATA — ledger PHENOM-STAT-D):
+D(s) already equals the excess degradation of the adapter-equipped system relative to the
+standalone degradation:
+
+    D = Δ0 − Δs = (A0 − C0) − (As − Cs) = (A0 − As) − (C0 − Cs)
+
+(A0/As = dense/compressed + adapter, C0/Cs = dense/compressed standalone). So D IS the
+"legacy adapter's uplift is disproportionately damaged" quantity the prereg strong-claim
+prose already named. The old fragility statistic F = D − E = (A0−As) − 2(C0−Cs) has no
+intended scientific interpretation and is BIDIRECTIONALLY unsafe (it can hide genuine
+fragility when E>0 and can MANUFACTURE a fragility PASS that D denies when E<0). The
+decision gate now uses **D**. F is retained ONLY as deprecated provenance, clearly invalid
+for inference — never a gate input.
 
 Score arrays are shaped (n_prompts, n_seeds). Rows are prompts (the cluster). Columns are
 the paired generation seeds; the same seed index means the same generation seed across
@@ -33,7 +47,7 @@ N_PROMPTS = 64
 N_SEEDS = 3
 SESOI = 0.025            # Gate-0 minimum meaningful ΔCLAP
 NONINF_MARGIN = 0.025    # standalone preserved iff upper-CI95[E(s)] <= this
-FRAGILITY_MARGIN = 0.025  # differential fragility iff point F(s) >= this AND lower-CI95>0
+FRAGILITY_MARGIN = 0.025  # differential fragility iff point D(s) >= this AND lower-CI95[D]>0
 # -----------------------------------------------------------------------------
 
 
@@ -114,8 +128,8 @@ def gate0_verdict(adapter_dense: np.ndarray, base_dense: np.ndarray) -> Gate0Ver
 class SeverityVerdict:
     severity: str
     E: CI            # standalone degradation C(0)-C(s)
-    D: CI            # adapter uplift lost dCLAP(0)-dCLAP(s)
-    F: CI            # excess adapter loss D-E
+    D: CI            # DECISION STATISTIC: adapter uplift lost dCLAP(0)-dCLAP(s)
+    F_deprecated: CI  # DEPRECATED provenance ONLY (old D-E); INVALID for inference
     standalone_preserved: bool
     differential_fragility: bool
     phenomenon: bool  # BOTH conditions
@@ -123,10 +137,13 @@ class SeverityVerdict:
     def as_dict(self) -> dict:
         return {
             "severity": self.severity,
-            "E": self.E.as_dict(), "D": self.D.as_dict(), "F": self.F.as_dict(),
+            "E": self.E.as_dict(), "D": self.D.as_dict(),
+            # F retained only for provenance/audit; never a gate input (prereg v5).
+            "F_deprecated_invalid_for_inference": self.F_deprecated.as_dict(),
             "standalone_preserved": self.standalone_preserved,
             "differential_fragility": self.differential_fragility,
             "phenomenon": self.phenomenon,
+            "decision_statistic": "D",
             "NONINF_MARGIN": NONINF_MARGIN, "FRAGILITY_MARGIN": FRAGILITY_MARGIN,
         }
 
@@ -138,18 +155,27 @@ def severity_verdict(severity: str,
     """Dual pre-registered gate at one severity s (all arrays (n_prompts, n_seeds),
     same prompt/seed order = the same held-out battery at s=0 and at s).
 
-    E(s)=C(0)-C(s); D(s)=ΔCLAP(0)-ΔCLAP(s); F(s)=D(s)-E(s), all per-prompt then bootstrapped.
-    standalone_preserved iff upper-CI95[E] <= NONINF_MARGIN.
-    differential_fragility iff point F >= FRAGILITY_MARGIN AND lower-CI95[F] > 0.
-    phenomenon iff BOTH.
+    Per-prompt paired construction (reduce seeds FIRST, then bootstrap over prompts):
+      E(s) = C(0) - C(s)                        # standalone degradation
+      D(s) = ΔCLAP(0) - ΔCLAP(s)                # DECISION statistic (adapter uplift lost)
+             = (A0 - As) - (C0 - Cs)            # == excess adapter-equipped degradation
+      F_deprecated(s) = D(s) - E(s)             # NO scientific meaning; provenance only
+
+    standalone_preserved   iff upper-CI95[E] <= NONINF_MARGIN.
+    differential_fragility  iff point D >= FRAGILITY_MARGIN AND lower-CI95[D] > 0.
+    phenomenon              iff BOTH.
+
+    D is computed per prompt from paired (prompt, seed) observations BEFORE bootstrapping
+    (the 3 seeds stay clustered inside each prompt), never as a difference of separately
+    aggregated group means — see tests/research/test_phenomenon_statistic.py.
     """
     c0 = per_prompt_standalone(standalone_dense)
     cs = per_prompt_standalone(standalone_pruned)
     e_pp = c0 - cs                                            # E per prompt
     dclap0 = per_prompt_paired_uplift(adapter_dense, base_dense)
     dclaps = per_prompt_paired_uplift(adapter_pruned, base_pruned)
-    d_pp = dclap0 - dclaps                                    # D per prompt
-    f_pp = d_pp - e_pp                                        # F per prompt
+    d_pp = dclap0 - dclaps                                    # D per prompt (decision statistic)
+    f_pp = d_pp - e_pp                                        # DEPRECATED (provenance only)
     for name, arr in (("standalone", c0), ("E", e_pp), ("D", d_pp), ("F", f_pp)):
         if arr.shape[0] != c0.shape[0]:
             raise ValueError(f"{name}: prompt count mismatch")
@@ -157,9 +183,9 @@ def severity_verdict(severity: str,
     D = cluster_percentile_ci(d_pp)
     F = cluster_percentile_ci(f_pp)
     standalone_preserved = E.hi <= NONINF_MARGIN
-    differential_fragility = (F.point >= FRAGILITY_MARGIN) and (F.lo > 0.0)
+    differential_fragility = (D.point >= FRAGILITY_MARGIN) and (D.lo > 0.0)   # D, not F
     return SeverityVerdict(
-        severity=severity, E=E, D=D, F=F,
+        severity=severity, E=E, D=D, F_deprecated=F,
         standalone_preserved=standalone_preserved,
         differential_fragility=differential_fragility,
         phenomenon=standalone_preserved and differential_fragility,

@@ -448,3 +448,9 @@ has changed. **It no longer governs.** (Preserved above for history; not deleted
 * **Total spent (smoke 0.1835 + train 1.7969 + gen 0.8844) = 2.8648 cr; remaining under the 5.0-cr envelope = 2.1352 cr.**
 * **Gate 0 verdict: PASS** (ΔCLAP 0.0464, CI95 [0.0221, 0.0720]; `artifacts/icassp_gate0/gate0_verdict.json` md5 62cefa0b6e8e72f567e63bfa6f93f85c).
 * **Updated falsifier projection:** 768 gens at the realized gen rate (0.8844 cr / 384 incl. overhead) ~= 1.5-1.8 cr -> central chain ~4.3-4.7 cr, within 5.0. Needs the sliced-adapter generation path built first.
+
+### Phenomenon 768-gen projection — path BUILT (2026-08-27, PHENOM-STAT-D), GPU NOT launched
+
+* **4 systems = {p1_pruned_ema_reconstructed, p1_recovered} × {off, on} = 768 NEW WAVs** (dense 384 reused byte-for-byte, NOT regenerated). Sliced-adapter generation path built + CPU dry-run GREEN on both backbones (sliced adapter sha `5cc0a79a`; loads into pruned + recovered; OFF/ON generate; manifests validate 0 errors).
+* **Projected settled cost for exactly 768 WAVs:** pure-gen floor 768 × 7.143 s/clip @ 0.89 cr/GPU-h = **1.356 cr**; at the realized gate0-gen rate (0.8844/384 = 0.002303 cr/WAV incl. overhead) ≈ **1.77 cr**. **Central chain would reach ≈ 4.22–4.63 cr** (2.8648 spent + 1.36–1.77), within the authorized 5.0-cr envelope.
+* Entry: `scripts/research/run_phenomenon_gen.sh`. Launch (NOT executed): `lightning job run --machine T4 --studio gabriel-allgd-deploy-model-devbox --teamspace general --org independentaudioresearch "cd audioldm-modality-swap-pruning && bash scripts/research/run_phenomenon_gen.sh"` + `job_watchdog.py`. Falsifier NOT authorized; awaiting Gabriel.

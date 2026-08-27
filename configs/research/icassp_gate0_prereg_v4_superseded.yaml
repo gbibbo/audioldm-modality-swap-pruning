@@ -1,26 +1,7 @@
-# ICASSP-2027 Scenario-B pre-registration — v5, FROZEN at DECISION-V4-09 + V4-10 + V4-11 + V4-12
-# (2026-08-26) + the v5 PHENOM-STAT-D correction (2026-08-27, PRE-PHENOMENON-DATA).
+# ICASSP-2027 Scenario-B pre-registration — v4, FROZEN at DECISION-V4-09 + V4-10 + V4-11 + V4-12 (2026-08-26).
 # Single source of truth for the frozen numbers. Code reads this; do not change any value
 # after seeing data. The smoke measures execution/cost ONLY and never tunes these.
 # Contract: docs/master_plan_v4_amendment_icassp.md (rev4, ADOPTED), docs/publication_decision_memo.md §5.
-#
-#   v5 changelog (PHENOM-STAT-D + primary-endpoint hierarchy, 2026-08-27, PRE-PHENOMENON-DATA,
-#     Gate 0 already PASSED and its artifacts are frozen byte-for-byte; NO phenomenon data yet):
-#     (A) DECISION STATISTIC CORRECTED — the differential-fragility gate now uses D(s), not the
-#         old F(s)=D(s)-E(s). Algebra: D = Δ0-Δs = (A0-C0)-(As-Cs) = (A0-As)-(C0-Cs) already IS
-#         the excess degradation of the adapter-equipped system beyond standalone degradation, i.e.
-#         exactly the "legacy adapter's uplift is disproportionately damaged" quantity the strong
-#         claim prose already declares. F = D-E = (A0-As)-2(C0-Cs) has NO intended interpretation
-#         and is bidirectionally unsafe (hides genuine fragility when E>0; MANUFACTURES a fragility
-#         PASS D denies when E<0 — see tests/research/test_phenomenon_statistic.py P4). This RESTORES
-#         the already-declared scientific intent; it is not a post-data endpoint change (no phenomenon
-#         data exists). F remains ONLY as deprecated provenance, invalid for inference.
-#     (B) PRIMARY CONFIRMATORY ENDPOINT = p1_recovered (single endpoint; no multiple-comparison
-#         correction). p1_pruned_ema_reconstructed is SECONDARY / mechanistic context (ablation), not
-#         a second route to the central claim.
-#     UNCHANGED (frozen): margins (0.025), bootstrap method, B=10000, seed 20260826, battery, gen
-#     recipe, adapter, and every other scientific parameter. Only the statistic and hierarchy change.
-#     v4 preserved verbatim at configs/research/icassp_gate0_prereg_v4_superseded.yaml (sha256 e1c51244…).
 #
 # VERSIONED — v1 preserved verbatim at configs/research/icassp_gate0_prereg_v1_superseded.yaml
 # (sha256 bfddd527…). These are PRE-DATA protocol corrections, not result-driven tuning:
@@ -64,7 +45,7 @@
 #     DISABLE runtime EMA. Demonstrated CPU-side (scripts/research/ema_convention_demo.py PASS).
 #     v3 preserved at configs/research/icassp_gate0_prereg_v3_superseded.yaml (sha256 8f7d426b…).
 
-decision: DECISION-V4-09 + DECISION-V4-10 + DECISION-V4-11 + DECISION-V4-12 + PHENOM-STAT-D (v5)
+decision: DECISION-V4-09 + DECISION-V4-10 + DECISION-V4-11 + DECISION-V4-12
 
 # --- Weight convention (V4-12): EMA (inference) weights, materialized pre-LoRA, runtime EMA off ---
 weight_convention:
@@ -187,31 +168,21 @@ phenomenon:
   deferred_to_full_curve_only: ["1_2_3_4", "1_2_3_3", "1_2_3_2"]   # mild+ladder return post-PASS
   systems: ["backbone", "backbone_plus_sliced_lora"]   # sliced LoRA maps by kept-index onto each backbone's arch
   sliced_lora_note: "the dense-trained LoRA is sliced to the (1,2,3,1) kept-set; on p1_recovered it lands on the SAME architecture/kept-set but RECOVERED (non-selection) weights — reported honestly."
-  # --- Inferential hierarchy (v5 PHENOM-STAT-D, PRE-PHENOMENON-DATA) ---
-  endpoint_hierarchy:
-    primary_confirmatory: p1_recovered
-    primary_question: "Does the published recovered compressed EMA backbone preserve standalone semantic alignment while disproportionately losing the legacy adapter's uplift?"
-    primary_pass: "standalone_preserved AND differential_fragility, i.e. upper_CI95[E(p1_recovered)] <= 0.025 AND point D(p1_recovered) >= 0.025 AND lower_CI95[D(p1_recovered)] > 0"
-    secondary_mechanistic: p1_pruned_ema_reconstructed
-    secondary_role: "mechanistic context / ablation ONLY (expected larger generic capacity loss). Report the SAME C, ΔCLAP, E, D and CIs, but this condition is NOT a co-primary route to the central claim."
-    multiple_comparison: "single primary endpoint (p1_recovered) => NO multiple-comparison correction; the secondary condition must not be promoted into a second route to the primary PASS."
-    rationale: "the strong deployment claim has always centered the PUBLISHED recovered model; the reconstructed pre-recovery backbone is expected to suffer larger generic capacity loss (which the dual gate would classify as descriptive-only, not phenomenon)."
   definitions:
     C: "C(s) = standalone CLAP of backbone s alone"
     dCLAP: "dCLAP(s) = mean over prompts of (backbone_s + sliced_LoRA) - (backbone_s)"
     E: "E(s) = C(dense) - C(s)          # standalone degradation of backbone s"
-    D: "D(s) = dCLAP(dense) - dCLAP(s)  # DECISION statistic: adapter uplift lost at s == (A0-As)-(C0-Cs)"
-    F_deprecated: "F(s) = D(s) - E(s)   # DEPRECATED (v5): == (A0-As)-2(C0-Cs), NO scientific meaning; INVALID for inference; provenance only, NEVER a gate input"
+    D: "D(s) = dCLAP(dense) - dCLAP(s)  # adapter uplift lost at s"
+    F: "F(s) = D(s) - E(s)              # EXCESS adapter loss beyond standalone loss"
   recovered_p1_bookkeeping:            # the strong deployment question, defined BEFORE data:
-    E_recovered: "E(p1_recovered) = C(dense) - C(p1_recovered). SMALL E => recovery restored standalone alignment (upper_CI95[E] <= 0.025)."
-    D_recovered: "D(p1_recovered) = dCLAP(dense) - dCLAP(p1_recovered). LARGE positive D (point >= 0.025 AND lower_CI95 > 0) => legacy-adapter utility disproportionately lost. THIS is the fragility statistic (not F)."
-    strong_claim: "phenomenon on p1_recovered = standard recovery restores STANDALONE alignment (E non-inferior) YET the legacy adapter's uplift is disproportionately damaged (D fragile) — a broken downstream capability that standalone recovery metrics silently pass."
+    E_recovered: "E(p1_recovered) = C(dense) - C(p1_recovered). SMALL E => recovery restored standalone alignment."
+    F_recovered: "F(p1_recovered) = D(p1_recovered) - E(p1_recovered). LARGE positive F => legacy-adapter utility disproportionately lost."
+    strong_claim: "phenomenon on p1_recovered = standard recovery restores STANDALONE alignment (E non-inferior) YET the legacy adapter's uplift is disproportionately damaged (F fragile) — a broken downstream capability that standalone recovery metrics silently pass."
   gate:                                # identical dual gate applies to EVERY severity incl. recovered
     standalone_preserved: "upper_CI95[E(s)] <= 0.025"
-    differential_fragility: "point D(s) >= 0.025 AND lower_CI95[D(s)] > 0"   # v5: D, not F
+    differential_fragility: "point F(s) >= 0.025 AND lower_CI95[F(s)] > 0"
     phenomenon: "standalone_preserved AND differential_fragility"
-    descriptive_only_if: "D fragile but standalone_preserved false (generic capacity loss, e.g. expected at p1_pruned_ema_reconstructed)"
-    deprecated_F: "F=D-E is computed for provenance only and is INVALID for inference; it is never a gate input (v5 PHENOM-STAT-D)"
+    descriptive_only_if: "F positive but standalone_preserved false (generic capacity loss)"
   claim_scope: "standalone text-audio semantic alignment (CLAP); FAD/KAD corroborative only"
   fail_action: STOP-2                      # pre-registered negative; no method work
 
