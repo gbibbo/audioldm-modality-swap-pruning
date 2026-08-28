@@ -18,6 +18,13 @@ This figure **SUPERSEDES the stale "~9.6 credits" line further down** (that refl
 state on 2026-08-19 and must not be treated as current) and matches Gabriel's externally-reported
 "~6 cr" to within measurement.
 
+**2026-08-28 — current balance ≈ `0.72 credits` (Gabriel-reported).** This supersedes the
+5.0-cr figure above for *present* spend decisions. **NB the `0.5332 cr` "remaining" in the ledger
+central-chain accounting is HISTORICAL** (leftover capacity of the retired 5-credit central chain),
+**NOT the current account balance.** RECOVERY-REVERSAL-V1 GPU envelope for the 576-generation arm
+(96×2×3) is ≈ **1.50 cr**, which EXCEEDS 0.72 cr → **GPU launch presently BLOCKED**; the V1 CPU
+preflight (reconstruction, sensitivity, waveform panel, Human-CLAP) spent **0 cr, no GPU**.
+
 **Effective ICASSP spend cap = 3.0 cr (BINDING; arithmetic correction DECISION-V4-10).** With a
 5.0-cr balance the nominal 3.5-cr hard cap and the ≥2-cr reserve cannot both hold, so the binding
 ceiling is **min(3.5, 5.0 − 2.0) = 3.0 cr** and STOP-3 fires there. The nominal 3.5 is kept only as a
