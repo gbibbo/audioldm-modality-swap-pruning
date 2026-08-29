@@ -4,6 +4,28 @@ Do not invent GPU-hour estimates. Every number below is either **MEASURED** on r
 hardware or **DERIVED** from measured values by the master-plan §7.3 formulas, and each is
 labelled. Anything still unmeasured says so.
 
+## RECOVERY-REVERSAL-V1 576-generation projection (DERIVED from settled T4 runs; 2026-08-29)
+
+V1 = 3 backbones (dense_ema, p1_pruned_ema_reconstructed, p1_recovered) × 96 prompts × 2 replicates
+= **576 WAVs**, SAME operating point (3.84 s / DDIM 50 / eta 0 / guidance 2.5 / FP32 / single-gen)
+as the historical settled runs, so their **settled per-WAV cost** is the direct analog:
+
+* phenom analog `gate0-phenom-1`: 1.6020 cr / 768 WAVs = **0.002086 cr/WAV** → ×576 = **1.20 cr**
+* dense-gen analog `gate0-gen-1`: 0.8844 cr / 384 WAVs = **0.002303 cr/WAV** → ×576 = **1.33 cr**
+* throughput cross-check: 7.14 s/clip measured; settled effective ≈ 7.9–8.9 s/WAV incl. overhead →
+  576 WAVs ≈ 76–85 min + **3 checkpoint loads** (dense + pruned + the 4.45 GB recovered ckpt) at
+  T4 ≈ 0.94 cr/hr → ≈ 1.25–1.45 cr.
+
+**Point estimate ≈ 1.3 cr** (bracket 1.20–1.33 from the two settled analogs; V1 loads 3 checkpoints
+vs the analogs' 1–2, nudging toward the upper end). **Conservative planning figure = 1.5 cr**
+(covers load overhead, warmup, and generation-job variance/preemption/retries).
+
+* **Current balance ≈ 0.72 cr** (2026-08-28) → **short by ≈ 0.6 cr (point) to ≈ 0.8 cr (conservative)**.
+* **Minimum additional credit to launch = ≈ 0.8 cr** (reach the 1.5-cr conservative cost).
+* **Recommended safe balance before launch = ≈ 2.0 cr** (1.5-cr conservative cost + ~0.5-cr margin
+  for variance/retries; leaves a small buffer). → top up ≈ **1.3 cr** above the current 0.72.
+* **GPU launch BLOCKED** until the balance is raised. This is a budget block only; no design change.
+
 ## Account balance — AUTHORITATIVE (measured via Lightning SDK, 2026-08-26)
 
 **2026-08-26 16:27 UTC — user credit balance = `5.0` credits** (lifetime `total_spent` = 55.62;
