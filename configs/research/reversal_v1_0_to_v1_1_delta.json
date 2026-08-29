@@ -1,0 +1,32 @@
+{
+ "artifact": "reversal_v1_0_to_v1_1_delta",
+ "note": "administrative provenance of the V1.1 pre-data hashing correction; no semantic analysis",
+ "amendment": "docs/recovery_reversal_v1_1.md",
+ "v1_0_manifest_sha256": "36c442729f403f7724f17b5621ae5d9924126893d4f0ae6ca88cad4d5182edf2",
+ "v1_1_manifest_sha256": "e221c0e01fa40f3ccfcc259e0d408d0f516d0d3005852670a51245a0e43e0a4f",
+ "common_ytids": 9,
+ "v1_0_only": 87,
+ "v1_1_only": 87,
+ "caption_diffs_among_common": 7,
+ "common_ytids_list": [
+  "1e98HeU9Vrg",
+  "2ABngPM3raQ",
+  "UCy1BEx8jBE",
+  "Xf5LjaE_JQ0",
+  "Xz56Q2Q5j5c",
+  "ZYWCwfCkBp4",
+  "bAqgL5dCQOE",
+  "c0IggDOisOo",
+  "n-JyOqYSLQM"
+ ],
+ "caption_diff_ytids": [
+  "1e98HeU9Vrg",
+  "2ABngPM3raQ",
+  "UCy1BEx8jBE",
+  "Xf5LjaE_JQ0",
+  "ZYWCwfCkBp4",
+  "bAqgL5dCQOE",
+  "c0IggDOisOo"
+ ],
+ "artifact_sha256": "772dff0e35e902f471a0c10d69398103a379fbca4612d107f3f87872f6b3fa1b"
+}

@@ -1,0 +1,1784 @@
+{
+ "artifact": "reversal_v1_1_audiocaps_manifest",
+ "status": "FROZEN battery instantiation (post V1.1 pre-data amendment)",
+ "amendment": "docs/recovery_reversal_v1_1.md",
+ "amendment_sha256": "6eea0720458e224eb0182acf436b8c5e542f55da20c981a2cb9cf3a4564aa7ae",
+ "parent_amendment_git_sha": "75135560dd20d70a1f43f248108b2d6d74b6ff0d",
+ "supersedes_v1_0_manifest": {
+  "path": "configs/research/reversal_v1_audiocaps_manifest.json",
+  "sha256": "d63a821ae15e23555b7c42d547d1cb40255549fb785c56ff7993bc3e9828113d"
+ },
+ "SELECTION_SALT": "RECOVERY-REVERSAL-V1|AUDIOCAPS-TEST|2026-08-27",
+ "GENERATION_SALT": "RECOVERY-REVERSAL-V1|GENERATION|2026-08-27",
+ "selection_rule": "sort eligible unique ytids by sha256(SELECTION_SALT|YTID|ytid) ascending, first 96",
+ "caption_rule": "Convention B: n=5 caption ROWS (multiset, dups preserved, no dedup) sorted UTF-8; index=int.from_bytes(sha256(SELECTION_SALT|CAPTION|ytid)[:8],'big')%n; caption text NOT hashed",
+ "generation_seed_rule": "int.from_bytes(sha256(GENERATION_SALT|ytid|r)[:8],'big'); shared across backbones",
+ "backbones": [
+  "dense_ema",
+  "p1_pruned_ema_reconstructed",
+  "p1_recovered"
+ ],
+ "n_prompts": 96,
+ "n_replicates": 2,
+ "n_wavs_per_system": 192,
+ "n_wavs_total": 576,
+ "csv_json_discrepancy": {
+  "test_csv_rows": 4875,
+  "test_csv_unique_ytids": 975,
+  "test_label_json_rows": 4820,
+  "test_label_json_unique_ytids": 964,
+  "label_ytids_not_in_csv": 0,
+  "explanation": "label JSON is the audited canonical eval universe (one row per test caption actually scored); test.csv is the raw AudioCaps release (more caption rows). V1 eligible universe = label-JSON unique ytids."
+ },
+ "exclusion_counts": {
+  "canonical_test_universe": 964,
+  "after_not_in_train": 964,
+  "after_not_in_music64": 964,
+  "after_not_in_kim44": 964
+ },
+ "exclusions": [
+  "in canonical AudioCaps test",
+  "not in AudioCaps train",
+  "not in frozen 64 music battery",
+  "not in 44 Kim training-source ytids"
+ ],
+ "sources": {
+  "test_label_sha256": "6b09d3fd9b610a69f3e4f6882a56c6524007814a3583da81a4b993be2378d4ec",
+  "test_csv_sha256": "b91c4b7ded2f4f6e7db5b9c4983dc1e1dca3d556f505b61e3fd65cac7e1c638a",
+  "train_csv_sha256": "c0c5223db682b3bf724ce7e7ce58d5b36929f74572e8526a7211f92d2eef7c8e",
+  "battery_sha256": "87860bc1eb22e8105e7eece532d428c332f6fcc9b23eb7d67c75aa8630e23d38",
+  "kim_source_sha256": "e8ce24add345c44336d861230d0a4cdb36e548e9ec68b1521433636ead7aa160"
+ },
+ "git_sha": "75135560dd20d70a1f43f248108b2d6d74b6ff0d",
+ "prompts": [
+  {
+   "prompt_index": 0,
+   "ytid": "QTSKjweEWew",
+   "caption": "A wind blows as a man speaks outside",
+   "selection_key": "0011f21ce46562d1f79936ec0889f7f0484625856a6d84449b1e9feff1e32a68",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "c5c9fbbe2ecd9ca56bd4e540ff183ff2c3763b8fcf979738aea055d481636e26",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    5305799194271739812,
+    8703357764820765787
+   ]
+  },
+  {
+   "prompt_index": 1,
+   "ytid": "O90Qy2xG6oA",
+   "caption": "A domestic pet is making noises and a baby cries",
+   "selection_key": "0088926182f7d6638e232278b51a207bebe2b5a755fd5367ba0e14488557cb0d",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "417ebcc2dde22c3f2e8614b12e935ce78d68bf25557e8ac208e86f2dc68d4c3f",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14774783664067500575,
+    12945662248629385134
+   ]
+  },
+  {
+   "prompt_index": 2,
+   "ytid": "_ezm-TpKj1w",
+   "caption": "A mid-size motor vehicle engine is revving repeatedly, while people talk in the background",
+   "selection_key": "00cc61aea6f99ecf060c6cbc8096be37890cb69851f83109ad5025b0f033f41e",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "cb6510a63f2f929e71ca80dd26ad58e457c06d7ba08f980edd5c6d44a0d32746",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    12270773671928884252,
+    3805926715071973497
+   ]
+  },
+  {
+   "prompt_index": 3,
+   "ytid": "LVvS3s9dFKw",
+   "caption": "A man is talking as water is running along with tapping noises",
+   "selection_key": "01067adcda2e7794e81270214a46e2443a6e05cfc87a4524c3b72cb161f2336b",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "426ab3596b75902078f33a0bbcd4ed5953591d1d1e4d7e20f48a8f004429ece7",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    610850250742314930,
+    9163866933668235372
+   ]
+  },
+  {
+   "prompt_index": 4,
+   "ytid": "7QN3lwOzfdg",
+   "caption": "An adult speaks over a telephone and then an adult male speaks, and this pattern repeats three times",
+   "selection_key": "010781f6151f890130904f54aca7ddc5ec177e6650b5dd5e3d6f9e2c78bdf9fa",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "631e742fc39a486550bd567a9e526d7f5e1d9ecdc50559f97f1c977c0d220fb5",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    8830794181138577617,
+    11192692497609231160
+   ]
+  },
+  {
+   "prompt_index": 5,
+   "ytid": "-NrFeH-kBSM",
+   "caption": "A gun cocking then firing as metal clanks on a hard surface followed by a man talking during an electronic laser effect as gunshots and explosions go off in the distance",
+   "selection_key": "01629e9c118d3afc14d1342a7d10f955a3dd0137b7bea5b41a18bf64041759e5",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "50cc1c92daf323a7ca7838112872b0729a600eb9a4c4cb82096632a4310a4b05",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    9699150118067121916,
+    373278524378409686
+   ]
+  },
+  {
+   "prompt_index": 6,
+   "ytid": "a3GzZKxUTy8",
+   "caption": "Birds chirping and then a dog barking and a duck quaking",
+   "selection_key": "016accc536ca88f17820379c646e9c211e6ef3ed8c39112ccd75d6159f07b36b",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "ccdd5cd5276478a0fdfac865b481b7abff25ba5da9abf33674f2b7a0cffc128e",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    17833836519939430192,
+    12969494821909914595
+   ]
+  },
+  {
+   "prompt_index": 7,
+   "ytid": "r2djvq1vc68",
+   "caption": "A faucet pouring water as a plastic container fills with liquid and scrubbing against a plastic surface while water trickles",
+   "selection_key": "01bb9dc117f5cc638765f7b8995fc2add973364d709bbe6cd1414c6446867b50",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "f50d7d1d69ae50f4ee4d76f39d77e59fbe780d4ae39e30016fe527acae1133b8",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    12074391325255251863,
+    11296883172294653079
+   ]
+  },
+  {
+   "prompt_index": 8,
+   "ytid": "emGPabOePzA",
+   "caption": "Eructation sounds in slow motion followed by speech in slow motion",
+   "selection_key": "02058d50808e533ae76f4f3ac02d753bb003885a67e273612e736576d8305204",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "910c69873de3f8438fd17fcebee24fc99a0168fa38a019d64583fcc6ecdb8605",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    18049321753323904908,
+    5884969705591106279
+   ]
+  },
+  {
+   "prompt_index": 9,
+   "ytid": "3wV3ST-c4PE",
+   "caption": "Rhythmic ticking is occurring",
+   "selection_key": "0212055dbceec51845545d7a45dfe26f283961263b8520fe957e445f6216ded1",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "e39a45b7fd8b853fb4409772c026d76df4ee5e4001bd2f35cd6d8aefb38cd1b9",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    3754451457420071929,
+    7204285248990952239
+   ]
+  },
+  {
+   "prompt_index": 10,
+   "ytid": "6aWnK1GyeJY",
+   "caption": "A baby is crying and a person sneezes then another person speaks",
+   "selection_key": "021e4b499f4ed0fa7ef662bd643c6ac898a4778f7a40067c3d44d0e1778eb619",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "82ca4a5f7cf9862c3d5f2b16d6a265a2c429ecff5734dcc98beac51059e7a208",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    15185446427896024477,
+    2269440924093121721
+   ]
+  },
+  {
+   "prompt_index": 11,
+   "ytid": "C8kR19NvynA",
+   "caption": "A man speaking continuously",
+   "selection_key": "02ac179631a738f60df7f2d7a7778bff34a163761bb2c5df7d908c3f21fc5f1d",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "426da0647f8a07b4f6d41f8f420e46267ddcc561ba1410ce21f4d8915b81c58b",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    2686331179227796450,
+    640036126593901927
+   ]
+  },
+  {
+   "prompt_index": 12,
+   "ytid": "YIqpIjjee00",
+   "caption": "A toilet flushing",
+   "selection_key": "02e4b778cfc445a0cc1489d524f360d3be5eebbe81cd55fa0b17257a9c62402f",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "a4c12dbef9e86d86e4e870dcee1e9ad904d4c05cf4922925c1129f6e8296c0fa",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    1369521288864486250,
+    8245868496585138602
+   ]
+  },
+  {
+   "prompt_index": 13,
+   "ytid": "1e98HeU9Vrg",
+   "caption": "Waves and wind rake a shore",
+   "selection_key": "02ecb4e48686f6d9c74cb117cf4a5c1df422ee6ca813ce8f47f41ad1376c5cf6",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "2191137085f229202fbd92aa4b98f24d835fbe7071ddd6ec1d0b5ea80047f9b5",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    8243118455185150277,
+    14792396691538018193
+   ]
+  },
+  {
+   "prompt_index": 14,
+   "ytid": "1vCYiVvZ7VE",
+   "caption": "An adult female speaks in a quiet environment",
+   "selection_key": "03d42a0768f57ca8427590a840a3ab18dad1011441052d62a4f14dd0ee8d4f0e",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "7616fb14bc9b37e64cc827c9a3886a3efa0459cab611968c9c59dba071c97690",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    7650154833212542808,
+    17568577665062884781
+   ]
+  },
+  {
+   "prompt_index": 15,
+   "ytid": "AagLJkfrFMk",
+   "caption": "Water hissing followed by a man breathing aloud then a toilet flushing",
+   "selection_key": "03ddd2316ed6b436c274fd263c68a39f36386c156e13dc9d3e27656a7df28bd1",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "85838cd21cf1fd70d3be605b4942cbb1123bf7d3892001b9fc433612730cfcb4",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    13448606454533462985,
+    15023810850894265918
+   ]
+  },
+  {
+   "prompt_index": 16,
+   "ytid": "LvhvAA11oxE",
+   "caption": "Race cars are racing and skidding tires",
+   "selection_key": "04166924e60681716a5954f4bca6084ebf3e77cd67faa56b736dcd6ea7be3b23",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "76fc1bebfa87728a45eeedc5f08c33d50ff910a705792ab76990bea804426d27",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14091035776270389513,
+    14574673458681975041
+   ]
+  },
+  {
+   "prompt_index": 17,
+   "ytid": "2ymiXjImwGs",
+   "caption": "Emergency vehicle driving with siren on",
+   "selection_key": "045eb31d145214f73231b6930efce821e1eee75f8ae41ee033b6182051e059c4",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "6ecacfc6a408b9a0221f6295b4546da5944f31a1bbd7517cc740546f6859be03",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    1464324556951962773,
+    3821221577418935698
+   ]
+  },
+  {
+   "prompt_index": 18,
+   "ytid": "zF3xXn6NTyU",
+   "caption": "A woman speaking then coughing as a river stream flows followed by a series of plastic clacking",
+   "selection_key": "04c0f574c87c8c7abfb36e034242837fa6840deef26cbbe205c45e5ae7864770",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "67924ace3fe946c40813c46fc68e5bad6e9a445f9a224b9e7d38dcf2bc75dfbb",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    17555389452848946036,
+    16507459978262309820
+   ]
+  },
+  {
+   "prompt_index": 19,
+   "ytid": "CMUuelJFJ7Q",
+   "caption": "One long chime",
+   "selection_key": "04c1eea1e0ca503bd336cfa627358975f5f5212aa2434544095e92781e10ba20",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "5c686ec81401183fa8b91becc4760d5d3f608d34f5c3346c0448a529b5d12737",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14271885976155171020,
+    18087482602555520115
+   ]
+  },
+  {
+   "prompt_index": 20,
+   "ytid": "fmEft49sPfE",
+   "caption": "A man is speaking with the wind blowing in the background",
+   "selection_key": "04c4533bb86c8bf1ad937dc1c6c3b9ae6bfbb00b8d98ccf8390e28d82055838f",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "ddc2924d5a2c0eafd06f097555e18cda45c014e5b31d445fde63521ebaff8af3",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    16097786114906553423,
+    9423245919214828357
+   ]
+  },
+  {
+   "prompt_index": 21,
+   "ytid": "GSHcgY6ATkQ",
+   "caption": "A man is talking as a person types on a keyboard",
+   "selection_key": "05586bdb8d8130d1ee29a7b4b9140118c63850449d16e87e9792ae413c424bc5",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "70cf8bd348f2d0a0d9e6295d6b2e0b2d4a7e186e8c28345b877a168fa347670f",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4356720689206956871,
+    5019537689058542833
+   ]
+  },
+  {
+   "prompt_index": 22,
+   "ytid": "twFypUcdgRc",
+   "caption": "A man shouting then laughing as wind blows heavily into a microphone",
+   "selection_key": "05732a309a0eb57dc9faa6bf9d668fbdf854945a4e21d7102ae2526b17ae5581",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "aeb8b8d4eb0553e51f8152ea77f21ac1476d1101a6f7159fc7fb5269c7b3a5f9",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    17452618749915777500,
+    13454542419785298677
+   ]
+  },
+  {
+   "prompt_index": 23,
+   "ytid": "PLHXGDnig4M",
+   "caption": "A man talking then meowing and hissing",
+   "selection_key": "05ad6acf66b0a06461541efe89c191b605d20865fc7fc2c18c421fe4944fcedf",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "ae48e0044687dbc66ede6fa56ab6b81b2de927b4bbb305d5cc7028455f78bdf7",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    2450592968602435595,
+    9802476392742795654
+   ]
+  },
+  {
+   "prompt_index": 24,
+   "ytid": "3VHpLxtd498",
+   "caption": "Mechanical humming with pigeons cooing and a person speaking briefly",
+   "selection_key": "061c585920590baa714585adaf94e4a54b962d74ea840b876ba905d49b699f76",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "86a86f0883caea04c61fd950dd29e25013e963630e00dd740d5ab940d09f852f",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10371665461046154302,
+    10831394222542771692
+   ]
+  },
+  {
+   "prompt_index": 25,
+   "ytid": "mWqH2xwjkYA",
+   "caption": "An infant and a woman laughing followed by someone spits then a woman talking",
+   "selection_key": "06298a6552b3eb9915019fd79c8e5eccefcfe75666b7862840cf46cea130930a",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "9a8b5b03c2a965eeb8493b7afdfe0d761fe37a4ccbaf4cd1d10e93e9c32b40e2",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    11651868802972015011,
+    8572521295519591290
+   ]
+  },
+  {
+   "prompt_index": 26,
+   "ytid": "pHNMcX-9FDs",
+   "caption": "Whimpering of several small dogs",
+   "selection_key": "06c51396efad050f7b84328bde830407a19f74189761804a24c2c041cecb59d1",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "7b3c2b75562df7083911f1e975c97f3f0c976da8d7e2893cdb70608f26efc74e",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    16363080937844845394,
+    9358581956844552064
+   ]
+  },
+  {
+   "prompt_index": 27,
+   "ytid": "f8WPf5F22xI",
+   "caption": "A person sneezes and then speaks with clock ticking in the background",
+   "selection_key": "0828ca06a223975e16b7932aad146498051ee79c529ab4cae0ce90d49565e211",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "a3bb30ed0824f277c6f063fa4c60ec8d4b2bb4887df9978e064d95365f07110c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    18144302211323722728,
+    15566558368941189355
+   ]
+  },
+  {
+   "prompt_index": 28,
+   "ytid": "PMMdAKZxI_I",
+   "caption": "Burping and laughing by girls with distant speaking of a television",
+   "selection_key": "082fc567d2f32b943fd864cc8e42a720babad03d6e7c9734311309c96807a7a4",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "6eb6d9c2e002090dadbbbb635d600ca38b1e8649eb2096c78455964df6f2c9b8",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4901832060690744015,
+    15089095539432391290
+   ]
+  },
+  {
+   "prompt_index": 29,
+   "ytid": "AFgGoY8Ihhg",
+   "caption": "Wind and then a short ambulance siren repeats several times",
+   "selection_key": "0834f1b254fd832e2f89c264a1398ae34eee53cbfed9700bfd63489469ac3c6a",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "154a8420a2cfc75629c3a226810484341eed614347f079a39da1ec8f0e5c7a0c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10871716153879908592,
+    1150318884435224657
+   ]
+  },
+  {
+   "prompt_index": 30,
+   "ytid": "y93cZqNCtks",
+   "caption": "A man talking as footsteps run on concrete followed by a series of gunshots firing a gun cocking while another man talks in the background before a dog growls",
+   "selection_key": "08754a3d482def348ebb1416899334e9dd6422e27f847edf66b33fb601f967a3",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "7ff5ce1af00b6c449344ffb73848c4bc31450ab706b09f2c350cbf25a3ff852d",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    7268278451107054353,
+    4087060903945839250
+   ]
+  },
+  {
+   "prompt_index": 31,
+   "ytid": "2ABngPM3raQ",
+   "caption": "An adult male speaks, a tapping sound occurs, and frogs croak",
+   "selection_key": "08796304be91891e51ad9e5857456fd67f140f5e0ba19c64007fff09ed6707bc",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "1b526a7a0df3bf466e35b3ed59a10f9a90f042862bffc3de8b85a3993c5b9e95",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    2807742034866910616,
+    10832763847755044112
+   ]
+  },
+  {
+   "prompt_index": 32,
+   "ytid": "kF1KWybdRpM",
+   "caption": "An aircraft taking off with some wind noises in the background",
+   "selection_key": "08ae9a1be7b8907a5e982fd4cb67bbcae5bb80a662a83550a5e58c2249396a83",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "72abf9f1ef52e5ac2816e833c71c44354f59d7103e8d5cf781774e384ea7869f",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    8328653551181080777,
+    9596755893209218564
+   ]
+  },
+  {
+   "prompt_index": 33,
+   "ytid": "bJMMp6PLKqM",
+   "caption": "A baby cries and a small child speaks",
+   "selection_key": "08fb375edbd6727147553c0fe6947b9fdf9292340467a3a6330aa46420d5eab1",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "1c9ae7f8e042607b8a519e055aea841d8716e5713fdaab9631e4777e3b2ae97e",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    11613896661671737755,
+    14633471651801909226
+   ]
+  },
+  {
+   "prompt_index": 34,
+   "ytid": "h0M4RS8p_mo",
+   "caption": "A maniacal laugh followed by a crying baby",
+   "selection_key": "0918eafb4015f0287221bcb24e21ece283e9f0b1ca73d1647f1fe9fa31247c6b",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "b8c17cbca29e1a10874740ff926be374014f3a5932c91780448d3279887fde87",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    11354563545012604909,
+    8766056321500687035
+   ]
+  },
+  {
+   "prompt_index": 35,
+   "ytid": "pgq2KPX5_SA",
+   "caption": "Paper is crinkling and crumpling, and thumping occurs",
+   "selection_key": "0a3282b89e4336551c01a9eaff77a80be369be9e9f829005e6b7ce692ba5e14e",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "deac83669fb5c625b0f7e568ddc2b1931d8cd5ff777ccd07696823e61cb21dad",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    9429940833702003602,
+    15667774090925521135
+   ]
+  },
+  {
+   "prompt_index": 36,
+   "ytid": "3IScngdQA4I",
+   "caption": "A woman talking as a door closes shut followed by another woman talking",
+   "selection_key": "0af216825fa69dd1983f003a27df78b6427a22fed4f4e72440666a22067b9405",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "60f27e21478f615ec693e376e66196b0932459fa3d52f9e5f86fd4a10889c1f5",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    16217139569920485326,
+    14228325442845899880
+   ]
+  },
+  {
+   "prompt_index": 37,
+   "ytid": "B8rdur4aams",
+   "caption": "Rustling and shaking followed by a horn and gusts of wind",
+   "selection_key": "0b6c7cb34bad0733c34ac5e591a461603d9ac0b4e5f172dd193aad1ef9f0e61c",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "bfbf3c99c006d107c1dc7a04d94052a13577829a925d3c4ce317b071629b47a0",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    13082823440463253151,
+    16857197892810875564
+   ]
+  },
+  {
+   "prompt_index": 38,
+   "ytid": "onBZOH88OYs",
+   "caption": "Air spraying several times as a machine motor hums in the distance",
+   "selection_key": "0c4e452e7c3e6df49c3c98efeb3734035b77b3410992ae62ebfb6d9263f123ad",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "3a7da96263cfdaf76cbda8fe37200289a411641191f02911c5714c525f251d93",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    931338863336448006,
+    14919530625221638415
+   ]
+  },
+  {
+   "prompt_index": 39,
+   "ytid": "OxUVcZmeiyI",
+   "caption": "U'A clock ticking followed by a cuckoo bird cooing then music playing.",
+   "selection_key": "0c604dda3b1b94fe8e720cbf1c022f2d9dddd53252eda20a2ffc05b7223d707d",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "d838c1800fa63fc54a9703f752110007e975a6bb7a51512a8d3c82088be754a3",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10100497258302543672,
+    7727228807234904626
+   ]
+  },
+  {
+   "prompt_index": 40,
+   "ytid": "Xf5LjaE_JQ0",
+   "caption": "A man speaks with distant traffic passing and some nearby rattling",
+   "selection_key": "0c66a811441f91b98f5ff4093b7dd606ba6af33d8ffaf0dddf07a12f2ac833eb",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "f6fed83430dab5de35ceb5fa790e295c6e92baf2700341b9b283529950c2fa7c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    1248617982362641060,
+    18299780765721568030
+   ]
+  },
+  {
+   "prompt_index": 41,
+   "ytid": "bUTOsLXYyxg",
+   "caption": "A man talking then another man talking followed by a group of people laughing then another man talking",
+   "selection_key": "0ca30ef2a65634413859d3a1f8dbbb5796eeab5a314276e8a6b10d2a09331536",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "de2aa5563261ae7e75bd7177730c34e0fed6c7b6aa38ad14878ce359dd21a16f",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4136703137274187785,
+    5215466565046960662
+   ]
+  },
+  {
+   "prompt_index": 42,
+   "ytid": "b1PXsfgQw5w",
+   "caption": "People are giggling, and a man speaks",
+   "selection_key": "0ce9a6b7b7e0f459bd8ca752106d61607829b1533167c9b89af62c5b47a11225",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "8f9ab06876f6e67b00282aa61631c77345edeba84ebee6f066084ebdae693392",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    1483906966074366181,
+    15097876399558158891
+   ]
+  },
+  {
+   "prompt_index": 43,
+   "ytid": "ZYWCwfCkBp4",
+   "caption": "A person is sawing wood and music is playing in the background",
+   "selection_key": "0cfc26086e3bc04ca506fd65c64581a6de6f9d8bf69628f0e2ea9b754b62ae99",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "cf5ade0dcf19c97de1259b5bb6ac1089fb3fefa7e46d20e1b1ba5eaf0688c464",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    17124920747289800271,
+    4704288954456806595
+   ]
+  },
+  {
+   "prompt_index": 44,
+   "ytid": "eUecAF626A8",
+   "caption": "A vehicle engine running idle then revving as a crowd of people talk in the background",
+   "selection_key": "0d1885052d1b96ab0ae89cf6008ef9f0d7d599cad331e09fd861677e0e67bdb7",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "bf14f7c8dda182bed95ad912025930f3ba3125723712b2c89200fa5413b90cd8",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    2756661768027511278,
+    3563820100570509853
+   ]
+  },
+  {
+   "prompt_index": 45,
+   "ytid": "0UJtGcoPYa0",
+   "caption": "A vehicle motor running idle followed by a car horn honking then a group of men groaning",
+   "selection_key": "0d240a537ad07a3d569c6901858d8e2ca859691011a09310271dd82efbfa2021",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "3d1b617501042b67a06ce8625d6e0cf29e9bb4e78ec6bfe5066ede38add68080",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    15264208704166989123,
+    7971411444371317429
+   ]
+  },
+  {
+   "prompt_index": 46,
+   "ytid": "-SkjbQVgJ0M",
+   "caption": "A man speaking as vehicles drive by and leaves rustling",
+   "selection_key": "0deda557a547e2145e00cda21cd3ee18963c18d984345a3b1433a40bc160db3c",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "b4bad70c87390443b08d0127bdf35a12c50a7a2f6a7155e556eb764a7d57dac4",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14974852121643305728,
+    8142718258794668245
+   ]
+  },
+  {
+   "prompt_index": 47,
+   "ytid": "y-RSojxgkDo",
+   "caption": "An adult male speaks, a bird chirps harshly, and then the adult male and an adult female speak",
+   "selection_key": "0e476f55d202db3d9cfd8b5870a2711aa2359f996e84e3620862b6daab7f09c0",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "0f5c028afe411605ceccf8d4b4bc81b1a73daead7f4c97e1d3b42b2ce4a67275",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    9994680124576305987,
+    11179881755013779715
+   ]
+  },
+  {
+   "prompt_index": 48,
+   "ytid": "ENTi8Sn4vdM",
+   "caption": "A woman and young boy talking as a river stream flows and a young girl talks in the distance",
+   "selection_key": "0e9afe942d5431d7db3bea524fd070022ab3b910582196b0dc710019f8e792b0",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "ca338724d667cb9b3db1210530e10577ff27f029af07d5b2951d26f99701819f",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    5070380356450937764,
+    5423479876910872690
+   ]
+  },
+  {
+   "prompt_index": 49,
+   "ytid": "7bO0AJI-ihs",
+   "caption": "Clip-clop of horse with an engine idling in the background",
+   "selection_key": "0ee249f8656e74c894f2042bfa6eeab2c0f5f824cb3f09fa3e4b554b3df88488",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "93e39e6649b01404ef060acf7ee49e4ee683faec891663fbd18f9e7e1d587ebb",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10137216356812931719,
+    575674640347039657
+   ]
+  },
+  {
+   "prompt_index": 50,
+   "ytid": "bLZFtoWXYTA",
+   "caption": "A cup is filled from a faucet",
+   "selection_key": "0eec130b7c35e2b962bc5a451f41b6342acc7d5b71d8835e77a6bbc16f51cbb9",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "e73b69662b6001a8fb00bcc247d679f2a4a9a3cf320dda86f691b5999cbea892",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    9919978440992359778,
+    13023993857491793760
+   ]
+  },
+  {
+   "prompt_index": 51,
+   "ytid": "bmEF-c-M174",
+   "caption": "A duck quacking and a bird chirping followed by footsteps on a wooden surface then a man talking",
+   "selection_key": "0f0e9f6ad7610cda6d086f7c6e8e4341982b9df1c65c83950014da324676af83",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "17dd2042cb9be05b27500854cb623d85ee78640d0bd57550a8d8baedec34b6ea",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    18263759992936238743,
+    1662651885408112343
+   ]
+  },
+  {
+   "prompt_index": 52,
+   "ytid": "i2yhbckq3p0",
+   "caption": "A motorcycle engine running as several vehicle horns honk while a car alarm rings in the distance",
+   "selection_key": "0f26c89661f5b76ddf1bfcc30c0a7e7d3286edccb785512bcd74678b7c35a9da",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "1fed44ddf309838ae2441fef7826d9ff1b3a0be5e0edc106d877a0a0730bc4d5",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    306279927712494823,
+    8363837176172867902
+   ]
+  },
+  {
+   "prompt_index": 53,
+   "ytid": "JmWaRt8-u0s",
+   "caption": "A motorcycle engine running idle while two men communicate with each other",
+   "selection_key": "0f69e844e2c2437e19d380ec63a8cba4d1bf531be2bd0bb587f65c4b96cac9ec",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "c95215f65d6c82d7d53872d1d46ea368a01ee4c4843d321fc4582bffb0e7ca5b",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    16607741817939750724,
+    15620679666897922008
+   ]
+  },
+  {
+   "prompt_index": 54,
+   "ytid": "7JWHbs3gu1w",
+   "caption": "A hum of a train engine passing with a blowing horn",
+   "selection_key": "0f94abfbf230b3c0c076ac2685f4671892c604efa20d272948866110753ac952",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "77edacaf71e40f74759e5a4e4480f818654bc0ad864b20bc2a2e5bab1cad2c40",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    13974847158359010452,
+    5067022335900345339
+   ]
+  },
+  {
+   "prompt_index": 55,
+   "ytid": "e2rScj9UyMs",
+   "caption": "Birds cooing with clanging in background",
+   "selection_key": "0fc1f5d34f718e73be963e89446b76c40a1ce2da2c41fa23f0960b80f5e3a616",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "088f378099dbc0c51e21f281dc036e007517469a509eeb821710dd854ff98219",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10314661289531245638,
+    2923669185020659337
+   ]
+  },
+  {
+   "prompt_index": 56,
+   "ytid": "WWkhzcmx3VE",
+   "caption": "A duck quacking",
+   "selection_key": "0fc98b3716bf284b2569ef6f536dd32fc82143416980286f658e761257ad7725",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "0fecde8cdb4fd745b0dcfd35b19522bb7d1d3e56eb0c0b78fcce33039436b8e9",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    13070023950508049497,
+    5202635287313724176
+   ]
+  },
+  {
+   "prompt_index": 57,
+   "ytid": "Dc2WEiRk0rA",
+   "caption": "Hissing spray is occurring, and liquid is pattering on a surface",
+   "selection_key": "101941c8b28f599985420bf67b1d0a0cdc6adc6ad50cea2946eed9271f0a0df1",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "581cdb25632a46cdd26570a1c53a28b25734baf00126ec99909190109f73022c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    11339640942872954231,
+    4594035339220414884
+   ]
+  },
+  {
+   "prompt_index": 58,
+   "ytid": "NwoBDrTlbTI",
+   "caption": "An animal makes squeaking noises with buzzing background sounds, and a dog barks",
+   "selection_key": "1029b7d646ab41575743314380b144a66f8f1d8d74127975e94fffb5b99ac4a7",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "065b513f570ba4b017e9230513323b43ae360b28592b97ae7e2ea44093319b2c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    15648906724244284532,
+    2537803514822817175
+   ]
+  },
+  {
+   "prompt_index": 59,
+   "ytid": "fPqj3nnwQOI",
+   "caption": "Ocean waves crashing and water trickling",
+   "selection_key": "1053e2c74ae51028dbb7758645dae3d50c06ca7c5cbd53b7f41072a6c8a1e657",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "677cd59b178f27ecce08e71a3c7eaca221a08cc795150416380cb3d99feb0abe",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    17497916444912052867,
+    18242143891121578073
+   ]
+  },
+  {
+   "prompt_index": 60,
+   "ytid": "Ni3dIj90Oa4",
+   "caption": "Explosion followed by man speaking a short bit of music at the end",
+   "selection_key": "10823839de79507526714f1e83560afefed60a125d37bfc118d9c28d0e538fbe",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "d08e6cd6bb28ae6ccfde32ffeebe192233eccf0d55d950a2db09f5a6c878754c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    2507553584302288013,
+    16985612514213146236
+   ]
+  },
+  {
+   "prompt_index": 61,
+   "ytid": "fwhkCnOeyC0",
+   "caption": "A man and a woman talking followed by a bell ringing and a cat meowing as a crowd of people applaud",
+   "selection_key": "10d35d3396359de3acf61198f28c224923ca59ad844854d02b0f554a8787240e",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "18e6f81b8fdcd36b142ae3957f0f4f8907fd6648add9218e19332dcc5846b3b8",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4000284789227503541,
+    135623688510166646
+   ]
+  },
+  {
+   "prompt_index": 62,
+   "ytid": "KnsKf9KoNds",
+   "caption": "A man speaks nearby and another speaks over the phone",
+   "selection_key": "112f76a65effbcc22011fd74dce6323ed13690a06a352ec2b5306145a9a5c001",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "595f62d4802c62a4360c49b379f3a4d3504c0ecc9f86c6f320a8b565414b1c5c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10832231255400914537,
+    14456806352492881541
+   ]
+  },
+  {
+   "prompt_index": 63,
+   "ytid": "TQr9v-PQOc4",
+   "caption": "Humming noise then sneezing and coughing",
+   "selection_key": "11564d119c64dbc5ec1948ef2d1f01fef72bc2616889bc3a01e57288c5676ebc",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "e7c054bbc98407aca465767ef3bb890012485637f7b73e4abd51bc20489c82a8",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14281023032134453266,
+    3744542835474608850
+   ]
+  },
+  {
+   "prompt_index": 64,
+   "ytid": "n-JyOqYSLQM",
+   "caption": "Metal clanking followed by plastic rattling and air spraying with a group of people talking faintly in the background",
+   "selection_key": "11dc97e1d3af0123dcffee4928a9695feaa598bd493656a89393f8bf5d76447b",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "c87922b9ed042833b9d2d4ecbeb676ad52f5f578a43a6b38947c8e808cdef32d",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    16244495498847474691,
+    8695908372844638572
+   ]
+  },
+  {
+   "prompt_index": 65,
+   "ytid": "6NBPiArs2-w",
+   "caption": "Rapid gunfire with far away voice",
+   "selection_key": "11ea05226e9e54402cbd73bc55411a63ec85a1b9c38f7c30ef68a526a51b9d61",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "78e50eacdf4bb16c935f738c49bb11f65119f057d8e99786a68034fe9b1c9cd6",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14498968529740228458,
+    9733579364563745876
+   ]
+  },
+  {
+   "prompt_index": 66,
+   "ytid": "H7rd9bZtbgc",
+   "caption": "Several church bells ringing",
+   "selection_key": "12565a8f2cf53c75fa5eee23c1c086be2993d65d974cf23e5127eed94ae0a773",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "493b6163893c294ee1f39d3e9aa29d6423c3fb33cd25c579d5d1bc652185c3e1",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    2717684019634165034,
+    3960445020960341832
+   ]
+  },
+  {
+   "prompt_index": 67,
+   "ytid": "Y3lNEe-ZGF0",
+   "caption": "Repeated ticking culminates in a sliding click",
+   "selection_key": "12e424b6126b205a022cadc6a85563b1730563546f0558b896175a0d9e23a0e2",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "e5f05ca2bf8b4f899e997130c5e725a79944d39e4f40376f7d3799ad8e5d50de",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    11316559788816529898,
+    15631367218020238858
+   ]
+  },
+  {
+   "prompt_index": 68,
+   "ytid": "-mhFGevxLUg",
+   "caption": "A man speaks with low speech in the background",
+   "selection_key": "12e5233d83affb1c03d489e0e172648680fd9f2ea86e6e0b4a735b878cef16e5",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "942819eb518d4d7885b2a578194867aa4b89de9fb9383ffd21fd53d0e9f9f8c2",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    16603410994387634560,
+    2726543686732597487
+   ]
+  },
+  {
+   "prompt_index": 69,
+   "ytid": "dxow2DcTrwk",
+   "caption": "Wind blowing followed by people speaking then a loud burst of thunder",
+   "selection_key": "133935aec0f4dcf850a1d7b7e8b155e54fb02689c98a97e328610d66119b4121",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "346faf2e0a19d87c290686095dc17db20095327d034fe8142dfed15840b6c233",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    7182342920969874168,
+    2672963275997649957
+   ]
+  },
+  {
+   "prompt_index": 70,
+   "ytid": "JHhEjsAkZoc",
+   "caption": "A train honks horn and passes by",
+   "selection_key": "13769d2cf2fbaba7d7b0d90824027cd72fdaa12216506a9ea4b88efa77c54448",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "45d1ce46364bbd86115671fd7048c201f5225e81090d2f7a772c092e77b3c0d3",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    6069398866080594087,
+    16005260463061231275
+   ]
+  },
+  {
+   "prompt_index": 71,
+   "ytid": "IKnx3hJv1bs",
+   "caption": "The hiss of spraying",
+   "selection_key": "137ae15eea8a671645285dd4bf5408fed6482fd08d1725d58eb896b89d068a12",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "347a26e0e1f39c6d506ea5008b9adeb554a185d137648eb246175a6dc13b0a68",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    17222688452324042475,
+    13820985108068794964
+   ]
+  },
+  {
+   "prompt_index": 72,
+   "ytid": "OVQMFBeCHq0",
+   "caption": "Sirens blaring from a vehicle passes by and starts to diminish in the distance",
+   "selection_key": "139c0c19530b2a1a7ac72b1cf5752e365c9e8adf44c144206e4bdfb5c86ce7d7",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "6d5240e974744afe8557d4475d21e28f4bf9030b67c2a2012211f71e12ed7595",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    13264972000368554438,
+    11139503155796388643
+   ]
+  },
+  {
+   "prompt_index": 73,
+   "ytid": "g5l3Bz6lWnc",
+   "caption": "Wood lightly shuffling as insects buzz and birds chirp in the background",
+   "selection_key": "13bfd17ed9dafcc367be8647ad93571a611ba5b57bd8610fe05be1258de6ae67",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "191930b1aa3e3bc92472d709f1e62d723eafe78d178df7737130da45229d83fe",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14647803681101952581,
+    3662305841041385061
+   ]
+  },
+  {
+   "prompt_index": 74,
+   "ytid": "L_CNz9Vrtkw",
+   "caption": "A man speaking followed by a crowd applauding and cheering",
+   "selection_key": "1401eb69d8180be0193a04370b845f3853c17f18695e605ef6da39a766c28e51",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "d4636407dbbf535e917abe259a19ea0bb0d85c7e45425c9db7d7b0718cf5d91f",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    6999830794840578290,
+    6542239867033401057
+   ]
+  },
+  {
+   "prompt_index": 75,
+   "ytid": "c0IggDOisOo",
+   "caption": "Bells ringing with voices in background and wind blowing",
+   "selection_key": "142157658b78852c68f6ed5ecdb8823fcdf082ad425217c3f26b697e31795d3d",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "c48d8006d4bfe91de78d9526793bdec2aeddbeaa4fcb25aea73ffa85d60270d0",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    15597576089748983836,
+    10000027471593115186
+   ]
+  },
+  {
+   "prompt_index": 76,
+   "ytid": "sVYTOURVsQ0",
+   "caption": "Water trickling with man speaking",
+   "selection_key": "144580e96b7d8fa7a593a9c90afdc120e988a7dbcadbd992d76b25ae1a8a979c",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "6a13ac35d21ba54d2983554c3df9c89e20bef500d96533345b7d4676dea7c32a",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14534735926123606892,
+    8976918376079438801
+   ]
+  },
+  {
+   "prompt_index": 77,
+   "ytid": "T32kii824pA",
+   "caption": "A male speech and metal clanging.",
+   "selection_key": "146991f8510ddd2231d3c7e6ddef3d1b76c174f28f8d7e2784de62426787a538",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "b380d342b0d6745ac237a18e61b229192d6bae7d41dca4cb58811c1b85cedeae",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10616323353747899698,
+    1128724361364270863
+   ]
+  },
+  {
+   "prompt_index": 78,
+   "ytid": "UCy1BEx8jBE",
+   "caption": "A man speaks while water splashes",
+   "selection_key": "147d99019ee1de12b6adeed43569d57a8a375d4928f20aabafe83eb3bd7c1a4d",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "12e20cc76fcd689dcf574b17857e623c98029bdd4667243266be044d5770450e",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10398375265317878202,
+    11764073995877745184
+   ]
+  },
+  {
+   "prompt_index": 79,
+   "ytid": "bAqgL5dCQOE",
+   "caption": "Rain falls, tapping on metal, a vehicle runs in the distance, the tapping sound fades as the rain continues",
+   "selection_key": "148f509393be74d6fad9f159954efd30675b8e0f10ae8260c6ec7c7dfeea89a9",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "152a3246878900391c7a90b294d7372d7f17c2d5b3c42237e1700b759df9cb02",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    899368293749398557,
+    4507876697070484984
+   ]
+  },
+  {
+   "prompt_index": 80,
+   "ytid": "A0E_UiD-fR4",
+   "caption": "Digital beeping followed by rapid vibrations and humming",
+   "selection_key": "1554944a526ba81daaa0146d5a2e817fc163b47265fa9dfd8a784aee1f4704b9",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "7b6bc824a97a90d74fe6166bd050a41817fe5fec69c77db522ef306f246fe2e2",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4666629300615657454,
+    11368943150182640260
+   ]
+  },
+  {
+   "prompt_index": 81,
+   "ytid": "Q0anPAIkfBE",
+   "caption": "A baby sobs and then a woman speaks followed a woman laughing",
+   "selection_key": "15d85a27f8f66056f406f4e7910311aae4d5c5f09bb5edd3af39f3b9aabb25e8",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "ce14ce34ca545fe41926df12c9db872f7ea14f9a773233bc2c242fa111b6dc54",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    6432683464948132775,
+    10842397098878049517
+   ]
+  },
+  {
+   "prompt_index": 82,
+   "ytid": "3wrdPAeqjVI",
+   "caption": "A man talking followed by a camera muffling and footsteps shuffling then wood lightly clanking",
+   "selection_key": "1633017f6d8ad3ddf624fbc8b7a0cf489d24fa922f8cd45ae53f55e59552ba95",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "e88378a1fe2f82e9bd9efa980a1ffa24b595fb6716a32dce68b52e85f02df5e1",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    13531033553559114612,
+    11935034601096367539
+   ]
+  },
+  {
+   "prompt_index": 83,
+   "ytid": "IhvXtS9-IxM",
+   "caption": "An idle helicopter engine running",
+   "selection_key": "16580d917fb541af925a3432aae8562abdc3b6e7efa8fd2f82de5e49fc864f06",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "6fad7627f04d7bfceb384c944699b90fa7151748e8e726bc607ef8930a13c8f4",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    5500353624027588089,
+    2412170166575679528
+   ]
+  },
+  {
+   "prompt_index": 84,
+   "ytid": "HUwXtfYRFwk",
+   "caption": "A bus engine running as several vehicles pass by and car horns honk in the distance",
+   "selection_key": "1668bb804dbeeda16dcc1b5fe9aafdc5b5d3669d5f30baad17d088912c1fce75",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "9a96e675498f67247e341bec3ba49f3053ce030f4ff7b4e105908f3a7ea3b0e2",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    1149968997329925654,
+    13624365791890113451
+   ]
+  },
+  {
+   "prompt_index": 85,
+   "ytid": "A2mcp0N__7U",
+   "caption": "Mid frequency of multiple people in the distance talking and yelling, followed by coughing",
+   "selection_key": "16b9a28d86984f269605c6e45ca27b0be0bee051443932e27c2e5f752d5d431a",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "54b2a4d831412ef200aab8d20a927de1c4fd4d8a154d97cd6358330b60e844b6",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4299738671860018644,
+    18394653413880187516
+   ]
+  },
+  {
+   "prompt_index": 86,
+   "ytid": "jjHIINDfE1c",
+   "caption": "A vehicle is in motion, and the horn sounds",
+   "selection_key": "17a0a07957d2acd6e13aff22682918ac2213ea99d1a4a9392643512f12044910",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "36510b9164f9f958d585aec093dff929407ce834200f6a968e6b44d69f2e812d",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14923943816894593424,
+    294881421990427391
+   ]
+  },
+  {
+   "prompt_index": 87,
+   "ytid": "D2Xc_jZllDY",
+   "caption": "A man talking as a dog barks in the distance while wind blows into a microphone",
+   "selection_key": "17a247e840feff354c0990e4b85ce20819166615a6810e9b9fa2cf52e235cb23",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "02c9151dbc640e3df3229b9881729a953e593e25545ce8cb2c292ade1ac9e986",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    15354024830101338098,
+    5257342573267065322
+   ]
+  },
+  {
+   "prompt_index": 88,
+   "ytid": "7WkB6pflr6o",
+   "caption": "A woman speaking",
+   "selection_key": "17e654c060053ba8f28eb1c1d9baa6103035450a9d6675cc956a1d802be70803",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "6719af2ff37409810de8863f7572f8a31a16dea988e11f0352f31134e2666e21",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4657543181487318738,
+    18104514648169788841
+   ]
+  },
+  {
+   "prompt_index": 89,
+   "ytid": "hJtOGmN_KVw",
+   "caption": "A man speaking and plastic crumpling",
+   "selection_key": "17f60db758724ab89442bf5b353fc792a943588ddf752b21d4125260ee8896b1",
+   "caption_row_count": 5,
+   "chosen_caption_index": 1,
+   "caption_hash_hex": "3df7737603de8b331ab6787671320fe59ef0dc8438e90f6320dd973d22b3e573",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    14712071763157460050,
+    6249256552854267499
+   ]
+  },
+  {
+   "prompt_index": 90,
+   "ytid": "3fomsZXG3aM",
+   "caption": "An idle vehicle engine running followed by a gear cranking then revving",
+   "selection_key": "184e27fa8d27443f35510892e43c04c76b09b4271f17e0d61dbb5423da3ac63b",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "4f75233278e97bed132576c3a5256eb28d253bc36db3a2f16afcf3c3f8e308a3",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    2008428081575545362,
+    1062649832503791556
+   ]
+  },
+  {
+   "prompt_index": 91,
+   "ytid": "Xz56Q2Q5j5c",
+   "caption": "Wood being scraped along with mechanical sounds",
+   "selection_key": "189822951525d9797e97522d4b0ba0f5667c327da94819567e5a22403bf92491",
+   "caption_row_count": 5,
+   "chosen_caption_index": 4,
+   "caption_hash_hex": "86b43d355a7dce3c2a606cb235d2d6ffff29b29b90c0b3e8b09e9954278f9a5e",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    4022662648940873759,
+    15160029933831008492
+   ]
+  },
+  {
+   "prompt_index": 92,
+   "ytid": "EUZaxaWqhwg",
+   "caption": "An aircraft engine running as a crowd of people talk in the background",
+   "selection_key": "18b4ec8ed1a4a169b3f1bf099d916ccb7ec37038985270efe9de36fade25151a",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "49184b09155bd02e523d0e7867c109e49a9cd3bdbd7b4f29d672f951fa4458fc",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    17540652806002102630,
+    13470688693603439317
+   ]
+  },
+  {
+   "prompt_index": 93,
+   "ytid": "0_ogYGDGDco",
+   "caption": "A boat is traveling while water is splashing with wind noise, and a man is speaking on a two-way radio",
+   "selection_key": "18ceaf501f7ca388c9489184100c7732dbc8827810e7079c96e039122312f3b7",
+   "caption_row_count": 5,
+   "chosen_caption_index": 0,
+   "caption_hash_hex": "8becb59e969db7516ad407d133f3237c1b031ff77f16293f5fc0ef9e9668742d",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    3799141174226633805,
+    16990146807434096998
+   ]
+  },
+  {
+   "prompt_index": 94,
+   "ytid": "ArHiac57pVk",
+   "caption": "Males speaking and then a clock ticks twice",
+   "selection_key": "18d24f491c785e36151d2f294c626fc8d03aa1c8bfa8687237f33407f9f8234b",
+   "caption_row_count": 5,
+   "chosen_caption_index": 3,
+   "caption_hash_hex": "8c9a32c6e82a341901f0c3d1c6a50da3a4c5ea338b3c67646b0e820a3227809c",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    10700818297301420617,
+    13358048222539493309
+   ]
+  },
+  {
+   "prompt_index": 95,
+   "ytid": "SNIaYhri76w",
+   "caption": "A pig squeals and dogs bark followed by a man speaking",
+   "selection_key": "1953bce6c2baa498dae39d70744d6d352f4a92268c42c4c755559db15cca501c",
+   "caption_row_count": 5,
+   "chosen_caption_index": 2,
+   "caption_hash_hex": "80fc58a74760eb786cb4491cd40caf238a283a1d8e7e6b5bf29b804826254ef5",
+   "caption_order": "5 caption ROWS (multiset, duplicates preserved) sorted UTF-8 bytewise",
+   "replicate_indices": [
+    0,
+    1
+   ],
+   "generation_seeds": [
+    8944230028008581112,
+    16152249815771954861
+   ]
+  }
+ ],
+ "manifest_sha256": "e221c0e01fa40f3ccfcc259e0d408d0f516d0d3005852670a51245a0e43e0a4f"
+}
