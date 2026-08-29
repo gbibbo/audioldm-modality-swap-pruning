@@ -1,81 +1,103 @@
-# RECOVERY-REVERSAL-V1 — prospective cross-domain ranking test (DRAFT)
+# RECOVERY-REVERSAL-V1 — prospective cross-domain ranking test
 
 ```
-STATUS: DRAFT / NOT FROZEN
+STATUS: FROZEN / PREREGISTERED
+FROZEN BEFORE AUDIOCAPS BATTERY SELECTION
 NO AUDIOCAPS OUTCOME DATA OBSERVED
-NO GPU GENERATION AUTHORIZED
 ```
 
-Authored 2026-08-28 (MVD). Supersedes the stale `64×3×2` sizing sketch in the
-RECOVERY-REVERSAL-AUDIT-1 ledger entry wherever the two conflict; the sizing and gate below are
-the later supervisor-confirmed specification. This document is a **draft preregistration**: it is
-NOT frozen, the 96 AudioCaps ytids are NOT selected, and no generation/scoring is authorized.
+Frozen 2026-08-29 (MVD), supervisor decision GO-to-freeze at 96×2×3. This preregistration is the
+binding scientific/statistical contract for the RECOVERY-REVERSAL-V1 AudioCaps experiment. It is
+frozen **before** the 96 AudioCaps ytids are selected (git history: freeze commit precedes the
+manifest commit). A SHA256 of this file is recorded in `docs/recovery_reversal_v1.md.sha256` and
+the ledger entry `RECOVERY-REVERSAL-V1-FREEZE`. Supersedes the AUDIT-1 `64×3` sizing sketch.
+
+The sensitivity preflight (ledger RECOVERY-REVERSAL-V1-PREFLIGHT) did not trigger the predefined
+STOP. We accept limited power to satisfy the complete decision rule for true effects very near the
+SESOI, while being adequately powered for the larger effects that would make the reversal
+scientifically compelling.
 
 ---
 
 ## 1. Scientific status (bounded)
 
-A **post-hoc music-domain observation motivated a prospectively specified, held-out AudioCaps
-test of a recovery-reversal hypothesis.** The published post-pruning "recovered" AudioLDM
-checkpoint scores *worse* than the pruned-only checkpoint on a held-out 100%-music battery
-(frozen `R_music = C_recovered − C_pruned = −0.0941`, CI95 `[−0.1241, −0.0646]`, n=64). That
-music result is **historical / post-hoc** and is the *motivation*, not the confirmation.
+A **post-hoc music-domain observation motivated a prospectively specified, held-out AudioCaps test
+of a recovery-reversal hypothesis.** The published post-pruning "recovered" AudioLDM checkpoint
+scores *worse* than the pruned-only checkpoint on a held-out 100%-music battery (frozen
+`R_music = C_recovered − C_pruned = −0.0941`, CI95 `[−0.1241, −0.0646]`, n=64). That music result
+is historical/post-hoc — the *motivation*. The **prospectively specified validation arm** is the
+future AudioCaps-test experiment: does `recovered` *beat* `pruned` on held-out **in-domain**
+(AudioCaps) captions under the **same** operating point that produced the music failure?
 
-The **prospectively specified validation arm** is the future AudioCaps-test experiment: does
-`recovered` *beat* `pruned` on held-out **in-domain** (AudioCaps) captions under the **same**
-controlled operating point that produced the music failure? If yes, the ordering between the two
-models reverses across domains. If `recovered` also fails on AudioCaps, **V1 fails** — we do not
-conclude operating-point brittleness and do not launch a rescue experiment (see §8).
-
-**Catastrophic forgetting is NOT an established mechanism here** and must not be asserted. The
-candidate contribution is narrow (§7).
+Catastrophic forgetting is **not** an established mechanism and is not claimed. Candidate
+contribution stays narrow (§10).
 
 ---
 
-## 2. Design (intended, not frozen)
+## 2. Binding design
 
 | Item | Value |
 |---|---|
-| Test prompts | **96 unique AudioCaps-test ytids** (deterministic selection; NOT yet drawn) |
+| Test prompts | **96 unique AudioCaps-test ytids** (canonical universe = `audiocaps_test_label.json`) |
 | Caption | **1 deterministic caption per ytid** |
 | Replicates | **2 paired generation replicates** per prompt |
-| Backbones (standalone) | **dense EMA**, **`p1_pruned_ema_reconstructed`**, **`p1_recovered`** |
-| Total generations | **96 × 2 × 3 = 576 WAVs** |
-| Dense EMA | **descriptive anchor only** — NOT part of the PASS gate |
+| Standalone backbones | **dense EMA** (descriptive), **`p1_pruned_ema_reconstructed`**, **`p1_recovered`** |
+| Total generations | **96 × 2 × 3 = 576 WAVs** (192 per system) |
+| Dense EMA | **descriptive anchor only — cannot change PASS** |
 
-**Operating point — identical to the historical music arm** (the whole point is a common
-controlled operating point):
-
-```
-clip length     3.84 s      (latent_t = 96)
-sampler         DDIM, 50 steps, eta = 0
-guidance        2.5
-precision       FP32
-generation      single generation per seed (NO best-of-3, NO CLAP selection)
-```
-
-**Selection & bootstrap constants (later decisions, not reconciled to the old audit):**
+**Operating point (identical to the historical music arm):**
 
 ```
-SELECTION_SALT = "RECOVERY-REVERSAL-V1|AUDIOCAPS-TEST|2026-08-27"
-BOOTSTRAP_SEED = 20260827          # NB: prospective V1 seed; the HISTORICAL music arm keeps 20260826
+clip length 3.84 s (latent_t 96) · DDIM 50 steps · eta 0 · guidance 2.5 · FP32
+single generation per seed · no adapter · no best-of-3 · no generation-time CLAP selection
 ```
 
-Scorer: the frozen primary convention (LAION `clap-htsat-fused`, rev `365dea6e`, SR 48000,
-`truncation="fusion"`, seed-once-per-192-item system, `get_*_features` cosine). Prompt-cluster
-percentile bootstrap, **B = 10,000**, generator **PCG64(20260827)**.
+**Frozen constants (distinct namespaces — do not conflate):**
+
+```
+SELECTION_SALT  = "RECOVERY-REVERSAL-V1|AUDIOCAPS-TEST|2026-08-27"   # which ytids/captions
+GENERATION_SALT = "RECOVERY-REVERSAL-V1|GENERATION|2026-08-27"       # generation noise seeds
+BOOTSTRAP_SEED  = 20260827                                           # prospective statistics (PCG64)
+B               = 10000
+# The primary CLAP scorer RNG convention is UNCHANGED from the historical scorer:
+# np.random.seed(20260826) reset once per 192-item system. Do NOT replace it with 20260827.
+```
+
+**Selection rule (frozen):** eligible unique ytids sorted ascending by
+`selection_key = sha256(SELECTION_SALT | ytid)`, take the first 96.
+**Caption rule (frozen):** per ytid, unique captions ordered UTF-8 bytewise; choose the caption
+minimising `sha256(SELECTION_SALT | ytid | caption)`; record its index in that canonical order.
+**Exclusions (frozen, in order):** (1) in canonical AudioCaps TEST; (2) not in AudioCaps TRAIN;
+(3) not in the frozen 64 music-battery ytids; (4) not in the 44 Kim training-source ytids. No
+semantic/Music/length/difficulty filtering; no manual replacement; counts recorded after each step.
+
+**Generation seed convention (frozen):**
+`generation_seed(ytid, r) = int.from_bytes(sha256(GENERATION_SALT | ytid | r)[:8], "big")`
+(the frozen `derive_paired_seed` CRN convention). One seed per `(ytid, replicate)`; the **same**
+initial latent `x_T` (shape `(1, 8, 96, 16)`) is used across dense/pruned/recovered — no
+backbone-specific transformation. Replicates 0 and 1 are distinct. Implemented and tested in
+`research_pruning/eval/reversal.py` (`generation_seed`) and `scripts/research/reversal_v1_gen_preflight.py`.
+
+**Primary CLAP scorer convention (frozen, unchanged):** LAION `clap-htsat-fused` rev `365dea6e`,
+SR 48000, `truncation="fusion"`, one 192-item seed-once call per system in canonical
+`(prompt_index, replicate_index)` order, `np.random.seed(20260826)` reset once before each system,
+OpenBLAS Haswell guard (`scripts/research/gate0_clap_scorer.py --score-groups`, reused unchanged).
 
 ---
 
 ## 3. Primary quantities & PASS gate
 
 ```
-R_AC    = C_recovered,AC − C_pruned,AC          (paired, prompt-clustered)
-R_music = −0.0941   [frozen historical, CI95 −0.1241 … −0.0646]   (descriptive baseline)
-I       = R_AC − R_music                         (cross-domain interaction)
+R_AC    = C_recovered,AC − C_pruned,AC          (per prompt: mean over the 2 replicates; paired)
+R_music = −0.0941   [frozen historical, CI95 −0.1241 … −0.0646]   (durable baseline, §5)
+I       = R_AC − R_music                          (cross-domain interaction)
 ```
 
-**Planned PASS requires ALL of:**
+Estimation: reduce each prompt to its paired mean FIRST, then prompt-cluster percentile bootstrap
+(B=10000, PCG64(20260827)). For `I`, a joint two-sample bootstrap independently resamples the 96
+AC per-prompt contrasts and the frozen 64 music per-prompt contrasts: `I* = mean(AC*) − mean(music*)`.
+
+**PASS requires ALL of:**
 
 ```
 1.  R_AC point            >= +0.025        # SESOI on the POINT estimate (practical floor)
@@ -83,167 +105,139 @@ I       = R_AC − R_music                         (cross-domain interaction)
 3.  lower_CI95(I)         >  0
 ```
 
-`0.025` is the **predefined practical SESOI on the point estimate**. It does **not** claim
-`R_AC ≥ 0.025` at 95% confidence. `R_music` enters `I` with its own historical uncertainty
-retained (joint two-sample bootstrap), not as a known constant.
+`0.025` is the predefined practical SESOI on the **point** estimate; it does **not** assert
+`R_AC ≥ 0.025` at 95% confidence. Dense has **no** influence on PASS. Verdict code frozen now:
+`scripts/research/reversal_v1_verdict.py` / `research_pruning/eval/reversal.py::primary_verdict`.
+
+Also reported descriptively (no gate role): prompt sign fraction, median prompt contrast, the
+ECDF-ready prompt-level contrast vector, and dense gaps for each standalone system.
 
 ---
 
-## 4. Historical music provenance (frozen; reconstructed without rescoring)
+## 4. FAIL interpretation (no automatic rescue)
 
-Rebuilt from the persisted phenomenon artifacts (no WAV rescored) by
-[reversal_reconstruct_music_contrast.py](../scripts/research/reversal_reconstruct_music_contrast.py)
-→ `artifacts/icassp_gate0/reversal_music_contrast.json` (regenerable; gitignored):
-
-- 64 prompts × 3 paired replicates; pairing by generation seed across backbones.
-- `R_music = −0.0941`, CI95 `[−0.1241, −0.0646]` — **reproduces the frozen ledger value exactly**
-  (prompt-cluster percentile bootstrap, seed 20260826).
-- 79.7% of prompts have `recovered < pruned`.
-- Sources hashed; `phenomenon_verdict.json` md5 `326eb639` confirmed; scorer + generation git
-  SHAs captured. Regression assertions fail loudly on any ordering/pairing/value drift
-  ([test_reversal.py](../tests/research/test_reversal.py) T3).
+If PASS fails — including the case where `recovered` also fails on AudioCaps — **V1 fails**. We do
+**not** conclude operating-point brittleness, do **not** launch an alternate-operating-point
+(10.24 s / DDIM 200 / guidance 3.5 / best-of-3) rescue, do **not** add a second pruning severity,
+and do **not** invent post-outcome metrics. A negative is a valid, reportable result.
 
 ---
 
-## 5. Sensitivity preflight (CPU-only; historical data only)
+## 5. Historical R_music provenance (frozen; reconstructed without rescoring)
 
-[reversal_sensitivity.py](../scripts/research/reversal_sensitivity.py) →
-`artifacts/icassp_gate0/reversal_sensitivity.json`. Random-effects decomposition of the
-historical music paired differences, projected onto the future 96×2 design. **No AudioCaps data.**
-
-- Variance plug-in from music: `σ_between = 0.0973`, `σ_within = 0.1314` (per-replicate). The
-  3-rep music within-noise maps onto 2-rep AudioCaps as `σ_within²/2`, so the replicate asymmetry
-  (music 3, AC 2) is handled explicitly.
-- **Inflation interpretation.** *Primary:* scale BOTH components together (total-variance stress)
-  at 1.0× / 1.5× / 2.0×. *Alternatives (transparency):* between-only 2× and within-only 2×.
-  Justification: cross-domain generalisation can plausibly widen both prompt-level heterogeneity
-  and generation noise; the primary stresses both, the alternatives localise the source.
-- **The interaction I never binds:** `P(lower_CI95(I) > 0) = 1.000` in every cell, because
-  `R_music ≈ −0.094` is strongly negative, so `I = R_AC + 0.094` is comfortably positive. **V1
-  therefore reduces to detecting `R_AC` (point ≥ 0.025 AND lower_CI95 > 0).**
-
-**P(all three PASS conditions), 2000 sims × 2000 bootstrap, PCG64(20260827):**
-
-| true R_AC | plug-in (1.0×) | both 1.5× | both 2.0× | between 2× | within 2× |
-|---|---|---|---|---|---|
-| 0.025 | 0.43 | 0.33 | 0.28 | 0.31 | 0.32 |
-| 0.040 | 0.83 | 0.65 | 0.54 | 0.65 | 0.66 |
-| 0.050 | **0.95** | 0.85 | 0.73 | 0.84 | 0.85 |
-| 0.075 | 1.00 | 0.99 | **0.96** | 0.99 | 1.00 |
-
-Expected CI half-width ≈ 0.027 (plug-in) → 0.038 (2×). Point-estimate SD ≈ 0.014 → 0.020.
-
-**Reading:** 96×2 is well-powered (≥0.95 plug-in; ≥0.73 under 2× total-variance stress) for
-`R_AC ≥ 0.05`, and well-powered even under 2× for `R_AC ≥ 0.075`. It is only moderately powered
-at `R_AC = 0.04` (0.83 plug-in, 0.54 under 2×) and **intrinsically underpowered right at the
-SESOI (`R_AC = 0.025`)** — expected, since `lower_CI > 0` at an effect equal to the point
-threshold cannot exceed ~0.5. This is a property of the gate, not a fixable N choice; **N and the
-gate are NOT changed** (§8 discipline).
+Rebuilt from the persisted phenom artifacts (no WAV rescored):
+`scripts/research/reversal_reconstruct_music_contrast.py`; durable per-prompt baseline (tracked)
+`configs/research/reversal_v1_r_music_clap.json`. `R_music = −0.0941`, CI95 `[−0.1241, −0.0646]`
+(seed 20260826), 79.7% of prompts recovered<pruned. `phenomenon_verdict.json` md5 `326eb639`
+confirmed; scorer rev `365dea6e`, scoring git `3d499dd`, generation git `22910045`. Regression
+guarded by `tests/research/test_reversal.py` T3.
 
 ---
 
 ## 6. Robustness of the motivating music result (diagnostic; does NOT redefine R_music)
 
-**Physical waveform panel** ([reversal_waveform_panel.py](../scripts/research/reversal_waveform_panel.py),
-historical OFF WAVs, 3×192): recovered's poor music behaviour has an **objective signal-level
-signature** — elevated loudness (RMS median 0.163 vs dense 0.135; recovered > dense in 75% of
-prompts, > pruned in 100%) and a marked upward spectral-centroid shift (2232 Hz vs dense 1655 Hz).
-Pruned-only is *quiet* (RMS 0.041). **Correction to the earlier small-sample claim:** on the full
-panel recovered does **not** systematically clip (peak median 0.898, near-clip fraction ≈ 0), so
-the previous "peak 0.959 / near-clipping" characterisation is downgraded to "elevated loudness and
-high-frequency tilt, no systematic clipping." The degradation is physical, not a pure scorer
-artefact — but this is diagnostic, **not a gate**.
+**Physical waveform panel** (`scripts/research/reversal_waveform_panel.py`, historical OFF WAVs,
+3×192): the semantic-score deficit co-occurs with an objective shift in waveform statistics,
+particularly elevated RMS (median 0.163 vs dense 0.135; recovered > dense in 75% of prompts, >
+pruned in 100%) and elevated spectral centroid (2232 Hz vs dense 1655 Hz). **These signal-level
+changes establish that recovered and pruned differ beyond the primary scorer, but do not by
+themselves establish perceptual degradation.** Systematic clipping was **not** observed (peak
+median 0.898, near-clip fraction ≈ 0). Elevated loudness / high-frequency tilt are **not** called
+degradation absent perceptual evidence. Diagnostic only, not a gate; R_music unchanged.
 
-**Human-CLAP corroboration** ([reversal_humanclap.py](../scripts/research/reversal_humanclap.py),
-`sarulab-speech/human-clap-wsce-mae`, CPU): recovered < pruned **confirmed** —
-`R_music(Human-CLAP) = −0.1446`, CI95 `[−0.1781, −0.1113]`, 85.9% of prompts negative. Same
-direction as the primary CLAP, comparable-or-larger in its own scale. **Caveat:** Human-CLAP is a
-CLAP-family model, not an independent human evaluation, and its published validation is not
-music-specific; this shows the ordering is **not idiosyncratic to the exact frozen CLAP
-checkpoint**, nothing about human preference. The frozen `R_music` (primary CLAP) is unchanged.
+**Human-CLAP corroboration** (`scripts/research/reversal_humanclap.py`): recovered < pruned
+confirmed — `R_music_HC = −0.1446`, CI95 `[−0.1781, −0.1113]`, 85.9% of prompts negative. Human-CLAP
+is a CLAP-family model, not an independent human evaluation; agreement supports **scorer
+robustness**, not human preference.
 
 ---
 
-## 7. Publication framing (bounded — verify against primary sources before writing)
+## 7. SECONDARY prospective analyses for AudioCaps (frozen now, no PASS influence)
 
-Candidate contribution, **narrowly**:
+Both are decided **before** seeing AudioCaps, reported **regardless of direction**, and can **never**
+change the primary PASS.
 
-> evidence that the published post-pruning recovery artifact can change the ordering between
-> pruned and recovered AudioLDM models across domains under a controlled common generation
-> operating point.
+### 7a. Human-CLAP secondary (corroborative)
 
-Call it a **"recovery-induced cross-domain ranking reversal"** only if the prospective AudioCaps
-arm actually establishes the opposite ordering. Until then it is a hypothesis.
+Score the **same** future AudioCaps WAVs (`p1_pruned_ema_reconstructed`, `p1_recovered`; dense
+descriptively if convenient) with the exact preflight-validated Human-CLAP implementation. Define:
 
-Relevant precedent (do NOT write novelty claims from memory; check primary sources):
-Singh et al., *Efficient Text-to-Audio Generation via Pruning* (2026, the studied artifact);
-Kumar et al., *Fine-Tuning Can Distort Pretrained Features…* (ICLR 2022, ID↑/OOD↓ precedent);
-Thangarasa et al., *Self-Data Distillation…* (MLSys 2025, post-pruning SFT shifts behaviour);
-Takano et al., *Human-CLAP* (2025, corroborative scorer motivation).
+```
+R_AC_HC = HC_recovered,AC − HC_pruned,AC
+I_HC    = R_AC_HC − R_music_HC        (joint two-sample bootstrap vs the frozen historical HC music
+                                       contrasts, configs/research/reversal_v1_r_music_humanclap.json)
+```
 
----
+Report: point estimate, prompt-clustered 95% CI, fraction of prompt-level contrasts > 0, and
+`I_HC` point/CI. SECONDARY, CORROBORATIVE, **no SESOI**, **no multiple-metric rescue**. The
+Human-CLAP result MUST be reported even if it disagrees with primary CLAP.
 
-## 8. Explicitly OUT of scope for V1 (do not implement)
+**Pinned provenance (frozen):**
+```
+model         sarulab-speech/human-clap-wsce-mae
+revision      06788887d254df15db5c0ca9d54da39d46188063
+safetensors   sha256 09357f504d52900cb1bc3bf2fe1f3173dd1702781ef0bdedb122a6e47d4c5c61
+processor     laion/clap-htsat-fused ; sample rate 48000
+convention    truncation="fusion", get_*_features cosine, np.random.seed(20260826) once per 192-item system
+ordering      canonical (prompt_index, replicate_index), one 192-item call per system
+environment   .venv-metrics (transformers 4.30.2, torch 2.2.2 CPU, librosa 0.11.0); OPENBLAS_CORETYPE=Haswell
+```
+Human-CLAP remains CLAP-family; agreement supports scorer robustness, NOT human preference.
 
-- **No textual domain-distance / nearest-neighbour regression** — with two deliberately separated
-  domains it mostly re-expresses domain membership through an arbitrary embedding.
-- **No second pruning severity** — later replication decision after V1 results + budget review.
-- **No alternate operating point** (10.24 s / DDIM 200 / guidance 3.5 / best-of-3). V1 asks first
-  whether recovered beats pruned in-domain under the SAME operating point that produced the music
-  failure. If recovered also fails on AudioCaps, V1 fails; brittleness is not auto-concluded.
-- **No N or gate change** in response to the §5 power table (this is sensitivity, not post-data N
-  optimisation).
+### 7b. Waveform panel secondary (descriptive)
 
----
-
-## 9. Denoiser functional drift — DESIGN ONLY (`PROPOSED / NOT YET PREREGISTERED`)
-
-A future CPU-only *descriptive* mechanistic analysis. The naive raw-L2 proposal is **rejected**:
-`recovered`'s large gain/norm shift (ledger PHENOM-VALIDITY-GEOM) confounds any raw-L2 distance.
-Requirements this design must satisfy: (1) not confounded by the norm shift; (2) separate
-prediction *direction* from prediction *scale*; (3) symmetric `x_t` across both domains; (4) no
-reference-audio latents (equivalent reference audio is not guaranteed symmetric across the music
-battery and AudioCaps); (5) identical deterministic latent/noise construction on both domains;
-(6) no inferential gate; (7) no claim that per-timestep closeness to dense implies final quality.
-
-**Recommended exact symmetric construction (one, proposed):**
-
-- **Reference-free noised latent.** For each prompt `p` (in either domain), replicate `r`, and
-  timestep `t` from a fixed grid `T = {100, 300, 500, 700, 900}` on the 1000-step schedule, draw a
-  standard-normal latent `z_{p,r,t} ~ N(0, I)` in the AudioLDM latent shape, seeded deterministically
-  by `derive_paired_seed(SELECTION_SALT, ytid_p, r) ⊕ t` — the **same** RNG scheme on both domains.
-  Use `z` directly as the noised sample `x_t` (the diffusion prior; no VAE-encoded reference audio,
-  satisfying (3)(4)(5)).
-- **Two separated read-outs** of each model's ε-prediction `ε_θ(x_t, t, c_p)` (classifier-free
-  guidance OFF, to probe the denoiser itself), comparing `recovered` and `pruned` each against
-  `dense`:
-  - **Direction:** `cos( ε_model, ε_dense )` per `(p, t)` — invariant to the global scale shift.
-  - **Scale:** `‖ε_model‖ / ‖ε_dense‖` per `(p, t)` — the norm/gain channel, reported separately.
-- **Aggregation:** per-prompt means, prompt-clustered percentile bootstrap **for descriptive CIs
-  only** (no threshold, no PASS). The mechanistic question: is `recovered`'s **direction** drift
-  from `dense` larger in the **music** domain than in **AudioCaps** (domain-dependent functional
-  drift), after the norm shift is separated into the scale channel?
-- **No claim** that direction-closeness at any `t` implies final semantic quality (7).
-
-Rejected alternative: VAE-encoding each clip's reference audio to build `x_t` — asymmetric
-(availability differs across domains) and reintroduces a reference-latent confound. **Review
-required before implementation.**
+Apply the **same** frozen waveform-statistic definitions (`scripts/research/reversal_waveform_panel.py`
+`clip_stats`: RMS, peak, near-clip fraction @ |x|≥0.99, crest_db, spectral centroid) to the future
+AudioCaps systems. Purpose: whether the recovered loudness / spectral shift observed in music is
+also present in-domain. Descriptive only, no PASS gate, no perceptual-quality interpretation without
+perceptual evidence. Metric definitions are pinned by that versioned script; no new metrics after
+seeing AudioCaps.
 
 ---
 
-## 10. Budget / compute governance
+## 8. Denoiser functional drift is OUTSIDE the binding V1 contract
 
-- Current Lightning balance ≈ **0.72 credits** (Gabriel, 2026-08-28). The `0.5332 cr` figure in
-  the older ledger is *historical remaining capacity from the retired 5-credit central-chain
-  accounting*, NOT the current account balance.
-- Planned GPU extension envelope for the 576-generation V1 arm: **≈ 1.50 cr**. This EXCEEDS the
-  current balance, so **GPU launch is presently BLOCKED**. This block does not require any design
-  change; it defers execution until the balance is raised.
-- Everything in this document to date is **CPU-only, 0 credits, no GPU**.
+Denoiser-drift is **not** part of this preregistration and its execution is **not** part of V1
+PASS. The earlier reference-free `N(0,I)`-at-arbitrary-`t` construction is withdrawn: at a finite
+diffusion timestep a valid noisy state follows the timestep-dependent diffusion marginal / sampler
+trajectory, not an arbitrary standard normal at every `t`, which would make low/intermediate-noise
+interpretation questionable.
+
+Recorded future preferred direction only (non-binding, `NOT PREREGISTERED`, review before any
+implementation): *If pursued later, compare dense/pruned/recovered vector fields at identical states
+taken from a common realistic generation trajectory — preferably the deterministic dense DDIM
+trajectory for the same prompt and initial latent. Capture selected `x_t` states from that common
+reference trajectory and evaluate all backbones at identical `(x_t, t, conditioning)`. Separate
+prediction direction (cosine) from norm/scale. No gate, and no implication that local vector-field
+similarity guarantees final semantic quality.* Do not implement now.
 
 ---
 
-## 11. Do-not-do (this block)
+## 9. Sensitivity preflight summary (historical data only)
 
-Do NOT freeze this document, select the 96 AudioCaps ytids, generate AudioCaps audio, run paid
-GPU/scoring, or implement §9. STOP and report before any of those.
+`scripts/research/reversal_sensitivity.py` (PCG64(20260827), 2000×2000): plug-in σ_between 0.097 /
+σ_within 0.131. The interaction never binds (`P(lo95(I)>0)=1.000`, since R_music≪0), so V1 reduces
+to detecting `R_AC`. P(all three PASS) at plug-in / 2× total-variance: 0.95/0.73 @R_AC 0.05,
+1.00/0.96 @0.075, 0.83/0.54 @0.04, 0.43/0.28 @SESOI 0.025. Well-powered for R_AC ≥ 0.05;
+underpower at the SESOI is intrinsic to `lo95>0` at effect=threshold. N and gate unchanged.
+
+---
+
+## 10. Publication framing (bounded — verify against primary sources)
+
+Candidate contribution, narrowly: *evidence that the published post-pruning recovery artifact can
+change the ordering between pruned and recovered AudioLDM models across domains under a controlled
+common generation operating point.* Call it a **"recovery-induced cross-domain ranking reversal"**
+only if the prospective AudioCaps arm establishes the opposite ordering. Precedent (check primary
+sources, do not cite from memory): Singh et al. 2026 (studied artifact); Kumar et al. ICLR 2022
+(ID↑/OOD↓); Thangarasa et al. MLSys 2025 (post-pruning SFT shifts behaviour); Takano et al. 2025
+(Human-CLAP).
+
+---
+
+## 11. Budget / compute governance (block active)
+
+Current Lightning balance ≈ **0.72 credits** (2026-08-28). The `0.5332 cr` central-chain "remaining"
+in older ledger text is HISTORICAL, not the account balance. Projected V1 GPU envelope for the
+576-generation arm ≈ **1.50 cr** > 0.72 → **GPU launch BLOCKED**. All V1 work to date is CPU-only,
+0 credits, no GPU. Freezing this contract does not authorise generation.

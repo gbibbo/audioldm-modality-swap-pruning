@@ -1,0 +1,343 @@
+{
+ "artifact": "reversal_v1_r_music_humanclap",
+ "scorer": "Human-CLAP (secondary, corroborative, CLAP-family; NOT human eval)",
+ "model": "sarulab-speech/human-clap-wsce-mae",
+ "revision": "06788887d254df15db5c0ca9d54da39d46188063",
+ "safetensors_sha256": "09357f504d52900cb1bc3bf2fe1f3173dd1702781ef0bdedb122a6e47d4c5c61",
+ "processor": "laion/clap-htsat-fused",
+ "sampling_rate": 48000,
+ "convention": "SR48k, truncation=fusion, get_*_features cosine, np.random.seed(20260826) once/192-system",
+ "seed": 20260826,
+ "n": 64,
+ "R_music_HC": {
+  "point": -0.1446020525812249,
+  "lo": -0.17813149193765032,
+  "hi": -0.11131534352365027,
+  "b": 10000
+ },
+ "prompt_sign_fraction_neg": 0.859375,
+ "regenerate_with": "scripts/research/reversal_humanclap.py (.venv-metrics)",
+ "prompts": [
+  {
+   "prompt_index": 0,
+   "ytid": "8rCYRgePG-4",
+   "prompt_mean_diff": -0.08504575490951538
+  },
+  {
+   "prompt_index": 1,
+   "ytid": "PFX2OO75sRQ",
+   "prompt_mean_diff": -0.2585347543160121
+  },
+  {
+   "prompt_index": 2,
+   "ytid": "KxZ0yDfyaJw",
+   "prompt_mean_diff": -0.09629974390069644
+  },
+  {
+   "prompt_index": 3,
+   "ytid": "NsR60ehkHGA",
+   "prompt_mean_diff": -0.3566641276702285
+  },
+  {
+   "prompt_index": 4,
+   "ytid": "rVymW4Nb4NU",
+   "prompt_mean_diff": 0.016872530182202656
+  },
+  {
+   "prompt_index": 5,
+   "ytid": "uE3BHXXiCFs",
+   "prompt_mean_diff": -0.40263833850622177
+  },
+  {
+   "prompt_index": 6,
+   "ytid": "6EwEo0JQkTg",
+   "prompt_mean_diff": -0.24974082907040915
+  },
+  {
+   "prompt_index": 7,
+   "ytid": "VAqPLAgn9NI",
+   "prompt_mean_diff": -0.16878019583721957
+  },
+  {
+   "prompt_index": 8,
+   "ytid": "D8zK7PHIkgA",
+   "prompt_mean_diff": -0.09820473411430915
+  },
+  {
+   "prompt_index": 9,
+   "ytid": "M-RX7LqL50A",
+   "prompt_mean_diff": -0.051868513226509094
+  },
+  {
+   "prompt_index": 10,
+   "ytid": "zNgRUFOj3HI",
+   "prompt_mean_diff": -0.21288394182920456
+  },
+  {
+   "prompt_index": 11,
+   "ytid": "aUvHaURNgY8",
+   "prompt_mean_diff": -0.08556334177652995
+  },
+  {
+   "prompt_index": 12,
+   "ytid": "Jk2mvFrdZTU",
+   "prompt_mean_diff": -0.08537065982818604
+  },
+  {
+   "prompt_index": 13,
+   "ytid": "6xxu6f0f0e4",
+   "prompt_mean_diff": -0.03304347892602285
+  },
+  {
+   "prompt_index": 14,
+   "ytid": "A_oaLt-n4fQ",
+   "prompt_mean_diff": -0.32370766159147024
+  },
+  {
+   "prompt_index": 15,
+   "ytid": "uYCMVgUAwnM",
+   "prompt_mean_diff": -0.051252126693725586
+  },
+  {
+   "prompt_index": 16,
+   "ytid": "9STauy5DsC8",
+   "prompt_mean_diff": -0.1530173992117246
+  },
+  {
+   "prompt_index": 17,
+   "ytid": "6sWVG6GyJBU",
+   "prompt_mean_diff": -0.2332366146147251
+  },
+  {
+   "prompt_index": 18,
+   "ytid": "_GQnXfIGNKY",
+   "prompt_mean_diff": -0.12546136726935705
+  },
+  {
+   "prompt_index": 19,
+   "ytid": "We-bFXFjWaM",
+   "prompt_mean_diff": -0.4165177463243405
+  },
+  {
+   "prompt_index": 20,
+   "ytid": "3KdyWJ6wTOw",
+   "prompt_mean_diff": -0.07323475927114487
+  },
+  {
+   "prompt_index": 21,
+   "ytid": "sOSU7p9pLjs",
+   "prompt_mean_diff": -0.060344912111759186
+  },
+  {
+   "prompt_index": 22,
+   "ytid": "TakkuFZJsis",
+   "prompt_mean_diff": -0.27801667774717015
+  },
+  {
+   "prompt_index": 23,
+   "ytid": "-jpbCWcz2pk",
+   "prompt_mean_diff": -0.3237266888221105
+  },
+  {
+   "prompt_index": 24,
+   "ytid": "nv1hWkBbG0g",
+   "prompt_mean_diff": -0.14086104681094488
+  },
+  {
+   "prompt_index": 25,
+   "ytid": "WiAFUo2nxIk",
+   "prompt_mean_diff": 0.0855630487203598
+  },
+  {
+   "prompt_index": 26,
+   "ytid": "0Ubu4BqSWmU",
+   "prompt_mean_diff": -0.07057394087314606
+  },
+  {
+   "prompt_index": 27,
+   "ytid": "bcybO-SMY5E",
+   "prompt_mean_diff": 0.03295222918192545
+  },
+  {
+   "prompt_index": 28,
+   "ytid": "ZkmtfBzpQlI",
+   "prompt_mean_diff": -0.07195054988066356
+  },
+  {
+   "prompt_index": 29,
+   "ytid": "J_Raltj-6dk",
+   "prompt_mean_diff": -0.22305784622828165
+  },
+  {
+   "prompt_index": 30,
+   "ytid": "NQXQsVawPhU",
+   "prompt_mean_diff": -0.1347902168830236
+  },
+  {
+   "prompt_index": 31,
+   "ytid": "jd94Ox7KJ9Q",
+   "prompt_mean_diff": 0.039308652902642884
+  },
+  {
+   "prompt_index": 32,
+   "ytid": "RXGDlFry3Vo",
+   "prompt_mean_diff": -0.08767498036225636
+  },
+  {
+   "prompt_index": 33,
+   "ytid": "1ToIyrmWFjw",
+   "prompt_mean_diff": -0.050243920336167015
+  },
+  {
+   "prompt_index": 34,
+   "ytid": "KiFQFxJphjI",
+   "prompt_mean_diff": -0.19160984146098295
+  },
+  {
+   "prompt_index": 35,
+   "ytid": "Q_3GACs__Xs",
+   "prompt_mean_diff": -0.026376396417617798
+  },
+  {
+   "prompt_index": 36,
+   "ytid": "2ZYzviKuq9w",
+   "prompt_mean_diff": -0.04808994786192974
+  },
+  {
+   "prompt_index": 37,
+   "ytid": "J2BDMndrvhA",
+   "prompt_mean_diff": -0.04655535767475764
+  },
+  {
+   "prompt_index": 38,
+   "ytid": "WmTDKYYH5OU",
+   "prompt_mean_diff": -0.2356477752327919
+  },
+  {
+   "prompt_index": 39,
+   "ytid": "WgZ8KAnnTb8",
+   "prompt_mean_diff": -0.27707483153790236
+  },
+  {
+   "prompt_index": 40,
+   "ytid": "32iayLTRmxg",
+   "prompt_mean_diff": -0.09049860139687856
+  },
+  {
+   "prompt_index": 41,
+   "ytid": "hqQvatf1RUY",
+   "prompt_mean_diff": -0.20785628259181976
+  },
+  {
+   "prompt_index": 42,
+   "ytid": "8oTTgXIO0-I",
+   "prompt_mean_diff": -0.08439736316601436
+  },
+  {
+   "prompt_index": 43,
+   "ytid": "HS_ikHx4LIQ",
+   "prompt_mean_diff": -0.11729634677370389
+  },
+  {
+   "prompt_index": 44,
+   "ytid": "I06TOd9pXng",
+   "prompt_mean_diff": 0.04371160268783569
+  },
+  {
+   "prompt_index": 45,
+   "ytid": "dwAo0dKCyBI",
+   "prompt_mean_diff": 0.03177410860856374
+  },
+  {
+   "prompt_index": 46,
+   "ytid": "vEMNk-lbGTE",
+   "prompt_mean_diff": -0.22942880541086197
+  },
+  {
+   "prompt_index": 47,
+   "ytid": "O5IulN0n6d0",
+   "prompt_mean_diff": -0.5130453010400137
+  },
+  {
+   "prompt_index": 48,
+   "ytid": "dsVzafZik3c",
+   "prompt_mean_diff": -0.0824236050248146
+  },
+  {
+   "prompt_index": 49,
+   "ytid": "w6MtzUCl4vM",
+   "prompt_mean_diff": -0.1620562175909678
+  },
+  {
+   "prompt_index": 50,
+   "ytid": "j43Dwqzd8w8",
+   "prompt_mean_diff": -0.25897805020213127
+  },
+  {
+   "prompt_index": 51,
+   "ytid": "OZv8mtQEgA0",
+   "prompt_mean_diff": -0.19122757762670517
+  },
+  {
+   "prompt_index": 52,
+   "ytid": "RmDfwz0OG8E",
+   "prompt_mean_diff": 0.03532144924004873
+  },
+  {
+   "prompt_index": 53,
+   "ytid": "E3iPiZlT6f8",
+   "prompt_mean_diff": -0.22875594596068063
+  },
+  {
+   "prompt_index": 54,
+   "ytid": "CM2rKZmcR0I",
+   "prompt_mean_diff": 0.043770971397558846
+  },
+  {
+   "prompt_index": 55,
+   "ytid": "40kbMyL2Wgo",
+   "prompt_mean_diff": -0.30305051306883496
+  },
+  {
+   "prompt_index": 56,
+   "ytid": "iQAXwX28LLw",
+   "prompt_mean_diff": -0.1267947517335415
+  },
+  {
+   "prompt_index": 57,
+   "ytid": "XjUmXwVlDDo",
+   "prompt_mean_diff": -0.32380155101418495
+  },
+  {
+   "prompt_index": 58,
+   "ytid": "N1Mxns_JJTk",
+   "prompt_mean_diff": 0.20930306365092596
+  },
+  {
+   "prompt_index": 59,
+   "ytid": "hu6sChY-Yps",
+   "prompt_mean_diff": -0.47495712836583454
+  },
+  {
+   "prompt_index": 60,
+   "ytid": "0DizopdPMBw",
+   "prompt_mean_diff": -0.15813489258289337
+  },
+  {
+   "prompt_index": 61,
+   "ytid": "GRdzFvQezUE",
+   "prompt_mean_diff": -0.14672250300645828
+  },
+  {
+   "prompt_index": 62,
+   "ytid": "HEclHruM37s",
+   "prompt_mean_diff": -0.09021216134230296
+  },
+  {
+   "prompt_index": 63,
+   "ytid": "x6U1gX5a_4M",
+   "prompt_mean_diff": -0.17581040474275747
+  }
+ ],
+ "artifact_sha256": "c854f708db531579fa7d87e3eda2c41962d66168f91feb6e26220830faa5f4be"
+}

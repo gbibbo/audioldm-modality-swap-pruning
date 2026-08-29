@@ -1,6 +1,6 @@
 """Recovery-Reversal V1 core: historical music-contrast reconstruction + CPU sensitivity.
 
-STATUS: DRAFT support code for RECOVERY-REVERSAL-V1 (docs/recovery_reversal_v1.md).
+Support code for the FROZEN RECOVERY-REVERSAL-V1 contract (docs/recovery_reversal_v1.md).
 NO AudioCaps outcome data is read or produced here. GPU is never touched.
 
 Two independent, importable pieces (numpy only, so both frozen venvs can run them):
@@ -27,21 +27,27 @@ prompt-cluster percentile, B=10000). Historical reconstruction uses the historic
 """
 from __future__ import annotations
 
+import hashlib
 import re
 from dataclasses import dataclass, field
 
 import numpy as np
 
 from research_pruning.eval.cluster_bootstrap import cluster_percentile_ci
+from research_pruning.manifest_validator import derive_paired_seed
 
 # --- prospective V1 constants (later decision; NOT the historical 20260826) ----------
 BOOTSTRAP_SEED_V1 = 20260827
 SELECTION_SALT_V1 = "RECOVERY-REVERSAL-V1|AUDIOCAPS-TEST|2026-08-27"
+GENERATION_SALT_V1 = "RECOVERY-REVERSAL-V1|GENERATION|2026-08-27"
 SESOI = 0.025                     # practical minimum on the R_AC POINT estimate
 N_PROMPTS_V1 = 96
 N_REPLICATES_V1 = 2
 N_PROMPTS_MUSIC = 64
 N_REPLICATES_MUSIC = 3
+BACKBONES_V1 = ("dense_ema", "p1_pruned_ema_reconstructed", "p1_recovered")
+OPERATING_POINT_V1 = {"clip_seconds": 3.84, "latent_t": 96, "ddim_steps": 50, "eta": 0.0,
+                      "guidance": 2.5, "precision": "fp32", "best_of": 1, "adapter": "none"}
 # regression target for the frozen historical music contrast (ledger, seed 20260826)
 R_MUSIC_TARGET_POINT = -0.0941
 R_MUSIC_TARGET_LO = -0.1241
@@ -251,3 +257,140 @@ def simulate_design(vc: VarComponents, music_prompt_diff: np.ndarray, *,
         "P_lowerCI_I_gt0": float(i_lo_pos.mean()),
         "P_pass_all_three": float(pass_all.mean()),
     }
+
+
+# --- frozen V1 selection / caption / generation-seed conventions ----------------------
+# Selection ordering reuses the Gate-0 battery rule sha256(SALT|ytid); the generation seed
+# reuses the frozen derive_paired_seed CRN convention; both are namespaced by distinct salts.
+
+def selection_order_key(ytid: str) -> str:
+    """Frozen ytid ordering key: sha256(SELECTION_SALT|ytid) hex (ascending, first 96)."""
+    return hashlib.sha256(f"{SELECTION_SALT_V1}|{ytid}".encode()).hexdigest()
+
+
+def caption_key(ytid: str, caption: str) -> str:
+    """Frozen per-ytid caption ordering key: sha256(SELECTION_SALT|ytid|caption) hex."""
+    return hashlib.sha256(f"{SELECTION_SALT_V1}|{ytid}|{caption}".encode()).hexdigest()
+
+
+def choose_caption(ytid: str, captions) -> dict:
+    """Deterministically pick ONE caption per ytid (frozen rule).
+
+    Canonical order = unique caption strings sorted UTF-8 bytewise ascending. The chosen caption
+    is the one with the smallest caption_key; its position in the canonical order is the index.
+    Raises on an empty candidate set.
+    """
+    uniq = sorted(set(captions), key=lambda c: c.encode("utf-8"))
+    if not uniq:
+        raise ValueError(f"ytid {ytid!r} has no captions")
+    chosen = min(uniq, key=lambda c: caption_key(ytid, c))
+    return {"caption": chosen, "chosen_caption_index": uniq.index(chosen),
+            "n_captions": len(uniq), "caption_key": caption_key(ytid, chosen)}
+
+
+def generation_seed(ytid: str, replicate: int) -> int:
+    """Frozen common-random-number generation seed: derive_paired_seed(GENERATION_SALT, ytid, r).
+    The SAME seed (hence the SAME initial latent x_T) is used across dense/pruned/recovered; no
+    backbone-specific transformation. Replicates 0 and 1 get distinct seeds."""
+    return derive_paired_seed(GENERATION_SALT_V1, ytid, replicate)
+
+
+# --- frozen V1 primary + secondary verdicts -------------------------------------------
+
+def _paired_prompt_diff(recovered: np.ndarray, pruned: np.ndarray) -> np.ndarray:
+    """Per-prompt paired contrast mean_r(recovered - pruned). Shapes (n_prompts, n_reps)."""
+    recovered = np.asarray(recovered, dtype=np.float64)
+    pruned = np.asarray(pruned, dtype=np.float64)
+    if recovered.shape != pruned.shape or recovered.ndim != 2:
+        raise ValueError(f"need matching (n_prompts, n_reps); got {recovered.shape} vs {pruned.shape}")
+    return (recovered - pruned).mean(axis=1)
+
+
+def interaction_ci(ac_prompt_diff: np.ndarray, music_prompt_diff: np.ndarray, *,
+                   b: int = 10000, seed: int = BOOTSTRAP_SEED_V1, alpha: float = 0.05) -> dict:
+    """I = R_AC - R_music via a joint TWO-SAMPLE prompt bootstrap (music uncertainty retained).
+
+    One PCG64(seed) stream: draw the AC prompt resample FIRST (identical to the R_AC bootstrap),
+    then the independent music prompt resample; I* = mean(AC*) - mean(music*). Percentile CI.
+    """
+    ac = np.asarray(ac_prompt_diff, dtype=np.float64)
+    mu = np.asarray(music_prompt_diff, dtype=np.float64)
+    rng = np.random.default_rng(seed)
+    ac_idx = rng.integers(0, ac.size, size=(b, ac.size))
+    mu_idx = rng.integers(0, mu.size, size=(b, mu.size))
+    boot = ac[ac_idx].mean(axis=1) - mu[mu_idx].mean(axis=1)
+    point = float(ac.mean() - mu.mean())
+    return {"point": point, "lo": float(np.percentile(boot, 100 * alpha / 2)),
+            "hi": float(np.percentile(boot, 100 * (1 - alpha / 2))), "n_ac": int(ac.size),
+            "n_music": int(mu.size), "b": b, "seed": seed}
+
+
+def primary_verdict(recovered: np.ndarray, pruned: np.ndarray, music_prompt_diff: np.ndarray, *,
+                    dense: np.ndarray | None = None, sesoi: float = SESOI,
+                    seed: int = BOOTSTRAP_SEED_V1, b: int = 10000) -> dict:
+    """FROZEN V1 primary gate. Dense (if given) is DESCRIPTIVE ONLY and cannot change PASS.
+
+        R_AC  = mean_p mean_r (C_recovered - C_pruned)     [prompt-cluster percentile bootstrap]
+        I     = R_AC - R_music                             [joint two-sample bootstrap]
+        PASS  = R_AC.point >= sesoi  AND  lo95(R_AC) > 0  AND  lo95(I) > 0
+    """
+    ac_diff = _paired_prompt_diff(recovered, pruned)
+    r_ac = cluster_percentile_ci(ac_diff, b=b, seed=seed)
+    inter = interaction_ci(ac_diff, music_prompt_diff, b=b, seed=seed)
+    cond_point = bool(r_ac.point >= sesoi)
+    cond_lo_rac = bool(r_ac.lo > 0.0)
+    cond_lo_i = bool(inter["lo"] > 0.0)
+    out = {
+        "R_AC": r_ac.as_dict(), "I": inter,
+        "PASS_conditions": {"R_AC_point_ge_SESOI": cond_point, "lo95_R_AC_gt0": cond_lo_rac,
+                            "lo95_I_gt0": cond_lo_i},
+        "PASS": bool(cond_point and cond_lo_rac and cond_lo_i),
+        "SESOI": sesoi, "seed": seed, "b": b,
+        "descriptive": {
+            "prompt_sign_fraction_pos": float((ac_diff > 0).mean()),
+            "median_prompt_contrast": float(np.median(ac_diff)),
+            "prompt_contrast_vector": [float(x) for x in ac_diff],  # ECDF-ready
+        },
+    }
+    if dense is not None:
+        dense = np.asarray(dense, dtype=np.float64)
+        c_dense = dense.mean(axis=1); c_rec = np.asarray(recovered).mean(axis=1)
+        c_pru = np.asarray(pruned).mean(axis=1)
+        out["descriptive"]["dense_gap_recovered_mean"] = float((c_dense - c_rec).mean())
+        out["descriptive"]["dense_gap_pruned_mean"] = float((c_dense - c_pru).mean())
+    return out
+
+
+def secondary_hc_verdict(recovered_hc: np.ndarray, pruned_hc: np.ndarray,
+                         music_hc_prompt_diff: np.ndarray, *, seed: int = BOOTSTRAP_SEED_V1,
+                         b: int = 10000) -> dict:
+    """SECONDARY / CORROBORATIVE Human-CLAP contrast. NO SESOI, NO PASS influence.
+
+        R_AC_HC = mean_p mean_r (HC_recovered - HC_pruned)
+        I_HC    = R_AC_HC - R_music_HC        (joint two-sample bootstrap, if HC music available)
+    Reports point, prompt-cluster CI, prompt sign fraction, and I_HC.
+    """
+    ac_diff = _paired_prompt_diff(recovered_hc, pruned_hc)
+    r_ac_hc = cluster_percentile_ci(ac_diff, b=b, seed=seed)
+    out = {"R_AC_HC": r_ac_hc.as_dict(),
+           "prompt_sign_fraction_pos": float((ac_diff > 0).mean()),
+           "median_prompt_contrast": float(np.median(ac_diff)),
+           "note": "SECONDARY, CORROBORATIVE, CLAP-family (NOT human eval); cannot change primary PASS"}
+    if music_hc_prompt_diff is not None:
+        out["I_HC"] = interaction_ci(ac_diff, music_hc_prompt_diff, b=b, seed=seed)
+    return out
+
+
+def apply_exclusions(universe, train, music64, kim44):
+    """Frozen V1 eligibility filter (order matters; counts recorded after each step)."""
+    counts = {"canonical_test_universe": len(universe)}
+    e = [y for y in universe if y not in train]; counts["after_not_in_train"] = len(e)
+    e = [y for y in e if y not in music64]; counts["after_not_in_music64"] = len(e)
+    e = [y for y in e if y not in kim44]; counts["after_not_in_kim44"] = len(e)
+    return e, counts
+
+
+def select_prompts(eligible, n: int = N_PROMPTS_V1):
+    """Frozen selection: sort eligible unique ytids by selection_order_key, take first n."""
+    ordered = sorted(set(eligible), key=selection_order_key)
+    return ordered[:n]

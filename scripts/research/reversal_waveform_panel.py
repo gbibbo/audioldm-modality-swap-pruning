@@ -70,15 +70,17 @@ def _sha256_obj(obj) -> str:
     return hashlib.sha256(json.dumps(obj, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
 
 
-def run(out_path: str) -> dict:
+def run(out_path: str, systems: dict | None = None, n_prompts: int = N_PROMPTS,
+        n_reps: int = N_REPS) -> dict:
     import librosa
+    systems = systems if systems is not None else SYSTEMS
     metrics = ["rms", "peak", "near_clip_frac", "crest_db", "spectral_centroid_hz"]
-    # per_clip[system][metric] shape (64,3)
-    per_clip = {s: {m: np.full((N_PROMPTS, N_REPS), np.nan) for m in metrics} for s in SYSTEMS}
+    # per_clip[system][metric] shape (n_prompts, n_reps)
+    per_clip = {s: {m: np.full((n_prompts, n_reps), np.nan) for m in metrics} for s in systems}
     sr_seen = set()
-    for s, (root, prefix) in SYSTEMS.items():
-        for p in range(N_PROMPTS):
-            for r in range(N_REPS):
+    for s, (root, prefix) in systems.items():
+        for p in range(n_prompts):
+            for r in range(n_reps):
                 fp = os.path.join(root, f"{prefix}_p{p}_r{r}.wav")
                 if not os.path.exists(fp):
                     raise SystemExit(f"missing WAV: {fp}")
@@ -89,34 +91,36 @@ def run(out_path: str) -> dict:
                     per_clip[s][m][p, r] = st[m]
 
     systems_out = {}
-    for s in SYSTEMS:
+    for s in systems:
         systems_out[s] = {}
         for m in metrics:
             arr = per_clip[s][m]
-            prompt_mean = arr.mean(axis=1)  # (64,)
+            prompt_mean = arr.mean(axis=1)
             systems_out[s][m] = {"clip_dist": _dist(arr.ravel()),
                                  "prompt_mean_dist": _dist(prompt_mean)}
 
-    # per-prompt paired contrasts vs dense and recovered-vs-pruned (descriptive; NOT a gate)
-    def paired(a_sys, b_sys, m):
-        a = per_clip[a_sys][m].mean(axis=1); b = per_clip[b_sys][m].mean(axis=1)
-        diff = a - b
-        return {"prompt_mean_diff_median": float(np.median(diff)),
-                "prompt_mean_diff_mean": float(diff.mean()),
-                "frac_prompts_a_gt_b": float((diff > 0).mean())}
+    # per-prompt paired contrasts (descriptive; NOT a gate) — only for the standard 3-system panel
     contrasts = {}
-    for m in metrics:
-        contrasts[m] = {
-            "recovered_minus_dense": paired("p1_recovered", "dense", m),
-            "recovered_minus_pruned": paired("p1_recovered", "p1_pruned_ema_reconstructed", m),
-            "pruned_minus_dense": paired("p1_pruned_ema_reconstructed", "dense", m),
-        }
+    std = {"p1_recovered", "p1_pruned_ema_reconstructed", "dense"}
+    if std.issubset(systems):
+        def paired(a_sys, b_sys, m):
+            a = per_clip[a_sys][m].mean(axis=1); b = per_clip[b_sys][m].mean(axis=1)
+            diff = a - b
+            return {"prompt_mean_diff_median": float(np.median(diff)),
+                    "prompt_mean_diff_mean": float(diff.mean()),
+                    "frac_prompts_a_gt_b": float((diff > 0).mean())}
+        for m in metrics:
+            contrasts[m] = {
+                "recovered_minus_dense": paired("p1_recovered", "dense", m),
+                "recovered_minus_pruned": paired("p1_recovered", "p1_pruned_ema_reconstructed", m),
+                "pruned_minus_dense": paired("p1_pruned_ema_reconstructed", "dense", m),
+            }
 
     payload = {
         "artifact": "reversal_waveform_panel",
         "status": "DIAGNOSTIC / SUPPORTING — not a gate; does not redefine R_music",
-        "systems": {s: {"root": SYSTEMS[s][0], "prefix": SYSTEMS[s][1],
-                        "n_clips": N_PROMPTS * N_REPS} for s in SYSTEMS},
+        "systems": {s: {"root": systems[s][0], "prefix": systems[s][1],
+                        "n_clips": n_prompts * n_reps} for s in systems},
         "sample_rate_hz": sorted(sr_seen),
         "clip_threshold": CLIP_THRESH,
         "metrics": metrics,
