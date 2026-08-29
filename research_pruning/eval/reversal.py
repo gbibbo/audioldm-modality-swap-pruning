@@ -394,3 +394,46 @@ def select_prompts(eligible, n: int = N_PROMPTS_V1):
     """Frozen selection: sort eligible unique ytids by selection_order_key, take first n."""
     ordered = sorted(set(eligible), key=selection_order_key)
     return ordered[:n]
+
+
+# --- RECOVERY-REVERSAL-V1.1 pre-data amendment: corrected deterministic hash rules -----
+# V1.0 (superseded) used sha256(SALT|ytid) for ytid order and an argmin over sha256(SALT|ytid|
+# caption). V1.1 restores the supervisor-specified namespaces: literal |YTID| / |CAPTION| tokens,
+# and modulo caption selection over the 5 caption ROWS (multiset, duplicates PRESERVED, no dedup).
+# The caption TEXT never enters the hash. Only ytid-hash namespace + caption algorithm change.
+CAPTION_ROWS_EXPECTED = 5
+
+
+def selection_key_v11(ytid: str) -> str:
+    """V1.1 ytid ordering key: sha256(SELECTION_SALT|YTID|ytid) hex (ascending, first 96)."""
+    return hashlib.sha256(f"{SELECTION_SALT_V1}|YTID|{ytid}".encode("utf-8")).hexdigest()
+
+
+def select_prompts_v11(eligible, n: int = N_PROMPTS_V1):
+    """V1.1 selection: sort eligible unique ytids by selection_key_v11, take first n."""
+    return sorted(set(eligible), key=selection_key_v11)[:n]
+
+
+def canonical_caption_rows_v11(caption_rows):
+    """V1.1 canonical ordering: all caption ROW strings sorted UTF-8 bytewise, DUPLICATES PRESERVED.
+
+    Deliberately a multiset (list), never a set: multiplicity of exact-duplicate annotations is
+    part of the annotation distribution and must affect n. NO deduplication here.
+    """
+    return sorted(list(caption_rows), key=lambda c: c.encode("utf-8"))
+
+
+def choose_caption_v11(ytid: str, caption_rows) -> dict:
+    """V1.1 caption pick: modulo over the caption-row multiset; caption text NOT hashed.
+
+        caption_index = int.from_bytes(sha256(SELECTION_SALT|CAPTION|ytid)[:8], "big") % n
+    with n = number of caption ROWS (multiset length). Raises on empty input.
+    """
+    canonical = canonical_caption_rows_v11(caption_rows)
+    n = len(canonical)
+    if n == 0:
+        raise ValueError(f"ytid {ytid!r} has no caption rows")
+    h = hashlib.sha256(f"{SELECTION_SALT_V1}|CAPTION|{ytid}".encode("utf-8")).digest()
+    idx = int.from_bytes(h[:8], "big") % n
+    return {"caption": canonical[idx], "chosen_caption_index": idx, "n_caption_rows": n,
+            "caption_hash_hex": h.hex()}
