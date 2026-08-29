@@ -67,12 +67,19 @@ def _git_sha():
 
 
 def _extract_ytid(wav_field: str) -> str:
-    """Extract the 11-char YouTube id from a label-json wav path; validated against test.csv."""
+    """Extract the 11-char YouTube id from a label-json wav path (AudioSet 'Y<ytid>.wav' convention).
+
+    Basename is Y + 11-char ytid + .wav (12 chars before extension). Strip the leading 'Y'.
+    Every extracted ytid is cross-validated against test.csv youtube_id in load_universe().
+    """
     base = os.path.basename(wav_field)
-    m = _YT_RE.search(base)
-    if not m:
-        raise SystemExit(f"cannot extract ytid from label wav field {wav_field!r}")
-    return m.group(1)
+    if base.endswith(".wav"):
+        base = base[:-4]
+    if base.startswith("Y") and len(base) == 12:
+        base = base[1:]
+    if not _YT_RE.fullmatch(base):
+        raise SystemExit(f"cannot extract 11-char ytid from label wav field {wav_field!r} -> {base!r}")
+    return base
 
 
 def load_universe():
