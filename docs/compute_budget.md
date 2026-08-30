@@ -494,3 +494,16 @@ has changed. **It no longer governs.** (Preserved above for history; not deleted
 
 * **`gate0-phenom-1` COMPLETED clean** (killed=False), settled **1.6020 cr**, ~101 min, T4 FP32, 768 WAVs (watchdog max-cost 2.05 / max-min 150; not triggered). Projected 1.36–1.77; actual 1.602 (within band).
 * **Central chain (settled):** smoke 0.1835 + train 1.7969 + Gate-0 gen 0.8844 + phenom gen 1.6020 = **4.4668 / 5.0 cr**; remaining **0.5332 cr**. CLAP scoring free (Studio CPU). GPU stopped after the falsifier (STOP-2 negative; no further runs).
+
+### 2026-08-30 (MVD 01:37) | BUDGET RECONCILIATION before OP-DURATION-DISCRIMINATOR-1 (Arm D) — appended, no history overwritten
+
+Reliable signal = each job's **settled `total_cost`** via `lightning_sdk` in the cloudspace env (the API `balance`/`total_spent` scalar was shown unreliable during V1.1). Do NOT conflate the two counters below.
+
+* **Historical project "central-chain" envelope (5.0 cr, ICASSP plan)** — PRESERVED as historical accounting. Settled central-chain jobs: smoke `gate0-smoke-1` 0.1835 + `gate0-train-1` 1.8304 + `gate0-gen-1` 0.9030 + `gate0-phenom-1` 1.6339 = **4.5508 cr** (minor settlement uplift vs the earlier 4.4668 ledger estimate; do not rewrite the historical entries).
+* **Gabriel top-up (+2.0 cr) authorized before V1.1** → project-available ≈ **2.72 cr** at V1.1 start (Gabriel authoritative).
+* **V1.1 `reversal-v11-gen-1` settled = 1.2623 cr** (confirmed via `total_cost`; matches the total_spent delta 66.770→68.032 recorded at run time).
+* **RECOVERY-METRIC-AUDIT-1 + OP-discriminator design audit + Arm-D preflights = 0 cr** (all CPU, Studio).
+* **Current project-available ≈ 2.72 − 1.2623 ≈ `1.46 cr`.** (Teamspace-lifetime settled across all 39 jobs = 16.4431 cr is an account-wide counter spanning other projects/SA3 — NOT the project envelope; recorded only for provenance.)
+* **Arm D (OP-DURATION-DISCRIMINATOR-1):** 160 new WAVs @ 10.24 s/DDIM50/single, pruned+recovered only. **Projected ≈ 1.02 cr** (160 × 0.002191 cr/WAV × latent 256/96 + 0.09 fixed). **HARD MAX NEW GPU SPEND = 1.20 cr.** Do NOT launch if projected cost under current pricing exceeds 1.20 cr; do NOT shrink N post-freeze for budget.
+* **Expected post-run reserve:** 1.46 − 1.02 ≈ **0.44 cr** (expected); ≥ **0.26 cr** at the 1.20 cap. Meets the ≥0.25 reserve rule.
+* Arm-D actual settled cost to be read directly from the job's `total_cost` post-run (as for V1.1).

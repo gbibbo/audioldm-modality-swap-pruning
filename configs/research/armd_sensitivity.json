@@ -1,0 +1,55 @@
+{
+  "artifact": "armd_sensitivity",
+  "design": "matched r0-only, paired, n=80",
+  "subset_salt": "OP-DURATION-DISCRIMINATOR-1|SUBSET|2026-08-30",
+  "n_subset": 80,
+  "subset_sha256_of_sorted": "ce5fad11221ec0ab3302b7f31420dd34e9afc3b3315ade01261c6ad63e7cc25e",
+  "var_d_r0_all96": 0.021669933638924107,
+  "sd_d_r0_all96": 0.14720711137347986,
+  "var_d_r0_selected80": 0.020756138489087327,
+  "sd_d_r0_selected80": 0.14406990833996988,
+  "mean_d_r0_all96": 0.014022602689995741,
+  "mean_d_r0_selected80": 0.005661016469821334,
+  "projection": {
+    "from_all96": {
+      "rho=0.0": {
+        "SE_J": 0.0233,
+        "CI95_halfwidth": 0.0456,
+        "MDE_J_80pct": 0.0652
+      },
+      "rho=0.5": {
+        "SE_J": 0.0165,
+        "CI95_halfwidth": 0.0323,
+        "MDE_J_80pct": 0.0461
+      },
+      "rho=0.7": {
+        "SE_J": 0.0127,
+        "CI95_halfwidth": 0.025,
+        "MDE_J_80pct": 0.0357
+      }
+    },
+    "from_selected80": {
+      "rho=0.0": {
+        "SE_J": 0.0228,
+        "CI95_halfwidth": 0.0446,
+        "MDE_J_80pct": 0.0638
+      },
+      "rho=0.5": {
+        "SE_J": 0.0161,
+        "CI95_halfwidth": 0.0316,
+        "MDE_J_80pct": 0.0451
+      },
+      "rho=0.7": {
+        "SE_J": 0.0125,
+        "CI95_halfwidth": 0.0245,
+        "MDE_J_80pct": 0.0349
+      }
+    }
+  },
+  "gate_mde": 0.075,
+  "gate_pass": true,
+  "gate_statistic": {
+    "conservative_MDE_rho0_all96": 0.0652,
+    "threshold": 0.075
+  }
+}
