@@ -26,6 +26,12 @@ vs the analogs' 1–2, nudging toward the upper end). **Conservative planning fi
   for variance/retries; leaves a small buffer). → top up ≈ **1.3 cr** above the current 0.72.
 * **GPU launch BLOCKED** until the balance is raised. This is a budget block only; no design change.
 
+**2026-08-29 — SETTLED (job `reversal-v11-gen-1`, T4).** Authorized after Gabriel's +2.0-cr top-up
+(start ≈ 2.72 cr). 576 WAVs, ~91 min, **settled cost = 1.262 cr** (`total_spent` 66.770→68.032; the
+API `balance` field stays 5.0 and remains unreliable — use the `total_spent` delta). Under the
+1.50-cr hard cap. Projection was ~1.3 cr point → accurate. Ending balance ≈ **1.46 cr**. Primary
+result = pre-registered NEGATIVE (PASS=FALSE); GPU stopped, no rescue runs.
+
 ## Account balance — AUTHORITATIVE (measured via Lightning SDK, 2026-08-26)
 
 **2026-08-26 16:27 UTC — user credit balance = `5.0` credits** (lifetime `total_spent` = 55.62;
