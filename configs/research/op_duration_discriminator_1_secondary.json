@@ -1,0 +1,84 @@
+{
+  "artifact": "op_duration_discriminator_1_secondary",
+  "status": "SECONDARY/DESCRIPTIVE — no primary role, no gate; cannot change V1.1 or Arm-D primary",
+  "n": 80,
+  "bootstrap": {
+    "B": 10000,
+    "seed_pcg64": 20260830,
+    "unit": "ytid"
+  },
+  "KL": {
+    "orientation": "+ = recovered better",
+    "direction_note": "R_KL=KL_pruned-KL_recovered (KL lower better)",
+    "R_ctrl": {
+      "point": 0.21826402377337217,
+      "ci95": [
+        -0.251698418459855,
+        0.6993868393870069
+      ]
+    },
+    "R_alt": {
+      "point": 0.5822310801129789,
+      "ci95": [
+        0.19504932091920638,
+        1.0027099287323653
+      ]
+    },
+    "J": {
+      "point": 0.36396705633960663,
+      "ci95": [
+        -0.11259992006700485,
+        0.8521761143405455
+      ]
+    },
+    "frac_ytid_j_pos": 0.5125
+  },
+  "PANN_capture": {
+    "orientation": "+ = recovered better",
+    "direction_note": "R_cap=cap_recovered-cap_pruned (capture higher better)",
+    "R_ctrl": {
+      "point": 0.2,
+      "ci95": [
+        -0.025,
+        0.4375
+      ]
+    },
+    "R_alt": {
+      "point": 0.3625,
+      "ci95": [
+        0.1125,
+        0.625
+      ]
+    },
+    "J": {
+      "point": 0.1625,
+      "ci95": [
+        -0.15,
+        0.4625
+      ]
+    },
+    "frac_ytid_j_pos": 0.35
+  },
+  "FD_pann2048": {
+    "ctrl": {
+      "pruned": 79.37522579679597,
+      "recovered": 80.69490206986589
+    },
+    "alt": {
+      "pruned": 71.42485552769352,
+      "recovered": 60.23919470622255
+    }
+  },
+  "FAD_vggish": {
+    "ctrl": {
+      "pruned": 14.404290106156203,
+      "recovered": 15.291860352631772
+    },
+    "alt": {
+      "pruned": 12.250239171819501,
+      "recovered": 5.408090001512527
+    }
+  },
+  "protocol_doc_sha256": "fe2be79f7fb3cbc8ab52a80a34144cd8bd56cb400f3ac67a42534296e305fff8",
+  "artifact_sha256": "172b601604d02bf018ac64752104f0a32db81d677a84f7810263d6850fe83538"
+}

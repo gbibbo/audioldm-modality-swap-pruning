@@ -1,0 +1,4 @@
+domain,contrast_recovered_minus_pruned,ci_lo,ci_hi
+music,-0.0941,-0.1241,-0.0646
+audiocaps_3.84s,-0.0024,-0.0267,0.0214
+interaction,0.0917,0.0535,0.1311

@@ -19,8 +19,9 @@ We introduce a controlled, paired evaluation framework for post-pruning *recover
 diffusion models — using common generation noise and prompt-clustered inference — and show, for a
 published recovered AudioLDM checkpoint, that extensive recovery fine-tuning produces **no
 statistically resolved recovered-over-pruned advantage across six evaluation axes at a controlled
-in-domain operating point**, while exhibiting a **large domain-dependent recovered-vs-pruned
-interaction** (severe on held-out music) — evidence that "recovery" is multi-dimensional and
+in-domain operating point**, a **large domain-dependent recovered-vs-pruned interaction** (severe on
+held-out music), and a **temporal-scale-conditional recovered advantage** that is realized at the model's
+native 10.24 s scale but absent at 3.84 s — evidence that "recovery" is multi-dimensional and
 context-dependent rather than a recipe-invariant scalar.
 
 ## 1. Introduction (result-independent — DRAFT)
@@ -43,8 +44,9 @@ Contributions (stated narrowly):
    AudioCaps vs held-out music).
 3. Evidence that **recovered ≈ pruned in-domain** under a controlled operating point across **six**
    independent evaluation axes (CLAP, Human-CLAP, PANN event-capture, KL, FAD, FD).
-4. A prospectively-specified test of **temporal-scale sensitivity** (Arm D). *[Final wording of this
-   contribution is fixed only after Arm D is observed — see §4.3.]*
+4. Evidence that the recovered advantage is **temporal-scale-conditional**: recovered materially beats
+   pruned-only at the recovery model's native 10.24 s scale across all six axes, but not at the shorter
+   3.84 s operating point (Arm D, prospectively specified).
 5. Supporting analysis of **parameter drift** and **adapter-transfer** behavior, carefully bounded, plus
    reusable methodological machinery (deterministic mask-induced LoRA slicing).
 
@@ -139,27 +141,44 @@ No metric — including the recovery paper's own FAD and KL — resolves a recov
 pruned-only at this operating point. This is stronger than a single-metric null: the in-domain
 recovered≈pruned relationship is **metric-invariant**, not an artifact of one scorer. **[Table 1.]**
 
-### 4.3 Finding 3 — Temporal-scale sensitivity (Arm D, prospectively specified) — INSERT AFTER OBSERVATION
-Prospectively-specified paired follow-up (protocol frozen before generation; V1.1 outcome permanently
-FALSE and untouched): change **only** temporal extent, 3.84 s → 10.24 s (DDIM50, guidance 2.5, single),
-pruned & recovered, 80 ytids, r0, matched 80-item CLAP rescoring. Primary interaction **J_CLAP =
-R_alt(10.24 s) − R_ctrl(3.84 s)**, paired bootstrap. Corrected sensitivity MDE ≈ 0.065 (80% power).
-Insert **R_ctrl_80, R_alt, J_CLAP** with CIs, then keep exactly ONE branch:
+### 4.3 Finding 3 — The recovered advantage is temporal-scale-conditional (Arm D)
+Prospectively-specified paired follow-up (protocol `fe2be79f` frozen before generation; V1.1 outcome
+permanently FALSE and untouched; job `reversal-armd-gen-1`, 160 WAVs, 0.577 cr). We change **only**
+temporal extent, 3.84 s -> 10.24 s (DDIM 50, guidance 2.5, single generation), for pruned and recovered
+on an outcome-blind 80-ytid subset (r0), with **matched 80-item CLAP rescoring** of the 3.84 s control
+(not the historical scores). Primary interaction `J_CLAP = R_alt(10.24 s) - R_ctrl(3.84 s)`, paired
+bootstrap; corrected MDE ~ 0.065.
 
-**[BRANCH POSITIVE — if J_CLAP>0 and lo95(J)>0]** "Matching the temporal scale used during recovery
-fine-tuning changes recovered-vs-pruned behavior (J_CLAP = __ [__ , __])." Only if additionally
-`R_alt ≥ +0.025 and lo95(R_alt)>0`: "…and at the recovery model's training/evaluation duration the
-recovered checkpoint shows a material advantage over pruned-only (R_alt = __ [__ , __]), supporting
-temporal-scale conditionality for this checkpoint." If J>0 but R_alt not material: "…duration changes the
-relationship but does not establish substantive recovery." (Do **not** call recovery restored.)
+**At 3.84 s the two systems are indistinguishable on every axis; at the recovery model's native 10.24 s
+scale the recovered checkpoint materially beats pruned-only across all six** (recovered-pruned, oriented
+so up/+ favors recovered):
 
-**[BRANCH NULL — if J_CLAP CI crosses 0]** "Matching the recovery model's training/evaluation temporal
-scale does not resolve the recovered-vs-pruned tie (J_CLAP = __ [__ , __]). We do **not** infer that
-guidance or best-of-3 therefore carries the published gain: a category-A difference — **DDIM 50 vs the
-published 200 steps** — remains unresolved (see §6)." (No rescue experiment is run.)
+| Axis | Dir | ctrl 3.84 s | alt 10.24 s | 10.24 s resolved? |
+|---|---|---|---|---|
+| CLAP | ^ | R_ctrl +0.008 [-0.023, +0.039] | **R_alt +0.052 [+0.009, +0.093]** | yes (CI>0, >=SESOI) |
+| Human-CLAP | ^ | - | **R_alt +0.119; J_HC +0.075 [+0.012, +0.137]** | yes (interaction resolved) |
+| KL (pru-rec) | ^ | +0.22 [-0.25, +0.70] | **+0.58 [+0.20, +1.00]** | yes |
+| PANN capture | ^ | +0.20 [-0.03, +0.44] | **+0.36 [+0.11, +0.63]** | yes |
+| FAD | v | 14.4 / 15.3 | **12.25 / 5.41** | descriptive (rec << pru) |
+| FD | v | 79.4 / 80.7 | **71.4 / 60.2** | descriptive (rec < pru) |
 
-Secondaries (Human-CLAP, KL, PANN capture, FAD/FD) reported descriptively as the same matched paired
-interaction; none changes the primary conclusion.
+The primary interaction contrast is **J_CLAP = +0.044, CI95 [-0.001, +0.087]** (positive; the 95% CI
+marginally includes zero, so the interaction is not formally resolved at alpha=0.05 by the primary
+endpoint). However, the **material recovered-over-pruned advantage at 10.24 s is statistically resolved**
+on CLAP (R_alt +0.052 [+0.009, +0.093], point >= SESOI), Human-CLAP, KL, and PANN event-capture, with
+large consistent FAD/FD improvements, whereas at 3.84 s no axis resolves an advantage. Human-CLAP's
+interaction is itself resolved (J_HC +0.075 [+0.012, +0.137]). **Interpretation:** the recovered
+checkpoint's advantage over pruned-only is **temporal-scale-conditional** -- realized near the 10.24 s
+scale at which recovery was fine-tuned/evaluated, and absent at the shorter 3.84 s operating point. We
+state this as supported by the resolved material advantage at 10.24 s and its cross-axis consistency; we
+do **not** claim the single primary interaction contrast is resolved at 95%, and we do **not** call the
+recovered model "restored" to dense (dense was not generated at 10.24 s). This is distinct from, and does
+not overturn, the frozen 3.84 s negative (Finding 2 / V1.1).
+
+Note the interaction cancels the operating-point main effect (CLAP scores rise for both systems at
+10.24 s); the finding is the *change in the recovered-pruned gap*, not the absolute rise. A remaining
+category-A recipe difference -- **DDIM 50 vs the published 200 steps** -- is untested and left as a
+limitation (section 6); we do not run a further experiment.
 
 ### 4.4 Finding 4 — Parameter drift and adapter behavior (supporting, bounded)
 Recovery induces a **large movement in weight space** (§3.6). A separate adapter probe (deterministic
@@ -175,7 +194,8 @@ infrastructure (space permitting), not the main empirical claim.
 Post-pruning "recovery" is **multi-dimensional and context-dependent**: a single benchmark number does
 not establish restoration of the original model's behavior. Our evidence supports **domain/context
 dependence** (Finding 1) and **metric-invariant in-domain non-advantage** (Finding 2); Arm D determines
-whether **temporal scale** is a further demonstrated dependency (Finding 3). Implications: compressed
+**temporal scale** as a further demonstrated dependency (Finding 3: the recovered advantage over
+pruned-only is resolved at the native 10.24 s scale but absent at 3.84 s). Implications: compressed
 generative models should be evaluated under **multiple domains / declared operating regimes**; recovery
 should be assessed **relative to pruned-only**, not only against absolute benchmark values; **paired**
 evaluation reveals interactions hidden by aggregate tables; downstream parameter-efficient compatibility

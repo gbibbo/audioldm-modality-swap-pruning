@@ -507,3 +507,8 @@ Reliable signal = each job's **settled `total_cost`** via `lightning_sdk` in the
 * **Arm D (OP-DURATION-DISCRIMINATOR-1):** 160 new WAVs @ 10.24 s/DDIM50/single, pruned+recovered only. **Projected ≈ 1.02 cr** (160 × 0.002191 cr/WAV × latent 256/96 + 0.09 fixed). **HARD MAX NEW GPU SPEND = 1.20 cr.** Do NOT launch if projected cost under current pricing exceeds 1.20 cr; do NOT shrink N post-freeze for budget.
 * **Expected post-run reserve:** 1.46 − 1.02 ≈ **0.44 cr** (expected); ≥ **0.26 cr** at the 1.20 cap. Meets the ≥0.25 reserve rule.
 * Arm-D actual settled cost to be read directly from the job's `total_cost` post-run (as for V1.1).
+
+### 2026-08-30 (MVD 02:37) | ARM D settled cost
+
+* **`reversal-armd-gen-1` settled `total_cost` = 0.5766 cr** (Completed clean; watchdog killed=False; << 1.02 projection and 1.20 hard cap). ~39 min, T4, 160 ALT WAVs @10.24s.
+* Project-available: ~1.46 − 0.5766 ≈ **0.88 cr** remaining. **No further GPU experiment planned** (Arm D is the last). CLAP/KL/PANN/FAD scoring on Studio CPU = 0 cr.
