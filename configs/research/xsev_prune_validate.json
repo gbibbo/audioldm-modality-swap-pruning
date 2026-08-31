@@ -1,0 +1,70 @@
+{
+  "artifact": "xsev_prune_validate",
+  "oracles": {
+    "A_RAW_131_vs_pub_p1": "690/690 mism=0",
+    "A_EMA_131_vs_frozen_sev1": "690/690 mism=0",
+    "B_RAW_111_vs_pub_dp1": "688/688 mism=0"
+  },
+  "diff_proof": {
+    "n_tensors": 688,
+    "n_differing": 3,
+    "differing": [
+      "output_blocks.0.0.in_layers.2.weight",
+      "output_blocks.1.0.in_layers.2.weight",
+      "output_blocks.2.0.in_layers.2.bias"
+    ],
+    "expected": [
+      "output_blocks.0.0.in_layers.2.weight",
+      "output_blocks.1.0.in_layers.2.weight",
+      "output_blocks.2.0.in_layers.2.bias"
+    ],
+    "exactly_expected_three": true,
+    "per_tensor": {
+      "output_blocks.0.0.in_layers.2.weight": {
+        "shape": [
+          192,
+          384,
+          3,
+          3
+        ],
+        "max_abs_diff": 0.23643185198307037,
+        "l2_diff": 16.809633255004883,
+        "rel_norm_diff": 1.2851179838180542
+      },
+      "output_blocks.1.0.in_layers.2.weight": {
+        "shape": [
+          192,
+          384,
+          3,
+          3
+        ],
+        "max_abs_diff": 0.21692965924739838,
+        "l2_diff": 14.93845272064209,
+        "rel_norm_diff": 1.3193786144256592
+      },
+      "output_blocks.2.0.in_layers.2.bias": {
+        "shape": [
+          192
+        ],
+        "max_abs_diff": 0.05119519308209419,
+        "l2_diff": 0.15182892978191376,
+        "rel_norm_diff": 1.5004730224609375
+      }
+    }
+  },
+  "forward": {
+    "pruned2_A": {
+      "n_samples": 61472,
+      "finite": true
+    },
+    "pruned2_B": {
+      "n_samples": 61472,
+      "finite": true
+    },
+    "recovered2": {
+      "n_samples": 61472,
+      "finite": true
+    }
+  },
+  "VERDICT": "SEAM SENSITIVITY DESIGN VALIDATED"
+}
