@@ -1,0 +1,255 @@
+{
+  "assignment_hash": "568a66c71d240a0e67349385d0a45b575125d3d03783d9182b3ae3ac7ac0a7f1",
+  "level_check_audio": "audio/af27089da24022b75.wav",
+  "n_trials": 35,
+  "participant_code": "P04",
+  "protocol_hash": "9222507996561a7bd831c6977e429a965377c06be40c5b4133bc3d14804f5827",
+  "study_version": "LSTUDY-2026-08-31-v1",
+  "trials": [
+    {
+      "audio_A": "audio/a7aece171bff21570.wav",
+      "audio_B": "audio/a7e27e54f33af3229.wav",
+      "prompt_text": "Vehicle running with a far away voice in the background",
+      "trial_id": "P04_01",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ad673c4bb24eb83d2.wav",
+      "audio_B": "audio/ae84011da69d9f6bc.wav",
+      "prompt_text": "Leaves rustling in the wind with dogs barking and birds chirping",
+      "trial_id": "P04_02",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a690f7ebbb7857ec3.wav",
+      "audio_B": "audio/addb61348a83c8ee7.wav",
+      "prompt_text": "Hissing spray is occurring, and liquid is pattering on a surface",
+      "trial_id": "P04_03",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/accd5d46a188cfea3.wav",
+      "audio_B": "audio/a065f1cb8b6defb1a.wav",
+      "prompt_text": "A motorcycle engine running idle while two men communicate with each other",
+      "trial_id": "P04_04",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/a37be8aaeb3ce8fea.wav",
+      "audio_B": "audio/ae2b921fffb26eed0.wav",
+      "prompt_text": "A man speaks with low speech in the background",
+      "trial_id": "P04_05",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/acdeaead9e2fa96a4.wav",
+      "audio_B": "audio/a9c1049dca7589137.wav",
+      "prompt_text": "A vehicle motor running idle followed by a car horn honking then a group of men groaning",
+      "trial_id": "P04_06",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a9f3ea50f193292a0.wav",
+      "audio_B": "audio/a15f6ec5519afb1ea.wav",
+      "prompt_text": "Several church bells ringing",
+      "trial_id": "P04_07",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a6e7a50b24be6c879.wav",
+      "audio_B": "audio/a0534b50f1dc216d3.wav",
+      "prompt_text": "Waves and wind rake a shore",
+      "trial_id": "P04_08",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a42adce64f4335823.wav",
+      "audio_B": "audio/a0ede222fe653f055.wav",
+      "prompt_text": "Males speaking and then a clock ticks twice",
+      "trial_id": "P04_09",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/aafaffa99108f0e99.wav",
+      "audio_B": "audio/a8ecdb50ceb4d29c8.wav",
+      "prompt_text": "A bus engine running as several vehicles pass by and car horns honk in the distance",
+      "trial_id": "P04_10",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a5900dd299c5d8d91.wav",
+      "audio_B": "audio/a4084e78ca175c49f.wav",
+      "prompt_text": "A man speaks with low speech in the background",
+      "trial_id": "P04_11",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/afc7c16d2acbd6a3c.wav",
+      "audio_B": "audio/af4af23712a4116ac.wav",
+      "prompt_text": "Rhythmic ticking is occurring",
+      "trial_id": "P04_12",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ac0bb1c0ee6f33e2c.wav",
+      "audio_B": "audio/a1f00cee5478db34f.wav",
+      "prompt_text": "A gun cocking then firing as metal clanks on a hard surface followed by a man talking during an electronic laser effect as gunshots and explosions go off in the distance",
+      "trial_id": "P04_13",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ae5c0c073b99186f5.wav",
+      "audio_B": "audio/a6df1e7dcab29a32c.wav",
+      "prompt_text": "A baby cries and a small child speaks",
+      "trial_id": "P04_14",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a0c43b052b927d78f.wav",
+      "audio_B": "audio/aefe59c602b6552d4.wav",
+      "prompt_text": "Waves and wind rake a shore",
+      "trial_id": "P04_15",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ae950f59d1af6aec1.wav",
+      "audio_B": "audio/a513dc620998c38cd.wav",
+      "prompt_text": "A domestic pet is making noises and a baby cries",
+      "trial_id": "P04_16",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a222bd416fde50820.wav",
+      "audio_B": "audio/acdbf275f21d80730.wav",
+      "prompt_text": "Birds are chirping, ducks are quacking and other bird whistling noises",
+      "trial_id": "P04_17",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a587418933fd75d43.wav",
+      "audio_B": "audio/ab30f5d695eaae2cb.wav",
+      "prompt_text": "Rhythmic ticking is occurring",
+      "trial_id": "P04_18",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a00f3bad8517c20bf.wav",
+      "audio_B": "audio/aa6c62837b1989602.wav",
+      "prompt_text": "A mid-size motor vehicle engine is revving repeatedly, while people talk in the background",
+      "trial_id": "P04_19",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a24b8a9df5f3a4495.wav",
+      "audio_B": "audio/a97053dcb767719ef.wav",
+      "prompt_text": "Race cars are racing and skidding tires",
+      "trial_id": "P04_20",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a84ec7a086ff83ffc.wav",
+      "audio_B": "audio/a5a0a8fe1d6028787.wav",
+      "prompt_text": "Whimpering of several small dogs",
+      "trial_id": "P04_21",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/a36e01add79ab60b5.wav",
+      "audio_B": "audio/a43a8b50ead91db03.wav",
+      "prompt_text": "A man mimics goat bleating",
+      "trial_id": "P04_22",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a2526cf7fbe5da9e6.wav",
+      "audio_B": "audio/ab6aeecf33d3ce581.wav",
+      "prompt_text": "A gun cocking then firing as metal clanks on a hard surface followed by a man talking during an electronic laser effect as gunshots and explosions go off in the distance",
+      "trial_id": "P04_23",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a2208a0820f2cd4a4.wav",
+      "audio_B": "audio/a9e8e46251a8b456e.wav",
+      "prompt_text": "The hiss of spraying",
+      "trial_id": "P04_24",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/ad5b45eff1d945b0b.wav",
+      "audio_B": "audio/a0e22b7a27990d9ca.wav",
+      "prompt_text": "A mid-size motor vehicle engine is revving repeatedly, while people talk in the background",
+      "trial_id": "P04_25",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a8a386f2890433bcc.wav",
+      "audio_B": "audio/a71e0e8b5f97699d2.wav",
+      "prompt_text": "Race cars are racing and skidding tires",
+      "trial_id": "P04_26",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ab19d5be31de1031f.wav",
+      "audio_B": "audio/a859e9f00661352ef.wav",
+      "prompt_text": "Males speaking and then a clock ticks twice",
+      "trial_id": "P04_27",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a23cc0ef4b896e3c5.wav",
+      "audio_B": "audio/a4674e43b146c1f95.wav",
+      "prompt_text": "A baby cries and a small child speaks",
+      "trial_id": "P04_28",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a7bad808c6b6aa942.wav",
+      "audio_B": "audio/a2a3dbabff0ba7819.wav",
+      "prompt_text": "A domestic pet is making noises and a baby cries",
+      "trial_id": "P04_29",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a008c6bf922aa1faf.wav",
+      "audio_B": "audio/a755e1e717dc0d4ac.wav",
+      "prompt_text": "Hissing spray is occurring, and liquid is pattering on a surface",
+      "trial_id": "P04_30",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a307520287aad0fe8.wav",
+      "audio_B": "audio/a66f1393f5eba47fc.wav",
+      "prompt_text": "A distant explosion followed by steam hissing and fire igniting then a person speaking in the background",
+      "trial_id": "P04_31",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a4c7ec186fa24a306.wav",
+      "audio_B": "audio/ab12c7ea652938f7d.wav",
+      "prompt_text": "Several church bells ringing",
+      "trial_id": "P04_32",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a00d3d13d1edb7631.wav",
+      "audio_B": "audio/af9d5ac4b5b44207d.wav",
+      "prompt_text": "A bus engine running as several vehicles pass by and car horns honk in the distance",
+      "trial_id": "P04_33",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a3c98061558c5b305.wav",
+      "audio_B": "audio/ab11cade824e120c0.wav",
+      "prompt_text": "A vehicle motor running idle followed by a car horn honking then a group of men groaning",
+      "trial_id": "P04_34",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a16303c22fa82876e.wav",
+      "audio_B": "audio/ae30523d741452f67.wav",
+      "prompt_text": "A train running on railroad tracks as a train horn blows and steam hisses",
+      "trial_id": "P04_35",
+      "type": "experimental"
+    }
+  ]
+}

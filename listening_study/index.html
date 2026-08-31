@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Audio Listening Study</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app" aria-live="polite">
+  <!-- Consent screen -->
+  <section id="screen-consent" class="screen">
+    <h1>Anonymous audio listening study</h1>
+    <p class="lede">Thank you for helping. This is a short, voluntary research study that
+      compares short computer-generated audio clips against a written text description.</p>
+    <ul class="consent">
+      <li>Expected time: about <strong>15&ndash;20 minutes</strong>.</li>
+      <li>You will hear pairs of audio clips (A and B) and say which better matches a text prompt.</li>
+      <li>Participation is <strong>voluntary</strong>; you may stop at any time by closing the tab.</li>
+      <li>Responses are <strong>anonymous</strong> and may be used in scientific research and publication.</li>
+      <li>We collect <strong>no</strong> names, emails, health information, location, or other sensitive
+        personal data. No cookies or analytics are used.</li>
+      <li>Please use <strong>headphones</strong> in a quiet room, and set a comfortable, fixed volume
+        that you do not change during the study.</li>
+    </ul>
+    <p class="consent-confirm">By continuing you confirm that you are <strong>18 or older</strong> and
+      consent to participate on these terms.</p>
+    <p id="consent-participant" class="muted"></p>
+    <div class="row">
+      <label class="vol-check"><input type="checkbox" id="ack"> I have read the above and I consent.</label>
+    </div>
+    <button id="btn-start" class="primary" disabled>Start</button>
+    <p id="consent-error" class="error" role="alert"></p>
+  </section>
+
+  <!-- Level-check / instructions screen -->
+  <section id="screen-instructions" class="screen" hidden>
+    <h2>Before you begin</h2>
+    <ol class="instructions">
+      <li>Put on headphones and play the sample below to set a <strong>comfortable, fixed</strong>
+        listening level. Keep this level for the whole study.</li>
+      <li>On each trial you will see a text prompt and two clips, <strong>A</strong> and <strong>B</strong>.
+        You may replay each clip <strong>once</strong>.</li>
+      <li>Answer two questions per trial: which clip better <em>matches the text</em> (main question),
+        and which has better <em>overall sound quality</em>.</li>
+      <li>There is no right pace &mdash; but please answer based on your first careful impression.</li>
+    </ol>
+    <div class="levelcheck">
+      <button id="btn-levelplay" class="secondary" type="button">&#9654; Play level-check clip</button>
+      <span id="levelcheck-note" class="muted"></span>
+    </div>
+    <button id="btn-begin" class="primary">Begin the study</button>
+  </section>
+
+  <!-- Trial screen -->
+  <section id="screen-trial" class="screen" hidden>
+    <div class="progress"><div id="progress-bar"></div></div>
+    <p id="progress-text" class="muted"></p>
+
+    <div class="prompt-card">
+      <span class="prompt-label">Text prompt</span>
+      <p id="prompt-text"></p>
+    </div>
+
+    <div class="players">
+      <div class="player">
+        <button class="play secondary" data-side="A" type="button">&#9654; Play A</button>
+        <span class="replay-note" data-side="A"></span>
+      </div>
+      <div class="player">
+        <button class="play secondary" data-side="B" type="button">&#9654; Play B</button>
+        <span class="replay-note" data-side="B"></span>
+      </div>
+    </div>
+
+    <fieldset class="question" id="q-relevance">
+      <legend>1. Which clip better matches the text prompt?</legend>
+      <div class="scale" data-q="relevance">
+        <button type="button" data-v="-2">A much better</button>
+        <button type="button" data-v="-1">A slightly better</button>
+        <button type="button" data-v="0">About the same</button>
+        <button type="button" data-v="1">B slightly better</button>
+        <button type="button" data-v="2">B much better</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="question" id="q-quality">
+      <legend>2. Which clip has better overall sound quality?</legend>
+      <div class="scale" data-q="quality">
+        <button type="button" data-v="-2">A much better</button>
+        <button type="button" data-v="-1">A slightly better</button>
+        <button type="button" data-v="0">About the same</button>
+        <button type="button" data-v="1">B slightly better</button>
+        <button type="button" data-v="2">B much better</button>
+      </div>
+    </fieldset>
+
+    <button id="btn-next" class="primary" disabled>Next</button>
+    <p class="kbd-hint muted">Keys: <kbd>A</kbd> play A, <kbd>B</kbd> play B,
+      <kbd>1</kbd>&ndash;<kbd>5</kbd> answer the highlighted question, <kbd>Enter</kbd> next.</p>
+  </section>
+
+  <!-- Submit screen -->
+  <section id="screen-done" class="screen" hidden>
+    <h2>All trials complete</h2>
+    <p>Thank you. Please submit your responses using the button below.</p>
+    <button id="btn-submit" class="primary">Submit responses</button>
+    <p id="submit-status" class="muted" role="status"></p>
+    <div id="fallback" hidden>
+      <p class="error">Automatic submission did not confirm. Please use one of these fallbacks so your
+        responses are not lost:</p>
+      <button id="btn-download" class="secondary" type="button">Download responses (.json)</button>
+      <button id="btn-copy" class="secondary" type="button">Copy responses to clipboard</button>
+      <p class="muted">Then send the file (or pasted text) to the study organiser as instructed.</p>
+    </div>
+  </section>
+
+  <section id="screen-error" class="screen" hidden>
+    <h2>Study could not load</h2>
+    <p id="load-error" class="error"></p>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

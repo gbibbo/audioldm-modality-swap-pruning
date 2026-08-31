@@ -1,0 +1,321 @@
+{
+  "all_pass": true,
+  "artifact": "listening_study_validation",
+  "checks": [
+    {
+      "detail": "37 == 37",
+      "name": "P01 n_trials",
+      "pass": true
+    },
+    {
+      "detail": "3",
+      "name": "P01 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "P01 public no-leak",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P01 A!=B urls",
+      "pass": true
+    },
+    {
+      "detail": "14 prompts",
+      "name": "P01 sev1 both durations",
+      "pass": true
+    },
+    {
+      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "name": "P01 pair separation",
+      "pass": true
+    },
+    {
+      "detail": "[10, 21, 23]",
+      "name": "P01 catch placement",
+      "pass": true
+    },
+    {
+      "detail": "recovered-as-A 17/34=0.50",
+      "name": "P01 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "37 == 37",
+      "name": "P02 n_trials",
+      "pass": true
+    },
+    {
+      "detail": "3",
+      "name": "P02 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "P02 public no-leak",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P02 A!=B urls",
+      "pass": true
+    },
+    {
+      "detail": "14 prompts",
+      "name": "P02 sev1 both durations",
+      "pass": true
+    },
+    {
+      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "name": "P02 pair separation",
+      "pass": true
+    },
+    {
+      "detail": "[12, 20, 27]",
+      "name": "P02 catch placement",
+      "pass": true
+    },
+    {
+      "detail": "recovered-as-A 17/34=0.50",
+      "name": "P02 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "35 == 35",
+      "name": "P03 n_trials",
+      "pass": true
+    },
+    {
+      "detail": "3",
+      "name": "P03 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "P03 public no-leak",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P03 A!=B urls",
+      "pass": true
+    },
+    {
+      "detail": "13 prompts",
+      "name": "P03 sev1 both durations",
+      "pass": true
+    },
+    {
+      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "name": "P03 pair separation",
+      "pass": true
+    },
+    {
+      "detail": "[3, 23, 29]",
+      "name": "P03 catch placement",
+      "pass": true
+    },
+    {
+      "detail": "recovered-as-A 15/32=0.47",
+      "name": "P03 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "35 == 35",
+      "name": "P04 n_trials",
+      "pass": true
+    },
+    {
+      "detail": "3",
+      "name": "P04 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "P04 public no-leak",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P04 A!=B urls",
+      "pass": true
+    },
+    {
+      "detail": "13 prompts",
+      "name": "P04 sev1 both durations",
+      "pass": true
+    },
+    {
+      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "name": "P04 pair separation",
+      "pass": true
+    },
+    {
+      "detail": "[3, 20, 23]",
+      "name": "P04 catch placement",
+      "pass": true
+    },
+    {
+      "detail": "recovered-as-A 15/32=0.47",
+      "name": "P04 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "35 == 35",
+      "name": "P05 n_trials",
+      "pass": true
+    },
+    {
+      "detail": "3",
+      "name": "P05 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "P05 public no-leak",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P05 A!=B urls",
+      "pass": true
+    },
+    {
+      "detail": "13 prompts",
+      "name": "P05 sev1 both durations",
+      "pass": true
+    },
+    {
+      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "name": "P05 pair separation",
+      "pass": true
+    },
+    {
+      "detail": "[15, 21, 29]",
+      "name": "P05 catch placement",
+      "pass": true
+    },
+    {
+      "detail": "recovered-as-A 15/32=0.47",
+      "name": "P05 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "35 == 35",
+      "name": "P06 n_trials",
+      "pass": true
+    },
+    {
+      "detail": "3",
+      "name": "P06 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "P06 public no-leak",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P06 A!=B urls",
+      "pass": true
+    },
+    {
+      "detail": "13 prompts",
+      "name": "P06 sev1 both durations",
+      "pass": true
+    },
+    {
+      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "name": "P06 pair separation",
+      "pass": true
+    },
+    {
+      "detail": "[4, 13, 32]",
+      "name": "P06 catch placement",
+      "pass": true
+    },
+    {
+      "detail": "recovered-as-A 15/32=0.47",
+      "name": "P06 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "94/196=0.480",
+      "name": "global AB balance",
+      "pass": true
+    },
+    {
+      "detail": "min 6",
+      "name": "global pair separation >=3",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "sev2 selection reproducible",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "private key not in public dir",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "client offline fallback",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "client no autoplay-on-load",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "client no tracking code",
+      "pass": true
+    },
+    {
+      "detail": "no PII fields",
+      "name": "payload shape",
+      "pass": true
+    },
+    {
+      "detail": "worst 17.67 min",
+      "name": "time <= 20 min (moderate replay)",
+      "pass": true
+    }
+  ],
+  "n_checks": 57,
+  "n_fail": 0,
+  "n_pass": 57,
+  "pair_separation_min": 6,
+  "time_estimate_min": {
+    "P01": {
+      "moderate_replay_min": 17.67,
+      "single_pass_min": 14.37
+    },
+    "P02": {
+      "moderate_replay_min": 17.67,
+      "single_pass_min": 14.37
+    },
+    "P03": {
+      "moderate_replay_min": 16.77,
+      "single_pass_min": 13.63
+    },
+    "P04": {
+      "moderate_replay_min": 16.77,
+      "single_pass_min": 13.63
+    },
+    "P05": {
+      "moderate_replay_min": 16.77,
+      "single_pass_min": 13.63
+    },
+    "P06": {
+      "moderate_replay_min": 16.77,
+      "single_pass_min": 13.63
+    }
+  }
+}

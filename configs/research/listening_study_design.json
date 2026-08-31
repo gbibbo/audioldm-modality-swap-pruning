@@ -1,0 +1,111 @@
+{
+  "ab_counterbalance_global": {
+    "recovered_as_A": 94,
+    "recovered_as_A_frac": 0.4796,
+    "total": 196
+  },
+  "artifact": "listening_study_design",
+  "catch_per_listener": 3,
+  "design": "D1",
+  "inventory_sha256": "34f39ae706571bafe9d4e84a319c56ce422bd5f8a9de1405adbb5855b89267d6",
+  "loudness": {
+    "peak_ceiling_dbfs": -1.0,
+    "rule": "listening copies only; single fixed gain per stimulus to reach target; NO limiting, NO compression, NO condition-specific target; if any study stimulus cannot reach target with post-gain sample peak <= ceiling -> STOP",
+    "standard": "ITU-R BS.1770-4 (pyloudnorm Meter)",
+    "target_lufs": -36.0
+  },
+  "min_pair_separation_target": 6,
+  "n_listeners": 6,
+  "power_ref": "configs/research/listening_study_power.json",
+  "protocol_doc": "docs/listening_study_protocol.md",
+  "protocol_sha256": "9222507996561a7bd831c6977e429a965377c06be40c5b4133bc3d14804f5827",
+  "public_bundle_sha256": "cadfae13eb85ced732438cfee70cb30a480b55c965f9fd4843f9fa93e15e0c3e",
+  "sev1_both_durations": true,
+  "sev1_prompts_total": 80,
+  "sev1_raters_per_prompt": 1,
+  "sev2_select_namespace": "LISTENING-STUDY|SEV2-SELECT|2026-08-31",
+  "sev2_selected": 36,
+  "sev2_selected_ytids": [
+    "AUJPx81qKtY",
+    "VMsbrcHPBfk",
+    "-aYumc8KoXg",
+    "2KR0C5ysO8o",
+    "MVGhC-xB79s",
+    "ptIksg9KEac",
+    "-mb4Fw4Z0xg",
+    "aMhu5eMQAsI",
+    "LWng-4PDzPM",
+    "hV4bDCBDCy0",
+    "zEaGx6an4es",
+    "n74IYuCe_ms",
+    "DzKjogSVOLM",
+    "taYKM1OSTwE",
+    "hFCmq9pCBbM",
+    "YQGW5AwDOIo",
+    "PO8Nu3F8mkA",
+    "x5AH2gW_8S4",
+    "4SZ7JXDCNps",
+    "WOywdRmySs0",
+    "Jon_DEFqsfM",
+    "KVbmN9ZRg5Q",
+    "lVr-PxhZo8s",
+    "oklu5ZJD_2U",
+    "KnXNy5Q6YS4",
+    "yau2WIRkxb8",
+    "Aj_VMUSNjNM",
+    "Ch0LMmhBUg4",
+    "DAN1t9ukkg0",
+    "dkiwn2FdDVw",
+    "gkWd1HugK2w",
+    "m_NCf-q4Gn0",
+    "9E8BmPZ9mWc",
+    "Rtenf2XSXRc",
+    "3iLGu2Omgrw",
+    "59VP93Tzjmg"
+  ],
+  "study_version": "LSTUDY-2026-08-31-v1",
+  "trials_by_listener": {
+    "P01": {
+      "catch": 3,
+      "sev1_prompts": 14,
+      "sev1_trials": 28,
+      "sev2_trials": 6,
+      "total": 37
+    },
+    "P02": {
+      "catch": 3,
+      "sev1_prompts": 14,
+      "sev1_trials": 28,
+      "sev2_trials": 6,
+      "total": 37
+    },
+    "P03": {
+      "catch": 3,
+      "sev1_prompts": 13,
+      "sev1_trials": 26,
+      "sev2_trials": 6,
+      "total": 35
+    },
+    "P04": {
+      "catch": 3,
+      "sev1_prompts": 13,
+      "sev1_trials": 26,
+      "sev2_trials": 6,
+      "total": 35
+    },
+    "P05": {
+      "catch": 3,
+      "sev1_prompts": 13,
+      "sev1_trials": 26,
+      "sev2_trials": 6,
+      "total": 35
+    },
+    "P06": {
+      "catch": 3,
+      "sev1_prompts": 13,
+      "sev1_trials": 26,
+      "sev2_trials": 6,
+      "total": 35
+    }
+  }
+}

@@ -51,3 +51,9 @@ data/sa3/
 
 # stray lock from ephemeral `uv run --no-project` invocations (project env is poetry.lock-based)
 uv.lock
+
+# listening study: audio bundles + unblinding artifacts + tooling venv (never commit to public repo)
+.venv-loudness
+listening_study/audio/
+configs/research/listening_study_assignments_private.json
+configs/research/listening_study_bundle_manifest.json

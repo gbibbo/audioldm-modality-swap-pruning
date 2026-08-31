@@ -1,0 +1,428 @@
+{
+  "artifact": "listening_study_power",
+  "b_boot": 1500,
+  "designs": {
+    "D1": {
+      "raters_per_prompt": 1,
+      "sev1_judgments": 160,
+      "sev1_prompts": 80
+    },
+    "D2": {
+      "raters_per_prompt": 2,
+      "sev1_judgments": 160,
+      "sev1_prompts": 40
+    }
+  },
+  "mde": {
+    "D1": {
+      "MDE80_A_native_mu_n": 0.35,
+      "MDE80_J_H_delta": 0.45,
+      "central_dispersion": {
+        "rho": 0.5,
+        "sigma_p": 0.6,
+        "sigma_r": 0.8
+      },
+      "curveA": [
+        [
+          0.1,
+          0.124
+        ],
+        [
+          0.15,
+          0.229
+        ],
+        [
+          0.2,
+          0.381
+        ],
+        [
+          0.25,
+          0.583
+        ],
+        [
+          0.3,
+          0.722
+        ],
+        [
+          0.35,
+          0.821
+        ],
+        [
+          0.4,
+          0.921
+        ],
+        [
+          0.45,
+          0.97
+        ],
+        [
+          0.5,
+          0.991
+        ],
+        [
+          0.55,
+          0.999
+        ],
+        [
+          0.6,
+          0.999
+        ],
+        [
+          0.65,
+          1.0
+        ],
+        [
+          0.7,
+          1.0
+        ],
+        [
+          0.75,
+          1.0
+        ],
+        [
+          0.8,
+          0.999
+        ],
+        [
+          0.85,
+          1.0
+        ]
+      ],
+      "curveJ": [
+        [
+          0.1,
+          0.087
+        ],
+        [
+          0.15,
+          0.149
+        ],
+        [
+          0.2,
+          0.239
+        ],
+        [
+          0.25,
+          0.353
+        ],
+        [
+          0.3,
+          0.485
+        ],
+        [
+          0.35,
+          0.625
+        ],
+        [
+          0.4,
+          0.743
+        ],
+        [
+          0.45,
+          0.825
+        ],
+        [
+          0.5,
+          0.905
+        ],
+        [
+          0.55,
+          0.949
+        ],
+        [
+          0.6,
+          0.967
+        ],
+        [
+          0.65,
+          0.994
+        ],
+        [
+          0.7,
+          0.994
+        ],
+        [
+          0.75,
+          0.997
+        ],
+        [
+          0.8,
+          0.999
+        ],
+        [
+          0.85,
+          1.0
+        ]
+      ]
+    },
+    "D2": {
+      "MDE80_A_native_mu_n": 0.4,
+      "MDE80_J_H_delta": 0.5,
+      "central_dispersion": {
+        "rho": 0.5,
+        "sigma_p": 0.6,
+        "sigma_r": 0.8
+      },
+      "curveA": [
+        [
+          0.1,
+          0.107
+        ],
+        [
+          0.15,
+          0.207
+        ],
+        [
+          0.2,
+          0.329
+        ],
+        [
+          0.25,
+          0.449
+        ],
+        [
+          0.3,
+          0.605
+        ],
+        [
+          0.35,
+          0.73
+        ],
+        [
+          0.4,
+          0.845
+        ],
+        [
+          0.45,
+          0.909
+        ],
+        [
+          0.5,
+          0.961
+        ],
+        [
+          0.55,
+          0.984
+        ],
+        [
+          0.6,
+          0.994
+        ],
+        [
+          0.65,
+          0.995
+        ],
+        [
+          0.7,
+          0.999
+        ],
+        [
+          0.75,
+          1.0
+        ],
+        [
+          0.8,
+          1.0
+        ],
+        [
+          0.85,
+          1.0
+        ]
+      ],
+      "curveJ": [
+        [
+          0.1,
+          0.067
+        ],
+        [
+          0.15,
+          0.131
+        ],
+        [
+          0.2,
+          0.215
+        ],
+        [
+          0.25,
+          0.318
+        ],
+        [
+          0.3,
+          0.439
+        ],
+        [
+          0.35,
+          0.537
+        ],
+        [
+          0.4,
+          0.649
+        ],
+        [
+          0.45,
+          0.765
+        ],
+        [
+          0.5,
+          0.855
+        ],
+        [
+          0.55,
+          0.917
+        ],
+        [
+          0.6,
+          0.938
+        ],
+        [
+          0.65,
+          0.971
+        ],
+        [
+          0.7,
+          0.985
+        ],
+        [
+          0.75,
+          0.992
+        ],
+        [
+          0.8,
+          0.997
+        ],
+        [
+          0.85,
+          0.999
+        ]
+      ]
+    }
+  },
+  "model": "per-prompt latent signed preference (-2..+2), rho-correlated across duration, rater noise averaged within prompt, ordinal=round-and-clip(|y|<0.5->0 tie), paired prompt percentile bootstrap lower95>0",
+  "n_sims": 3000,
+  "scenario_grounding": "FineLAP native sev1 recovered mass 0.304 vs pruned 0.127 (large); CLAP native R_alt +0.052 [0.009,0.093]; short rec~pru; used only to bound plausible human effect sizes, not to select prompts or using any human data.",
+  "scenarios": {
+    "anchor": {
+      "params": {
+        "mu_n": 0.5,
+        "mu_s": 0.15,
+        "rho": 0.5,
+        "sigma_p": 0.6,
+        "sigma_r": 0.8
+      },
+      "power": {
+        "D1": {
+          "H1_A_native": 0.988,
+          "H1_and_H2_J": 0.625
+        },
+        "D2": {
+          "H1_A_native": 0.962,
+          "H1_and_H2_J": 0.568
+        }
+      }
+    },
+    "conservative": {
+      "params": {
+        "mu_n": 0.35,
+        "mu_s": 0.15,
+        "rho": 0.5,
+        "sigma_p": 0.6,
+        "sigma_r": 0.8
+      },
+      "power": {
+        "D1": {
+          "H1_A_native": 0.838,
+          "H1_and_H2_J": 0.256
+        },
+        "D2": {
+          "H1_A_native": 0.741,
+          "H1_and_H2_J": 0.224
+        }
+      }
+    },
+    "heterog": {
+      "params": {
+        "mu_n": 0.5,
+        "mu_s": 0.15,
+        "rho": 0.5,
+        "sigma_p": 0.8,
+        "sigma_r": 0.8
+      },
+      "power": {
+        "D1": {
+          "H1_A_native": 0.963,
+          "H1_and_H2_J": 0.569
+        },
+        "D2": {
+          "H1_A_native": 0.87,
+          "H1_and_H2_J": 0.457
+        }
+      }
+    },
+    "low_rho": {
+      "params": {
+        "mu_n": 0.5,
+        "mu_s": 0.15,
+        "rho": 0.3,
+        "sigma_p": 0.6,
+        "sigma_r": 0.8
+      },
+      "power": {
+        "D1": {
+          "H1_A_native": 0.988,
+          "H1_and_H2_J": 0.595
+        },
+        "D2": {
+          "H1_A_native": 0.962,
+          "H1_and_H2_J": 0.523
+        }
+      }
+    },
+    "noisy_raters": {
+      "params": {
+        "mu_n": 0.5,
+        "mu_s": 0.15,
+        "rho": 0.5,
+        "sigma_p": 0.6,
+        "sigma_r": 1.1
+      },
+      "power": {
+        "D1": {
+          "H1_A_native": 0.918,
+          "H1_and_H2_J": 0.433
+        },
+        "D2": {
+          "H1_A_native": 0.877,
+          "H1_and_H2_J": 0.4
+        }
+      }
+    },
+    "optimistic": {
+      "params": {
+        "mu_n": 0.7,
+        "mu_s": 0.15,
+        "rho": 0.5,
+        "sigma_p": 0.6,
+        "sigma_r": 0.8
+      },
+      "power": {
+        "D1": {
+          "H1_A_native": 1.0,
+          "H1_and_H2_J": 0.942
+        },
+        "D2": {
+          "H1_A_native": 0.999,
+          "H1_and_H2_J": 0.902
+        }
+      }
+    }
+  },
+  "seed": 1378128955,
+  "seed_namespace": "LISTENING-STUDY|POWER-SIM|2026-08-31",
+  "self_sha256": "cf2fcc3e50b62f67c6f33c0c26558e8e807ab8cac1792d4ace25cf9bf72366a6",
+  "sev2_secondary_A_native_2": {
+    "N30_muN0.50": 0.718,
+    "N36_muN0.50": 0.798,
+    "N36_muN0.80_large": 0.995,
+    "note": "secondary, single rater; sev-2 automatic native advantage is large (R_native +0.244)."
+  }
+}

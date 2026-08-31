@@ -1,0 +1,255 @@
+{
+  "assignment_hash": "6ee52f426b5d96768eb3df88c66fc507ec245ae97e38fbd8d75678d10bb22234",
+  "level_check_audio": "audio/a8092625a0857566d.wav",
+  "n_trials": 35,
+  "participant_code": "P03",
+  "protocol_hash": "9222507996561a7bd831c6977e429a965377c06be40c5b4133bc3d14804f5827",
+  "study_version": "LSTUDY-2026-08-31-v1",
+  "trials": [
+    {
+      "audio_A": "audio/a0dd5870adf2c334c.wav",
+      "audio_B": "audio/af2ef4166fbd77628.wav",
+      "prompt_text": "Water trickling with man speaking",
+      "trial_id": "P03_01",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ac2132afe5e3255fa.wav",
+      "audio_B": "audio/a75ac3a8a735ab23a.wav",
+      "prompt_text": "An adult male speaks, a bird chirps harshly, and then the adult male and an adult female speak",
+      "trial_id": "P03_02",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/abdc19ec9723328d2.wav",
+      "audio_B": "audio/aaa1e75679da1d9b2.wav",
+      "prompt_text": "Burping and laughing by girls with distant speaking of a television",
+      "trial_id": "P03_03",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ad1cdbcc226d57d90.wav",
+      "audio_B": "audio/a38bad76513429eba.wav",
+      "prompt_text": "Several church bells ringing",
+      "trial_id": "P03_04",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/ab9e12895e05b5054.wav",
+      "audio_B": "audio/a127f149220632dde.wav",
+      "prompt_text": "Wood lightly shuffling as insects buzz and birds chirp in the background",
+      "trial_id": "P03_05",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ab9df0f5a44183baa.wav",
+      "audio_B": "audio/aff1156a7b1f3b34d.wav",
+      "prompt_text": "An aircraft taking off with some wind noises in the background",
+      "trial_id": "P03_06",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ac9924e2656db2373.wav",
+      "audio_B": "audio/a4ae6465d69a92dbd.wav",
+      "prompt_text": "Water trickling with man speaking",
+      "trial_id": "P03_07",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a751af473e86bd3f1.wav",
+      "audio_B": "audio/a55bcf1ba11e3f528.wav",
+      "prompt_text": "A child talking then a man speaking with bird sounds in the background",
+      "trial_id": "P03_08",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a123737419d2c8b89.wav",
+      "audio_B": "audio/a5651666b56e43213.wav",
+      "prompt_text": "U'A clock ticking followed by a cuckoo bird cooing then music playing.",
+      "trial_id": "P03_09",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a3e43bb798a366e68.wav",
+      "audio_B": "audio/a84cfa914d236eea7.wav",
+      "prompt_text": "An adult speaks over a telephone and then an adult male speaks, and this pattern repeats three times",
+      "trial_id": "P03_10",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a19d2555a21501149.wav",
+      "audio_B": "audio/a45ea521a35c000f7.wav",
+      "prompt_text": "Wood lightly shuffling as insects buzz and birds chirp in the background",
+      "trial_id": "P03_11",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a18feb30f3143f485.wav",
+      "audio_B": "audio/a657bf850dac294de.wav",
+      "prompt_text": "Rapid gunfire with far away voice",
+      "trial_id": "P03_12",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a0f8c0eaf4394186e.wav",
+      "audio_B": "audio/ac67f4dd5f16e8be2.wav",
+      "prompt_text": "A maniacal laugh followed by a crying baby",
+      "trial_id": "P03_13",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/aa6a68f434fffb80d.wav",
+      "audio_B": "audio/a769bde3f6ac7c6d8.wav",
+      "prompt_text": "Muffled speech and insect buzzing",
+      "trial_id": "P03_14",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ae8edaf3de9123c2d.wav",
+      "audio_B": "audio/a592457a502d1c18d.wav",
+      "prompt_text": "Burping and laughing by girls with distant speaking of a television",
+      "trial_id": "P03_15",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a112ffd51ed23ac6e.wav",
+      "audio_B": "audio/a42158417b9479136.wav",
+      "prompt_text": "A woman talking as a door closes shut followed by another woman talking",
+      "trial_id": "P03_16",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a39326c5d50c6f753.wav",
+      "audio_B": "audio/a53b130e4a93e0f3f.wav",
+      "prompt_text": "Digital beeping followed by rapid vibrations and humming",
+      "trial_id": "P03_17",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a96be6321f73da1ae.wav",
+      "audio_B": "audio/aef59ff9e52a8b2a5.wav",
+      "prompt_text": "An adult speaks over a telephone and then an adult male speaks, and this pattern repeats three times",
+      "trial_id": "P03_18",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a940448478a8c4646.wav",
+      "audio_B": "audio/a118bed62b091677c.wav",
+      "prompt_text": "The hiss of spraying",
+      "trial_id": "P03_19",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a34253f909383afcd.wav",
+      "audio_B": "audio/ae932353d3bb47e8f.wav",
+      "prompt_text": "An aircraft taking off with some wind noises in the background",
+      "trial_id": "P03_20",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a239992736496a2aa.wav",
+      "audio_B": "audio/a4d259c2f57ac0bc0.wav",
+      "prompt_text": "U'A clock ticking followed by a cuckoo bird cooing then music playing.",
+      "trial_id": "P03_21",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a075a6b86ac57f95d.wav",
+      "audio_B": "audio/aced29a3847cc7457.wav",
+      "prompt_text": "A truck revs up and moves, then men talk",
+      "trial_id": "P03_22",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a92a37e1086a8b219.wav",
+      "audio_B": "audio/aa0665e3eead32d4a.wav",
+      "prompt_text": "Whimpering of several small dogs",
+      "trial_id": "P03_23",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a407337efeb0ac391.wav",
+      "audio_B": "audio/a3e58f9bac6962508.wav",
+      "prompt_text": "An idle helicopter engine running",
+      "trial_id": "P03_24",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/ae4077d07e9a64be7.wav",
+      "audio_B": "audio/a522c47253f043714.wav",
+      "prompt_text": "A rustling followed by a soulful whistling",
+      "trial_id": "P03_25",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ac4536957bad3d7d1.wav",
+      "audio_B": "audio/a893a42d9cf485bd2.wav",
+      "prompt_text": "An engine revs several times",
+      "trial_id": "P03_26",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a17b29541a3f39ff6.wav",
+      "audio_B": "audio/a1afcc65351a2099a.wav",
+      "prompt_text": "A stream burbles while a man speaks",
+      "trial_id": "P03_27",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a63087d73602dce50.wav",
+      "audio_B": "audio/a8d6d574b2885495e.wav",
+      "prompt_text": "A maniacal laugh followed by a crying baby",
+      "trial_id": "P03_28",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a26581efa38236551.wav",
+      "audio_B": "audio/a484e1d47938541a0.wav",
+      "prompt_text": "The hiss of spraying",
+      "trial_id": "P03_29",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a3d7b0fed2350174d.wav",
+      "audio_B": "audio/a155dfe421cd7806c.wav",
+      "prompt_text": "A woman speaking then coughing as a river stream flows followed by a series of plastic clacking",
+      "trial_id": "P03_30",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/ab2e9b98d5cf7e31f.wav",
+      "audio_B": "audio/a797fe051a821267c.wav",
+      "prompt_text": "An adult male speaks, a bird chirps harshly, and then the adult male and an adult female speak",
+      "trial_id": "P03_31",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a41e8305fb9f25581.wav",
+      "audio_B": "audio/a88504e8428074f6d.wav",
+      "prompt_text": "Digital beeping followed by rapid vibrations and humming",
+      "trial_id": "P03_32",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a65479817183542b3.wav",
+      "audio_B": "audio/adc7f0f69bc063a1a.wav",
+      "prompt_text": "Whimpering of several small dogs",
+      "trial_id": "P03_33",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a27be1b5e27d49445.wav",
+      "audio_B": "audio/a468dd384883993f1.wav",
+      "prompt_text": "Rapid gunfire with far away voice",
+      "trial_id": "P03_34",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ade906b7aa1352f29.wav",
+      "audio_B": "audio/a844b0979257bdf50.wav",
+      "prompt_text": "A woman talking as a door closes shut followed by another woman talking",
+      "trial_id": "P03_35",
+      "type": "experimental"
+    }
+  ]
+}

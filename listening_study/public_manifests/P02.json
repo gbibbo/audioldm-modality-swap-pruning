@@ -1,0 +1,269 @@
+{
+  "assignment_hash": "270f3118489bc0dbe7a535c0050c9e9aad9f83d3e810c4709918d2736f2cc9d6",
+  "level_check_audio": "audio/a63207ae89154fb81.wav",
+  "n_trials": 37,
+  "participant_code": "P02",
+  "protocol_hash": "9222507996561a7bd831c6977e429a965377c06be40c5b4133bc3d14804f5827",
+  "study_version": "LSTUDY-2026-08-31-v1",
+  "trials": [
+    {
+      "audio_A": "audio/a5fb660d8292feac1.wav",
+      "audio_B": "audio/a6803b02d9f195fcf.wav",
+      "prompt_text": "Humming noise then sneezing and coughing",
+      "trial_id": "P02_01",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a9bcb7fc33f351389.wav",
+      "audio_B": "audio/ad615407241b08fa2.wav",
+      "prompt_text": "Clip-clop of horse with an engine idling in the background",
+      "trial_id": "P02_02",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a39d51dbb576908a3.wav",
+      "audio_B": "audio/adbbe02ee5cadd217.wav",
+      "prompt_text": "A motorcycle engine running idle while two men communicate with each other",
+      "trial_id": "P02_03",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ab5bc9e6bcc8139b3.wav",
+      "audio_B": "audio/ae04e446049513760.wav",
+      "prompt_text": "Water hissing followed by a man breathing aloud then a toilet flushing",
+      "trial_id": "P02_04",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a67e5769ce8710674.wav",
+      "audio_B": "audio/ab571566b5871d253.wav",
+      "prompt_text": "Wind blowing followed by people speaking then a loud burst of thunder",
+      "trial_id": "P02_05",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a94223f79e0f9ba8f.wav",
+      "audio_B": "audio/a81019b84f16abff9.wav",
+      "prompt_text": "Wood being scraped along with mechanical sounds",
+      "trial_id": "P02_06",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a1a497131e2f6654e.wav",
+      "audio_B": "audio/a12d2fe9b1249203b.wav",
+      "prompt_text": "A man and a woman talking followed by a bell ringing and a cat meowing as a crowd of people applaud",
+      "trial_id": "P02_07",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a2a833b440181972b.wav",
+      "audio_B": "audio/a29585c2760d3f68c.wav",
+      "prompt_text": "A wind blows as a man speaks outside",
+      "trial_id": "P02_08",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a66e262319d63479b.wav",
+      "audio_B": "audio/abf62dcee28928893.wav",
+      "prompt_text": "An infant and a woman laughing followed by someone spits then a woman talking",
+      "trial_id": "P02_09",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a1f3f830683118cb5.wav",
+      "audio_B": "audio/aed7346a8ada8d81e.wav",
+      "prompt_text": "An idle helicopter engine running",
+      "trial_id": "P02_10",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a8246e649d34043b9.wav",
+      "audio_B": "audio/a867727e8a271237c.wav",
+      "prompt_text": "Plastic rattling as a vehicle engine accelerates",
+      "trial_id": "P02_11",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a8f9f1e4c65d89998.wav",
+      "audio_B": "audio/ae7f66be84a33eca0.wav",
+      "prompt_text": "A man talks and insects buzz",
+      "trial_id": "P02_12",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a9093225d2444dd01.wav",
+      "audio_B": "audio/aacb440f4c2ba725d.wav",
+      "prompt_text": "A maniacal laugh followed by a crying baby",
+      "trial_id": "P02_13",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/aca50144ba690ae70.wav",
+      "audio_B": "audio/a2efce7eb097d4921.wav",
+      "prompt_text": "A man is speaking with the wind blowing in the background",
+      "trial_id": "P02_14",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a6d532095d638c704.wav",
+      "audio_B": "audio/a9e81071d046c95cd.wav",
+      "prompt_text": "A woman speaking then coughing as a river stream flows followed by a series of plastic clacking",
+      "trial_id": "P02_15",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a4d62a83e13684501.wav",
+      "audio_B": "audio/ab6b40bdfa1bd92ab.wav",
+      "prompt_text": "An infant and a woman laughing followed by someone spits then a woman talking",
+      "trial_id": "P02_16",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ab6f8d76e730ecd94.wav",
+      "audio_B": "audio/a8dc7bcac41ec4918.wav",
+      "prompt_text": "Humming noise then sneezing and coughing",
+      "trial_id": "P02_17",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a9b9a4ef49bc748db.wav",
+      "audio_B": "audio/a991f35e5127b50fa.wav",
+      "prompt_text": "A motorcycle engine running idle while two men communicate with each other",
+      "trial_id": "P02_18",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a7f1022d8e5928088.wav",
+      "audio_B": "audio/a85703657c2d01fb7.wav",
+      "prompt_text": "An idle helicopter engine running",
+      "trial_id": "P02_19",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a0b1c442c0546a016.wav",
+      "audio_B": "audio/a1a1c7aa3b960fc8f.wav",
+      "prompt_text": "An aircraft engine running as a crowd of people talk in the background",
+      "trial_id": "P02_20",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/aa8c393a29013b0c8.wav",
+      "audio_B": "audio/a915d0b860e50d12d.wav",
+      "prompt_text": "An adult male speaks, a bird chirps harshly, and then the adult male and an adult female speak",
+      "trial_id": "P02_21",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/a958d573ca6c2da04.wav",
+      "audio_B": "audio/a71b9faee359330f2.wav",
+      "prompt_text": "A woman speaking then coughing as a river stream flows followed by a series of plastic clacking",
+      "trial_id": "P02_22",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a30783ea5937240a2.wav",
+      "audio_B": "audio/a4e8395db22a29999.wav",
+      "prompt_text": "A girl speaking with plastic crinkling",
+      "trial_id": "P02_23",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a27915fdd14636875.wav",
+      "audio_B": "audio/a66049a75a2d5af65.wav",
+      "prompt_text": "A wind blows as a man speaks outside",
+      "trial_id": "P02_24",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/aee9b58eda6ae3c00.wav",
+      "audio_B": "audio/a264cd3fed1e9beb7.wav",
+      "prompt_text": "A man and a woman talking followed by a bell ringing and a cat meowing as a crowd of people applaud",
+      "trial_id": "P02_25",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a66f71df5655cbf21.wav",
+      "audio_B": "audio/a7ee08cb1347c31c0.wav",
+      "prompt_text": "A man is speaking with the wind blowing in the background",
+      "trial_id": "P02_26",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a7c69537d3c811608.wav",
+      "audio_B": "audio/a9cfb7102d9fde2d6.wav",
+      "prompt_text": "A bird sings followed by drumming",
+      "trial_id": "P02_27",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a3090ad6e7d162d34.wav",
+      "audio_B": "audio/a2e3f20928492a93c.wav",
+      "prompt_text": "A bus engine running as several vehicles pass by and car horns honk in the distance",
+      "trial_id": "P02_28",
+      "type": "catch"
+    },
+    {
+      "audio_A": "audio/aabed9b8af2dc3af1.wav",
+      "audio_B": "audio/aed5e805b2bf24d54.wav",
+      "prompt_text": "A man speaking followed by a crowd applauding and cheering",
+      "trial_id": "P02_29",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a472624f1f44b6516.wav",
+      "audio_B": "audio/aa715b677e0324b63.wav",
+      "prompt_text": "Wood being scraped along with mechanical sounds",
+      "trial_id": "P02_30",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/aa70010f7b5857ef8.wav",
+      "audio_B": "audio/a2e9e666616c5700e.wav",
+      "prompt_text": "A vehicle is making a thudding noise",
+      "trial_id": "P02_31",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a1c8b9d4e99f310e6.wav",
+      "audio_B": "audio/a5fb462c9f71ddecb.wav",
+      "prompt_text": "A train horn blows several times with leaves rustling in the wind",
+      "trial_id": "P02_32",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/af53543e6e237b747.wav",
+      "audio_B": "audio/a5dfc1251571b2080.wav",
+      "prompt_text": "Clip-clop of horse with an engine idling in the background",
+      "trial_id": "P02_33",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a6be7dd09a5302014.wav",
+      "audio_B": "audio/a8fb066ab45ab2bab.wav",
+      "prompt_text": "Wind blowing followed by people speaking then a loud burst of thunder",
+      "trial_id": "P02_34",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/ae7c4fe86e604b093.wav",
+      "audio_B": "audio/a4fbc614190bbaf00.wav",
+      "prompt_text": "A man speaking followed by a crowd applauding and cheering",
+      "trial_id": "P02_35",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/a177d99ed70917715.wav",
+      "audio_B": "audio/af3ab91c3467709be.wav",
+      "prompt_text": "Water hissing followed by a man breathing aloud then a toilet flushing",
+      "trial_id": "P02_36",
+      "type": "experimental"
+    },
+    {
+      "audio_A": "audio/abd0896acf17b8258.wav",
+      "audio_B": "audio/ad74a2945f12b03ed.wav",
+      "prompt_text": "An aircraft engine running as a crowd of people talk in the background",
+      "trial_id": "P02_37",
+      "type": "experimental"
+    }
+  ]
+}
