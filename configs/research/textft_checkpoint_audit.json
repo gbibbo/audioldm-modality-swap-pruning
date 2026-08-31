@@ -1,0 +1,110 @@
+{
+  "artifact": "textft_checkpoint_audit",
+  "role": "PUBLIC dense text-fine-tuning reference ONLY; NOT Singh dense-FT; NOT a matched causal control",
+  "B0_1_provenance": {
+    "path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/data/checkpoints/audioldm-m-text-ft.ckpt",
+    "bytes": 4571676474,
+    "md5": "036bc9b547a50f78b960ef8f14d0e1fb",
+    "sha256": "d77d5a61785af82012edb8a72158d52592ac7c76d7f6ed51a048ec2dec8d5eca",
+    "expected": {
+      "bytes": 4571676474,
+      "md5": "036bc9b547a50f78b960ef8f14d0e1fb",
+      "sha256": "d77d5a61785af82012edb8a72158d52592ac7c76d7f6ed51a048ec2dec8d5eca"
+    },
+    "bytes_match": true,
+    "md5_match": true,
+    "sha256_match": true,
+    "PASS": true
+  },
+  "B0_2_toplevel": {
+    "textft_keys": [
+      "state_dict"
+    ],
+    "full_keys": [
+      "state_dict"
+    ]
+  },
+  "B0_2_structure": {
+    "textft_only_keys": [],
+    "full_only_keys": [],
+    "n_shared_state_keys": 2299,
+    "n_shape_mismatch": 0,
+    "shape_mismatch_sample": [],
+    "n_shared_value_identical": 918,
+    "n_shared_value_changed": 1381,
+    "unet_keys_textft": 690,
+    "unet_keys_full": 690,
+    "unet_keyset_equal": true,
+    "unet_all_shapes_match": true,
+    "cond_stage_keys_textft": 505,
+    "first_stage_keys_textft": 398,
+    "ema_keys_textft": 692,
+    "has_model_ema": true,
+    "inferred_model_channels": 192,
+    "input_conv_shape": [
+      192,
+      8,
+      3,
+      3
+    ],
+    "strict_load_compatible_with_pipeline": true
+  },
+  "B0_2_unet_dryrun": {
+    "strict_load_missing": 0,
+    "strict_load_unexpected": 0,
+    "unet_tensors_loaded": 690,
+    "forward_shapes": {
+      "96": [
+        1,
+        8,
+        96,
+        16
+      ],
+      "256": [
+        1,
+        8,
+        256,
+        16
+      ]
+    },
+    "runs_at_96_and_256": true,
+    "strict_load_mode": "strict=True"
+  },
+  "B0_3_comparability": {
+    "training_data": "textFT = AudioCaps + MusicCaps (official release doc) vs Singh recovery = AudioCaps only",
+    "starting_model": "textFT = DENSE audioldm-m-full vs Singh recovery = PRUNED backbone",
+    "objective_conditioning": "full-model text-conditioned fine-tune (FiLM CLAP text); pathway same family as our pipeline",
+    "training_duration": "UNKNOWN (not reported as identical to Singh's 1M-step recovery)",
+    "max_claim": "whether a duration interaction is ALSO observable in one independently released dense text-fine-tuned AudioLDM companion",
+    "forbidden": [
+      "generic fine-tuning ruled out",
+      "matched dense control",
+      "pruning causality established",
+      "generic FT explains Singh recovery"
+    ]
+  },
+  "compat_PASS": true,
+  "artifact_sha256": "848a454483da503ec8badbbbea1b2ce03adb6cf04a3fe0a728ca0ec23df25540",
+  "B0_2_component_delta": {
+    "other": {
+      "changed": 0,
+      "identical": 14
+    },
+    "unet": {
+      "changed": 690,
+      "identical": 0
+    },
+    "unet_ema": {
+      "changed": 691,
+      "identical": 1
+    },
+    "vae": {
+      "changed": 0,
+      "identical": 398
+    },
+    "clap": {
+      "changed": 0,
+      "identical": 505
+    }
+  }
+}
