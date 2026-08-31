@@ -1,0 +1,87 @@
+{
+  "artifact": "partb_power_analysis",
+  "n": 80,
+  "SESOI": 0.025,
+  "source": "op_duration_discriminator_1_result.json raw_cosines (existing, frozen)",
+  "identity": "J(A,B)=swing(A)-swing(B); Var[J_recovery] estimates any two-system duration-interaction variance",
+  "empirical": {
+    "J_recovery_point": 0.044222073093988,
+    "J_recovery_sd_ytid": 0.2040165310687927,
+    "J_recovery_se": 0.022809741600175914,
+    "J_recovery_ci95": [
+      -0.0004841989495130636,
+      0.08892834513748907
+    ],
+    "swing_rec_sd": 0.18563870030036397,
+    "swing_pru_sd": 0.1353410347341468,
+    "corr_swings": 0.2220176079302579
+  },
+  "J_dense_textFT": {
+    "estimator": "(textFT-dense)_nat - (textFT-dense)_short, paired ytid, n=80",
+    "variance_proxy": "Var_ytid[J_recovery] (same battery/scorer/op-points)",
+    "scenarios": {
+      "low_var_0.5x": {
+        "sd_ytid": 0.1442614725928993,
+        "se": 0.01612892296259728,
+        "ci95_halfwidth": 0.03161210812353017,
+        "mde_80pct_power": 0.045186552170402225
+      },
+      "central_1.0x": {
+        "sd_ytid": 0.2040165310687927,
+        "se": 0.022809741600175914,
+        "ci95_halfwidth": 0.04470627204350106,
+        "mde_80pct_power": 0.06390343491626224
+      },
+      "high_var_1.5x": {
+        "sd_ytid": 0.24986820010560662,
+        "se": 0.027936114042582824,
+        "ci95_halfwidth": 0.05475377740431509,
+        "mde_80pct_power": 0.07826540417799836
+      }
+    }
+  },
+  "Q": {
+    "estimator": "J_recovery_sev1 - J_dense_textFT, paired ytid, n=80",
+    "note": "central sd(J_textFT)=sd(J_recovery); TOST needs 90% CI halfwidth < 0.025 at Q~0",
+    "scenarios": {
+      "rho_0_indep": {
+        "sd_ytid": 0.2885229451857985,
+        "se": 0.03225784592519456,
+        "ci95_halfwidth": 0.06322421624706034,
+        "ci90_halfwidth_TOST": 0.05305943486926344,
+        "mde_80pct_power": 0.09037310434080445,
+        "tost_equiv_feasible_within_0.025": false
+      },
+      "rho_0.5": {
+        "sd_ytid": 0.2040165310687927,
+        "se": 0.022809741600175914,
+        "ci95_halfwidth": 0.04470627204350106,
+        "ci90_halfwidth_TOST": 0.037518686201982135,
+        "mde_80pct_power": 0.06390343491626224,
+        "tost_equiv_feasible_within_0.025": false
+      },
+      "rho_-0.5_worstcase": {
+        "sd_ytid": 0.35336699739510335,
+        "se": 0.03950763135902211,
+        "ci95_halfwidth": 0.07743353459633993,
+        "ci90_halfwidth_TOST": 0.06498427073506646,
+        "mde_80pct_power": 0.11068399605313722,
+        "tost_equiv_feasible_within_0.025": false
+      }
+    }
+  },
+  "decision": {
+    "MDE_J_textFT_central": 0.06390343491626224,
+    "detectable_effect_examples": {
+      "J_recovery_sev1_native_short": 0.044222073093988,
+      "J_recovery_sev2_CLAP": 0.159
+    },
+    "TOST_Q_within_0.025_feasible_n80": false,
+    "verdict_TOST": "NOT attainable at n=80 unless the two duration interactions are very strongly positively correlated (rho>0.5); remove Q-equivalence as a planned claim",
+    "asymmetric_value": {
+      "positive_J_textFT": "a clearly positive J_dense_textFT would broaden the evaluation warning beyond pruning recovery (detectable if |J_textFT| >~ MDE)",
+      "unresolved_J_textFT": "does NOT establish absence of duration dependence",
+      "null_point_no_powered_equiv": "is NOT evidence of no interaction"
+    }
+  }
+}
