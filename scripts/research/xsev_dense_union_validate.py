@@ -28,7 +28,8 @@ from research_pruning.eval.reversal import generation_seed as v1_seed
 SR = 16000
 NSAMP = 163872           # 10.24 s vocoder length (matches the completed 73 + severity-2 natives)
 DENSE_CKPT = "data/checkpoints/audioldm-m-full.ckpt"
-DENSE_CKPT_MD5_FROZEN = "936914a3"   # V1.1 launch-record pinned dense identity (prefix)
+# Pinned dense identity is a SHA256 (V1.1 launch record / reversal_v1_gen_preflight source_sha256).
+DENSE_CKPT_SHA256_FROZEN = "936914a388905e1fc179c148a41a2b1552dba322ce474160b1cfa0f01ac26f8f"
 ARMD = "configs/research/op_duration_discriminator_1_subset.json"
 GEN_SUBDIR = "artifacts/icassp_gate0/reversal_xsev_gen"
 REF_ENV = {"gpu": "Tesla T4", "torch": "1.13.1+cu117", "cuda": "11.7"}  # job1 (the 73) reference
@@ -38,12 +39,12 @@ def sha_file(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
-def md5_prefix(p, n=8):
-    h = hashlib.md5()
+def sha256_hex(p):
+    h = hashlib.sha256()
     with open(p, "rb") as f:
         for c in iter(lambda: f.read(1 << 20), b""):
             h.update(c)
-    return h.hexdigest()[:n]
+    return h.hexdigest()
 
 
 def check_audio(wav):
@@ -79,8 +80,8 @@ def main():
                     "git_sha": tp.get("git_sha"), "device": tp.get("device")}
 
     # pinned dense checkpoint identity (same file used by both segments)
-    ckpt_md5 = md5_prefix(DENSE_CKPT) if os.path.exists(DENSE_CKPT) else None
-    ckpt_ok = (ckpt_md5 == DENSE_CKPT_MD5_FROZEN)
+    ckpt_sha = sha256_hex(DENSE_CKPT) if os.path.exists(DENSE_CKPT) else None
+    ckpt_ok = (ckpt_sha == DENSE_CKPT_SHA256_FROZEN)
 
     records, all_errs, present = [], [], set()
     for idx in range(80):
@@ -131,7 +132,7 @@ def main():
            "expected": "exactly {0..79}, 80 unique, 0 dup, 0 omit",
            "duplicates": bool(dup), "omissions": sorted(set(range(80)) - present),
            "total_errors": len(all_errs), "errors": all_errs[:40],
-           "dense_ckpt_md5_prefix": ckpt_md5, "dense_ckpt_md5_frozen": DENSE_CKPT_MD5_FROZEN,
+           "dense_ckpt_sha256": ckpt_sha, "dense_ckpt_sha256_frozen": DENSE_CKPT_SHA256_FROZEN,
            "dense_ckpt_identity_ok": ckpt_ok,
            "env_reference_job1_the_73": REF_ENV,
            "env_tail_job3": tail_env,
