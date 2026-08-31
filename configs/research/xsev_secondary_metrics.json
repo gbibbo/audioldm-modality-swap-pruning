@@ -1,0 +1,71 @@
+{
+  "artifact": "xsev_secondary_metrics",
+  "status": "SECONDARY/CORROBORATIVE — no primary role, no gate; cannot change the CASE C verdict",
+  "operating_point": "AudioCaps NATIVE 10.24 s",
+  "n": 192,
+  "bootstrap": {
+    "B": 10000,
+    "seed_pcg64": 20260831,
+    "unit": "ytid"
+  },
+  "means": {
+    "KL": {
+      "recovered2": 2.2253877470308603,
+      "pruned2_A": 4.449781057114403,
+      "pruned2_B": 4.445278976733486
+    },
+    "PANN_top10_capture": {
+      "recovered2": 1.4635416666666667,
+      "pruned2_A": 0.6041666666666666,
+      "pruned2_B": 0.5989583333333334
+    }
+  },
+  "contrasts_recovered_vs_prunedA": {
+    "R_KL": {
+      "point": 2.224393310083542,
+      "ci95": [
+        1.9257218372983818,
+        2.529839189525713
+      ],
+      "frac_pos": 0.8697916666666666
+    },
+    "R_cap": {
+      "point": 0.859375,
+      "ci95": [
+        0.6979166666666666,
+        1.0209635416666647
+      ],
+      "frac_pos": 0.5520833333333334
+    }
+  },
+  "contrasts_recovered_vs_prunedB": {
+    "R_KL": {
+      "point": 2.2198912297026254,
+      "ci95": [
+        1.9231684120978267,
+        2.5259885521426138
+      ],
+      "frac_pos": 0.8697916666666666
+    },
+    "R_cap": {
+      "point": 0.8645833333333334,
+      "ci95": [
+        0.703125,
+        1.03125
+      ],
+      "frac_pos": 0.5520833333333334
+    }
+  },
+  "music_secondary": "UNAVAILABLE (0/64 MusicCaps real refs); NOT computed; primary music CLAP unaffected",
+  "FD_pann2048": {
+    "recovered2": 48.681633195729404,
+    "pruned2_A": 107.21490143762088,
+    "pruned2_B": 107.60231056398707
+  },
+  "FAD_vggish": {
+    "recovered2": 6.924776874608476,
+    "pruned2_A": 27.410256632446583,
+    "pruned2_B": 27.77564847118869
+  },
+  "artifact_sha256": "e5a167fbcb152c99e017868cefbe3b4b494d9ffc2452ec5757db2219513c2bcd"
+}
