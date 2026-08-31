@@ -127,3 +127,59 @@ The only zero-GPU path is requesting the fine-tuned unpruned checkpoint from the
 call; nothing sent). If obtained → the ≈0.9-cr, 352-WAV control in §5 is a strong candidate for the
 final experiment. If not obtained → adopt the evaluation framing with the dense-FT limitation stated
 explicitly.
+
+**[RESOLVED same day — see §8: the author confirmed the checkpoint no longer exists. The §5
+conditional experiment is VOID; the checkpoint branch is closed.]**
+
+## 8. CLOSURE — direct author confirmation (2026-08-31)
+
+> Author confirmation, 2026-08-31:
+> Arshdeep Singh states that the fine-tuned unpruned AudioLDM-M-Full
+> baseline checkpoint was deleted due to cluster storage/memory constraints
+> and is no longer available.
+
+**This establishes:** the checkpoint existed; the checkpoint is no longer available.
+**This does NOT establish:** the exact dense-FT step count, the exact trainable modules, or recipe
+identity with the pruned runs — those remain unknown unless the author answers separately. Gabriel is
+asking a follow-up (same configuration? same step count?); any later answer is
+**provenance/limitation information only** and does not reopen experiments unless a usable checkpoint
+unexpectedly becomes available.
+
+### Experimental decision tree — CLOSED (supervisor decision, 2026-08-31)
+
+**No further GPU experiments.** Explicitly NOT worth running: DDIM200; a third pruning severity; more
+prompts; additional Arm-D samples; new scorers; dense retraining; **approximate dense-FT
+reconstruction** (the source recipe is underspecified — step count and trainable modules unknown —
+and a new approximation would not be equivalent to evaluating the source artifact; do not attempt to
+recreate it).
+
+Reason: the surviving scientific-material contribution is already supported by prospective frozen
+experiments; an independent second-severity replication; a positive temporal interaction at
+severity 2; a strong native recovered advantage; seam robustness; multi-metric corroboration; an
+honest negative sign-pattern replication; the explicit post-hoc severity analysis; and the dense
+severity-1 reference. The only high-value mechanistic discriminator was the source dense-FT artifact,
+and it is unavailable. No GPU credits on lower-value substitutes.
+
+### Final framing boundary
+
+The contribution is framed as **evaluation of the post-pruning recovered artifacts**.
+Allowed conceptual target: *"Does evaluation at a single operating point adequately characterize the
+behavior of published post-pruning recovered models?"* Supported answer: *"No. The
+recovered-vs-pruned contrast depends strongly on evaluation context and temporal operating point, and
+this behavior is observed prospectively at a second pruning severity."*
+Forbidden framings (mechanism attribution blocked by the unavailable dense-FT control): "pruning
+causes specialization"; "recovery-specific training causes specialization"; "pruning uniquely causes
+the temporal interaction". The generic fine-tuning explanation remains a **limitation**, not a
+falsification of the evaluation claim.
+
+### Final status
+
+```
+EXPERIMENTAL PHASE: COMPLETE
+GPU PHASE: CLOSED
+```
+
+Reopen only by explicit supervisor decision. Manuscript remains frozen pending explicit supervisor
+GO. Final scientific-material readiness stays framing-split and unmerged: **evaluation-of-recovery
+~3.5/5 (before manuscript quality); pruning-specific mechanistic ~2/5.** No new experiment is
+recommended to improve the evaluation framing at acceptable cost.
