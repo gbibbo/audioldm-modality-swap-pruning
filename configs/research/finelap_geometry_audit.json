@@ -1,0 +1,130 @@
+{
+  "model": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/_external/FineLAP",
+  "clip_seconds": 10.24,
+  "boundary_s": 3.84,
+  "checks": {
+    "loads": true,
+    "missing_keys": 1,
+    "unexpected_keys": 0,
+    "mel_frames_exact_10p24s_16k": {
+      "n_samples": 163840,
+      "kaldi_mel_frames": 1022,
+      "target_len": 1024,
+      "truncated": false,
+      "zero_padded_frames": 2,
+      "samples_dropped": 80
+    },
+    "mel_frames_audioldm_native": {
+      "n_samples": 163872,
+      "kaldi_mel_frames": 1022,
+      "target_len": 1024,
+      "truncated": false,
+      "zero_padded_frames": 2,
+      "samples_dropped": 112
+    },
+    "empirical_demo_wav": "p1_pruned_ema_reconstructed_noadapter_alt10s_p0_r0.wav",
+    "empirical_demo_samples": 163872,
+    "empirical_mel_frames_prepad": 1022,
+    "dense_output_frames": 64,
+    "dense_frames_eq_64": true,
+    "mel_batch_shape": [
+      1,
+      1,
+      1024,
+      128
+    ],
+    "encoder_tokens": [
+      1,
+      513,
+      768
+    ],
+    "n_patches_eq_512": true,
+    "patch_ordering_time_major": true,
+    "patch_probe": {
+      "perturbed_time_block": 5,
+      "changed_patch_idx": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "expected_contiguous_group": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ]
+    },
+    "reshape_groups_by_time": true,
+    "localization_early_beats_late": true,
+    "contextualized_global": true
+  },
+  "env": {
+    "torch": "1.13.1+cu117",
+    "torchaudio": "0.13.1+cu117"
+  },
+  "config": {
+    "img_size": [
+      1024,
+      128
+    ],
+    "patch_size": 16,
+    "stride": 16,
+    "n_time_patch": 64,
+    "n_freq_patch": 8,
+    "target_len_mel": 1024,
+    "frame_shift_ms": 10,
+    "depth": 12
+  },
+  "time_mapping": {
+    "seconds_per_frame": 0.16,
+    "frame_i_covers_s": "[0.16*i, 0.16*(i+1))",
+    "frame_center_s": "0.16*i + 0.08 (window mid); +~0.0125 kaldi offset negligible",
+    "eval_doc_0p15625": "= 10.0/64, assumes a 10.0-s clip; NOT applicable to our 10.24-s WAVs",
+    "applicable": 0.16,
+    "boundary_frame_index": 24,
+    "boundary_is_exact_patch_boundary": true,
+    "EARLY_frames": [
+      0,
+      23
+    ],
+    "LATE_frames": [
+      24,
+      63
+    ]
+  },
+  "localization": {
+    "event": "Applause",
+    "boundary_frame": 24,
+    "early_sig_early_mean": 0.9951640963554382,
+    "early_sig_late_mean": 0.00019080177298747003,
+    "late_sig_early_mean": 6.696924538118765e-05,
+    "late_sig_late_mean": 0.996893048286438,
+    "early_ratio": 5215.66893800223,
+    "late_ratio": 14885.611402679306,
+    "ok": true
+  },
+  "contextualization": {
+    "early_embed_delta": 0.02584143914282322,
+    "late_embed_delta": 0.0267635527998209,
+    "late_change_affects_early_frames": true,
+    "architectural": "12 AltBlocks, full bidirectional self-attention, no causal/window mask"
+  },
+  "verdict": "PASS",
+  "gate_keys": [
+    "loads",
+    "dense_frames_eq_64",
+    "n_patches_eq_512",
+    "patch_ordering_time_major",
+    "reshape_groups_by_time",
+    "localization_early_beats_late"
+  ]
+}

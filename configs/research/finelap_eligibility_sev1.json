@@ -1,0 +1,2119 @@
+{
+  "artifact": "finelap_eligibility_sev1",
+  "status": "OUTCOME-BLIND requested-event eligibility (frozen before any FineLAP scoring)",
+  "severity": "sev1",
+  "wav_root": "/teamspace/jobs/reversal-armd-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_armd_gen",
+  "rule": "requested_events = {m in gt_labels(ytid) : strict alias of m matches caption (\\b word-boundary, case-insensitive)}; eligible <=> >=1; unit=prompt; event quantities averaged within prompt before inference; scoring phrase = display_name.split(',')[0].strip()",
+  "zero_outcome_dependent_filtering": true,
+  "inputs_sha256": {
+    "class_labels_indices_csv": "cdd1049833c4b86127c2773ac0d14a2754b6a6d0d1798002ed5c66e699708429",
+    "audiocaps_test_label_json": "6b09d3fd9b610a69f3e4f6882a56c6524007814a3583da81a4b993be2378d4ec",
+    "event_synonyms_strict_json": "f730d952cccf9b7f539b1444b44ab75f81860486781944a15b84ff0d0bfbdd6c",
+    "selection_manifest": "09996993e03a3fadabf1425eb1481212b677523f7bfb4a12e6e1b58f7e85ddb2"
+  },
+  "funnel": {
+    "n_prompts_considered": 80,
+    "n_excluded": 31,
+    "exclusion_reasons": {
+      "no_requested_event_in_ground_truth": 31
+    },
+    "n_eligible_prompts": 49,
+    "n_requested_event_occurrences": 63
+  },
+  "prompts": [
+    {
+      "prompt_id": "sev1_p0",
+      "prompt_index": 0,
+      "ytid": "AFgGoY8Ihhg",
+      "caption": "Wind and then a short ambulance siren repeats several times",
+      "ground_truth_mids": [
+        "/m/03j1ly",
+        "/m/03kmc9",
+        "/m/04qvtq"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/03kmc9",
+          "display_name": "Siren",
+          "phrase": "Siren",
+          "audioset_index": 396,
+          "matched_aliases": [
+            "siren"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p0_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p0_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p1",
+      "prompt_index": 1,
+      "ytid": "Y3lNEe-ZGF0",
+      "caption": "Repeated ticking culminates in a sliding click",
+      "ground_truth_mids": [
+        "/m/07qjznl",
+        "/m/07qjznt"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p1_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p1_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p2",
+      "prompt_index": 2,
+      "ytid": "T32kii824pA",
+      "caption": "A male speech and metal clanging.",
+      "ground_truth_mids": [
+        "/m/083vt"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p2_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p2_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p3",
+      "prompt_index": 3,
+      "ytid": "JHhEjsAkZoc",
+      "caption": "A train honks horn and passes by",
+      "ground_truth_mids": [
+        "/m/01g50p",
+        "/m/0284vy3",
+        "/m/06d_3",
+        "/m/07jdr",
+        "/m/07rwm0c"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07jdr",
+          "display_name": "Train",
+          "phrase": "Train",
+          "audioset_index": 329,
+          "matched_aliases": [
+            "train"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p3_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p3_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p4",
+      "prompt_index": 4,
+      "ytid": "mWqH2xwjkYA",
+      "caption": "An infant and a woman laughing followed by someone spits then a woman talking",
+      "ground_truth_mids": [
+        "/m/01j3sz",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p4_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p4_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p5",
+      "prompt_index": 5,
+      "ytid": "AagLJkfrFMk",
+      "caption": "Water hissing followed by a man breathing aloud then a toilet flushing",
+      "ground_truth_mids": [
+        "/m/01jt3m"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p5_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p5_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p6",
+      "prompt_index": 6,
+      "ytid": "fwhkCnOeyC0",
+      "caption": "A man and a woman talking followed by a bell ringing and a cat meowing as a crowd of people applaud",
+      "ground_truth_mids": [
+        "/m/028ght",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p6_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p6_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p7",
+      "prompt_index": 7,
+      "ytid": "eUecAF626A8",
+      "caption": "A vehicle engine running idle then revving as a crowd of people talk in the background",
+      "ground_truth_mids": [
+        "/m/07yv9",
+        "/m/09x0r",
+        "/m/0k4j",
+        "/m/0ltv"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07yv9",
+          "display_name": "Vehicle",
+          "phrase": "Vehicle",
+          "audioset_index": 300,
+          "matched_aliases": [
+            "vehicle"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p7_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p7_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p8",
+      "prompt_index": 8,
+      "ytid": "0UJtGcoPYa0",
+      "caption": "A vehicle motor running idle followed by a car horn honking then a group of men groaning",
+      "ground_truth_mids": [
+        "/m/07jdr",
+        "/m/07yv9",
+        "/m/0912c9",
+        "/t/dd00128"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07yv9",
+          "display_name": "Vehicle",
+          "phrase": "Vehicle",
+          "audioset_index": 300,
+          "matched_aliases": [
+            "vehicle"
+          ]
+        },
+        {
+          "mid": "/m/0912c9",
+          "display_name": "Vehicle horn, car horn, honking",
+          "phrase": "Vehicle horn",
+          "audioset_index": 308,
+          "matched_aliases": [
+            "car horn",
+            "honking"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p8_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p8_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p9",
+      "prompt_index": 9,
+      "ytid": "-NrFeH-kBSM",
+      "caption": "A gun cocking then firing as metal clanks on a hard surface followed by a man talking during an electronic laser effect as gunshots and explosions go off in the distance",
+      "ground_truth_mids": [
+        "/m/032s66"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/032s66",
+          "display_name": "Gunshot, gunfire",
+          "phrase": "Gunshot",
+          "audioset_index": 427,
+          "matched_aliases": [
+            "gunshots"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p9_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p9_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p10",
+      "prompt_index": 10,
+      "ytid": "7bO0AJI-ihs",
+      "caption": "Clip-clop of horse with an engine idling in the background",
+      "ground_truth_mids": [
+        "/m/03k3r",
+        "/m/07rv9rh",
+        "/m/0jbk"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/03k3r",
+          "display_name": "Horse",
+          "phrase": "Horse",
+          "audioset_index": 87,
+          "matched_aliases": [
+            "horse"
+          ]
+        },
+        {
+          "mid": "/m/07rv9rh",
+          "display_name": "Clip-clop",
+          "phrase": "Clip-clop",
+          "audioset_index": 88,
+          "matched_aliases": [
+            "clip-clop"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p10_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p10_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p11",
+      "prompt_index": 11,
+      "ytid": "LvhvAA11oxE",
+      "caption": "Race cars are racing and skidding tires",
+      "ground_truth_mids": [
+        "/m/07yv9",
+        "/m/09x0r",
+        "/m/0h9mv",
+        "/m/0ltv",
+        "/t/dd00128"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p11_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p11_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p12",
+      "prompt_index": 12,
+      "ytid": "L_CNz9Vrtkw",
+      "caption": "A man speaking followed by a crowd applauding and cheering",
+      "ground_truth_mids": [
+        "/m/028ght",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p12_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p12_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p13",
+      "prompt_index": 13,
+      "ytid": "sVYTOURVsQ0",
+      "caption": "Water trickling with man speaking",
+      "ground_truth_mids": [
+        "/m/07pqc89",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p13_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p13_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p14",
+      "prompt_index": 14,
+      "ytid": "Xz56Q2Q5j5c",
+      "caption": "Wood being scraped along with mechanical sounds",
+      "ground_truth_mids": [
+        "/m/07k1x",
+        "/m/083vt"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/083vt",
+          "display_name": "Wood",
+          "phrase": "Wood",
+          "audioset_index": 437,
+          "matched_aliases": [
+            "wood"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p14_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p14_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p15",
+      "prompt_index": 15,
+      "ytid": "6aWnK1GyeJY",
+      "caption": "A baby is crying and a person sneezes then another person speaks",
+      "ground_truth_mids": [
+        "/m/0463cq4",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0463cq4",
+          "display_name": "Crying, sobbing",
+          "phrase": "Crying",
+          "audioset_index": 22,
+          "matched_aliases": [
+            "crying"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p15_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p15_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p16",
+      "prompt_index": 16,
+      "ytid": "3wV3ST-c4PE",
+      "caption": "Rhythmic ticking is occurring",
+      "ground_truth_mids": [
+        "/m/07qjznl"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p16_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p16_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p17",
+      "prompt_index": 17,
+      "ytid": "NwoBDrTlbTI",
+      "caption": "An animal makes squeaking noises with buzzing background sounds, and a dog barks",
+      "ground_truth_mids": [
+        "/t/dd00018"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p17_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p17_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p18",
+      "prompt_index": 18,
+      "ytid": "2ABngPM3raQ",
+      "caption": "An adult male speaks, a tapping sound occurs, and frogs croak",
+      "ground_truth_mids": [
+        "/m/09ld4",
+        "/m/09x0r",
+        "/m/0jbk"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/09ld4",
+          "display_name": "Frog",
+          "phrase": "Frog",
+          "audioset_index": 132,
+          "matched_aliases": [
+            "frogs"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p18_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p18_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p19",
+      "prompt_index": 19,
+      "ytid": "7QN3lwOzfdg",
+      "caption": "An adult speaks over a telephone and then an adult male speaks, and this pattern repeats three times",
+      "ground_truth_mids": [
+        "/m/07cx4",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07cx4",
+          "display_name": "Telephone",
+          "phrase": "Telephone",
+          "audioset_index": 389,
+          "matched_aliases": [
+            "telephone"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p19_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p19_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p20",
+      "prompt_index": 20,
+      "ytid": "PMMdAKZxI_I",
+      "caption": "Burping and laughing by girls with distant speaking of a television",
+      "ground_truth_mids": [
+        "/m/03q5_w",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/03q5_w",
+          "display_name": "Burping, eructation",
+          "phrase": "Burping",
+          "audioset_index": 58,
+          "matched_aliases": [
+            "burping"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p20_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p20_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p21",
+      "prompt_index": 21,
+      "ytid": "kF1KWybdRpM",
+      "caption": "An aircraft taking off with some wind noises in the background",
+      "ground_truth_mids": [
+        "/m/014yck",
+        "/m/07yv9",
+        "/m/0cmf2",
+        "/m/0k5j"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0k5j",
+          "display_name": "Aircraft",
+          "phrase": "Aircraft",
+          "audioset_index": 335,
+          "matched_aliases": [
+            "aircraft"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p21_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p21_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p22",
+      "prompt_index": 22,
+      "ytid": "-mhFGevxLUg",
+      "caption": "A man speaks with low speech in the background",
+      "ground_truth_mids": [
+        "/m/07rqsjt",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/09x0r",
+          "display_name": "Speech",
+          "phrase": "Speech",
+          "audioset_index": 0,
+          "matched_aliases": [
+            "speech"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p22_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p22_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p23",
+      "prompt_index": 23,
+      "ytid": "7JWHbs3gu1w",
+      "caption": "A hum of a train engine passing with a blowing horn",
+      "ground_truth_mids": [
+        "/m/01g50p",
+        "/m/0284vy3",
+        "/m/06d_3",
+        "/m/07jdr",
+        "/m/07rwm0c"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07jdr",
+          "display_name": "Train",
+          "phrase": "Train",
+          "audioset_index": 329,
+          "matched_aliases": [
+            "train"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p23_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p23_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p24",
+      "prompt_index": 24,
+      "ytid": "h0M4RS8p_mo",
+      "caption": "A maniacal laugh followed by a crying baby",
+      "ground_truth_mids": [
+        "/m/01j3sz",
+        "/m/0463cq4"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0463cq4",
+          "display_name": "Crying, sobbing",
+          "phrase": "Crying",
+          "audioset_index": 22,
+          "matched_aliases": [
+            "crying"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p24_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p24_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p25",
+      "prompt_index": 25,
+      "ytid": "3IScngdQA4I",
+      "caption": "A woman talking as a door closes shut followed by another woman talking",
+      "ground_truth_mids": [
+        "/m/02dgv",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/02dgv",
+          "display_name": "Door",
+          "phrase": "Door",
+          "audioset_index": 354,
+          "matched_aliases": [
+            "door"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p25_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p25_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p26",
+      "prompt_index": 26,
+      "ytid": "IKnx3hJv1bs",
+      "caption": "The hiss of spraying",
+      "ground_truth_mids": [
+        "/m/07qlf79"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p26_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p26_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p27",
+      "prompt_index": 27,
+      "ytid": "QTSKjweEWew",
+      "caption": "A wind blows as a man speaks outside",
+      "ground_truth_mids": [
+        "/m/03m9d0z",
+        "/m/09x0r",
+        "/t/dd00129"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/03m9d0z",
+          "display_name": "Wind",
+          "phrase": "Wind",
+          "audioset_index": 283,
+          "matched_aliases": [
+            "wind"
+          ]
+        },
+        {
+          "mid": "/t/dd00129",
+          "display_name": "Outside, rural or natural",
+          "phrase": "Outside",
+          "audioset_index": 510,
+          "matched_aliases": [
+            "outside"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p27_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p27_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p28",
+      "prompt_index": 28,
+      "ytid": "3VHpLxtd498",
+      "caption": "Mechanical humming with pigeons cooing and a person speaking briefly",
+      "ground_truth_mids": [
+        "/m/015p6",
+        "/m/09x0r",
+        "/m/0h0rv"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0h0rv",
+          "display_name": "Pigeon, dove",
+          "phrase": "Pigeon",
+          "audioset_index": 115,
+          "matched_aliases": [
+            "pigeons"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p28_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p28_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p29",
+      "prompt_index": 29,
+      "ytid": "bJMMp6PLKqM",
+      "caption": "A baby cries and a small child speaks",
+      "ground_truth_mids": [
+        "/m/0463cq4",
+        "/m/09x0r",
+        "/m/0ytgt",
+        "/t/dd00125"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p29_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p29_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p30",
+      "prompt_index": 30,
+      "ytid": "3wrdPAeqjVI",
+      "caption": "A man talking followed by a camera muffling and footsteps shuffling then wood lightly clanking",
+      "ground_truth_mids": [
+        "/m/083vt",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/083vt",
+          "display_name": "Wood",
+          "phrase": "Wood",
+          "audioset_index": 437,
+          "matched_aliases": [
+            "wood"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p30_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p30_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p31",
+      "prompt_index": 31,
+      "ytid": "H7rd9bZtbgc",
+      "caption": "Several church bells ringing",
+      "ground_truth_mids": [
+        "/m/0395lw"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0395lw",
+          "display_name": "Bell",
+          "phrase": "Bell",
+          "audioset_index": 200,
+          "matched_aliases": [
+            "bells"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p31_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p31_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p32",
+      "prompt_index": 32,
+      "ytid": "HUwXtfYRFwk",
+      "caption": "A bus engine running as several vehicles pass by and car horns honk in the distance",
+      "ground_truth_mids": [
+        "/m/012f08",
+        "/m/01bjv",
+        "/m/07yv9",
+        "/m/0k4j"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/01bjv",
+          "display_name": "Bus",
+          "phrase": "Bus",
+          "audioset_index": 321,
+          "matched_aliases": [
+            "bus"
+          ]
+        },
+        {
+          "mid": "/m/07yv9",
+          "display_name": "Vehicle",
+          "phrase": "Vehicle",
+          "audioset_index": 300,
+          "matched_aliases": [
+            "vehicles"
+          ]
+        },
+        {
+          "mid": "/m/0k4j",
+          "display_name": "Car",
+          "phrase": "Car",
+          "audioset_index": 307,
+          "matched_aliases": [
+            "car"
+          ]
+        }
+      ],
+      "n_eligible_events": 3,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p32_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p32_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p33",
+      "prompt_index": 33,
+      "ytid": "r2djvq1vc68",
+      "caption": "A faucet pouring water as a plastic container fills with liquid and scrubbing against a plastic surface while water trickles",
+      "ground_truth_mids": [
+        "/m/0130jx",
+        "/m/02jz0l",
+        "/m/0838f"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/02jz0l",
+          "display_name": "Water tap, faucet",
+          "phrase": "Water tap",
+          "audioset_index": 370,
+          "matched_aliases": [
+            "faucet"
+          ]
+        },
+        {
+          "mid": "/m/0838f",
+          "display_name": "Water",
+          "phrase": "Water",
+          "audioset_index": 288,
+          "matched_aliases": [
+            "water"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p33_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p33_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p34",
+      "prompt_index": 34,
+      "ytid": "Ni3dIj90Oa4",
+      "caption": "Explosion followed by man speaking a short bit of music at the end",
+      "ground_truth_mids": [
+        "/m/032s66"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p34_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p34_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p35",
+      "prompt_index": 35,
+      "ytid": "EUZaxaWqhwg",
+      "caption": "An aircraft engine running as a crowd of people talk in the background",
+      "ground_truth_mids": [
+        "/m/07yv9",
+        "/m/0cmf2",
+        "/m/0k5j"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0k5j",
+          "display_name": "Aircraft",
+          "phrase": "Aircraft",
+          "audioset_index": 335,
+          "matched_aliases": [
+            "aircraft"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p35_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p35_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p36",
+      "prompt_index": 36,
+      "ytid": "JmWaRt8-u0s",
+      "caption": "A motorcycle engine running idle while two men communicate with each other",
+      "ground_truth_mids": [
+        "/m/04_sv",
+        "/m/07yv9",
+        "/m/09x0r",
+        "/t/dd00066"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/04_sv",
+          "display_name": "Motorcycle",
+          "phrase": "Motorcycle",
+          "audioset_index": 326,
+          "matched_aliases": [
+            "motorcycle"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p36_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p36_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p37",
+      "prompt_index": 37,
+      "ytid": "g5l3Bz6lWnc",
+      "caption": "Wood lightly shuffling as insects buzz and birds chirp in the background",
+      "ground_truth_mids": [
+        "/m/01h3n",
+        "/m/03vt0"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/03vt0",
+          "display_name": "Insect",
+          "phrase": "Insect",
+          "audioset_index": 126,
+          "matched_aliases": [
+            "insects"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p37_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p37_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p38",
+      "prompt_index": 38,
+      "ytid": "bmEF-c-M174",
+      "caption": "A duck quacking and a bird chirping followed by footsteps on a wooden surface then a man talking",
+      "ground_truth_mids": [
+        "/m/015p6",
+        "/m/09ddx",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/015p6",
+          "display_name": "Bird",
+          "phrase": "Bird",
+          "audioset_index": 111,
+          "matched_aliases": [
+            "bird"
+          ]
+        },
+        {
+          "mid": "/m/09ddx",
+          "display_name": "Duck",
+          "phrase": "Duck",
+          "audioset_index": 104,
+          "matched_aliases": [
+            "duck"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p38_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p38_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p39",
+      "prompt_index": 39,
+      "ytid": "fmEft49sPfE",
+      "caption": "A man is speaking with the wind blowing in the background",
+      "ground_truth_mids": [
+        "/m/05zppz",
+        "/m/09t49",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p39_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p39_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p40",
+      "prompt_index": 40,
+      "ytid": "D2Xc_jZllDY",
+      "caption": "A man talking as a dog barks in the distance while wind blows into a microphone",
+      "ground_truth_mids": [
+        "/m/068hy",
+        "/m/07r_k2n",
+        "/m/07rc7d9",
+        "/m/09x0r",
+        "/m/0bt9lr",
+        "/m/0jbk"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0bt9lr",
+          "display_name": "Dog",
+          "phrase": "Dog",
+          "audioset_index": 74,
+          "matched_aliases": [
+            "dog"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p40_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p40_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p41",
+      "prompt_index": 41,
+      "ytid": "ArHiac57pVk",
+      "caption": "Males speaking and then a clock ticks twice",
+      "ground_truth_mids": [
+        "/m/07qjznl",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p41_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p41_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p42",
+      "prompt_index": 42,
+      "ytid": "PLHXGDnig4M",
+      "caption": "A man talking then meowing and hissing",
+      "ground_truth_mids": [
+        "/m/01yrx",
+        "/m/07qrkrw"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p42_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p42_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p43",
+      "prompt_index": 43,
+      "ytid": "y-RSojxgkDo",
+      "caption": "An adult male speaks, a bird chirps harshly, and then the adult male and an adult female speak",
+      "ground_truth_mids": [
+        "/m/015p6",
+        "/m/068hy",
+        "/m/07pggtn"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/015p6",
+          "display_name": "Bird",
+          "phrase": "Bird",
+          "audioset_index": 111,
+          "matched_aliases": [
+            "bird"
+          ]
+        },
+        {
+          "mid": "/m/07pggtn",
+          "display_name": "Chirp, tweet",
+          "phrase": "Chirp",
+          "audioset_index": 113,
+          "matched_aliases": [
+            "chirps"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p43_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p43_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p44",
+      "prompt_index": 44,
+      "ytid": "zF3xXn6NTyU",
+      "caption": "A woman speaking then coughing as a river stream flows followed by a series of plastic clacking",
+      "ground_truth_mids": [
+        "/m/0j6m2"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0j6m2",
+          "display_name": "Stream",
+          "phrase": "Stream",
+          "audioset_index": 292,
+          "matched_aliases": [
+            "stream"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p44_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p44_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p45",
+      "prompt_index": 45,
+      "ytid": "IhvXtS9-IxM",
+      "caption": "An idle helicopter engine running",
+      "ground_truth_mids": [
+        "/m/07yv9",
+        "/m/09ct_"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/09ct_",
+          "display_name": "Helicopter",
+          "phrase": "Helicopter",
+          "audioset_index": 339,
+          "matched_aliases": [
+            "helicopter"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p45_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p45_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p46",
+      "prompt_index": 46,
+      "ytid": "f8WPf5F22xI",
+      "caption": "A person sneezes and then speaks with clock ticking in the background",
+      "ground_truth_mids": [
+        "/m/01hsr_"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/01hsr_",
+          "display_name": "Sneeze",
+          "phrase": "Sneeze",
+          "audioset_index": 49,
+          "matched_aliases": [
+            "sneezes"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p46_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p46_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p47",
+      "prompt_index": 47,
+      "ytid": "emGPabOePzA",
+      "caption": "Eructation sounds in slow motion followed by speech in slow motion",
+      "ground_truth_mids": [
+        "/m/03q5_w",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/03q5_w",
+          "display_name": "Burping, eructation",
+          "phrase": "Burping",
+          "audioset_index": 58,
+          "matched_aliases": [
+            "eructation"
+          ]
+        },
+        {
+          "mid": "/m/09x0r",
+          "display_name": "Speech",
+          "phrase": "Speech",
+          "audioset_index": 0,
+          "matched_aliases": [
+            "speech"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p47_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p47_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p48",
+      "prompt_index": 48,
+      "ytid": "CMUuelJFJ7Q",
+      "caption": "One long chime",
+      "ground_truth_mids": [
+        "/m/07qjznl",
+        "/m/07qjznt"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p48_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p48_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p49",
+      "prompt_index": 49,
+      "ytid": "n-JyOqYSLQM",
+      "caption": "Metal clanking followed by plastic rattling and air spraying with a group of people talking faintly in the background",
+      "ground_truth_mids": [
+        "/m/07qlf79"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p49_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p49_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p50",
+      "prompt_index": 50,
+      "ytid": "ZYWCwfCkBp4",
+      "caption": "A person is sawing wood and music is playing in the background",
+      "ground_truth_mids": [
+        "/m/01b82r",
+        "/m/07pdjhy",
+        "/m/083vt"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/01b82r",
+          "display_name": "Sawing",
+          "phrase": "Sawing",
+          "audioset_index": 421,
+          "matched_aliases": [
+            "sawing"
+          ]
+        },
+        {
+          "mid": "/m/083vt",
+          "display_name": "Wood",
+          "phrase": "Wood",
+          "audioset_index": 437,
+          "matched_aliases": [
+            "wood"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p50_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p50_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p51",
+      "prompt_index": 51,
+      "ytid": "YIqpIjjee00",
+      "caption": "A toilet flushing",
+      "ground_truth_mids": [
+        "/m/01jt3m"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p51_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p51_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p52",
+      "prompt_index": 52,
+      "ytid": "Dc2WEiRk0rA",
+      "caption": "Hissing spray is occurring, and liquid is pattering on a surface",
+      "ground_truth_mids": [
+        "/m/07qlf79"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07qlf79",
+          "display_name": "Spray",
+          "phrase": "Spray",
+          "audioset_index": 453,
+          "matched_aliases": [
+            "spray"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p52_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p52_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p53",
+      "prompt_index": 53,
+      "ytid": "LVvS3s9dFKw",
+      "caption": "A man is talking as water is running along with tapping noises",
+      "ground_truth_mids": [
+        "/m/0130jx",
+        "/m/02jz0l",
+        "/m/0838f"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0838f",
+          "display_name": "Water",
+          "phrase": "Water",
+          "audioset_index": 288,
+          "matched_aliases": [
+            "water"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p53_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p53_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p54",
+      "prompt_index": 54,
+      "ytid": "bUTOsLXYyxg",
+      "caption": "A man talking then another man talking followed by a group of people laughing then another man talking",
+      "ground_truth_mids": [
+        "/m/01j3sz",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p54_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p54_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p55",
+      "prompt_index": 55,
+      "ytid": "pHNMcX-9FDs",
+      "caption": "Whimpering of several small dogs",
+      "ground_truth_mids": [
+        "/m/068hy",
+        "/m/0bt9lr",
+        "/m/0jbk",
+        "/t/dd00136"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0bt9lr",
+          "display_name": "Dog",
+          "phrase": "Dog",
+          "audioset_index": 74,
+          "matched_aliases": [
+            "dogs"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p55_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p55_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p56",
+      "prompt_index": 56,
+      "ytid": "TQr9v-PQOc4",
+      "caption": "Humming noise then sneezing and coughing",
+      "ground_truth_mids": [
+        "/m/01hsr_"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p56_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p56_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p57",
+      "prompt_index": 57,
+      "ytid": "A0E_UiD-fR4",
+      "caption": "Digital beeping followed by rapid vibrations and humming",
+      "ground_truth_mids": [
+        "/m/02fs_r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p57_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p57_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p58",
+      "prompt_index": 58,
+      "ytid": "O90Qy2xG6oA",
+      "caption": "A domestic pet is making noises and a baby cries",
+      "ground_truth_mids": [
+        "/m/068hy",
+        "/m/0jbk",
+        "/t/dd00002"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p58_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p58_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p59",
+      "prompt_index": 59,
+      "ytid": "-SkjbQVgJ0M",
+      "caption": "A man speaking as vehicles drive by and leaves rustling",
+      "ground_truth_mids": [
+        "/m/07yv9",
+        "/m/09x0r",
+        "/m/0k4j",
+        "/t/dd00134"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07yv9",
+          "display_name": "Vehicle",
+          "phrase": "Vehicle",
+          "audioset_index": 300,
+          "matched_aliases": [
+            "vehicles"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p59_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p59_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p60",
+      "prompt_index": 60,
+      "ytid": "B8rdur4aams",
+      "caption": "Rustling and shaking followed by a horn and gusts of wind",
+      "ground_truth_mids": [
+        "/m/07yv9",
+        "/m/0912c9",
+        "/t/dd00128"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p60_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p60_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p61",
+      "prompt_index": 61,
+      "ytid": "pgq2KPX5_SA",
+      "caption": "Paper is crinkling and crumpling, and thumping occurs",
+      "ground_truth_mids": [
+        "/t/dd00112"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/t/dd00112",
+          "display_name": "Crumpling, crinkling",
+          "phrase": "Crumpling",
+          "audioset_index": 479,
+          "matched_aliases": [
+            "crumpling",
+            "crinkling"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p61_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p61_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p62",
+      "prompt_index": 62,
+      "ytid": "6NBPiArs2-w",
+      "caption": "Rapid gunfire with far away voice",
+      "ground_truth_mids": [
+        "/m/032s66"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/032s66",
+          "display_name": "Gunshot, gunfire",
+          "phrase": "Gunshot",
+          "audioset_index": 427,
+          "matched_aliases": [
+            "gunfire"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p62_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p62_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p63",
+      "prompt_index": 63,
+      "ytid": "Xf5LjaE_JQ0",
+      "caption": "A man speaks with distant traffic passing and some nearby rattling",
+      "ground_truth_mids": [
+        "/m/07qlf79",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p63_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p63_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p64",
+      "prompt_index": 64,
+      "ytid": "fPqj3nnwQOI",
+      "caption": "Ocean waves crashing and water trickling",
+      "ground_truth_mids": [
+        "/m/0j6m2"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p64_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p64_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p65",
+      "prompt_index": 65,
+      "ytid": "_ezm-TpKj1w",
+      "caption": "A mid-size motor vehicle engine is revving repeatedly, while people talk in the background",
+      "ground_truth_mids": [
+        "/m/07q2z82",
+        "/m/09x0r",
+        "/m/0k4j"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07q2z82",
+          "display_name": "Accelerating, revving, vroom",
+          "phrase": "Accelerating",
+          "audioset_index": 353,
+          "matched_aliases": [
+            "revving"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p65_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p65_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p66",
+      "prompt_index": 66,
+      "ytid": "1e98HeU9Vrg",
+      "caption": "Waves and wind rake a shore",
+      "ground_truth_mids": [
+        "/m/034srq",
+        "/m/03m9d0z",
+        "/m/05kq4"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/034srq",
+          "display_name": "Waves, surf",
+          "phrase": "Waves",
+          "audioset_index": 295,
+          "matched_aliases": [
+            "waves"
+          ]
+        },
+        {
+          "mid": "/m/03m9d0z",
+          "display_name": "Wind",
+          "phrase": "Wind",
+          "audioset_index": 283,
+          "matched_aliases": [
+            "wind"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p66_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p66_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p67",
+      "prompt_index": 67,
+      "ytid": "bAqgL5dCQOE",
+      "caption": "Rain falls, tapping on metal, a vehicle runs in the distance, the tapping sound fades as the rain continues",
+      "ground_truth_mids": [
+        "/m/06mb1",
+        "/m/07r10fb",
+        "/t/dd00038"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/06mb1",
+          "display_name": "Rain",
+          "phrase": "Rain",
+          "audioset_index": 289,
+          "matched_aliases": [
+            "rain"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p67_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p67_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p68",
+      "prompt_index": 68,
+      "ytid": "KnsKf9KoNds",
+      "caption": "A man speaks nearby and another speaks over the phone",
+      "ground_truth_mids": [
+        "/m/07cx4",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p68_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p68_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p69",
+      "prompt_index": 69,
+      "ytid": "3fomsZXG3aM",
+      "caption": "An idle vehicle engine running followed by a gear cranking then revving",
+      "ground_truth_mids": [
+        "/m/07q2z82",
+        "/m/07yv9",
+        "/t/dd00066"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/07q2z82",
+          "display_name": "Accelerating, revving, vroom",
+          "phrase": "Accelerating",
+          "audioset_index": 353,
+          "matched_aliases": [
+            "revving"
+          ]
+        },
+        {
+          "mid": "/m/07yv9",
+          "display_name": "Vehicle",
+          "phrase": "Vehicle",
+          "audioset_index": 300,
+          "matched_aliases": [
+            "vehicle"
+          ]
+        }
+      ],
+      "n_eligible_events": 2,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p69_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p69_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p70",
+      "prompt_index": 70,
+      "ytid": "b1PXsfgQw5w",
+      "caption": "People are giggling, and a man speaks",
+      "ground_truth_mids": [
+        "/m/01j3sz",
+        "/m/07r660_",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p70_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p70_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p71",
+      "prompt_index": 71,
+      "ytid": "OxUVcZmeiyI",
+      "caption": "U'A clock ticking followed by a cuckoo bird cooing then music playing.",
+      "ground_truth_mids": [
+        "/m/07qjznl",
+        "/m/07qjznt"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p71_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p71_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p72",
+      "prompt_index": 72,
+      "ytid": "C8kR19NvynA",
+      "caption": "A man speaking continuously",
+      "ground_truth_mids": [
+        "/m/02qldy",
+        "/m/05zppz",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/05zppz",
+          "display_name": "Male speech, man speaking",
+          "phrase": "Male speech",
+          "audioset_index": 1,
+          "matched_aliases": [
+            "man speaking"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p72_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p72_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p73",
+      "prompt_index": 73,
+      "ytid": "dxow2DcTrwk",
+      "caption": "Wind blowing followed by people speaking then a loud burst of thunder",
+      "ground_truth_mids": [
+        "/m/0ngt1"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0ngt1",
+          "display_name": "Thunder",
+          "phrase": "Thunder",
+          "audioset_index": 287,
+          "matched_aliases": [
+            "thunder"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p73_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p73_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p74",
+      "prompt_index": 74,
+      "ytid": "a3GzZKxUTy8",
+      "caption": "Birds chirping and then a dog barking and a duck quaking",
+      "ground_truth_mids": [
+        "/m/015p6",
+        "/m/09ddx",
+        "/m/0bt9lr",
+        "/m/0jbk"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/015p6",
+          "display_name": "Bird",
+          "phrase": "Bird",
+          "audioset_index": 111,
+          "matched_aliases": [
+            "birds"
+          ]
+        },
+        {
+          "mid": "/m/09ddx",
+          "display_name": "Duck",
+          "phrase": "Duck",
+          "audioset_index": 104,
+          "matched_aliases": [
+            "duck"
+          ]
+        },
+        {
+          "mid": "/m/0bt9lr",
+          "display_name": "Dog",
+          "phrase": "Dog",
+          "audioset_index": 74,
+          "matched_aliases": [
+            "dog"
+          ]
+        }
+      ],
+      "n_eligible_events": 3,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p74_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p74_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p75",
+      "prompt_index": 75,
+      "ytid": "c0IggDOisOo",
+      "caption": "Bells ringing with voices in background and wind blowing",
+      "ground_truth_mids": [
+        "/m/0395lw",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/0395lw",
+          "display_name": "Bell",
+          "phrase": "Bell",
+          "audioset_index": 200,
+          "matched_aliases": [
+            "bells"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p75_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p75_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p76",
+      "prompt_index": 76,
+      "ytid": "7WkB6pflr6o",
+      "caption": "A woman speaking",
+      "ground_truth_mids": [
+        "/m/02qldy",
+        "/m/02zsn",
+        "/m/09x0r"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/02zsn",
+          "display_name": "Female speech, woman speaking",
+          "phrase": "Female speech",
+          "audioset_index": 2,
+          "matched_aliases": [
+            "woman speaking"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p76_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p76_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p77",
+      "prompt_index": 77,
+      "ytid": "twFypUcdgRc",
+      "caption": "A man shouting then laughing as wind blows heavily into a microphone",
+      "ground_truth_mids": [
+        "/m/01bjv",
+        "/m/07yv9",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p77_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p77_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p78",
+      "prompt_index": 78,
+      "ytid": "A2mcp0N__7U",
+      "caption": "Mid frequency of multiple people in the distance talking and yelling, followed by coughing",
+      "ground_truth_mids": [
+        "/m/07qlf79",
+        "/m/09x0r"
+      ],
+      "eligible": false,
+      "exclusion_reason": "no ground-truth AudioSet label matched by any strict caption alias",
+      "eligible_events": [],
+      "n_eligible_events": 0,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p78_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p78_r0.wav"
+      }
+    },
+    {
+      "prompt_id": "sev1_p79",
+      "prompt_index": 79,
+      "ytid": "y93cZqNCtks",
+      "caption": "A man talking as footsteps run on concrete followed by a series of gunshots firing a gun cocking while another man talks in the background before a dog growls",
+      "ground_truth_mids": [
+        "/m/032s66",
+        "/m/04zjc"
+      ],
+      "eligible": true,
+      "exclusion_reason": null,
+      "eligible_events": [
+        {
+          "mid": "/m/032s66",
+          "display_name": "Gunshot, gunfire",
+          "phrase": "Gunshot",
+          "audioset_index": 427,
+          "matched_aliases": [
+            "gunshots"
+          ]
+        }
+      ],
+      "n_eligible_events": 1,
+      "wav_files": {
+        "recovered": "p1_recovered_noadapter_alt10s_p79_r0.wav",
+        "pruned_A": "p1_pruned_ema_reconstructed_noadapter_alt10s_p79_r0.wav"
+      }
+    }
+  ],
+  "prompts_sha256": "6dab6d972d164c77ae664b1ed4bd6df363b9fb7cc1b211b9bfc238fccbe82674",
+  "manifest_sha256": "1e3dc770db7d9173d5de835d0a88095427ad998928637bd3fd729ca29f805b39"
+}
