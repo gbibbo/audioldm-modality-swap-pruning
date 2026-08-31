@@ -37,4 +37,13 @@ Do not force-push, merge, rewrite history, delete branches, or open/merge a PR u
 
 ## 6. Report
 
-Return validation result, commit hash, push status, durable docs updated, and next open item. State anything still unverified explicitly.
+Return validation result, durable docs updated, and next open item. State anything still unverified explicitly. End the report with the binding checkpoint block (consistent with `AGENTS.md` Git discipline / Communication and the Stop hook):
+
+```text
+COMMIT: <full SHA>
+SHORT: <short SHA>
+PUSH: pushed/synced/no-upstream
+TREE: clean
+```
+
+If the tree is not clean or a push did not happen, say so explicitly instead of reporting `clean`/`pushed`.

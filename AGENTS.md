@@ -67,6 +67,20 @@ Rules:
 * Do not add AI attribution, generated-with trailers, or session links to commits or PR text.
 * If tests are failing or evidence is incomplete, record that state instead of disguising it as a completed checkpoint.
 
+**Final checkpoint report (binding).** Before STOP after any substantive project work: (1) validate the completed/in-progress state; (2) update the relevant durable provenance/state files; (3) commit the coherent state; (4) push if an upstream exists; (5) verify the working tree is clean; (6) obtain the final HEAD SHA; (7) include that SHA explicitly in the visible response immediately before STOP. Substantive work includes an experiment result, a partial/stopped experiment with meaningful state, a new blocker, a scientific audit, a design decision, an implementation, validated tooling, a provenance correction, a budget correction, or a methodological finding. Do not leave meaningful work only in chat. Do not create empty commits merely to manufacture a SHA. For a genuinely read-only turn that produced no repository change or new durable state, report `NO NEW COMMIT — HEAD <sha>` instead.
+
+## Compute resource discipline
+
+**Default = CPU.** Use CPU for every task that can reasonably run on CPU: scoring/evaluation, CLAP / Human-CLAP scoring when CPU runtime is reasonable, bootstrap/statistics, manifests, hashing/checksums, checkpoint inspection, state-dict transformations, architecture/shape validation, tests, provenance audits, dataset processing, plotting, report generation, Git operations, bookkeeping, and web/network downloads.
+
+**GPU is an exception,** launched only when at least one condition holds: (A) the computation genuinely requires CUDA/GPU execution; or (B) the CPU alternative is so slow that CPU would be operationally unreasonable. "GPU is faster" by itself is NOT sufficient.
+
+Before every new GPU launch, determine and record: (1) why CPU is unsuitable or impractically slow; (2) what work actually requires GPU; (3) the smallest/cheapest compatible GPU class; (4) expected GPU cost or hard cap when paid compute is involved.
+
+Do not keep a GPU alive for CPU work. When a pipeline mixes GPU-required and CPU-suitable stages, **split the pipeline** and release/stop paid GPU compute before CPU scoring, validation, statistics, and reporting. If CPU feasibility is uncertain, try or estimate CPU first rather than defaulting to GPU. The objective is to **minimize paid GPU use without compromising scientific correctness** — not merely to minimize wall-clock time.
+
+For this project: AudioLDM waveform generation is GPU-justified; CLAP/Human-CLAP scoring, bootstrap, verdict computation, SHA256/manifest validation, and checkpoint structural inspection run on CPU (the last unless memory/runtime makes it genuinely impractical).
+
 ## Repository architecture
 
 Follow the master plan unless the codebase requires a documented exception:
@@ -91,3 +105,5 @@ _external/        # gitignored reference clones
 ## Communication
 
 Start every response with the timestamp injected by the turn hook, on its own first line. Keep status concise and distinguish completed, verified work from planned work.
+
+Every substantive response ends, immediately before STOP, with a `## CHECKPOINT` block reporting `COMMIT: <full SHA>`, `SHORT: <short SHA>`, `PUSH: <status>`, `TREE: <clean/dirty>`. For a genuinely read-only turn that produced no repository change, report `NO NEW COMMIT` with `HEAD`, `PUSH`, `TREE` instead. The supervisor independently fetches the reported commit before the next scientific decision, so the SHA must be real, pushed (when an upstream exists), and describe the actual tree state.
