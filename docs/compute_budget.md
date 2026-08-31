@@ -520,3 +520,27 @@ Reliable signal = each job's **settled `total_cost`** via `lightning_sdk` in the
 * **Two dense-completion attempts** (`xsev-dense-tail-1`, `-2`) Failed at **0 cr** (never provisioned) — confirms zero remaining balance.
 * **All confirmatory scoring is free** (CLAP scorer `device="cpu"` in `.venv-metrics`; KL/PANN/FAD/FD Studio CPU) → the primary A′ + B′ + secondary CLAP-family result needs **0 cr**.
 * **Outstanding GPU need:** only the 7 remaining dense@10.24s control WAVs (73–79). **Est. marginal ≈ 0.05–0.10 cr** (Arm-D native rate ~0.0036 cr/WAV × 7 + provisioning). Gabriel authorized a small top-up to finish them on GPU; **launch pending credit confirmation** (a launch at zero balance just Fails at 0 cr).
+
+### 2026-08-31 20:03 UTC | EXPERIMENTAL-REOPENING-DESIGN-1 — proposed cost only; NOT authorized/launched
+
+The prior dense tail did subsequently complete as recorded in the ledger and CURRENT STATE:
+`xsev-dense-tail-3` settled **0.1050 cr**, bringing RECOVERY-CROSS-SEVERITY-REP-1 new GPU spend to
+**3.6883 cr**. This line appends that measured correction without rewriting the OUT_OF_FUNDS history.
+
+The proposed temporal semantic recovery Part A and all bootstrap/scoring work use the Studio CPU:
+**0 paid credits, 0 new WAVs**. The conditional Part B would generate only the official public
+`audioldm-m-text-ft` reference on the frozen Arm-D 80 prompts at two durations:
+
+| Component | Units | Empirical basis | Projected credits |
+|---|---:|---|---:|
+| Text-FT native | 80 WAVs @ 10.24 s | Arm-D native settled rate ≈0.00360 cr/WAV | ≈0.29 |
+| Text-FT short | 80 WAVs @ 3.84 s | prior short settled rate ≈0.00219 cr/WAV | ≈0.18 |
+| Provisioning/lifecycle contingency | one bounded T4 job | prior jobs | ≈0.00–0.13 |
+| **Part B total** | **160 new WAVs** | | **≈0.47–0.60** |
+
+**Proposed hard cap = 0.70 cr on the smallest compatible T4.** This is not an authorization. The
+public checkpoint must first pass an immutable-hash, strict-load, architecture/component/EMA audit and
+CPU dry-runs at both latent lengths. No music generation is proposed because the artifact's documented
+fine-tuning set includes MusicCaps. Live funded balance is not reliably exposed; obtain a top-up and
+explicit launch GO before attempting a job. CPU scoring must run after GPU generation and the GPU must
+be released first.

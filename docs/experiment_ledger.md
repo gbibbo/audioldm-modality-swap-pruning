@@ -2001,3 +2001,54 @@ Durable artifact `docs/dense_ft_baseline_availability_audit.md`. Conceptual corr
 * **Supervisor decision — experimental decision tree CLOSED:** NO dense-FT experiment; NO dense retraining; NO approximate dense-FT reconstruction (recipe underspecified; an approximation would not be equivalent to evaluating the source artifact — do not attempt); NO DDIM200; NO third severity; NO more prompts; NO additional Arm-D samples; NO new scorers; NO further GPU experiments. The DENSE-FT-BASELINE-AUDIT §5 conditional 352-WAV control is VOID. Reason: the surviving contribution is already supported (prospective frozen experiments; independent second-severity replication; positive temporal interaction at severity 2; strong native recovered advantage; seam robustness; multi-metric corroboration; honest negative sign-pattern replication; explicit post-hoc severity analysis; dense severity-1 reference); the only high-value mechanistic discriminator was the source dense-FT artifact and it is unavailable — no GPU credits on lower-value substitutes.
 * **Final framing boundary:** contribution = **evaluation of the post-pruning recovered artifacts**. Allowed target: "Does evaluation at a single operating point adequately characterize the behavior of published post-pruning recovered models?" — supported answer: "No; the recovered-vs-pruned contrast depends strongly on evaluation context and temporal operating point, observed prospectively at a second pruning severity." FORBIDDEN framings: "pruning causes specialization" / "recovery-specific training causes specialization" / "pruning uniquely causes the temporal interaction" (mechanism attribution blocked by the unavailable dense-FT control; generic fine-tuning remains a LIMITATION, not a falsification of the evaluation claim).
 * **Durable status: `EXPERIMENTAL PHASE: COMPLETE` / `GPU PHASE: CLOSED`** (reopen only by explicit supervisor decision). Manuscript remains FROZEN pending explicit supervisor GO. Final scientific-material readiness kept framing-split, unmerged: evaluation-of-recovery ~3.5/5 (before manuscript quality); pruning-specific mechanistic ~2/5. No new experiment recommended to improve the evaluation framing at acceptable cost. Provenance: `docs/dense_ft_baseline_availability_audit.md` §8; PROGRESS state bullet updated.
+
+### 2026-08-31 20:03 UTC | EXPERIMENTAL-REOPENING-DESIGN-1 | Temporal semantic recovery profile + public dense text-FT reference PROPOSED (0 GPU; no generated-audio outcome inspected)
+
+Gabriel explicitly re-opened the scientific decision, rejecting the blanket conclusion that no further
+experiment could materially improve the ICASSP contribution. This entry records a **design review**, not
+an adopted protocol or result. Full recommendation: `docs/experimental_reopening_recommendation.md`.
+
+* **Repository substrate verified without scoring generated outcomes:** existing paired 10.24-s
+  pruned/recovered outputs cover Arm D severity 1 (80 prompts) and the independent severity-2 battery
+  (192 prompts). Using only already frozen AudioSet ground-truth labels plus the caption-alias rule,
+  strict requested-event eligibility is severity 1 = **49 prompts / 63 event occurrences** and severity
+  2 = **110 / 131**. FineLAP is already pinned locally (weights sha256
+  `13b9646c9f9d48513c0145bed75e654179e83f0fd8d49ed4ffc5d6b8f3353fb4`) and its pre-existing CPU
+  validity smoke passed 5/5 own-event-vs-distractor checks. These are feasibility facts, not results on
+  the generated battery.
+* **Part A proposed (CPU, 0 new WAVs):** before any scoring, freeze a prompt-clustered FineLAP analysis
+  on the eligible requested events. Primary per-severity estimand is
+  `T_s = mean_late(rec-pruned) - mean_early(rec-pruned)`, with the boundary fixed at the prior 3.84-s
+  operating point inside each existing 10.24-s waveform. `B=10000`, prompt unit, new seed namespace.
+  Promotion requires positive point estimates at both severities and the severity-2 95% CI excluding
+  zero; severity 1 is directional because eligible n=49. Fixed secondaries: tau=0.5 occupancy, four
+  2.56-s-quarter coverage, peak evidence, and full-window semantic mass. No timestamp-accuracy claim is
+  allowed because AudioCaps captions do not specify event times.
+* **Part B proposed (conditional GPU reference):** official AudioLDM publishes
+  `audioldm-m-text-ft.ckpt` (4,571,676,474 bytes; md5 `036bc9b547a50f78b960ef8f14d0e1fb`;
+  sha256 `d77d5a61785af82012edb8a72158d52592ac7c76d7f6ed51a048ec2dec8d5eca`), documented as a medium
+  dense model fine-tuned with AudioCaps+MusicCaps pairs. It was overlooked in the Singh-artifact
+  availability branch. It is **NOT Singh's deleted dense-FT, NOT recipe-matched, and NOT a causal
+  control**; its permitted role is one public dense text-fine-tuning duration reference. A CPU-only
+  immutable-hash / strict-load / architecture / component-delta / EMA / two-length dry-run gate must
+  pass first. If compatible and separately authorized, generate only this system on the frozen Arm-D
+  80 prompts at 3.84 and 10.24 s = **160 new WAVs**; reuse all dense comparators. Primary references:
+  `J_dense_textFT = (textFT-dense)_native - (textFT-dense)_short` and
+  `Q = J_recovery_sev1 - J_dense_textFT`, paired by prompt. Pre-data interpretation uses the existing
+  0.025 CLAP SESOI: equivalence only if Q's 90% CI is wholly inside [-0.025,+0.025], and a larger
+  recovery interaction only if Q's two-sided 95% CI lies above zero. Power must be checked before GPU;
+  insufficient power stops Part B rather than changing the margin or N after outcome inspection.
+* **Outcome-complete interpretation:** a shared interaction broadens the contribution to an evaluation
+  warning for text fine-tuning/recovery; a dissociation supports only
+  "pruning-trajectory-associated relative to this public reference"; a mixed/null result is reported
+  without rescue. Forbidden in every branch: generic fine-tuning ruled out, pruning uniquely causes the
+  effect, or a matched dense control was evaluated.
+* **Why this package:** it adds a new audio-specific construct—frame-level temporal semantic allocation—
+  rather than more precision around clip-level metrics, and adds a real public comparative artifact
+  without reconstructing Singh's checkpoint or retraining. DDIM200, a third severity, more prompts,
+  another aggregate scorer, and approximate Singh retraining remain rejected.
+* **Authorization/budget:** Part A and the Part-B checkpoint audit require an explicit supervisor GO but
+  use CPU/0 paid credits. Part B generation requires a later explicit top-up + launch GO; estimate
+  **0.47–0.60 cr**, proposed hard cap **0.70 cr**, smallest compatible T4. Current live funded balance
+  is not reliably exposed. No checkpoint download, FineLAP generated-outcome scoring, or GPU launch was
+  performed in this design review. `docs/claims_matrix.md` is unchanged because evidence did not change.
