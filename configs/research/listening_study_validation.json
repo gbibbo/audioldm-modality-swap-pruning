@@ -43,6 +43,11 @@
       "pass": true
     },
     {
+      "detail": "0 missing",
+      "name": "P01 audio paths",
+      "pass": true
+    },
+    {
       "detail": "37 == 37",
       "name": "P02 n_trials",
       "pass": true
@@ -80,6 +85,11 @@
     {
       "detail": "recovered-as-A 17/34=0.50",
       "name": "P02 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "0 missing",
+      "name": "P02 audio paths",
       "pass": true
     },
     {
@@ -123,6 +133,11 @@
       "pass": true
     },
     {
+      "detail": "0 missing",
+      "name": "P03 audio paths",
+      "pass": true
+    },
+    {
       "detail": "35 == 35",
       "name": "P04 n_trials",
       "pass": true
@@ -160,6 +175,11 @@
     {
       "detail": "recovered-as-A 15/32=0.47",
       "name": "P04 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "0 missing",
+      "name": "P04 audio paths",
       "pass": true
     },
     {
@@ -203,6 +223,11 @@
       "pass": true
     },
     {
+      "detail": "0 missing",
+      "name": "P05 audio paths",
+      "pass": true
+    },
+    {
       "detail": "35 == 35",
       "name": "P06 n_trials",
       "pass": true
@@ -240,6 +265,11 @@
     {
       "detail": "recovered-as-A 15/32=0.47",
       "name": "P06 AB balance",
+      "pass": true
+    },
+    {
+      "detail": "0 missing",
+      "name": "P06 audio paths",
       "pass": true
     },
     {
@@ -283,14 +313,39 @@
       "pass": true
     },
     {
+      "detail": "max err 7.11e-15",
+      "name": "bundle applied-gain exact to -36 LUFS (source)",
+      "pass": true
+    },
+    {
+      "detail": "max -1.94",
+      "name": "bundle peak <= -1 dBFS",
+      "pass": true
+    },
+    {
+      "detail": "430/434 within 1 dB; drift range [-40.71,-34.30]",
+      "name": "bundle >=98% copies within +/-1 dB re-measured",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "bundle no problems",
+      "pass": true
+    },
+    {
+      "detail": "0 missing",
+      "name": "bundle files on disk",
+      "pass": true
+    },
+    {
       "detail": "worst 17.67 min",
       "name": "time <= 20 min (moderate replay)",
       "pass": true
     }
   ],
-  "n_checks": 57,
+  "n_checks": 68,
   "n_fail": 0,
-  "n_pass": 57,
+  "n_pass": 68,
   "pair_separation_min": 6,
   "time_estimate_min": {
     "P01": {

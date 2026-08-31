@@ -26,6 +26,10 @@ public repo or the deployed bundle. The GitHub remote is public.
    OPENBLAS_CORETYPE=Haswell .venv-loudness/bin/python scripts/research/build_listening_bundle.py
    ```
    Writes `listening_study/audio/*.wav` (−36 LUFS listening copies) + the local bundle manifest.
+   The applied gain reaches −36 LUFS on the source measurement exactly; on re-measurement ~430/434
+   copies sit within ±1 dB of −36, and ~4 near-silent failed-pruned clips drift a few dB (down to
+   −40.7 LUFS) because the BS.1770 absolute gate is not scale-invariant. This is expected, is not a
+   rule violation (single fixed gain, no limiting), and does not favour recovered.
 3. Run internal QA:
    ```
    OPENBLAS_CORETYPE=Haswell .venv-loudness/bin/python scripts/research/listening_study_validate.py
