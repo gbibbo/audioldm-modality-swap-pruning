@@ -1,0 +1,74 @@
+{
+  "artifact": "xsev_hc_secondary",
+  "status": "SECONDARY corroborative Human-CLAP; no PASS role; scale != CLAP; no SESOI",
+  "model": "sarulab-speech/human-clap-wsce-mae",
+  "group_seed": 20260826,
+  "bootstrap_seed": 20260831,
+  "means": {
+    "recovered2__ac_native": 0.4647994274322021,
+    "recovered2__ac_short": 0.2405736312721274,
+    "recovered2__music": 0.14750498190308767,
+    "pruned2_A__ac_native": 0.09027606354356976,
+    "pruned2_A__ac_short": 0.05119741307256239,
+    "pruned2_A__music": 0.1840385256728041,
+    "pruned2_B__ac_native": 0.0885644396354716,
+    "pruned2_B__ac_short": 0.05064606582406365,
+    "pruned2_B__music": 0.1849661993328482
+  },
+  "recovered_vs_prunedA": {
+    "R_native": {
+      "point": 0.37452336388863233,
+      "lo": 0.3396439368230858,
+      "hi": 0.4082981975031847
+    },
+    "R_short": {
+      "point": 0.189376218199565,
+      "lo": 0.16178803576237138,
+      "hi": 0.21738531390640975
+    },
+    "R_music": {
+      "point": -0.03653354376971644,
+      "lo": -0.0684553009198377,
+      "hi": -0.005047058674972511
+    },
+    "K": {
+      "point": 0.4110569076583488,
+      "lo": 0.36339132953726216,
+      "hi": 0.45740659736056843
+    },
+    "J": {
+      "point": 0.18514714568906734,
+      "lo": 0.15048834411196974,
+      "hi": 0.21944069309571812
+    }
+  },
+  "recovered_vs_prunedB": {
+    "R_native": {
+      "point": 0.37623498779673054,
+      "lo": 0.34168536315646636,
+      "hi": 0.4094711267977497
+    },
+    "R_short": {
+      "point": 0.18992756544806375,
+      "lo": 0.16238821201568499,
+      "hi": 0.21781924890062027
+    },
+    "R_music": {
+      "point": -0.03746121742976054,
+      "lo": -0.0691127794970574,
+      "hi": -0.0069920958869867465
+    },
+    "K": {
+      "point": 0.4136962052264911,
+      "lo": 0.36734115471002343,
+      "hi": 0.45899215974113755
+    },
+    "J": {
+      "point": 0.1863074223486668,
+      "lo": 0.15256970773716602,
+      "hi": 0.21986153094670347
+    }
+  },
+  "note": "HC music contrast is NEGATIVE (CI excludes 0) unlike the ~null primary CLAP music contrast; HC agrees on native-positive, K, J. Corroborative only; does not change CASE C.",
+  "artifact_sha256": "beddaf9a4f72f9600bc4528e0e2081a26399596493fb4fc68042b33a9658df55"
+}

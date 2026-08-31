@@ -159,7 +159,29 @@
   "REPLICATION_CASE": "C",
   "case_description": "K_A passes, one/both sign-pattern components fail: contextual dependence replicates; specific native-positive/music-negative pattern not fully replicated.",
   "secondaries": {
-    "human_clap": "computed separately (corroborative)",
+    "human_clap": {
+      "R_native_A": {
+        "point": 0.37452336388863233,
+        "lo": 0.3396439368230858,
+        "hi": 0.4082981975031847
+      },
+      "R_music_A": {
+        "point": -0.03653354376971644,
+        "lo": -0.0684553009198377,
+        "hi": -0.005047058674972511
+      },
+      "K_A": {
+        "point": 0.4110569076583488,
+        "lo": 0.36339132953726216,
+        "hi": 0.45740659736056843
+      },
+      "J_A": {
+        "point": 0.18514714568906734,
+        "lo": 0.15048834411196974,
+        "hi": 0.21944069309571812
+      },
+      "note": "HC music NEGATIVE (CI excludes 0) vs primary CLAP music ~null; corroborative, no PASS role"
+    },
     "audiocaps_KL_PANN_FAD_FD": "FEASIBLE (192/192 real refs); native OP",
     "music_KL_PANN_FAD_FD": "UNAVAILABLE (0/64 MusicCaps real refs; primary music CLAP unaffected)"
   },
