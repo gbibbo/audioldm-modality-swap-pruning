@@ -79,6 +79,8 @@ def main():
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
     ap.add_argument("--out", default="artifacts/icassp_gate0/reversal_xsev_gen")
     ap.add_argument("--dry-run-cpu", action="store_true")
+    ap.add_argument("--indices", default="", help="resume: comma-list of prompt_index (ikey) to (re)generate; "
+                    "seeds/x_T/everything else unchanged. Writes an index-suffixed manifest. Empty = full set.")
     args = ap.parse_args()
     if args.context == "dense_native" and args.system != "dense":
         raise SystemExit("dense_native context is for --system dense only")
@@ -88,6 +90,14 @@ def main():
     manifest_path, reps, T, duration, _salt, ykey, ikey = CTX[args.context]
     prompts = json.load(open(manifest_path))["prompts"]
     ddim = 50
+    idx_suffix = ""
+    if args.indices:
+        want = {int(x) for x in args.indices.split(",") if x.strip() != ""}
+        prompts = [p for p in prompts if p[ikey] in want]
+        got = {p[ikey] for p in prompts}
+        if got != want:
+            raise SystemExit(f"PREFLIGHT FAIL: requested indices {sorted(want)} but manifest has {sorted(got)}")
+        idx_suffix = f"_idx{min(want)}-{max(want)}"
     if args.dry_run_cpu:
         prompts = prompts[:1]; reps = 1; ddim = 6
 
@@ -140,7 +150,7 @@ def main():
            "manifest": manifest_path, "recipe": {"ddim": ddim, "guidance": 2.5, "eta": 0.0, "latent_t": T,
            "duration_s": duration, "reps": reps, "gen_salt": GEN_SALT, "weight_convention": "ema"},
            "provenance": prov, "n": len(rows), "rows": rows}
-    outman = os.path.join(args.out, f"gen_manifest_{args.system}_{args.context}.json")
+    outman = os.path.join(args.out, f"gen_manifest_{args.system}_{args.context}{idx_suffix}.json")
     json.dump(man, open(outman, "w"), indent=1)
     print(f"generated {len(rows)} wavs [{args.system}/{args.context}] len {rows[0]['n_samples']} -> {args.out}")
     print("XSEV-GENERATOR PASS")
