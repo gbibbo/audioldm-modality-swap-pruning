@@ -512,3 +512,11 @@ Reliable signal = each job's **settled `total_cost`** via `lightning_sdk` in the
 
 * **`reversal-armd-gen-1` settled `total_cost` = 0.5766 cr** (Completed clean; watchdog killed=False; << 1.02 projection and 1.20 hard cap). ~39 min, T4, 160 ALT WAVs @10.24s.
 * Project-available: ~1.46 − 0.5766 ≈ **0.88 cr** remaining. **No further GPU experiment planned** (Arm D is the last). CLAP/KL/PANN/FAD scoring on Studio CPU = 0 cr.
+
+### 2026-08-31 (MVD 09:41) | RECOVERY-CROSS-SEVERITY-REP-1 gen — OUT_OF_FUNDS stop; true headroom corrected
+
+* **`reversal-xsev-gen-1` settled `total_cost` = 3.583261 cr**, **status Stopped by Lightning with `message = USER_STOP_WORKLOAD_REASON_OUT_OF_FUNDS`** (SDK `_guaranteed_job`), NOT by the watchdog and NOT by the 5.5-cr hard cap. ~208 min, T4, produced 1728/1728 severity-2 WAVs + 73/80 dense control before the balance ran dry.
+* **Correction:** the operator-entry "~6 cr available" (2026-08-30) was the unreliable API balance field, not the project envelope. **True pre-run headroom ≈ 3.58 cr.** The RECOVERY-CROSS-SEVERITY-REP-1 budget lines (~4.88 cr projected, 5.5 hard cap) were therefore never reachable — funds bound first. Going forward, treat OUT_OF_FUNDS / settled `total_cost` as the only authoritative signals.
+* **Two dense-completion attempts** (`xsev-dense-tail-1`, `-2`) Failed at **0 cr** (never provisioned) — confirms zero remaining balance.
+* **All confirmatory scoring is free** (CLAP scorer `device="cpu"` in `.venv-metrics`; KL/PANN/FAD/FD Studio CPU) → the primary A′ + B′ + secondary CLAP-family result needs **0 cr**.
+* **Outstanding GPU need:** only the 7 remaining dense@10.24s control WAVs (73–79). **Est. marginal ≈ 0.05–0.10 cr** (Arm-D native rate ~0.0036 cr/WAV × 7 + provisioning). Gabriel authorized a small top-up to finish them on GPU; **launch pending credit confirmation** (a launch at zero balance just Fails at 0 cr).
