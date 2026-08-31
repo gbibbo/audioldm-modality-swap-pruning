@@ -1,0 +1,167 @@
+{
+  "artifact": "xsev_result",
+  "experiment": "RECOVERY-CROSS-SEVERITY-REP-1",
+  "status": "PROSPECTIVE INDEPENDENT REPLICATION at severity-2 (1,2,1,1) COMPLETE",
+  "generation": {
+    "severity2_job": "reversal-xsev-gen-1 (git afe76f8, T4)",
+    "dense_tail_job": "xsev-dense-tail-3 (git 45e1aec, T4_SMALL, Tesla T4)",
+    "settled_cr": {
+      "severity2": 3.583261,
+      "dense_tail": 0.105,
+      "total_new": 3.688261
+    },
+    "structural": "1808/1808 PASS (1728 severity-2 + 80 dense union)"
+  },
+  "manifests": {
+    "audiocaps_manifest_sha256_prefix": "4da90661",
+    "music_manifest_sha256_prefix": "f5a26fbe"
+  },
+  "scorer": {
+    "model": "laion/clap-htsat-fused",
+    "revision": "365dea6ef167def6676140ed93bbc43f84dabb28",
+    "group_seed": 20260826,
+    "convention": "one seed-once group per (system,context)"
+  },
+  "bootstrap": {
+    "seed": 20260831,
+    "B": 10000,
+    "SESOI": 0.025,
+    "equiv_margin": 0.025
+  },
+  "PRIMARY_A": {
+    "R_native": {
+      "point": 0.24428910286709046,
+      "lo": 0.21453982529201313,
+      "hi": 0.2729367767227814,
+      "n": 192
+    },
+    "R_music": {
+      "point": 0.009178354288451374,
+      "lo": -0.013358352466578556,
+      "hi": 0.03187418479228654,
+      "n": 64
+    },
+    "R_short": {
+      "point": 0.08488791843895645,
+      "lo": 0.06591445840119074,
+      "hi": 0.10505695062687057,
+      "n": 192
+    },
+    "K": {
+      "point": 0.2351107485786391,
+      "lo": 0.19739179489073044,
+      "hi": 0.27186321481494813,
+      "n_ac": 192,
+      "n_music": 64
+    },
+    "J": {
+      "point": 0.159401184428134,
+      "lo": 0.13085055237849397,
+      "hi": 0.1873238529800195,
+      "n": 192
+    },
+    "equiv_90ci": {
+      "lo": 0.06889836926444938,
+      "hi": 0.10158283738007107,
+      "point": 0.08488791843895645
+    },
+    "gates": {
+      "K_pass_lo95_gt0": true,
+      "H_native": true,
+      "H_music": false,
+      "J_pass_lo95_gt0": true,
+      "short_equivalence_pass": false
+    },
+    "means": {
+      "rec_native": 0.2991648926981725,
+      "pruned_native": 0.054875789831082024,
+      "rec_short": 0.09952505419884498,
+      "pruned_short": 0.014637135759888528,
+      "rec_music": 0.014087596760267237,
+      "pruned_music": 0.004909242471815863
+    }
+  },
+  "SENSITIVITY_B": {
+    "R_native": {
+      "point": 0.24739909092507636,
+      "lo": 0.2177303996735039,
+      "hi": 0.2765860886617399,
+      "n": 192
+    },
+    "R_music": {
+      "point": 0.009229601203211741,
+      "lo": -0.012987748591816247,
+      "hi": 0.03139753066473835,
+      "n": 64
+    },
+    "R_short": {
+      "point": 0.08594502913183533,
+      "lo": 0.06726441968845999,
+      "hi": 0.10562043740137594,
+      "n": 192
+    },
+    "K": {
+      "point": 0.23816948972186464,
+      "lo": 0.20078145672778192,
+      "hi": 0.2746886620195558,
+      "n_ac": 192,
+      "n_music": 64
+    },
+    "J": {
+      "point": 0.16145406179324104,
+      "lo": 0.1320710220497252,
+      "hi": 0.18985985623761129,
+      "n": 192
+    },
+    "gates": {
+      "K_pass_lo95_gt0": true,
+      "H_native": true,
+      "H_music": false,
+      "J_pass_lo95_gt0": true,
+      "short_equivalence_pass": false
+    }
+  },
+  "seam_robustness": {
+    "K": {
+      "A_pass": true,
+      "B_pass": true,
+      "seam_robust": true
+    },
+    "sign_pattern": {
+      "A_pass": false,
+      "B_pass": false,
+      "seam_robust": false
+    },
+    "J": {
+      "A_pass": true,
+      "B_pass": true,
+      "seam_robust": true
+    }
+  },
+  "DENSE_CONTROL": {
+    "C_dense_10s": 0.3520238741301,
+    "C_pruned_sev1_10s": 0.2525792172411457,
+    "C_recovered_sev1_10s": 0.30437950463965535,
+    "G_pruned_dense_minus_pruned": {
+      "point": 0.09944465688895435,
+      "lo": 0.05755473901052028,
+      "hi": 0.13993797575996722,
+      "n": 80
+    },
+    "G_recovered_dense_minus_recovered": {
+      "point": 0.04764436949044466,
+      "lo": -0.00035474926000460917,
+      "hi": 0.09570303603482898,
+      "n": 80
+    },
+    "note": "severity-1 completion on the frozen Arm-D 80 ytids; SECONDARY; does not alter the severity-2 replication verdict; no 'restored to dense' claim."
+  },
+  "REPLICATION_CASE": "C",
+  "case_description": "K_A passes, one/both sign-pattern components fail: contextual dependence replicates; specific native-positive/music-negative pattern not fully replicated.",
+  "secondaries": {
+    "human_clap": "computed separately (corroborative)",
+    "audiocaps_KL_PANN_FAD_FD": "FEASIBLE (192/192 real refs); native OP",
+    "music_KL_PANN_FAD_FD": "UNAVAILABLE (0/64 MusicCaps real refs; primary music CLAP unaffected)"
+  },
+  "verdict_json_sha256_prefix": "b2cb33d63347"
+}
