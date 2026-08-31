@@ -1,0 +1,2331 @@
+{
+  "artifact": "xsev_audiocaps_manifest",
+  "experiment": "RECOVERY-CROSS-SEVERITY-REP-1",
+  "selection_salt": "RECOVERY-CROSS-SEVERITY-REP-1|AUDIOCAPS|2026-08-30",
+  "caption_salt": "RECOVERY-CROSS-SEVERITY-REP-1|CAPTION|2026-08-30",
+  "generation_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+  "n": 192,
+  "n_replicates": 1,
+  "exclusions": {
+    "v1_1_96": 96,
+    "train": 49838,
+    "music64": 64,
+    "kim44": 44,
+    "eligible_after": 868
+  },
+  "provenance": {
+    "universe": 964,
+    "v1_1_manifest_sha256": "83f50befe4c61717cefcc79debf76409cc2e94bc06b75f1665494a43fa85d9cd",
+    "train_csv_sha256": "c0c5223db682b3bf724ce7e7ce58d5b36929f74572e8526a7211f92d2eef7c8e",
+    "battery_sha256": "87860bc1eb22e8105e7eece532d428c332f6fcc9b23eb7d67c75aa8630e23d38",
+    "kim_source_sha256": "e8ce24add345c44336d861230d0a4cdb36e548e9ec68b1521433636ead7aa160"
+  },
+  "prompts": [
+    {
+      "prompt_index": 0,
+      "ytid": "-DmjkgWa-rw",
+      "caption": "Church bells ringing during audio static",
+      "selection_key": "0011331ec301726f195bf1cddee727e9637daa7da9eb8af095772ff4b7bbaefb",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "b59d2e8f1a4d10b14c013ff7f700c18dc5ffd8860f044daec01683720d23f28c",
+      "generation_seeds": [
+        2823286605618390972
+      ]
+    },
+    {
+      "prompt_index": 1,
+      "ytid": "ilspW7JRjAg",
+      "caption": "A vehicle engine revving a few times",
+      "selection_key": "001aae4efe578ba957cae731a560f70bcf05b56e0341b90063c92ac26afa2031",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "2bdb2b00c8a158579db86e8290b91c9e0a6590a8e9de44fad96ea8bad7d19ed3",
+      "generation_seeds": [
+        17177058150410923878
+      ]
+    },
+    {
+      "prompt_index": 2,
+      "ytid": "U5ij0M7T-hk",
+      "caption": "Footsteps followed by creaking and a man speaking",
+      "selection_key": "00a6b25501ac74eb97d8dddfeffafbc64086d2a309aa50bc197fb9782a7510c9",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "ae4caa7d95e7f33f09bce864f8bb894091b45bd1107f4ba7a172faf95e376647",
+      "generation_seeds": [
+        11996954127214477456
+      ]
+    },
+    {
+      "prompt_index": 3,
+      "ytid": "CMNlIW6Lkwc",
+      "caption": "Some men speeches low followed by an explosion, then the man speeches louder and laugh",
+      "selection_key": "01275d9dcfc53f7f5c59edc688089a289a090a3722284774173253fa3e5b19f7",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "5b8d6e78c8a76c937490d9bbc50d94a6ccb476f418ea564915cb71d4ba2a2e2e",
+      "generation_seeds": [
+        15787701246446916495
+      ]
+    },
+    {
+      "prompt_index": 4,
+      "ytid": "ptIksg9KEac",
+      "caption": "Leaves rustling in the wind with dogs barking and birds chirping",
+      "selection_key": "017f3c825061ca7f17150d80dbf4177d04f512bf66302127dd5cd148a8a17050",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "2dfe6dd97aae24d963fa8a4f1afaadbc0b7fb4801bf4ba6f966cdb2c256b04a6",
+      "generation_seeds": [
+        9555754367600544267
+      ]
+    },
+    {
+      "prompt_index": 5,
+      "ytid": "GMP8m09j5vk",
+      "caption": "Birds chirping in the foreground and background as a dog barks in the distance",
+      "selection_key": "018535bfb1b24d960d3ebbc68b2c15ff92e71a9157d77165dc50cafd4e57a7bb",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "93faa5f04201c877827299847bc2f006512dcf3d3e6a8dbdf430896b75b0e65d",
+      "generation_seeds": [
+        4141043009236226040
+      ]
+    },
+    {
+      "prompt_index": 6,
+      "ytid": "2ErfX6ZT5pM",
+      "caption": "A toilet flushing",
+      "selection_key": "01a525adf53a270fd709a5039622c55dfbb8eae91ac049dfeffff99f1a675c20",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "9493c2bbf3166f721c7b0f661335c34118a1d9fafd750122239ba9063e96c550",
+      "generation_seeds": [
+        9720523028697715592
+      ]
+    },
+    {
+      "prompt_index": 7,
+      "ytid": "XWw7ZM1c_QA",
+      "caption": "A woman is speaking as surface is scratched followed by ticktock sounds",
+      "selection_key": "01a58c71c4ea2db73456e38baea0ae9f6064e82c49db8a3d4006bfa180b6d871",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "b39b3f9f2e9215f6460c0b6eee63cbfd33ae26be3e594b4e12fb41de31d72fef",
+      "generation_seeds": [
+        3694674902417899454
+      ]
+    },
+    {
+      "prompt_index": 8,
+      "ytid": "c6YJgZ3qzOw",
+      "caption": "A toy helicopter flying followed by wind blowing into a microphone",
+      "selection_key": "02204119799a52679260c46dc656e73a36f0e6bff33e0f4d04b0cd4b91e15dd1",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "bd771e64ac0a72e5f8c94d85836bda12583f21e2154898755fed39190ce9eaae",
+      "generation_seeds": [
+        3463113853173683813
+      ]
+    },
+    {
+      "prompt_index": 9,
+      "ytid": "SE_3nszEw7o",
+      "caption": "Hissing and clinking",
+      "selection_key": "023539ba7f499392fc62f07a87637aa27dd6674a66853b6f24d563c0dde3f8ae",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "5935ea61a5134ae3634d21497a5f5bd2a37c361a363973cd0609edc906c04963",
+      "generation_seeds": [
+        12085577897070172107
+      ]
+    },
+    {
+      "prompt_index": 10,
+      "ytid": "cz0FSQDVBMw",
+      "caption": "Hissing with people speaking and some rattling",
+      "selection_key": "025e9bd9de91bdc1161fa9c9c94a7eda427498303ce7f1ba76c2f03681321814",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "45be6887401cd833b6c7ed58ed28f261e5bb1f80467b81b2705b0601dacb37f8",
+      "generation_seeds": [
+        6979311160153389677
+      ]
+    },
+    {
+      "prompt_index": 11,
+      "ytid": "1L_OyngNZMA",
+      "caption": "Echoing male speech, laughter and applause",
+      "selection_key": "027316f3f1dc6a5b6606464f283b8dc5c7a323e2df912054afcb5923c1ef18ab",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "7072fe59062b52d4c1594d1daeae7ec5a885422c0fa56de778119c50b0451bb2",
+      "generation_seeds": [
+        12410256202506471585
+      ]
+    },
+    {
+      "prompt_index": 12,
+      "ytid": "PYP-r0nvbFk",
+      "caption": "Wind blows and a man speaks followed by a goat bleating",
+      "selection_key": "02a01d014224a9b15fee819f1c329a5aa4df63e8f1ec3d877fa3db6936d10e1a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "de4b3f0e5cc19fb095375a4bbfbcb5267a735809a220dc95d2d94c781aeb60c8",
+      "generation_seeds": [
+        16630063198208188044
+      ]
+    },
+    {
+      "prompt_index": 13,
+      "ytid": "oN0IcZaHD_8",
+      "caption": "Male voice speaking briefly followed by drilling",
+      "selection_key": "02ea58850e97325ed8d34afd04eb959e45a404913eddebfcc22a8ca154ffa857",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "9b1488f91df701d49fa63a68d511a15d2789bdf35f4f3c9b8c30a25a852d7399",
+      "generation_seeds": [
+        10593570043348601767
+      ]
+    },
+    {
+      "prompt_index": 14,
+      "ytid": "Rk-ujWKzPuc",
+      "caption": "Continuous rainfall",
+      "selection_key": "036a3dc63679a76bb71289df37b75df61238f34aefa7289b1f9060231d5c2fbd",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "c0950bf9b7bec6c7d47393a83d71298570709a599f621dc033810955b9b3f9a8",
+      "generation_seeds": [
+        8340160534138077185
+      ]
+    },
+    {
+      "prompt_index": 15,
+      "ytid": "TSdAJWJ-tW0",
+      "caption": "People speak with passing traffic",
+      "selection_key": "0401b5abd0b954096011cf42973a2429591de7060afc2f8a29b497ea25fe02c9",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "97bf693a2756b7220dcf9b7fd1d583db8803da890e7de095631a6e55c9728c0d",
+      "generation_seeds": [
+        16706612586146142722
+      ]
+    },
+    {
+      "prompt_index": 16,
+      "ytid": "AJtNitYMa1I",
+      "caption": "Food and oil sizzling",
+      "selection_key": "04616409a48e76da2e32e076dd970d7c18980a7199a9fc9faf7670c2e5c7efa6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "4e932b1898519966d8077c9c92d534b1f9eea8c3edc6c286254810d60011af58",
+      "generation_seeds": [
+        197127318519442396
+      ]
+    },
+    {
+      "prompt_index": 17,
+      "ytid": "0AsXkZkqelg",
+      "caption": "A vehicle running idle then stuttering",
+      "selection_key": "0470fe0fecf3d8a04ffd74ea79d6d382ef3544fdc6687fcaa5fd53c05a78aa25",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "3d1e5719bd5c4cf11222d6add5d49ef1267a2e4264f3e6c47ff6911e951c9d1d",
+      "generation_seeds": [
+        12848585805911425424
+      ]
+    },
+    {
+      "prompt_index": 18,
+      "ytid": "0G7rb74R-2A",
+      "caption": "An adult male is speaking and an audience is laughing",
+      "selection_key": "05076c59c9fb47a7231a71280aad5fc7cd80473d8208676b53978768a07cba39",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "71ebafb40403442d4d5f6dd85d56da6dc17d85b477c3823fbe468bd16f115a5f",
+      "generation_seeds": [
+        8000328548667345487
+      ]
+    },
+    {
+      "prompt_index": 19,
+      "ytid": "r2KhpX_QgXA",
+      "caption": "An engine running with a male speaking",
+      "selection_key": "053662724e121653ee85ddab3fecefed38f13a1c55f41ec6f535713ce767ef27",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "f1112d6707bf22d1233aa13c340a7323e497a9fd27ff8e59d6128923b09f839b",
+      "generation_seeds": [
+        5187313107659545516
+      ]
+    },
+    {
+      "prompt_index": 20,
+      "ytid": "pPLisQ_QXxw",
+      "caption": "An engine running and a horn",
+      "selection_key": "055d19dc8e7d0ad7fca12b3f3f44d4bb0b08863ea7ff666408cec051cd6e6ee5",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "4cb982c508fcec688d1b061a51f37dc29eae8c1b6b2051db32871b73e26eeaf8",
+      "generation_seeds": [
+        15976617083797285093
+      ]
+    },
+    {
+      "prompt_index": 21,
+      "ytid": "uJzAf4PaExI",
+      "caption": "An engine idling consistently",
+      "selection_key": "05a8ff909897e69e8561425b98f9069627fb3d948df935a8b3a587f7bdc9fd44",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "74fd6b5f8a1417734da0b19cdbe760ec6cdd5e372269de85f4e14d7a2ddc0700",
+      "generation_seeds": [
+        9625602974161632141
+      ]
+    },
+    {
+      "prompt_index": 22,
+      "ytid": "oklu5ZJD_2U",
+      "caption": "A bird sings followed by drumming",
+      "selection_key": "05c776329fc4ea675f6b778f0ecb253708a684ad6cdda31b8cb5a2f52020a7b6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "687b88948ddbd7e578c0310168cc3e08a8f12f509007296f0483ea9f639e34a0",
+      "generation_seeds": [
+        6472424181702323026
+      ]
+    },
+    {
+      "prompt_index": 23,
+      "ytid": "QARuiRtfy-k",
+      "caption": "A power tool drilling followed by a person blowing air then a man speaking as light rock music plays in the background",
+      "selection_key": "0602f3b51ae40d14e81e9fac29dd7e25123b3f97c7c44d0b2a3cf87c277bde14",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "028db5c6944adc48d1fec8f2be32a6a4fa2771318311df885320ea4c362fbab3",
+      "generation_seeds": [
+        2259672394526387661
+      ]
+    },
+    {
+      "prompt_index": 24,
+      "ytid": "Ch0LMmhBUg4",
+      "caption": "A man talking as a kid yells followed by an aircraft flying in the distance as wind blows into a microphone",
+      "selection_key": "0675888af331262a6911760b9c16798bfb60b4b53d3440a8b0d39c490b1e6776",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "1496c25b19444804988a960a2e9a9259a02f05444f1e2d25b04c2142cdc00d16",
+      "generation_seeds": [
+        14895082333970896004
+      ]
+    },
+    {
+      "prompt_index": 25,
+      "ytid": "14izd_i3ryE",
+      "caption": "A man talking as another man speaks through a megaphone as wind blows into a microphone and a vehicle engine runs",
+      "selection_key": "06890bbd17eaf5cdf0a9c13e0d6109739d38c563519c124af5629e8a0338e87c",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "2b2af2b8871f79b31e35fca9c90d979ceec6039d2883843ab7e81e654b981e34",
+      "generation_seeds": [
+        2696681854907754866
+      ]
+    },
+    {
+      "prompt_index": 26,
+      "ytid": "d6gu2w19YQo",
+      "caption": "An baby laughing",
+      "selection_key": "06ae36fb1c913c1dc4de1a663d56345ac72efa0c93b7ba2c869c14098e5354ca",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "d8712525a43fb2f9cd8efd79544a2810b53a4e303cae200ce4183b9a71a06696",
+      "generation_seeds": [
+        17981781862036185491
+      ]
+    },
+    {
+      "prompt_index": 27,
+      "ytid": "frOqlk0Wm5Y",
+      "caption": "A man speaking with intermittent metal scraping.",
+      "selection_key": "06ca07c8a282d112db4f50e9816b5773db76afdd66279f4e2210659e669c8b6a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "debc146d2b5950fa506f8a9411f774388a74456f13b4a5c55e26692682bec814",
+      "generation_seeds": [
+        7312128658971325284
+      ]
+    },
+    {
+      "prompt_index": 28,
+      "ytid": "inQOrxc_oZo",
+      "caption": "Oinking and squealing",
+      "selection_key": "06f8b76f696e036b5b863d2d1af59bf2a6d14eb4dfa800a37b2ec75356439011",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "c7c30288fb19d17e71f231b8feda3024fcfae605106a272a9d8135e5313b0d3d",
+      "generation_seeds": [
+        3495221985896347286
+      ]
+    },
+    {
+      "prompt_index": 29,
+      "ytid": "UmNrhFKpWIY",
+      "caption": "A car engine revs and then shuts off",
+      "selection_key": "07a30e95755bb75520d370f8679e92f1470cbf74b20c0802d8d26d73b8f30cc4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "a1314752db9c4b84d603b0c89f92b8bed50f5624cffb352f6ac53886c40fb08e",
+      "generation_seeds": [
+        2968138016825389645
+      ]
+    },
+    {
+      "prompt_index": 30,
+      "ytid": "AWGnTI0e2Fs",
+      "caption": "High frequency humming slows down and stops then begins again",
+      "selection_key": "07bc4e60dd03b9f9d516ecd3c6b98f761fc34a15fa66626c2171bc250b9b8b5a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "8357e6175ab4ebb73db668fd0a74e2bc5f0f1ea4b08114428e295e50236a8a5a",
+      "generation_seeds": [
+        9308072882868486240
+      ]
+    },
+    {
+      "prompt_index": 31,
+      "ytid": "XIooZl1QdM4",
+      "caption": "Several loud burps",
+      "selection_key": "07c5d168867af4af12710e5f1d84fc7197f0058b7f23e4270a0945148acba457",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "e971c8da64e45a16c1cf79e5459018d91023c0c3dc8a073be9f72ef763ddef30",
+      "generation_seeds": [
+        16859656644289196943
+      ]
+    },
+    {
+      "prompt_index": 32,
+      "ytid": "D9GHUPGWsV0",
+      "caption": "Sheep bleat and a woman speaks",
+      "selection_key": "07ef1e43b3cadd89243391e1098ea803c2eb198dd28a7844a711b9c176624846",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "b27e4b1264105970914a32599c731120e5fc6ec1f8a29e5ee16a1ebeaa548798",
+      "generation_seeds": [
+        8205274025551357748
+      ]
+    },
+    {
+      "prompt_index": 33,
+      "ytid": "Agh2EKINlSw",
+      "caption": "Rain noise on surface as men are speaking",
+      "selection_key": "07f5696d6e6e57ec5ff291958a1e641711f3cfa93739e6acd76a29ad6bf70803",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "94403825e3fcf504d10d7c5669b1763edf9a8cf3ba4fbcc6e0544a1cced456a2",
+      "generation_seeds": [
+        1224259137425074950
+      ]
+    },
+    {
+      "prompt_index": 34,
+      "ytid": "lJayhiVzl_E",
+      "caption": "Motorboat motor and high winds",
+      "selection_key": "08193e8c2ee23e19d25caeb7dce106fdc4b45087371647f9bfd73266e0630621",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "5b8ee5b2eff57808193f9c6156ab13a8cd9d28b9c63a99c19b894f860f63e565",
+      "generation_seeds": [
+        3531697668507198023
+      ]
+    },
+    {
+      "prompt_index": 35,
+      "ytid": "n74IYuCe_ms",
+      "caption": "A stream burbles while a man speaks",
+      "selection_key": "08ed56d9ceac83fed8f9eadacff8e7b0f35078f94a9971f24071fb4a1e292328",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "089ab21e6f928d903917b59d60e7d86c984a10f730b981eda93286c3e3523ebf",
+      "generation_seeds": [
+        14526418312392159744
+      ]
+    },
+    {
+      "prompt_index": 36,
+      "ytid": "AR8-MVl_Mf8",
+      "caption": "A man screaming followed by slamming against a metal object proceeded by a man talking cardboard tumbles on a hard surface as a truck engine runs idle in the background",
+      "selection_key": "090f41e74892ce66ffccbe55b96352cd5d7ec0d9a5b0dc4d29b3308f8d7140f4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "f7f5638d7769f06ad301b6385d365b3003ab6da892623b5b2e0d27d9e0b2ffc5",
+      "generation_seeds": [
+        16410228271411996466
+      ]
+    },
+    {
+      "prompt_index": 37,
+      "ytid": "e9MWXS34o48",
+      "caption": "A person breathes heavily and sneezes",
+      "selection_key": "091a2f2d32f31d2740afd4eaab98331445687d988099ec45bf9925eba29af6e5",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "94315064ae52d257b5962955aa8058d11d78d207b721195f2d30aadc25399646",
+      "generation_seeds": [
+        962924588495847149
+      ]
+    },
+    {
+      "prompt_index": 38,
+      "ytid": "EBCH7TPgiPc",
+      "caption": "A vehicle accelerates and then slows down",
+      "selection_key": "092652f527a673769e82c281c7878e695615033fa49fedfe406390a589add902",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "3e357bd405b76b5079e42eef4d13013e363a3e23a98289a1ea8bac3a81b371b5",
+      "generation_seeds": [
+        14917851155418437298
+      ]
+    },
+    {
+      "prompt_index": 39,
+      "ytid": "RNBoH2LHQEM",
+      "caption": "A crowd applauds, and faint speech occurs",
+      "selection_key": "0942d2139037e1a0f6a93a4ea176ce8e0ef9d7388483bc10e6c559c2f7c51a16",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "b52fdf440a97e4ccb7c791e69862d31880d74b14eb7bb2fa5d62732fd3d91b9a",
+      "generation_seeds": [
+        7653622972009864774
+      ]
+    },
+    {
+      "prompt_index": 40,
+      "ytid": "6dLkgq9EKPE",
+      "caption": "An adult male is speaking and a bus hisses",
+      "selection_key": "094c9c8bb1f326525d0acd7b78f2ae04c5d433e05905df055fb29ea3ea7514d7",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "7827628bf66aa8de2b57249b58778c42eeca80bf0d38e7c769559dbc48ec336e",
+      "generation_seeds": [
+        15832231828100740302
+      ]
+    },
+    {
+      "prompt_index": 41,
+      "ytid": "7XUt6sQS7nM",
+      "caption": "Sheep baaing with young female voice and wind gusts",
+      "selection_key": "097a0ccc8d91d4854af67213f89b72290b20e3be28310d4ccb956ff42f3fdd4a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "13783ecf41422ebd4159ebe78be4b84156dbb2954c1075c3697d2b8d2f7da27e",
+      "generation_seeds": [
+        13483128468226311081
+      ]
+    },
+    {
+      "prompt_index": 42,
+      "ytid": "9z8XIRyUq9Q",
+      "caption": "An adult female is speaking and her voice is amplified",
+      "selection_key": "09981f1ca8377e5e9eabff372a250278d6dc5698f43e8897773dcedb24979c8a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "08f8db7ecc781df364f4352ede733cd47403a8036be32d4f099de0546d19e064",
+      "generation_seeds": [
+        14068566943836907247
+      ]
+    },
+    {
+      "prompt_index": 43,
+      "ytid": "hFCmq9pCBbM",
+      "caption": "A girl speaking with plastic crinkling",
+      "selection_key": "09c961ea58ab0e0d688ffa8a034bb411035e57700ab4f3c44596c81539a591df",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "3429604cc2fe41cfa69bd91e2152c42b697c2e0f9ef049402594815a7fd6291b",
+      "generation_seeds": [
+        7642359332989043037
+      ]
+    },
+    {
+      "prompt_index": 44,
+      "ytid": "z4MeV9IGVo0",
+      "caption": "Distant humming followed by men speaking over a radio",
+      "selection_key": "09d8d2ed11a1d2f65fcb9a40deb262aaebb3e1b3d634e57a9b7b92fade3e158b",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "9fd7437c56c7ab11f417aac388bb397b496f1a8b57b8ec28110832d08be725d2",
+      "generation_seeds": [
+        2486758081520777711
+      ]
+    },
+    {
+      "prompt_index": 45,
+      "ytid": "kLYCjD6vWI4",
+      "caption": "Hissing of a steam engine train",
+      "selection_key": "09f90a8566ad0cceb455ff86ed4241be44cf6a5cd25e67ee4fad8558b58146c6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "cb697f5cf2f5d9a20f25aa11ec8857105460984a5a60f7d38b86656497d065d2",
+      "generation_seeds": [
+        2662107244457108677
+      ]
+    },
+    {
+      "prompt_index": 46,
+      "ytid": "9E8BmPZ9mWc",
+      "caption": "A truck revs up and moves, then men talk",
+      "selection_key": "0a03d5ca486c7234f70318248509def5698c7668509788b70ead4b11820c54ae",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "79cb01f3f41a46810db0979f0292ccd511b42b2806f7449b588455f7c62d8e80",
+      "generation_seeds": [
+        7988841721572519598
+      ]
+    },
+    {
+      "prompt_index": 47,
+      "ytid": "VMsbrcHPBfk",
+      "caption": "A man mimics goat bleating",
+      "selection_key": "0a5161ae80df40b4218aad06b1f09ac22db68574a4320ae4d61264422d274cb5",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "46dc95dcc260224248ed28caeead4e3427ac46fc2c652ce9a17197f6348d15f1",
+      "generation_seeds": [
+        4184837008899624051
+      ]
+    },
+    {
+      "prompt_index": 48,
+      "ytid": "Aj_VMUSNjNM",
+      "caption": "An engine revs several times",
+      "selection_key": "0a87f8a79ff45cc198dbcb2d528b68ec3cce5178a6fe11cc55a6d3fc9a679f18",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "6c15856b69e49a6a311be4260216640bc7c1ac188a7f9734f367ac0462867eb0",
+      "generation_seeds": [
+        9670749567364574280
+      ]
+    },
+    {
+      "prompt_index": 49,
+      "ytid": "K2kIOBeCfuo",
+      "caption": "A man speaking on a microphone followed by a crowd of people laughing then applauding",
+      "selection_key": "0a8f833dbe635ad354be3b223748584ecb854a5b085552bcc9721b9234e9a2d8",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "c3c0fafb502f6ddeb06483999a69b11b292d87e69d5e0fedb56b3e216bd6ac20",
+      "generation_seeds": [
+        9412971088296546170
+      ]
+    },
+    {
+      "prompt_index": 50,
+      "ytid": "Smdj6JFB9MQ",
+      "caption": "A person briefly talks followed quickly by toilet flushing and another voice from another person",
+      "selection_key": "0ada75ebbf89c28db695bc14357b9d549dba59f2c3e63b5285f6087f984005f7",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "7be4805a648312ad9b8f4d4c556fa7328a96d2ff53d5df7d073446d656ea2e1a",
+      "generation_seeds": [
+        12162183219977697055
+      ]
+    },
+    {
+      "prompt_index": 51,
+      "ytid": "Rtenf2XSXRc",
+      "caption": "A car idling and revving",
+      "selection_key": "0af1af27754daf04fd1cdc480fdd7f223bdd2c9fac82b6d3cc438b965f410623",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "9bed76620c918868093a3da7b7a0e6054b2ab5ae9945669f9e252c5b99d59d80",
+      "generation_seeds": [
+        17766832590627089235
+      ]
+    },
+    {
+      "prompt_index": 52,
+      "ytid": "TWOgvDaDqlU",
+      "caption": "A power tool drilling followed by a large motor running as wood is being sawed",
+      "selection_key": "0b73156659d785027e6cff78a6109a27b898d9e030dbfaf9161aa3644dc48088",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "04c07e20978009ad1bc70ddf7c920f08c36eeb597081e868795136573ab9b78c",
+      "generation_seeds": [
+        4343750813657990531
+      ]
+    },
+    {
+      "prompt_index": 53,
+      "ytid": "3MoF8myFs8Y",
+      "caption": "Wind blowing hard and waves crashing and splashing",
+      "selection_key": "0c5e46b81b154568289d30e0bd90b88f55c44f38d8ffdffad57dff578e54e556",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "d0ebc7763c8a29918fb201432abc84d4f6cf4c836c837e43e0f7a154a618c9c8",
+      "generation_seeds": [
+        16222675902875176824
+      ]
+    },
+    {
+      "prompt_index": 54,
+      "ytid": "KVbmN9ZRg5Q",
+      "caption": "A train running on railroad tracks as a train horn blows and steam hisses",
+      "selection_key": "0c9aa4ed6754d7776987a57d147da81c3b8e77243f6ed29e872f2dd31a5b9f44",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "cdabc0f2285075647131cccbde1735220dd42bee017dc1cf55a6be0ea6580e00",
+      "generation_seeds": [
+        8301235005426053670
+      ]
+    },
+    {
+      "prompt_index": 55,
+      "ytid": "0On6-JiVwRs",
+      "caption": "Cat meowing sadly",
+      "selection_key": "0cb7199f3844d40a9b6a2e00916b2852f962aec9aab9121f94170729e042b6ef",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "68486043ceddc65dc57c3cc20aa4a68ae5a46f3aa2a84d9e5858d4dfe6c3f7cb",
+      "generation_seeds": [
+        4652542036614129705
+      ]
+    },
+    {
+      "prompt_index": 56,
+      "ytid": "B3O476LeuXY",
+      "caption": "A loud engine idles followed by an increase and decrease in the engine sounds",
+      "selection_key": "0d4e0e5cf6bcd29fadafea655bd62df646da20af9f2f16f37f76e74d3967833a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "54d210ed3f4889061b3fe342f8a19018e42bb237d0bffe67ecb79b5334aa03fb",
+      "generation_seeds": [
+        3109133296180223792
+      ]
+    },
+    {
+      "prompt_index": 57,
+      "ytid": "YEYeQ0lIkBQ",
+      "caption": "Several ducks quack and chirp as men speak and wind blows",
+      "selection_key": "0d61ce7442d8f1b24c494ee7b558e55af9c67aecc6182bbb8578b31f9b2bcc21",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "d7f693b51074c074cd1864580f20d0027d91eeac5c2f4f050878c28ed1e4e501",
+      "generation_seeds": [
+        12771784383635794778
+      ]
+    },
+    {
+      "prompt_index": 58,
+      "ytid": "KJKHDKKW3XU",
+      "caption": "A liquid gurgles as it drains",
+      "selection_key": "0d64c129a7cc9ba78c1cc86b8354b01b7b7de7cd39366e0e484eae6081c4d90a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "fc3f9c9b4dd02142f1050cbf9820ac32ec70fb2d40cdeb7f5fc7f592e06e0064",
+      "generation_seeds": [
+        7870793408154616036
+      ]
+    },
+    {
+      "prompt_index": 59,
+      "ytid": "AI1OweEW8C0",
+      "caption": "Rain lightly falling while water trickles and splashes followed by wind blowing into a microphone then thunder roaring in the distance",
+      "selection_key": "0d68de5052b054e58db6e1e8f5a8bef8b716577c7da39d03914bd84a04dd96bb",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "33887d7738db66af8c440dd17cbf5256ef95736b5dae8999ea49d8b9495f16a0",
+      "generation_seeds": [
+        4980968084460681717
+      ]
+    },
+    {
+      "prompt_index": 60,
+      "ytid": "YQGW5AwDOIo",
+      "caption": "Vehicles driving by as people talk in the background",
+      "selection_key": "0d8610efcbef3ae2dfcd108fb3d2e461094ac5699f030d28e7b3ff98de02d3fb",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "7e8d7cf00b354b618cfb2d3e93493d695dfbd3e1226543b42a6e732ae8858c11",
+      "generation_seeds": [
+        6842695242323636488
+      ]
+    },
+    {
+      "prompt_index": 61,
+      "ytid": "FJkvAMLmejY",
+      "caption": "People are whispering, and a horn sounds followed by laughter",
+      "selection_key": "0e617c9fb203489614f6806ff93a736fc74425880fbf69ed42401af7a1f53542",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "db5de3f2d832728873bd043252adbab69ba1279c6a05d2e3bacc7f025ca48114",
+      "generation_seeds": [
+        12373716273556309652
+      ]
+    },
+    {
+      "prompt_index": 62,
+      "ytid": "fsBR7e_X_0Y",
+      "caption": "A young boy talking as a baby is yelling with several slaps on a hard surface",
+      "selection_key": "0e7284c4d02a2d6ef7ab1f14c328665dd1e342e2898eff03c4a3ca92ec121a6e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "421a3a0185ef6b0c477a407cecb0decbbb1ad598c7128d56e472fc46c185691a",
+      "generation_seeds": [
+        14163946161886865776
+      ]
+    },
+    {
+      "prompt_index": 63,
+      "ytid": "o_3MDLl_aH0",
+      "caption": "Artillery cannons firing several times",
+      "selection_key": "0ea2b397ba224d47949febfd2909b37c7df9756b0078fa4a7e9aab8614220911",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "9399654c2a125a72f7aab29b8c01a3b65f3612571cade93561ff8d915c823a11",
+      "generation_seeds": [
+        11342685125278814382
+      ]
+    },
+    {
+      "prompt_index": 64,
+      "ytid": "GIOApFAWDOc",
+      "caption": "Birds chirping and tweeting",
+      "selection_key": "0ef46bd898fba9e0a1d30cb51e6d9d0b3c1df588429e9a7619e8040f4bf1464b",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "31faabe89ff5b826d997552e171ff18758811068164a67500330078caeeb1215",
+      "generation_seeds": [
+        8906424566276366569
+      ]
+    },
+    {
+      "prompt_index": 65,
+      "ytid": "8o-Y4QP8LWs",
+      "caption": "An adult male speaks, after which clattering, thumping, metal pinging and a whistle occur, liquid splashes, and the adult male speaks again",
+      "selection_key": "0ef5462a8a89ed4e61441dc030cfa71e38746a4ef7584e341581950b395c5dcf",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "a69b70d1ece07f6155849788308f5b58a5a08933bc31239518dd90eae5f7f154",
+      "generation_seeds": [
+        3634543901454317023
+      ]
+    },
+    {
+      "prompt_index": 66,
+      "ytid": "59VP93Tzjmg",
+      "caption": "A train horn blows several times with leaves rustling in the wind",
+      "selection_key": "0effc8d091d7c78eb465c0dbfa04d3c19ceec0084e0fd09cf7744d4e73c8bff6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "130ce6027367ce5e177468e0eab9dfb000aed176ccc5019a9d8ab8c6e558e4da",
+      "generation_seeds": [
+        4042960433477569231
+      ]
+    },
+    {
+      "prompt_index": 67,
+      "ytid": "i1u_2eZYYlE",
+      "caption": "A short loud vibration",
+      "selection_key": "0fcc2273893f852f0d8baccb8c88177ed4462eda1f9f65744623b25b7b0596f8",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "c5d009f61d7ede817413086cd84b6ecad99d055143dbc26df30396ec4633e935",
+      "generation_seeds": [
+        1186998143201749226
+      ]
+    },
+    {
+      "prompt_index": 68,
+      "ytid": "ESjMIqrvRj4",
+      "caption": "Rain and thunder in a storm",
+      "selection_key": "10292718b71a2e02f9cd45c9996e75fc9d9d687243c2a94450d43c5504245b56",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "d27543100324eea4ec3bb5ce2a9dea2e699b12b14ce99abdff121987b5e72244",
+      "generation_seeds": [
+        17393261232716716156
+      ]
+    },
+    {
+      "prompt_index": 69,
+      "ytid": "mJ6ZO3xEcgw",
+      "caption": "A woman coughing and sneezing",
+      "selection_key": "1087a36faa6104eeb821c44d4df5006f4a76baad7578f19e3d65f668a2cf2f72",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "40e296dec9edaa28a9875d014e750a1f1dbde8354079aa143ebea269d3ec73f7",
+      "generation_seeds": [
+        12910519111331198597
+      ]
+    },
+    {
+      "prompt_index": 70,
+      "ytid": "Jon_DEFqsfM",
+      "caption": "Birds are chirping, ducks are quacking and other bird whistling noises",
+      "selection_key": "114c8a1dcb04bd8b0da819092be466714b8b9cf94233458ffc043982098a37f4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "b29de1577ffae1c4855c5cb41d7d1a4ef89146e9e57c7a2e641afded9e95cac1",
+      "generation_seeds": [
+        5357824017893250612
+      ]
+    },
+    {
+      "prompt_index": 71,
+      "ytid": "9HVgYs8OOLc",
+      "caption": "A male voice speaks and a bird coos and flaps its wings",
+      "selection_key": "1159b668476b297d6ab63551c307db6954611d782368035a194475890e1eaf8e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "83c1f2ff4488ab9f6a51c43150e4d57581b2e4307ba5ccfb0139f4d3fdf7e9e6",
+      "generation_seeds": [
+        15220031125912901147
+      ]
+    },
+    {
+      "prompt_index": 72,
+      "ytid": "uhSDBwVrEdo",
+      "caption": "A person whistling as wind blows lightly into a microphone",
+      "selection_key": "11ae8d9ffb01ac52a5ddad2a02a04ae5fc8782b974192e35d268df90e8c85787",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "8b6acd58124b5b95c700f85aae3e058eb3df105d00598b9c75f63f0be62e8462",
+      "generation_seeds": [
+        17733119706086371717
+      ]
+    },
+    {
+      "prompt_index": 73,
+      "ytid": "2KR0C5ysO8o",
+      "caption": "An engine revving continuously",
+      "selection_key": "124aa19b08e68aa9a84ff72c57ee8b200f0e183cc80c4ab55f004b0f0fdb48cd",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "73131788eb8122897bbe6ec7e74fd348f744f2cf26faf9d4ac539b72ea965742",
+      "generation_seeds": [
+        17915441093225560521
+      ]
+    },
+    {
+      "prompt_index": 74,
+      "ytid": "C_ga5m6nOhI",
+      "caption": "A train running on train tracks while a steam engine horn whistles",
+      "selection_key": "1261c6c9d7addcab9342ace34488318bd890dd0f0db367e71a3ed33ff960c090",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "41edf8763dd4bc71c950a5422886e723b74dedb1a03fdf133437ce9fbca921db",
+      "generation_seeds": [
+        16072338523216717218
+      ]
+    },
+    {
+      "prompt_index": 75,
+      "ytid": "7cHRSfbp7tc",
+      "caption": "A crowd of people talking as dinner plates and glasses clank followed by light knocking on wood",
+      "selection_key": "12db1b7c67a5bdc05cc6b0d097a50e43340f819686293c31a81a3c7f84ce5c2f",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "2b70eeac170829d03bfe6625af2455495d01d6fe3b1732d4ddd82bddf7972023",
+      "generation_seeds": [
+        5930100855387461332
+      ]
+    },
+    {
+      "prompt_index": 76,
+      "ytid": "PO8Nu3F8mkA",
+      "caption": "A distant explosion followed by steam hissing and fire igniting then a person speaking in the background",
+      "selection_key": "1340a154471368d8f4a0b5d962309488ad1f68e74cbc0c6a2946d6bbe95ce665",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "52cc484c1d0f3a0e115404837ba02bc42a95a4cb72271f2a9746bff61cb18785",
+      "generation_seeds": [
+        18118540961697618282
+      ]
+    },
+    {
+      "prompt_index": 77,
+      "ytid": "p9qRTh4BmSE",
+      "caption": "A man shouts followed by rapid gunfire",
+      "selection_key": "13f388d4691d83652644e55c262c481dfb5ed88279147a1da1b2fea504bc00ad",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "0f4153a6600dc906bc25e725aba915ba27410a1ced79a21460085ea2245fe934",
+      "generation_seeds": [
+        7612688628769136459
+      ]
+    },
+    {
+      "prompt_index": 78,
+      "ytid": "RrmBGjJqlEo",
+      "caption": "Typing on a keyboard with a man speaking",
+      "selection_key": "1428a08a9a88ec736bb317c48ae65e38524828af5815dbd005608071dcf4ee63",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "3e46944d882661887ce92bebe39c1bd8e4e7477d372642badd19e81d66033a38",
+      "generation_seeds": [
+        932961369760363389
+      ]
+    },
+    {
+      "prompt_index": 79,
+      "ytid": "mYQrjcYNrW0",
+      "caption": "A vehicle horn is repeatedly tooting followed by a passing engine rumble",
+      "selection_key": "142de994b08ef6f9d965febd9f1c23896851b4f62aab896d5ce736cc14360ce0",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "49ba1f3e461fcb17a4e30d82fe23194263e9072b89909f6d9031e3fe4d827e7a",
+      "generation_seeds": [
+        7509996820150861243
+      ]
+    },
+    {
+      "prompt_index": 80,
+      "ytid": "tfOIhQpYYe8",
+      "caption": "A helicopter is flying above while a man is talking",
+      "selection_key": "144f4d0099e8346cff36b1b2e676d8e5cfdce8f28eb656f3ab9447599d84d79c",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "a1755b7299867d79fef5cb6a87a4cfd62a27486de9a4f1d08d1642be5c18aec8",
+      "generation_seeds": [
+        9801069186029965581
+      ]
+    },
+    {
+      "prompt_index": 81,
+      "ytid": "DAN1t9ukkg0",
+      "caption": "Computer keyboard clicks as typing occurs",
+      "selection_key": "145df0ffa61736d651bdf9a4010c162c8357733d724654b3c3e575a10282d200",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "f25822a4581e43a9c27bfa2c048bf3f5ca18c001f7a8d42fde52954c452c5962",
+      "generation_seeds": [
+        8013077855298978017
+      ]
+    },
+    {
+      "prompt_index": 82,
+      "ytid": "q3SEOW2m4WY",
+      "caption": "Distant humming gets louder as a train passes after honking a horn",
+      "selection_key": "146b11d9da0f276920f6fb71acb05a3f7a15eb7bb954266733ae6ed801dd13af",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "5e81a060f28ec656eecdd549f16351fe0d1c2823d057180e568025ae699d93d8",
+      "generation_seeds": [
+        3327902508683109378
+      ]
+    },
+    {
+      "prompt_index": 83,
+      "ytid": "QKHpSAAjakY",
+      "caption": "A motorcycle engine is running, and a man is talking",
+      "selection_key": "1509d31ce6acfd1aebfd45bc05fb079c9a4bd745152fd24c664d0b0bb384917b",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "fe4ab2e48a1e8caa9ca1bf473d94635fc11a211e1acad23ea8b7b94b5d258363",
+      "generation_seeds": [
+        14674593703943082677
+      ]
+    },
+    {
+      "prompt_index": 84,
+      "ytid": "BMayJId0X1s",
+      "caption": "A baby crying over a radio as a man is talking",
+      "selection_key": "1617864da70aa5d1d9b49c63a87797bd1ff7646c2d14353bcef33f08e1fcf952",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "067536bfdada35f5147e0ee7959ea5497bf8ba1a2bb0b237f6c38efc7df887b2",
+      "generation_seeds": [
+        14504126943465311937
+      ]
+    },
+    {
+      "prompt_index": 85,
+      "ytid": "5xC4hkAWiao",
+      "caption": "Car engine running and then slowly turning off with a loud stuttering noise going off twice with slight pause between",
+      "selection_key": "1623a5de82d710a83e7f9d6fe097bec33ecf4e76f9f2f5f64ec75c5d37e0d3ba",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "d9302ca74551e4003abf23df86b7d5e9329029da46514db4396f0b2ea194793f",
+      "generation_seeds": [
+        17804160273361190914
+      ]
+    },
+    {
+      "prompt_index": 86,
+      "ytid": "maVYiednkSg",
+      "caption": "Low humming and vibrating with a spray and a man speaking",
+      "selection_key": "162e3e025506f7531fb24f54d5f19018e5c7b787276755c2c1bab689aef4c8fd",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "26c920182a5beba1201b9b05714b32446608b72bf5d7212118432386de67ef57",
+      "generation_seeds": [
+        17674463937342496025
+      ]
+    },
+    {
+      "prompt_index": 87,
+      "ytid": "BlbGXalLNVU",
+      "caption": "Water splashes and wind blows as men speak",
+      "selection_key": "1640b6fe8ef7ec7193f553fb6268f70627fffe8f0774ab24a82003e03890ca71",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "a75db4580f83906440a905a7b9c46a2da4f64126222000cd453fb26738f95da1",
+      "generation_seeds": [
+        10618981157226418807
+      ]
+    },
+    {
+      "prompt_index": 88,
+      "ytid": "R91bUbtKrRs",
+      "caption": "Two women are talking, and a baby cries",
+      "selection_key": "1679c963a1b863035b9e59b0cd10a7ba315bc3b1412ee5d58069b52e5ec5840f",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "c2126bc703d59d21137837315233f33cbfbd6df7595904df728df261a250956d",
+      "generation_seeds": [
+        6150691754110081780
+      ]
+    },
+    {
+      "prompt_index": 89,
+      "ytid": "DrCm-HpX67k",
+      "caption": "Fabric rustling followed by wood clanking then knocking on a hollow wooden surface as dirt and gravel pour out while crows caw in the background and wind blows into a microphone",
+      "selection_key": "16ac4d33b2bed1239cca3ce5997d4de1383e3e33b13b71d551fd3e7c612aa049",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "e2f9ac36540d8c95ae44d205d196bfc416f25e6ecd9247f232cc3b9128c2f2bf",
+      "generation_seeds": [
+        15039080955708062532
+      ]
+    },
+    {
+      "prompt_index": 90,
+      "ytid": "BwnGxJD9xh8",
+      "caption": "A man speaks, and a goat bleats",
+      "selection_key": "16cf1a010bfde228fe7a3dc5a50585c88284953d6d400db74b614b3e6430f55c",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "138b1589f4bc74488a542c795e92d06287a153b88569cb6693994e2271083377",
+      "generation_seeds": [
+        2154278458370904984
+      ]
+    },
+    {
+      "prompt_index": 91,
+      "ytid": "-Sz4z0QwEuM",
+      "caption": "A person burps loudly",
+      "selection_key": "16f9cb0990eea4caf5d8c04a3282c50e2298b882859d9e0dc610784a8ae8f576",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "605a486ffab91ffcbe5f17895035b1ebdd58f87bc1dde96f9b83b8edbdd002fe",
+      "generation_seeds": [
+        888548415390579328
+      ]
+    },
+    {
+      "prompt_index": 92,
+      "ytid": "9hxFqltp3xw",
+      "caption": "A woman speaks with some rustling and hissing",
+      "selection_key": "1717e3db71686067b6aea370af11d913e577c49e3d6293aecb19ca5e5bec8965",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "8ff2da260a22cbc873205d89bf0f8e06a4d5a8c4d57606ccc773fef7ef06e52e",
+      "generation_seeds": [
+        15313991690352315047
+      ]
+    },
+    {
+      "prompt_index": 93,
+      "ytid": "y1a8PntuXYw",
+      "caption": "A toilet flushing as an air ventilation system runs and a woman yells in the distance",
+      "selection_key": "1720a444321234459da4e0ca642532d21c65dabc861d0df409c3a6de9a7cf37e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "4298188e6181238cebd11ea2449b51441fdb002a56e2a3fc7fd1876be98bb9ec",
+      "generation_seeds": [
+        8965714201510638536
+      ]
+    },
+    {
+      "prompt_index": 94,
+      "ytid": "-aYumc8KoXg",
+      "caption": "The sound of horn from a car approaching from a distance",
+      "selection_key": "1733e217c1662363d61a47e77ba56427cb2382cf269b845f53f24e989956fef4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "f29de5f27efe10214a81e1af1e011842bc4188c8acbae21d94c73ed6361a0f78",
+      "generation_seeds": [
+        17255171025589920394
+      ]
+    },
+    {
+      "prompt_index": 95,
+      "ytid": "DzKjogSVOLM",
+      "caption": "A duck quacks while a rooster crows and a crowd chatters followed by a girl laughing",
+      "selection_key": "177db365c93ecc17a4217c2a2f4b8ca2b12744d84b94481b3026f2bb89f856db",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "da5886538f051fa8792d9fed0e61a822f8a2a4c68f3d39ed5ff66bd79ce3bfa8",
+      "generation_seeds": [
+        4490952592146996095
+      ]
+    },
+    {
+      "prompt_index": 96,
+      "ytid": "nLtNjMimLE0",
+      "caption": "Water trickling and lightly splashing followed by an animal hooting in the distance",
+      "selection_key": "17ee2774cb6b4c1619f6d05252abce0bb6f80bbeca4d4c82bcc038c396fe1bd2",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "064a0bbbffa6da0525be4ad749a00c2a0e6671df40f3763447d462d61cf60dd3",
+      "generation_seeds": [
+        2408409365951838708
+      ]
+    },
+    {
+      "prompt_index": 97,
+      "ytid": "E3Q1jfTeuWs",
+      "caption": "A baby crying and breathing",
+      "selection_key": "17f9354fc17b93ff6aabf49bd2c852a42d6c80b557b10dfa3caedf8d08c06f47",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "8185f59229311814d67ddcc34ab4995dd3f4067c6fa320948a04b27989e8b942",
+      "generation_seeds": [
+        5440997780889084861
+      ]
+    },
+    {
+      "prompt_index": 98,
+      "ytid": "NX0gR9Eebp0",
+      "caption": "Water splashing and then a speech.",
+      "selection_key": "17fe8b9745e7eb8e499e8022abe4e8d579acebe4ae587cdc689a212a1a9d296f",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "41440fb112089df0439ff9c4389ac9555e5b32804daaf0f22f043884ebb1cb72",
+      "generation_seeds": [
+        9035312311919111466
+      ]
+    },
+    {
+      "prompt_index": 99,
+      "ytid": "yau2WIRkxb8",
+      "caption": "A helicopter is in motion",
+      "selection_key": "18261315c07b12235537a643fff9fd8d64c9a7b16e634e0f27e1619f5cfa2660",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "85d5a432f3b56d7543ffb98f75332524896659c92cfdbbece64c70129fef975e",
+      "generation_seeds": [
+        6213297191784854119
+      ]
+    },
+    {
+      "prompt_index": 100,
+      "ytid": "WOywdRmySs0",
+      "caption": "A man speaks with some light crinkling of plastic",
+      "selection_key": "195cc7d585f41a1670760c9e7e86982d3132a5e87c06578fb94ba387b841c5df",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "776b1921a81663cfd93c9140f595945d4b6a71f916b858370177ad7a7aee9786",
+      "generation_seeds": [
+        11957356042784724848
+      ]
+    },
+    {
+      "prompt_index": 101,
+      "ytid": "glAeihz0NAM",
+      "caption": "A child speaking and then an adult speaking",
+      "selection_key": "197b8329eab4e7d03c00c8229f24c732aa521589c5d885350e97a9ee191fe6f8",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "e4cf925606bd945ff9bc8c1ad4d0ad78e3b200ba591a8181dcca272e89b48b6b",
+      "generation_seeds": [
+        15905246796806678582
+      ]
+    },
+    {
+      "prompt_index": 102,
+      "ytid": "Dt53UZgyznE",
+      "caption": "Baby cries and then man speaks",
+      "selection_key": "1a76c32c8dca19c6b6261ff59d338f9cf3dd2c6ec73d93493a9c8a9a87eda453",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "96b778a6bb0c066d6007944ed45aeca2e26cff72ae9aba72ae3c56b99956fec3",
+      "generation_seeds": [
+        874807801614766834
+      ]
+    },
+    {
+      "prompt_index": 103,
+      "ytid": "Ls2vrr9TamU",
+      "caption": "Heavy machinery operating followed by wood crunching and cracking as wind blows into a microphone",
+      "selection_key": "1aaffd4332f4bd5f3f782574fee005d3cfb906c4d475767f7c3b8a8d5cd3cdf4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "57d6b2eac57ae24134263460d21a24b25e26717665a5bd83716a63a1e429d76c",
+      "generation_seeds": [
+        3245015440148581967
+      ]
+    },
+    {
+      "prompt_index": 104,
+      "ytid": "taYKM1OSTwE",
+      "caption": "Sheep bleating with a baby sheep baaing",
+      "selection_key": "1b01549b1081f448f8783594d71c073b8933f66a1c9935202a72fc24211e838e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "8ad86818c154f2f3de04f4ce03f4a564ba5a201bcd1550ba48bdf7f20854b0da",
+      "generation_seeds": [
+        17214349057303173064
+      ]
+    },
+    {
+      "prompt_index": 105,
+      "ytid": "CxaPpRJRkn0",
+      "caption": "Footsteps walking on a hard surface followed by a person snoring",
+      "selection_key": "1b3754e77935cbfffb7cee58b0d3bef90d1c65c2c69c09f9b66fdde3e8e42b26",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "98c1945efc0d4430fafffedc799593c0e22658ba94214939f8c41fc67b37b861",
+      "generation_seeds": [
+        17560657725285995111
+      ]
+    },
+    {
+      "prompt_index": 106,
+      "ytid": "m_NCf-q4Gn0",
+      "caption": "A vehicle is making a thudding noise",
+      "selection_key": "1b5781b4ff495c6baf62f629bd5919674a80e3b3c4ee096fd6c1087a844a92f6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "4f770a8270964e67366eaf92f91a55e0ab706fae15253f6a842cb9189e1d501e",
+      "generation_seeds": [
+        2199955717407753759
+      ]
+    },
+    {
+      "prompt_index": 107,
+      "ytid": "9ZZHvwaH-CU",
+      "caption": "Multiple gun shots woman screaming",
+      "selection_key": "1b5e4047e3958d4009cd053c6f1951afc2aedbadee0b2d959b5c8ef96c08598b",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "781526674db8df7eda81047cb312596a4592a0d9bcdc6a09c080c6c3fe1637ee",
+      "generation_seeds": [
+        8212951625781644533
+      ]
+    },
+    {
+      "prompt_index": 108,
+      "ytid": "Td2EEDdFlRY",
+      "caption": "A man talking followed by footsteps on gravel as guitar music is playing",
+      "selection_key": "1b634777d7e5b40c4a911543852d91f29b536d1bbee8ca08c7e7fe11fde0ef6a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "dee7fd1c09662584f1cd7eeed67bd6b1bf451df3359128f29cb6224da574e51f",
+      "generation_seeds": [
+        15001640951522682205
+      ]
+    },
+    {
+      "prompt_index": 109,
+      "ytid": "ItS07xtdi4s",
+      "caption": "Rockets igniting followed by an electronic beep then footsteps on concrete as idle vehicle engines run in the background",
+      "selection_key": "1ba7c451695bb2d7dd17306487f5637b8224f93008f369a5aa35855cd9d7a678",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "d78e403da43abf62d535f9ebe0c7cb4722d54019dc5fdfe883d67cfda67e6891",
+      "generation_seeds": [
+        15712098709804414505
+      ]
+    },
+    {
+      "prompt_index": 110,
+      "ytid": "lVr-PxhZo8s",
+      "caption": "Hissing and vibrating from an idling engine",
+      "selection_key": "1c621ceef103f19bd5ab03fb2a624d00850b8a92bed7d0491afa58f9090326bd",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "a729c38a719cbd7df5b95d7855d58c24da757f27053adb0befd7017169d31688",
+      "generation_seeds": [
+        7797983587810552518
+      ]
+    },
+    {
+      "prompt_index": 111,
+      "ytid": "hVUmQfBIYe8",
+      "caption": "A man speaks with some clicking followed by wind blowing and a door opening",
+      "selection_key": "1d318bf88318cca93d8db3bfbcf125d0cda79d10fae4c81aab425efb1c4bf3b4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "94f6291bffacc460fe71d53761b6d5cb4f06c37df569df6b5c5eb4c40c386a17",
+      "generation_seeds": [
+        12330419018437836646
+      ]
+    },
+    {
+      "prompt_index": 112,
+      "ytid": "lgwpIImXCWA",
+      "caption": "A man speaks during rhythmic cutting",
+      "selection_key": "1d778b4fe4a8ebc88e950c907db1294767e06b26088aff9f3182284e11a5951e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "b865baabc9c2ef50064d46af8ca327fdc8a5adaeef5da125315c8c7df2e4b196",
+      "generation_seeds": [
+        961429641053546858
+      ]
+    },
+    {
+      "prompt_index": 113,
+      "ytid": "_iUX8CibElk",
+      "caption": "Humming sounds from a distance",
+      "selection_key": "1d7fb9748b953de11277b0c734d07a62a1acc8af28970e3d3e900f26d4f3d03d",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "f68f0bfa1e601686f80ef817bcbcaa373ea751a6a9142456bba8d7b2264d3f25",
+      "generation_seeds": [
+        13261666126351702508
+      ]
+    },
+    {
+      "prompt_index": 114,
+      "ytid": "i6MQCm58zlY",
+      "caption": "Squealing and rustling with a man speaking",
+      "selection_key": "1ea3c381af1fd8632b90ef9245605960706d50a0bff389d0879b7f5fd4b21f21",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "99a0ac679e88288c832e8141ca401d3c9d5297ac124df8c5e3f707f4e1248bc8",
+      "generation_seeds": [
+        12024484424542194877
+      ]
+    },
+    {
+      "prompt_index": 115,
+      "ytid": "404cD3bVXDc",
+      "caption": "A baby crying with a television on in background",
+      "selection_key": "1eeab06bd0b36fbf6c543e38140ad7dd4219b1013058fadeff4fd5725498a44a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "bccc6eac869f9b49973cc4d7201222acf67245574cc003d8dd5564b31c5db1e0",
+      "generation_seeds": [
+        15471113759316737788
+      ]
+    },
+    {
+      "prompt_index": 116,
+      "ytid": "LP_DzNUkAKY",
+      "caption": "Humming of an engine with people speaking in the distance followed by hissing",
+      "selection_key": "1f14b0c5ededb98b017a66fe0d0643203641047fc16a34991cf6ae6601d888c3",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "450ed55c5741821bb5e1dd79e00648d5e6d7e4faa5f49e951dd1b0073cf6dabf",
+      "generation_seeds": [
+        4785770454236260772
+      ]
+    },
+    {
+      "prompt_index": 117,
+      "ytid": "JnSwRonB9wI",
+      "caption": "A muffled motorboat engine running as a group of people are laughing and screaming while water splashes and sprays",
+      "selection_key": "1f4de5c77dc174301f7267458cfac4e07304b8c2808e1e87e6803a3c28cbecdb",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "f42fd0ce0ead26b9b4d0d5c2701831750298c4c696679e304fa2055479a345ab",
+      "generation_seeds": [
+        268173219647800662
+      ]
+    },
+    {
+      "prompt_index": 118,
+      "ytid": "NJEPbGVBJIQ",
+      "caption": "Traffic hums and beeps with revving engines and a man speaking nearby",
+      "selection_key": "1f64488b0698b0e998d0891a6c3ed9252f1abb05c4cc044f095d709ccf7fd2b2",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "379c6d14c967f055ef6eadd99c5944db954da35ca21322c64aad8ad3c3a81031",
+      "generation_seeds": [
+        17390979002788076227
+      ]
+    },
+    {
+      "prompt_index": 119,
+      "ytid": "SZ6CcXINiiE",
+      "caption": "A man briefly talks followed by a loud burst then laughter",
+      "selection_key": "1f8d93ae19a82cfc064cddf17b2bbaf208b632fd987315df7c4539c2387021d9",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "8f3afe6f9265f106ca8abce6a4245752faba788cb58433cf901148a928a72800",
+      "generation_seeds": [
+        1155743867442995553
+      ]
+    },
+    {
+      "prompt_index": 120,
+      "ytid": "AUJPx81qKtY",
+      "caption": "A man talks and insects buzz",
+      "selection_key": "1fc38a45f1450d2aaa3444608b7d30d3229ad6c853734d6d9d01fb2a2c453deb",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "bc3154139072ae5f3d2f85332be679e8620b76931eb2856e63ede37a2c0e4519",
+      "generation_seeds": [
+        8005595509476171540
+      ]
+    },
+    {
+      "prompt_index": 121,
+      "ytid": "4SZ7JXDCNps",
+      "caption": "Plastic rattling as a vehicle engine accelerates",
+      "selection_key": "20d846d5bd032ff3bb55e6331c0fe12af44c0c7d9910195041a7f6861adcd1d2",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "51db49ffd334f43bdb8d5861f2e34ec79685d4802f1eb5c961bd7ec98a1c1fd5",
+      "generation_seeds": [
+        17555540400230626832
+      ]
+    },
+    {
+      "prompt_index": 122,
+      "ytid": "sqWyxUObwkw",
+      "caption": "A motorboat engine turns on",
+      "selection_key": "20ee656343926e68db54682adf628a093ffe38956d25f2e2ee2ce11415731b50",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "91321e4f47c25e9ee7ed35960b5e60499ab57ece1f15951182a3218f4b26d849",
+      "generation_seeds": [
+        8496726684914760184
+      ]
+    },
+    {
+      "prompt_index": 123,
+      "ytid": "--0w1YA1Hm4",
+      "caption": "Men speak and laugh with humming of an engine",
+      "selection_key": "20f3a82406c4197e8329fe2530cc3479aea1db61211342087bb89ddf43e2477e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "7d852097b46db840a4c6ae53f0ad160d128e4096ae6cc4f43acb310c4a6d019e",
+      "generation_seeds": [
+        12902967211913407647
+      ]
+    },
+    {
+      "prompt_index": 124,
+      "ytid": "EQVWhHmT_cE",
+      "caption": "Some claps followed by a man speaking then glass breaking and people laughing",
+      "selection_key": "2102dd6eec88eebcfeac8bafb6c78230e0bf51393110bddc1c525fd77478e0e8",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "e3238817de98b2d3401274df4afd8931800ed626c0f5234b76e82e2144199b4f",
+      "generation_seeds": [
+        2713606152768957029
+      ]
+    },
+    {
+      "prompt_index": 125,
+      "ytid": "FA11v4SmdBc",
+      "caption": "A man speaks and then whistles",
+      "selection_key": "21256b60e2b412c753ea82d1d0533a31d4e23c67fc7320983c505140a15850dd",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "339f59d36b4a58a78bfa08682c34a37fac4fd8a7de0244a7768da42de09e8bcd",
+      "generation_seeds": [
+        15015834409553165248
+      ]
+    },
+    {
+      "prompt_index": 126,
+      "ytid": "-mb4Fw4Z0xg",
+      "caption": "Race car racing by some people laughing",
+      "selection_key": "21d441ed9f1b182966a6ad78b2148fef673aba59f9a55b20b2e454d091a2625e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "c0128d4cd5f30b2247710842a1fd2284e28c04bc891035a4ce57526c287f37c1",
+      "generation_seeds": [
+        9186866741010402140
+      ]
+    },
+    {
+      "prompt_index": 127,
+      "ytid": "LB6CZ0x-kns",
+      "caption": "Metal clanking followed by steam hissing as a truck engine is running then accelerating",
+      "selection_key": "2241c882c96eab8f803226ddde231945d4fa8798011608960563b1ff07ed6812",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "5beb78c3dec85a29bb2dac1056e04684cb0f7fcc19146720333fdf7883498186",
+      "generation_seeds": [
+        977227458540825906
+      ]
+    },
+    {
+      "prompt_index": 128,
+      "ytid": "yL3gKa6YLoM",
+      "caption": "Two men speaking",
+      "selection_key": "224df8b3d5f9d37032b9587c53e1bd8b463b1a6814bdb971fe74461b8f843776",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "7a63f0c0d78d442fad80e90c1851bb77a6748929be89457cb4e7ef90e0dae86b",
+      "generation_seeds": [
+        15380384661734995805
+      ]
+    },
+    {
+      "prompt_index": 129,
+      "ytid": "N_s9F4CI_98",
+      "caption": "Birds are cooing, and wings flap",
+      "selection_key": "226b4922f6d578e4a66c7fd44a4a1b895b88af997152c2610aead43ba70e940c",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "9b61907506146fe869e916e919710b740ac6bf8c07c0ead431299d20f83b2b2c",
+      "generation_seeds": [
+        7585243274259034029
+      ]
+    },
+    {
+      "prompt_index": 130,
+      "ytid": "LBe33dw9ezg",
+      "caption": "Buzzing sound moving nearer and further",
+      "selection_key": "2294f3d9c9c03300cc435b2b63c3f8214f20d6fddad7b5af378c348d8fb3a130",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "e53e1162a6884eec578024d7f3501760f73cf13d52bf9282c0b6fa674f97d58c",
+      "generation_seeds": [
+        8458895913267169546
+      ]
+    },
+    {
+      "prompt_index": 131,
+      "ytid": "nlC4UI4hZ60",
+      "caption": "Rapid clicking occurs, a motor vehicle engine attempts to start and grinds, then the engine fully engages and begins to run and vibrate",
+      "selection_key": "22d3486b138951935781a9501bbf7c97c3ee7b4c95601e5090fe08294fe344a3",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "982d6029399a3f5075ea9d500fa1fc298b2216687814726be506196b79a1c8ca",
+      "generation_seeds": [
+        9731947508427149057
+      ]
+    },
+    {
+      "prompt_index": 132,
+      "ytid": "0_K6OKtoBBU",
+      "caption": "A cat is meowing",
+      "selection_key": "231ed43276794c2a575269016644089b08937f6d5f61571e1d0db92aba00e209",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "912b760d92d8e8a759ba02fc2e287753566f988892db67851ad5948fa2003336",
+      "generation_seeds": [
+        15482428104411628474
+      ]
+    },
+    {
+      "prompt_index": 133,
+      "ytid": "5t6tSW0yT40",
+      "caption": "Short spraying that stops near the end",
+      "selection_key": "23243a9465bf3324a0581b8ff8b7029c7ea0b6b14f97b64e8b77c62e60cf70f9",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "a0cc44c220d2fb9fc75aa230e613f5655fe4c71f8530257a8bf326d20770a8ab",
+      "generation_seeds": [
+        10324926908454878488
+      ]
+    },
+    {
+      "prompt_index": 134,
+      "ytid": "CM49C3RkzV8",
+      "caption": "An adult female speaks, and muted speech occurs briefly in the background",
+      "selection_key": "2378214dbd418586a5ce66b874a51087eb21fb46e5bc137d67ab71a9c02433b4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "63ca305a849c5cefadee94b5f3b3da82272770cd97adafdfc6e56638b316b17b",
+      "generation_seeds": [
+        12262891579737908938
+      ]
+    },
+    {
+      "prompt_index": 135,
+      "ytid": "J0yeFeKvIt8",
+      "caption": "Gusts of wind blowing as leaves rustle and birds chirp in the distance while wind blows into a microphone",
+      "selection_key": "23e8eacdbea7cd586263494a92bfb86b1eef44c74bd0a8d6331622e7f25f111b",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "65ba7c296b727880515802d3abcf9bba5fa8dae3be2be984a8bd517b31d50df0",
+      "generation_seeds": [
+        10729171855357008553
+      ]
+    },
+    {
+      "prompt_index": 136,
+      "ytid": "bX2vDaHL26U",
+      "caption": "A car skidding its tires and racing away",
+      "selection_key": "23fcaa7759d014e92130f790d6053b5be540af658ec019ef136b7b14de39e8de",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "3a11a74eb0996d072f379983037cdef3c1643088e60d96cab2b456b7d8fffe17",
+      "generation_seeds": [
+        713956530665005372
+      ]
+    },
+    {
+      "prompt_index": 137,
+      "ytid": "mlnUJH4BQnk",
+      "caption": "Female speech and rubbing",
+      "selection_key": "24627b8334f6689425f291b0f045f3475214789ea1ba938ece6854d12348e985",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "1cbabb6c9f8f18f2e706f4beeb563eb14a10b761f3abc16c9771a90dd367a752",
+      "generation_seeds": [
+        13802740891547272723
+      ]
+    },
+    {
+      "prompt_index": 138,
+      "ytid": "wbPmnxCLoRQ",
+      "caption": "Church bells tolling followed by a smaller bell ringing",
+      "selection_key": "2477e6b7cc106b905ffb2e22afa6b095dde08a74808702b476069835decd17a7",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "b6a096751a8f1b2da4a29627d96c57610b3ede1ce4fe4ccbfb1ec047de5a30fe",
+      "generation_seeds": [
+        125392084998678391
+      ]
+    },
+    {
+      "prompt_index": 139,
+      "ytid": "hqPBcvex1VU",
+      "caption": "A baby whining and crying",
+      "selection_key": "24bc7eeec3a85ba5e66377cea5cc3d6a0baf52eeaab28dadd3045916fbfe83f9",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "8ab4bfe4cc96f856338aa6952aaf10910ec9ed8d97ca827c9fec1875b5f9de52",
+      "generation_seeds": [
+        11543076615836548619
+      ]
+    },
+    {
+      "prompt_index": 140,
+      "ytid": "MVGhC-xB79s",
+      "caption": "A child talking then a man speaking with bird sounds in the background",
+      "selection_key": "24de6c105a785632f3d6208cf7cba365848c12695e0322545c2646f5148c76f4",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "d2966c8bccb22aa00915e5a1148854029b13260f860068bcf173aeab88821ec3",
+      "generation_seeds": [
+        14406643001365513445
+      ]
+    },
+    {
+      "prompt_index": 141,
+      "ytid": "Ls1zyPjs3k8",
+      "caption": "A bleeping noise followed by a static noise",
+      "selection_key": "25e2976a68eb41927324613877ee2a26225dc4a8c4f885df94813e7e1c841544",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "9f50c5e23a36d2bfe9b73f32a708bc4d179afb3e9e10879fd9f8a070813b20eb",
+      "generation_seeds": [
+        3646919846649613055
+      ]
+    },
+    {
+      "prompt_index": 142,
+      "ytid": "14ekd4nkpwc",
+      "caption": "Baby crying and person tapping his mouth",
+      "selection_key": "2614d7b2b197ccb5a36d87f2b3f507734dcc383cacf0ed3fe750dccc9dfa24a1",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "5155b92ab3e68f2cb73d184be5cf1e465122ea4ff8feb918b7e8de1a56aa0cac",
+      "generation_seeds": [
+        16488973041260310995
+      ]
+    },
+    {
+      "prompt_index": 143,
+      "ytid": "fYTZVxQ8LJk",
+      "caption": "A woman talking followed by a young girl talking",
+      "selection_key": "2639873c2bdd1dbd7bfb9863490dd6c655bb3d8ea4fb485d9cc2a4afe0301996",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "8686370b70596372fad25cfcd1f4cff8d5566b1669f38580a8ac65fe9311d89e",
+      "generation_seeds": [
+        6503889455982385040
+      ]
+    },
+    {
+      "prompt_index": 144,
+      "ytid": "35b9BSmN5JM",
+      "caption": "Loud vibrating followed by revving",
+      "selection_key": "2678167fe639bba1608271030e42974b1b56a9fd466fcc53479bd5898f082115",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "7b2f8606b0ddcfa96641a6e2837db55267cf7b08db8f1fc3f78d999eb750d6c0",
+      "generation_seeds": [
+        8785495735895916755
+      ]
+    },
+    {
+      "prompt_index": 145,
+      "ytid": "qakN0JNbpcU",
+      "caption": "A man speaks while bees are buzzing all around",
+      "selection_key": "267f1b36198e89143aae4089879092f25b99cd2faa56c347eacb1e9e8e658969",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "c2ae8d04be6408f0409280fd1e168843fcd7fd5f6c3b7e4bb66889f999b42ea6",
+      "generation_seeds": [
+        2224676430940134988
+      ]
+    },
+    {
+      "prompt_index": 146,
+      "ytid": "jinJkonlrWc",
+      "caption": "The wind is blowing, a motor is buzzing and vibration is present, and an adult male is speaking in the background",
+      "selection_key": "269fcb55698b0ee8ad17f9549d056d957cfb281c19ecfc88cd1848583f409af9",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "c844b14825cd2f3a46a4c7b67aadf5c824dd5a6488968bf1c2c3ff5567a8942c",
+      "generation_seeds": [
+        3784431248233165660
+      ]
+    },
+    {
+      "prompt_index": 147,
+      "ytid": "JC2ZrXzCX4Y",
+      "caption": "A person snores while people communicate",
+      "selection_key": "275363caec2c556971b60a70bd71b9b0a8b09892e271727e31af318f399e0b3c",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "6b3c74412d56680a8b287ef8958f71055d31e02f3d88bcb2bbbcfe37530082a6",
+      "generation_seeds": [
+        17854620951737630883
+      ]
+    },
+    {
+      "prompt_index": 148,
+      "ytid": "XZTt1xdK8uQ",
+      "caption": "A vehicle engine running as water is splashing",
+      "selection_key": "2784ebdbf7bf5aa27ab811a811271c4070d7ee13c3ba59b0abaa984c4009d5ce",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "6cc9bdbe655111a822ed3233040e5acebb74bd85b79413fc256614e1bb05dfe7",
+      "generation_seeds": [
+        5792521715839457012
+      ]
+    },
+    {
+      "prompt_index": 149,
+      "ytid": "QRtuOWWya30",
+      "caption": "Metal clacking followed by a man talking as metal rattles while light guitar music plays in the background",
+      "selection_key": "27b04c4a8e5d6e116196bb89827729b5ffff57914c411eb9279fea9e64cf2092",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "9d6c94f1608e54142b67a64cb80eeb24688e3fe250e6d16fd0cf7c0443b07b41",
+      "generation_seeds": [
+        9231818947741517254
+      ]
+    },
+    {
+      "prompt_index": 150,
+      "ytid": "MjSegUnQXr4",
+      "caption": "Rattling is followed by pigeon wing flapping and vocalization",
+      "selection_key": "2804711416a67b73b0e70909d76bc01aa97651f9c8362ccff0f5d36339c948cf",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "6998fd72bca7b6e96fe0e6724547f09b40532c73fa91c3d796f9f7f87ceb63bf",
+      "generation_seeds": [
+        9208830815919738420
+      ]
+    },
+    {
+      "prompt_index": 151,
+      "ytid": "2a6GNu6uCDE",
+      "caption": "A woman speaking",
+      "selection_key": "287a80bd3acae925679466dacd299814736c858dbfa5ec10516a66b796ceb7f1",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "6d7ce443764b5fec0ea7657fef60dfd7a4eae6572f03447bc4d047099d0556ee",
+      "generation_seeds": [
+        687121312022898643
+      ]
+    },
+    {
+      "prompt_index": 152,
+      "ytid": "z1ax0QPpd14",
+      "caption": "A duck quacking as birds chirp and a pigeon cooing",
+      "selection_key": "2892bbed8b8389af334ad35a31c362e12dbce4b6aee7e5a21cabec52e5074a1b",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "771c2b83b0f9fc2fe91ce774cdb58dbbff11726aa484443a46948ebaeac395b2",
+      "generation_seeds": [
+        5076662026210335017
+      ]
+    },
+    {
+      "prompt_index": 153,
+      "ytid": "Z7yDwpdGelM",
+      "caption": "Water trickling, plastic crinkling, followed by a male speaking",
+      "selection_key": "293ea9c12a3ed5cfbec30d0513eca25a5559f29a7c650cd7d270463a67829e12",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "f12155ba8be7e5fae87f4d64848c76a7410bdb21f01df8646cf50a0dde73440d",
+      "generation_seeds": [
+        1508690545775635443
+      ]
+    },
+    {
+      "prompt_index": 154,
+      "ytid": "dkiwn2FdDVw",
+      "caption": "A pretend duck quacks in cartoon fashion while an adult female speaks",
+      "selection_key": "2942942991de0f29e799b820b3f601d45915bc8847977fb28883a54ebc29a226",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "84cc6c3f7724fc84aec9d2bd3db0d818b300712badc6de3a794e6a85488e973f",
+      "generation_seeds": [
+        7458307537853389535
+      ]
+    },
+    {
+      "prompt_index": 155,
+      "ytid": "atmDP_fmK_8",
+      "caption": "A low loud hum gets lower followed by an explosion",
+      "selection_key": "2955bd2e8a6a28e62ddcfc063e8545e618b0e6c9b1c98b431e993ba795f4673b",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "01a9ecf17c429f41fe23198be4148486a51219a1044b9267c3e8277ca10345d5",
+      "generation_seeds": [
+        17805015802360505816
+      ]
+    },
+    {
+      "prompt_index": 156,
+      "ytid": "Tgxst7Ft9js",
+      "caption": "Scrapping and filing of wood followed by a man talking as a dog barks in the background",
+      "selection_key": "2987b227ac08296a0c422fb82d110b2f3242f5f83861d0eef8433b40ca795cd6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "bfb87b9ed7fbf4ed1c6f75cdbf44e831f663a4f94bb0dd26cfabed0a118da511",
+      "generation_seeds": [
+        14393398644751593840
+      ]
+    },
+    {
+      "prompt_index": 157,
+      "ytid": "3qTL7QRk-tg",
+      "caption": "Gurgling water with men singing in background metal scraping metal",
+      "selection_key": "299558ade81b05aef317b2d2f92f6ca0f0ba93a437dfa35b8b57d2b4dae57d3d",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "e1eb4ebdd4c25017a35036dfa35ccab35f85dbf63b20349245251d5fb5d55aeb",
+      "generation_seeds": [
+        13842810590419104291
+      ]
+    },
+    {
+      "prompt_index": 158,
+      "ytid": "3iLGu2Omgrw",
+      "caption": "An elderly man speaking",
+      "selection_key": "2ad27a2409faa6762e6cddca333a401ea545de56ff8b8ff267622300d608b20e",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "7268f1060ea622776a4c3ffdefd057b75d61deb19c33c5720df22db752f2422f",
+      "generation_seeds": [
+        1224465088834113412
+      ]
+    },
+    {
+      "prompt_index": 159,
+      "ytid": "W7OJevEgq7w",
+      "caption": "Dog yapping and panting",
+      "selection_key": "2b2c8c3ef3795fd5887e53803ff3f422a58d4f791ee576906b72dd11a4571522",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "4c15c5617bb4587a78f14146aae78a7216bd4b405135e4c559745dde5b039ff4",
+      "generation_seeds": [
+        17138632536566232026
+      ]
+    },
+    {
+      "prompt_index": 160,
+      "ytid": "8ZH_PoK0clI",
+      "caption": "A series of doors slamming open as footsteps shuffle and plastic clack while a woman speaks",
+      "selection_key": "2b60f9e4eeebe9830803ced50222b8d59b7d8d2a0360643f6e156e472243ee88",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "b416592c7ad03a4eee252b4228bcb7aecba0370bfe027e2c3230bc4a969bbf6e",
+      "generation_seeds": [
+        4543733381094381003
+      ]
+    },
+    {
+      "prompt_index": 161,
+      "ytid": "KnXNy5Q6YS4",
+      "caption": "Muffled speech and insect buzzing",
+      "selection_key": "2b61a6c12b9d8456891e7052d428cf0633418452975ef8097c578551baf60939",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "73dd89b5f5b33aad29a7ccbd8b4b453f079108f627204abe50f4aa48e9b4e260",
+      "generation_seeds": [
+        7733742065514625991
+      ]
+    },
+    {
+      "prompt_index": 162,
+      "ytid": "a0yXS7PmVR0",
+      "caption": "Praying with mechanical noise in background",
+      "selection_key": "2b7594c4151a0ad1b99de74f1a2d4670092998892e28eb4f886fd5a7b51a9872",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "81ecc55dd56f06c7c667d446ee35a75d9e5ce33af4a7b65f52edb7e05be309c8",
+      "generation_seeds": [
+        18183046419128975335
+      ]
+    },
+    {
+      "prompt_index": 163,
+      "ytid": "3RultJjvTWI",
+      "caption": "A young girl talks followed by another young girl laughing then a young man yelling as a river stream splashes and flows with a crowd of people talking in the background",
+      "selection_key": "2bd113a49a797686b165bb6b261721fffef3ffe81175ef4af1413aaa5f1f7dd5",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "41ccb0df66aea1d8ea835e40357103588320e2d93c1f5408cbbd736c2a10bbdc",
+      "generation_seeds": [
+        3906977842409340383
+      ]
+    },
+    {
+      "prompt_index": 164,
+      "ytid": "lmPMhs-9IYE",
+      "caption": "Distant humming of engines with people speaking and whistling",
+      "selection_key": "2c0dd538d4b7e07ebdd9e9a3e467228cbcf9db442542c5c31f2247439c8d9529",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "b608217e190f851e9fffe8e78e9258c4938cae2a560e754ec32b964a1bbd8805",
+      "generation_seeds": [
+        11300523149700279580
+      ]
+    },
+    {
+      "prompt_index": 165,
+      "ytid": "bQNX7vDalQw",
+      "caption": "A man speaks followed by heavy sizzling",
+      "selection_key": "2ca21abe965dc767462cb9187601cf53c428b2f5b0c560a59bbf25bb5c3f61a2",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "594a49adcb5d7739b22b1a5212d236393ff183d061e250f3843dddb8333ae12c",
+      "generation_seeds": [
+        4435803904113680606
+      ]
+    },
+    {
+      "prompt_index": 166,
+      "ytid": "Xi6V0LGvqoo",
+      "caption": "Dog whimpering and barking together with rustling",
+      "selection_key": "2cb6886bac13603a8f3729e4f24acfa5b9a2a6239e5f6882722669bff74d1875",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "b97384333e3c3fd2c30e14ed5e18a0a3025d9d3277ebf185fc873b962d7be815",
+      "generation_seeds": [
+        1902868685951920806
+      ]
+    },
+    {
+      "prompt_index": 167,
+      "ytid": "PMMkPq5jJXY",
+      "caption": "Burping and then laughing with continuous burping",
+      "selection_key": "2cf3f9410c9b363fdeb4b30f2b77ff1d2d42cdca3d1387af5355bb8636566c22",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "dbd79dc7d7b8ba18460da1b32a1369697d490cad73765e8667a182581a60762f",
+      "generation_seeds": [
+        10846176094611985124
+      ]
+    },
+    {
+      "prompt_index": 168,
+      "ytid": "aMhu5eMQAsI",
+      "caption": "An aircraft engine is running smoothly and consistently",
+      "selection_key": "2d027953a4490b56e30d8cefc3a3fa556b4b0eb854ce2db8b6b4dec22c51e707",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "6febba027e958685ca9cd867b03f20987db1af940b1cbd1a2b2c076140be29f1",
+      "generation_seeds": [
+        10683562078499980033
+      ]
+    },
+    {
+      "prompt_index": 169,
+      "ytid": "YqYCDis3EUA",
+      "caption": "A swarm of insects buzzing as birds chirp in the background while wind blows into a microphone",
+      "selection_key": "2e08a07c9e74fc47daecd1c232bc7806094ce1d5ead6e66b1be64b5383e875e2",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "9d90f940d0d966a459cdf6194813cb45a55e8ee9558de3c3a8291b311e3963fc",
+      "generation_seeds": [
+        10175195419720605442
+      ]
+    },
+    {
+      "prompt_index": 170,
+      "ytid": "MPLZUg89y5U",
+      "caption": "A large truck engine running idle as a man is talking and wind blows into a microphone",
+      "selection_key": "2e63e7dee6340c1223f3f2c12395e743276e835c6452ff7f9e1cfbf942e74f1a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "371491d45267c826ca8227d57957f6b47f5004c4bad88daeaaee56e5cedd32bd",
+      "generation_seeds": [
+        626962723614731956
+      ]
+    },
+    {
+      "prompt_index": 171,
+      "ytid": "zEaGx6an4es",
+      "caption": "A power tool drill operating continuously",
+      "selection_key": "2f24cc878a78fba35006afae778b59c948cb72614a69da8326f9b5ea4a6a7533",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "1f92408b4ff169913c5468dc49b46f2c011832dac406422381389360b16ddae1",
+      "generation_seeds": [
+        10798932021541800486
+      ]
+    },
+    {
+      "prompt_index": 172,
+      "ytid": "-EaZ7EJJUl0",
+      "caption": "Cup being set down followed a man talking and mixing something in the cup",
+      "selection_key": "2f694cd2d11ca2c3ef37e7f067aa0aba072b01041c737145e68bb2c63254bd49",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "cdc43d25462acd1fa1be43d5398d62e67af2794935bb45d1e3de9c3a5b46fc92",
+      "generation_seeds": [
+        8404801880013291381
+      ]
+    },
+    {
+      "prompt_index": 173,
+      "ytid": "gkWd1HugK2w",
+      "caption": "Pigeons coo and flap their wings",
+      "selection_key": "2f9b362bcccf3e72531d4e914f8d834343b666159aabf570ca7900c52ad0d075",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "8de3513af2b9577003cf39c886af88b17b199db838e6087985e8a3748fcea700",
+      "generation_seeds": [
+        4381004620085954337
+      ]
+    },
+    {
+      "prompt_index": 174,
+      "ytid": "LWng-4PDzPM",
+      "caption": "A rustling followed by a soulful whistling",
+      "selection_key": "2fb0f9a818e1750320e29b105d364ebe258595a5b2244db56e8748389a55a5b3",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "6368c6063cee97a9c4e80aa4cbc543df15de680874b5d47404f3d4c0d5262cac",
+      "generation_seeds": [
+        7700337619299813186
+      ]
+    },
+    {
+      "prompt_index": 175,
+      "ytid": "_z6pymOet7g",
+      "caption": "A man talking followed by a toilet flushing",
+      "selection_key": "3000426e19e1c394974a6bae4f60d1193df34b80c1a41d4d9c395c875f9e87bf",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "8cb215721bc7f40aba8258e88f02749cc050d3bf9ec69783308946844fd88b47",
+      "generation_seeds": [
+        13031399263585922059
+      ]
+    },
+    {
+      "prompt_index": 176,
+      "ytid": "FhimNYClv40",
+      "caption": "A fire truck sounds the siren as it travels",
+      "selection_key": "3070cd11470013f9e6796cd21fa140b2aea654f5b5f6298b3065c7381186c388",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "20bf7ba4b0cc3dfe4ab430e0b7546e4aec377906c60af1e50609a0731d114f28",
+      "generation_seeds": [
+        16094113895250706108
+      ]
+    },
+    {
+      "prompt_index": 177,
+      "ytid": "rgrmLLhxoCQ",
+      "caption": "Continuous crinkling in a quiet environment",
+      "selection_key": "30965ed381954359e9f9997624cc868088966d1134d6e8687da9ad641c40cbcc",
+      "caption_row_count": 5,
+      "chosen_caption_index": 0,
+      "caption_hash_hex": "52b3eb60c45242b3d6651f2dce139190af9ab7a0193f8568e815e6999ee06380",
+      "generation_seeds": [
+        11294072168328081098
+      ]
+    },
+    {
+      "prompt_index": 178,
+      "ytid": "x5AH2gW_8S4",
+      "caption": "Pigeons cooing as wood clanks and an animal hisses",
+      "selection_key": "30d055cc02942c889977c29d4963b0e13c07eaadfed807f4b8751eeb9e29a488",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "d27981297443817d1293ea46949d3b850200e9851e1edac0bf6686f4debbecfa",
+      "generation_seeds": [
+        14780720382721392548
+      ]
+    },
+    {
+      "prompt_index": 179,
+      "ytid": "sTMKled6Q1M",
+      "caption": "Whistling with wings flapping, birds chirping, and pigeons cooing",
+      "selection_key": "30e2ac56893ee9a03be85526d3e63e4af59c4efa916a00db0600313816b1a608",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "a2b4f3137f01bd260b4f7ed093c8f1d4da10cf5de57ad4482d7c7b34b1dd2b69",
+      "generation_seeds": [
+        16593161822797730118
+      ]
+    },
+    {
+      "prompt_index": 180,
+      "ytid": "1Uh74_rZ72k",
+      "caption": "Wind blows hard",
+      "selection_key": "3193db049a16c224c074b7749453014857deba613909c21f2edc9041760b01b6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "9db444aae012750ee13012874251825364f20dcbe3fe440ecc2eaa88cb267551",
+      "generation_seeds": [
+        898047247391730479
+      ]
+    },
+    {
+      "prompt_index": 181,
+      "ytid": "096oTVzc5Gs",
+      "caption": "An adult female speaks and an animal growls playfully",
+      "selection_key": "31bb7ca335bd5b61ff21ff9255e84d414e0d41c1a804de4a7c7ae73e538e9ec6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 3,
+      "caption_hash_hex": "bc588075b69caf5e178635a17511f7513039136414cf1fe222b99bb98faa7e43",
+      "generation_seeds": [
+        16976724242968822865
+      ]
+    },
+    {
+      "prompt_index": 182,
+      "ytid": "dP5DbAzTl5M",
+      "caption": "A motorboat engine running as a man is talking followed by a plastic clank while wind blows into a microphone",
+      "selection_key": "3217cc032fdddb3dd945d251baaff1b1a3ed87cc29363106c8ff8b5b04cb8f50",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "8c40b1f38877848d5f0e61546e99e21692b9239042fd98f1f219e7e99b3d89ed",
+      "generation_seeds": [
+        5143859614405582621
+      ]
+    },
+    {
+      "prompt_index": 183,
+      "ytid": "XrJcmftCY04",
+      "caption": "A crowd of people applauding and cheering",
+      "selection_key": "32eb0655cbce7c3bc7200ee1ff6d3da9b3ffa0e7bd8be3efcb2062588e44fff2",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "f68086536e31e6fcf850cb72972e424df1502fd7f5a962b6ce506f95499005e8",
+      "generation_seeds": [
+        8664030988006297627
+      ]
+    },
+    {
+      "prompt_index": 184,
+      "ytid": "6ZFU4PqXmoI",
+      "caption": "Water sloshes as a motor runs, then a man briefly speaks",
+      "selection_key": "330e8d56c7f864757a329121c4e7d42c71c59a03706261ec9560e9a14caa9e1a",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "e4e56d8e8649e14ffedae77fa7644f118e627df09a6cbee37df901b9bd0a1ad5",
+      "generation_seeds": [
+        2439800665462922765
+      ]
+    },
+    {
+      "prompt_index": 185,
+      "ytid": "ZsTZ7jqbd9M",
+      "caption": "A man talking during footsteps on leaves as birds chirp in the background.",
+      "selection_key": "331eeea2cb6441b6213285e345d14c93e1d5b0286216523fc3039820576dd726",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "214c397560f992fd1348e44c8faa5626d35da345dde5120d3125112d64245a24",
+      "generation_seeds": [
+        16867859711318733284
+      ]
+    },
+    {
+      "prompt_index": 186,
+      "ytid": "w_Utn3CwAXE",
+      "caption": "Water trickles down followed by some rattling",
+      "selection_key": "333f515a7837238c17054af6ca3c46e478d780e3718df376ff79baba187dd5d9",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "2b760783bd583abef55bcb332b3b666c03bd145dcc01236f5de6e26ff0f3adb5",
+      "generation_seeds": [
+        9138978548770779695
+      ]
+    },
+    {
+      "prompt_index": 187,
+      "ytid": "3ue0gJM0THk",
+      "caption": "Aircraft engine revs and creates propeller which",
+      "selection_key": "33dc7b626715205086cbbb5fdd54e1cf1eb4b72c90fc38523525b76406a9caac",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "c3971d0731b8570f772d3013c7bfadb2ed5e417ed743e3826c99e04cb37d38c0",
+      "generation_seeds": [
+        8454896339157078390
+      ]
+    },
+    {
+      "prompt_index": 188,
+      "ytid": "hV4bDCBDCy0",
+      "caption": "Vehicle running with a far away voice in the background",
+      "selection_key": "33e9c559bcd100b0a8474cc745a7fd4a2336042a4a5166bab2ea20cca4d3baea",
+      "caption_row_count": 5,
+      "chosen_caption_index": 4,
+      "caption_hash_hex": "498a02652c0cda83383467d4e368e1a6d1030c3af9a51d9e3dec5516a3740193",
+      "generation_seeds": [
+        4190330679292541351
+      ]
+    },
+    {
+      "prompt_index": 189,
+      "ytid": "cFHFVGOtp6g",
+      "caption": "Camera rattling and muffling as a woman speaks in the background",
+      "selection_key": "346292c15fafe57c746332de07d143c00eac4a8a313718c8392425dbfc5491fc",
+      "caption_row_count": 5,
+      "chosen_caption_index": 2,
+      "caption_hash_hex": "170c819d7aded81f774846f534bcaba934cec12b388d963f4091d6751c447648",
+      "generation_seeds": [
+        6402781128300056293
+      ]
+    },
+    {
+      "prompt_index": 190,
+      "ytid": "Z_smJ66Tb3c",
+      "caption": "A man speaking as someone hisses while pigeons are cooing and bird wings are flapping",
+      "selection_key": "3467661728cda9c80eaad14217dbfdc1cf615491dd60815597c39de0343016c6",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "0a5b2755e223a5eb79d5bc015da8457fa4240cfd7ac97434a74d1e68de3799a0",
+      "generation_seeds": [
+        1259497615581886819
+      ]
+    },
+    {
+      "prompt_index": 191,
+      "ytid": "vfNKduToki4",
+      "caption": "A truck engine running while warning beeps sound followed by a man yelling then compressed air releasing",
+      "selection_key": "34ec883011abb2697c9130cc058523ccc07dd2ae2ff591172be102bbfca11316",
+      "caption_row_count": 5,
+      "chosen_caption_index": 1,
+      "caption_hash_hex": "1a0166fb5aa9a19c83c60240256052db80ef63d013450fcb634b46d4304cbfdd",
+      "generation_seeds": [
+        1825555110077026611
+      ]
+    }
+  ],
+  "prompts_sha256": "e33d661397a9fc4106e72ba2d6d1f1a73c5eeff2b90cf8241c64c47664e08b4b",
+  "manifest_sha256": "4da90661dac0449f1a8c32dc5486466e457734e74163e03d2f71e2a202b4ea9c"
+}
