@@ -81,6 +81,12 @@
 
 ## LOG
 
+### 2026-08-30 22:30 | RECOVERY-CROSS-SEVERITY-REP-1 — operator validated, protocol+manifests frozen, GPU LAUNCHED
+
+* **Path A' operator VALIDATED** (`prune_operator.py`, commit b0feeff): identity-when-full generalization of Singh prune_with_indices. Oracles bit-exact: A' RAW->(1,2,3,1)==pub p1 690/690, A' EMA->(1,2,3,1)==frozen sev-1 690/690, B' RAW->(1,2,1,1)==pub dp1 688/688. pruned2_A (primary) vs pruned2_B (sensitivity) differ in EXACTLY 3 decoder-seam tensors (cross-checkpoint pruning-convention inconsistency; provenance-only). recovered2 dp1 md5 5d7da150 EMA validated.
+* **FROZEN** (commit 3f08059, protocol sha 19c50cc3): independent manifests AudioCaps N=192 (4da90661, 0 overlap w/ V1.1) + music 64x3 (f5a26fbe, 0 overlap w/ frozen-64), new salts, no rule loosening. Primary K_A (lo95>0) + sign-pattern conjunction + J_A interaction (lo95>0, ~84% power @N=192); B' seam-sensitivity pre-specified (never rescues A'). Dense@10.24 control on Arm-D 80.
+* **GPU LAUNCHED** (commit afe76f8): job `reversal-xsev-gen-1` (T4), generator 4 systems x contexts all CPU dry-run PASS; 1808 WAVs; watchdog hard cap 5.5 cr (proj ~4.88), max 300min. Awaiting completion -> validate 1808 -> score A' primary + B' sensitivity + secondaries. NO manuscript.
+
 ### 2026-08-30 02:37 | OP-DURATION-DISCRIMINATOR-1 (Arm D) — FINAL GPU experiment; recovered advantage is temporal-scale-conditional
 
 * Job `reversal-armd-gen-1` Completed clean, settled 0.5766 cr (<<1.20 cap), 160/160 ALT WAVs valid (10.24s). All pre-launch gates passed (D3 MDE 0.065; budget reconciled; F1 freeze `fe2be79f`; F2 subset `ce5fad11`; CPU dry-run). Matched 4-group CLAP rescoring (D1) + KL/PANN/FAD secondaries. **At 3.84s rec≈pru; at native 10.24s recovered materially beats pruned across all six axes** (CLAP R_alt +0.052 [0.009,0.093] resolved; HC/KL/PANN resolved; FAD 5.41 vs 12.25; FD 60.2 vs 71.4). Primary interaction J_CLAP +0.044 [−0.001,+0.087] narrowly misses 95% gate; material advantage at 10.24s resolved on 4 axes + HC interaction resolved → convergent temporal-scale-conditionality. V1.1 PASS=FALSE untouched; DDIM200 = limitation; NO further experiment. New paper draft updated (Finding 3). Next = manuscript completion only.
