@@ -1,44 +1,47 @@
 # Listening Study — Deployment Guide
 
-## Hosting route (decided 2026-09-01): Claude Artifacts
+## Hosting route (FINAL, 2026-09-01): GitHub Pages
 
-**EAL Sharing (`sharing.edgeaudiolabs.com`) was REJECTED** for this study: its landing page states
-*"Team only. Sign in with your authorized Google account."* It is a login-gated internal tool, so
-(a) external panelists have no authorized EAL Google accounts, and (b) Google-OAuth login would break
-the anonymity the frozen consent promises. Not usable for an anonymous external panel.
+Delivery-route history: **EAL Sharing** rejected (team-only Google login → blocks anonymous external
+panel + breaks anonymity); **Claude Artifacts** built and published but rejected as the delivery
+mechanism (hard to share with external participants; claude.ai access/telemetry uncertainty; manual
+JSON return inferior to the working receiver). **Final route = GitHub Pages**, serving the
+self-contained static pages that POST automatically to the Apps Script receiver.
 
-**Chosen route: six private Claude Artifacts (one per participant)**, built by
-`scripts/research/build_listening_artifact.py` (self-contained: inline CSS/JS, embedded blinded
-manifest, all audio as lossless FLAC `data:` URIs; each < 16 MB; no external requests). Published
-private; Gabriel shares each from the artifact's share menu.
-
-Participant links (private until shared):
+**Build & deploy (reproducible):**
 ```
-P01  https://claude.ai/code/artifact/2840cebd-99a8-450a-888a-4b2545c73441
-P02  https://claude.ai/code/artifact/22504abe-1abe-453e-9561-eb04882c31df
-P03  https://claude.ai/code/artifact/0a43bdee-adaf-49d9-99fc-3974e5a386f6
-P04  https://claude.ai/code/artifact/52a53898-ad16-4f4a-ba6c-18a189dd798c
-P05  https://claude.ai/code/artifact/01f7094b-1e31-492d-98b7-852fc51bf21d
-P06  https://claude.ai/code/artifact/88cf21d4-9859-4a17-bbe4-da30523df80d
+# 1. build self-contained pages (live endpoint injected from local config.js):
+OPENBLAS_CORETYPE=Haswell .venv-loudness/bin/python scripts/research/build_listening_deploy.py
+# 2. stage the gh-pages tree with fresh opaque slugs + local-only slug map:
+OPENBLAS_CORETYPE=Haswell .venv-loudness/bin/python scripts/research/deploy_gh_pages.py
+# 3. push the orphan gh-pages branch from the staging dir (plumbing; does not touch main):
+STAGE="$PWD/artifacts/gh_pages_stage"; IDX=$(mktemp -u)
+GIT_INDEX_FILE="$IDX" git -C "$STAGE" --git-dir="$PWD/.git" --work-tree="$STAGE" add -A -f .
+TREE=$(GIT_INDEX_FILE="$IDX" git write-tree)
+COMMIT=$(printf "gh-pages deploy\n" | git commit-tree "$TREE")   # orphan (no -p)
+git branch -f gh-pages "$COMMIT"; git push -f -u origin gh-pages
+# Pages: source = gh-pages, folder = / (already enabled).
 ```
+Re-running step 2 mints NEW slugs; deploy the staging content and slug map from the SAME run.
 
-**Collection under the artifact route = MANUAL.** The artifact CSP blocks external `fetch`, so the
-live Apps Script receiver (verified working, see below) is NOT reachable from inside an artifact. On
-submit the page shows Download (via the `downloads` capability — `<a download>` is inert in artifacts)
-and Copy-to-clipboard; the participant sends the JSON to the organiser. The Apps Script receiver
-remains available only if the study is instead hosted on a plain static site (see the alternative).
+**Structure on gh-pages** (orphan branch, deployment material only — no repo source/history):
+`.nojekyll`, `robots.txt` (Disallow: /), `index.html` ("Not found."), `s/<32-hex-slug>/index.html` ×6.
+Each participant page: self-contained (inline CSS/JS, embedded blinded manifest, lossless FLAC audio),
+`<meta name="robots" content="noindex,nofollow,noarchive">`, auto-POST to the receiver, Download/Copy
+fallback. Opaque 128-bit slugs; the `participant_code → slug/URL` map is **local-only**
+(`configs/research/listening_deploy_slugs.local.json`, gitignored) — participant URLs are NOT committed
+to any branch or doc; Claude returns them to Gabriel in chat.
 
-**Two pre-launch items requiring Gabriel's decision/confirmation:**
-1. **Human browser QA** (cannot be done from the CLI): open one artifact and confirm FLAC audio plays
-   in full, the answer-lock unlocks only after both clips finish, one replay works, and Download/Copy work.
-2. **Privacy/consent**: the frozen consent says "no cookies or analytics." claude.ai frames artifacts
-   and may record view-level engagement telemetry, and viewers likely need claude.ai access. If that
-   conflicts with the consent text, either add a pre-participant consent note (supervisor decision — do
-   NOT change consent silently) or host on a static no-analytics site instead.
+Base URL: `https://gbibbo.github.io/audioldm-modality-swap-pruning/` (public, no login).
 
-**Alternative (automatic collection, no login):** the six self-contained files from
-`scripts/research/build_listening_deploy.py` on a plain static host (e.g. GitHub Pages) — external
-POST is allowed there, so the live Apps Script receiver collects automatically and no login is needed.
+**Collection = automatic** POST to the Apps Script receiver (external POST is allowed on GitHub Pages),
+with Download-JSON / Copy-to-clipboard fallback. The recipient email stays server-side in the receiver.
+
+**Remaining pre-launch item:** in-browser QA (audio playback, answer-lock, replay, an actual browser
+POST reaching the receiver) — not runnable from the CLI. All HTTP/source QA has passed remotely and the
+receiver was verified live via a synthetic POST.
+
+The published Claude Artifacts (superseded) remain private in Gabriel's gallery and are not used.
 
 ---
 

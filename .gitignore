@@ -57,3 +57,4 @@ uv.lock
 listening_study/audio/
 configs/research/listening_study_assignments_private.json
 configs/research/listening_study_bundle_manifest.json
+configs/research/listening_deploy_slugs.local.json
