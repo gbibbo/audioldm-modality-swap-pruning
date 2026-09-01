@@ -50,6 +50,8 @@ button.secondary:hover:not(:disabled) { background: #f0f3f8; }
 .question { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 0 0 16px; }
 .question legend { font-weight: 600; padding: 0 6px; }
 .question.active { border-color: var(--sel); box-shadow: 0 0 0 2px var(--sel-bg); }
+.question.locked { opacity: .5; }
+.lock-hint { margin: 0 0 12px; font-style: italic; }
 .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 8px; }
 .scale button { padding: 10px 4px; font-size: .82rem; line-height: 1.2; text-align: center; }
 .scale button[aria-pressed="true"] { background: var(--sel); color: #fff; border-color: var(--sel); }

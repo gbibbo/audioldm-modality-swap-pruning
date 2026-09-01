@@ -1,0 +1,155 @@
+{
+  "B": 1500,
+  "cells": {
+    "nullA-fixed|D1|pooled|central": {
+      "H1": 0.014,
+      "H1_H2": 0.002
+    },
+    "nullA-fixed|D1|strat|central": {
+      "H1": 0.035,
+      "H1_H2": 0.01
+    },
+    "nullA-fixed|D2|pooled|central": {
+      "H1": 0.025,
+      "H1_H2": 0.005
+    },
+    "nullA-fixed|D2|strat|central": {
+      "H1": 0.056,
+      "H1_H2": 0.019
+    },
+    "nullA-fixed|D3|pooled|central": {
+      "H1": 0.018,
+      "H1_H2": 0.004
+    },
+    "nullA-fixed|D3|pooled|stress": {
+      "H1": 0.011,
+      "H1_H2": 0.003
+    },
+    "nullA-fixed|D3|strat|central": {
+      "H1": 0.041,
+      "H1_H2": 0.012
+    },
+    "nullA-fixed|D3|strat|stress": {
+      "H1": 0.043,
+      "H1_H2": 0.015
+    },
+    "nullA-naive|D1|pooled|central": {
+      "H1": 0.165,
+      "H1_H2": 0.04
+    },
+    "nullA-naive|D1|strat|central": {
+      "H1": 0.225,
+      "H1_H2": 0.051
+    },
+    "nullA-naive|D2|pooled|central": {
+      "H1": 0.15,
+      "H1_H2": 0.038
+    },
+    "nullA-naive|D2|strat|central": {
+      "H1": 0.193,
+      "H1_H2": 0.043
+    },
+    "nullA-naive|D3|pooled|central": {
+      "H1": 0.178,
+      "H1_H2": 0.041
+    },
+    "nullA-naive|D3|strat|central": {
+      "H1": 0.223,
+      "H1_H2": 0.057
+    },
+    "nullJ-fixed|D1|pooled|central": {
+      "H1": 0.633,
+      "H1_H2": 0.028
+    },
+    "nullJ-fixed|D1|strat|central": {
+      "H1": 0.757,
+      "H1_H2": 0.03
+    },
+    "nullJ-fixed|D2|pooled|central": {
+      "H1": 0.541,
+      "H1_H2": 0.022
+    },
+    "nullJ-fixed|D2|strat|central": {
+      "H1": 0.725,
+      "H1_H2": 0.056
+    },
+    "nullJ-fixed|D3|pooled|central": {
+      "H1": 0.666,
+      "H1_H2": 0.026
+    },
+    "nullJ-fixed|D3|strat|central": {
+      "H1": 0.799,
+      "H1_H2": 0.036
+    },
+    "pow|D1|pooled|anchor": {
+      "H1": 0.975,
+      "H1_H2": 0.59
+    },
+    "pow|D1|strat|anchor": {
+      "H1": 0.993,
+      "H1_H2": 0.664
+    },
+    "pow|D1|strat|conserv": {
+      "H1": 0.868,
+      "H1_H2": 0.283
+    },
+    "pow|D1|strat|stress": {
+      "H1": 0.989,
+      "H1_H2": 0.652
+    },
+    "pow|D2|pooled|anchor": {
+      "H1": 0.924,
+      "H1_H2": 0.528
+    },
+    "pow|D2|strat|anchor": {
+      "H1": 0.975,
+      "H1_H2": 0.642
+    },
+    "pow|D2|strat|conserv": {
+      "H1": 0.825,
+      "H1_H2": 0.295
+    },
+    "pow|D2|strat|stress": {
+      "H1": 0.972,
+      "H1_H2": 0.618
+    },
+    "pow|D3|pooled|anchor": {
+      "H1": 0.987,
+      "H1_H2": 0.654
+    },
+    "pow|D3|strat|anchor": {
+      "H1": 0.998,
+      "H1_H2": 0.743
+    },
+    "pow|D3|strat|conserv": {
+      "H1": 0.901,
+      "H1_H2": 0.343
+    },
+    "pow|D3|strat|stress": {
+      "H1": 0.994,
+      "H1_H2": 0.722
+    }
+  },
+  "model": "prompt x duration + listener intercept + listener x duration + prompt x listener + side bias + trial noise; ordinal round-clip; positive=recovered.",
+  "n_sims": 2000,
+  "params_central": {
+    "rho_dur": 0.5,
+    "sigma_L": 0.5,
+    "sigma_Ld": 0.3,
+    "sigma_e": 0.6,
+    "sigma_p": 0.6,
+    "sigma_pl": 0.3,
+    "sigma_side": 0.4
+  },
+  "params_stress": {
+    "rho_dur": 0.5,
+    "sigma_L": 0.8,
+    "sigma_Ld": 0.5,
+    "sigma_e": 0.6,
+    "sigma_p": 0.6,
+    "sigma_pl": 0.3,
+    "sigma_side": 0.4
+  },
+  "seed": 1305147177,
+  "self_sha256": "f5ce4bd7baa5a505dca226ee42a54a92c94265c62136cfd999166daf1c93b3a3"
+}

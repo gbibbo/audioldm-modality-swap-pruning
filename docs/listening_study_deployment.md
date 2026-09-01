@@ -3,6 +3,12 @@
 Static bundle for the blinded expert listening study. Target host:
 `https://sharing.edgeaudiolabs.com/`. Desktop Chrome/Firefox/Safari + headphones.
 
+**Version: `LSTUDY-2026-08-31-v1.1`** (amendment `docs/listening_study_protocol_v1_1_amendment.md`).
+Design **D3** (80 sev-1 prompts × both durations single-rated + 18 bridge prompts double-rated; no
+sev-2 human arm). Inference target = **fixed panel** (six listeners; listener-stratified prompt
+bootstrap, pooled as sensitivity). Matched-vs-unrelated catch uses **real AudioCaps references**.
+Answers are **locked until both clips play in full**.
+
 ## What is committed vs. local-only
 
 | Artifact | Location | Committed? |
@@ -14,6 +20,9 @@ Static bundle for the blinded expert listening study. Target host:
 | **Loudness-normalized audio** | `listening_study/audio/*.wav` | **NO — gitignored** (generated audio) |
 | **Unblinding key** (A/B→system map, salt) | `configs/research/listening_study_assignments_private.json` | **NO — gitignored** |
 | **Bundle manifest** (hash→source map) | `configs/research/listening_study_bundle_manifest.json` | **NO — gitignored** (unblinding) |
+| Real-ref catch pool (metadata) | `configs/research/listening_study_realref_pool.json` | yes (ytid/caption/labels/sha; no unblinding) |
+| Real-ref staged 16 kHz clips | `artifacts/listening_study/real_refs/*.wav` | **NO — gitignored** (artifacts/) |
+| Power sim v2 / analyzer / pair audit | `configs/research/listening_study_power_v2.json`, `scripts/research/{listening_power_sim_v2,listening_analyze,listening_loudness_pair_audit}.py` | yes |
 
 The private key and bundle manifest are unblinding artifacts and must never reach the
 public repo or the deployed bundle. The GitHub remote is public.

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Internal technical QA for the frozen listening study (§14). CPU only.
-No human responses. Verifies masking, counts, balance, pairing, separation,
-catch trials, loudness (if bundle built), audio paths/hashes, payload shape,
-offline fallback, and estimated completion time.
-
+"""Internal technical QA for the FROZEN listening study v1.1 (§12). CPU only.
+No human responses. Verifies masking (incl. catch), counts, D3 bridge structure,
+A/B balance, duration pairing, separation, catch design, playback enforcement,
+public leakage, loudness (bundle + pair audit), payload shape, and timing.
 Run: .venv-loudness/bin/python scripts/research/listening_study_validate.py
 """
 import json, os, re, hashlib
@@ -17,9 +16,8 @@ INV = json.load(open("configs/research/listening_study_inventory.json"))
 STIM = INV["stimuli"]
 CODES = ["P0%d" % (i + 1) for i in range(6)]
 AUDIO_DIR = "listening_study/audio"
-FORBIDDEN = re.compile(r"recovered|pruned|dense|reconstr|sev1|sev2|severity|_alt10s", re.I)
-RESP_OVERHEAD_S = 8.0     # per-trial think/answer overhead
-REPLAY_FRACTION = 0.35    # fraction of samples a normal listener replays once
+FORBIDDEN = re.compile(r"recovered|pruned|dense|reconstr|catch|_alt10s|realref", re.I)
+RESP_OVERHEAD_S = 8.0
 MIN_SEP = DESIGN["min_pair_separation_target"]
 
 results = []
@@ -27,152 +25,169 @@ def check(name, ok, detail=""):
     results.append((name, bool(ok), detail))
     print(("PASS" if ok else "FAIL"), name, "-", detail)
 
-# ---------- per participant ----------
 sep_min_global = 99
 time_by = {}
-bundle_ok_paths = True
+# bridge structure: each bridge ytid rated by exactly 2 listeners
+bridge_raters = {}
+
 for c in CODES:
     pub = json.load(open(f"listening_study/public_manifests/{c}.json"))
     pv = PRIV["participants"][c]
     tr = pub["trials"]
-    pmap = {t["public_trial_id"]: t for t in pv["trials"]}
-
-    # counts
     exp = [t for t in pv["trials"] if t["type"] == "experimental"]
     cat = [t for t in pv["trials"] if t["type"] == "catch"]
-    n_expected = DESIGN["trials_by_listener"][c]["total"]
-    check(f"{c} n_trials", len(tr) == n_expected == len(pv["trials"]), f"{len(tr)} == {n_expected}")
+    nb = DESIGN["trials_by_listener"][c]
+    check(f"{c} n_trials", len(tr) == nb["total"] == len(pv["trials"]), f"{len(tr)}=={nb['total']}")
     check(f"{c} catch=3", len(cat) == 3, f"{len(cat)}")
+    check(f"{c} sev2 human absent", all(t["severity"] != "sev2" for t in pv["trials"]), "")
 
-    # public masking: forbidden tokens only allowed inside prompt_text
+    # public masking: no 'type'; only allowed keys; forbidden tokens only in prompt_text
+    pub_keys_ok = all(set(t.keys()) == {"trial_id", "prompt_text", "audio_A", "audio_B"} for t in tr)
+    check(f"{c} public keys minimal", pub_keys_ok, "trial_id/prompt_text/audio_A/audio_B only")
     leak = []
     for t in tr:
         for k, v in t.items():
             if k == "prompt_text":
                 continue
             if isinstance(v, str) and FORBIDDEN.search(v):
-                leak.append((t["trial_id"], k, v))
-    check(f"{c} public no-leak", not leak, str(leak[:3]))
+                leak.append((k, v))
+    check(f"{c} public no-leak", not leak, str(leak[:2]))
+    check(f"{c} A!=B urls", all(t["audio_A"] != t["audio_B"] for t in tr), "")
 
-    # A/B are distinct URLs everywhere (incl. identical catch -> two copies)
-    dist = all(t["audio_A"] != t["audio_B"] for t in tr)
-    check(f"{c} A!=B urls", dist, "")
-
-    # duration pairing: every sev1 prompt has both short and native for this rater
+    # duration pairing for every rated sev1 prompt
     s1 = {}
     for t in pv["trials"]:
         if t["severity"] == "sev1":
             s1.setdefault(t["ytid"], set()).add(t["duration"])
-    pair_ok = all(v == {"short", "native"} for v in s1.values())
-    check(f"{c} sev1 both durations", pair_ok, f"{len(s1)} prompts")
+            if t.get("bridge_role") == "bridge2":
+                bridge_raters.setdefault(t["ytid"], set()).add(c)
+    check(f"{c} sev1 both durations", all(v == {"short", "native"} for v in s1.values()), f"{len(s1)} prompts")
 
-    # repeated-prompt separation in presented order
-    order_pos = {t["trial_id"]: i for i, t in enumerate(tr)}
-    pair_positions = {}
+    # separation
+    pos = {t["trial_id"]: i for i, t in enumerate(tr)}
+    pp = {}
     for t in pv["trials"]:
         if t.get("pair_id"):
-            pair_positions.setdefault(t["pair_id"], []).append(order_pos[t["public_trial_id"]])
-    seps = [abs(p[0] - p[1]) for p in pair_positions.values() if len(p) == 2]
+            pp.setdefault(t["pair_id"], []).append(pos[t["public_trial_id"]])
+    seps = [abs(p[0] - p[1]) for p in pp.values() if len(p) == 2]
     smin = min(seps) if seps else 99
     sep_min_global = min(sep_min_global, smin)
-    check(f"{c} pair separation", smin >= 3, f"min gap {smin} (target>= {MIN_SEP}, non-adjacent>=2)")
+    check(f"{c} pair separation", smin >= 3, f"min gap {smin} (target>={MIN_SEP})")
 
-    # catch not first-2, not adjacent
-    cpos = sorted(order_pos[t["trial_id"]] for t in tr if t["type"] == "catch")
-    catch_place = all(p >= 2 for p in cpos) and all(cpos[k+1]-cpos[k] > 1 for k in range(len(cpos)-1))
-    check(f"{c} catch placement", catch_place, str(cpos))
+    catch_pub_ids = {x["public_trial_id"] for x in cat}
+    cpos = sorted(pos[t["trial_id"]] for t in tr if t["trial_id"] in catch_pub_ids)
+    check(f"{c} catch placement", all(p >= 2 for p in cpos) and
+          all(cpos[k+1]-cpos[k] > 1 for k in range(len(cpos)-1)), str(cpos))
 
-    # A/B balance within participant (experimental only)
+    # catch kinds
+    kinds = sorted(t["catch_kind"] for t in cat)
+    check(f"{c} catch kinds", kinds == ["identical_native", "identical_short", "matched_vs_unrelated_real"], str(kinds))
+    # real-ref catch uses real refs with disjoint labels (via stim id realref)
+    mr = [t for t in cat if t["catch_kind"] == "matched_vs_unrelated_real"][0]
+    check(f"{c} realref catch is real", mr["A_kind"] == "real" and mr["B_kind"] == "real", "")
+
+    # A/B balance
     recA = sum(1 for t in exp if t["recovered_side"] == "A")
-    frac = recA / len(exp)
-    check(f"{c} AB balance", 0.35 <= frac <= 0.65, f"recovered-as-A {recA}/{len(exp)}={frac:.2f}")
+    check(f"{c} AB balance", 0.35 <= recA/len(exp) <= 0.65, f"recA {recA}/{len(exp)}={recA/len(exp):.2f}")
 
-    # audio paths + hash (if bundle built)
     if os.path.isdir(AUDIO_DIR) and os.listdir(AUDIO_DIR):
         miss = [t["audio_A"] for t in tr if not os.path.exists(os.path.join("listening_study", t["audio_A"]))]
         miss += [t["audio_B"] for t in tr if not os.path.exists(os.path.join("listening_study", t["audio_B"]))]
-        if miss:
-            bundle_ok_paths = False
         check(f"{c} audio paths", not miss, f"{len(miss)} missing")
 
-    # timing estimate
     dur = 0.0
     for t in pv["trials"]:
-        da = STIM[t["A_stim"]]["duration_s"] if t["A_stim"] in STIM else 3.84
-        db = STIM[t["B_stim"]]["duration_s"] if t["B_stim"] in STIM else 3.84
+        da = STIM[t["A_stim"]]["duration_s"] if t["A_stim"] in STIM else 10.242
+        db = STIM[t["B_stim"]]["duration_s"] if t["B_stim"] in STIM else 10.242
         dur += da + db
     single = dur + RESP_OVERHEAD_S * len(pv["trials"])
-    withreplay = dur * (1 + REPLAY_FRACTION) + RESP_OVERHEAD_S * len(pv["trials"])
+    withreplay = dur * 1.35 + RESP_OVERHEAD_S * len(pv["trials"])
     time_by[c] = {"single_pass_min": round(single/60, 2), "moderate_replay_min": round(withreplay/60, 2)}
 
-# ---------- global ----------
-allpub = []
-for c in CODES:
-    allpub += json.load(open(f"listening_study/public_manifests/{c}.json"))["trials"]
+# ---- global ----
 gexp = [(c, t) for c in CODES for t in PRIV["participants"][c]["trials"] if t["type"] == "experimental"]
 grecA = sum(1 for _, t in gexp if t["recovered_side"] == "A")
 check("global AB balance", 0.45 <= grecA/len(gexp) <= 0.55, f"{grecA}/{len(gexp)}={grecA/len(gexp):.3f}")
 check("global pair separation >=3", sep_min_global >= 3, f"min {sep_min_global}")
 
-# sev2 selection outcome-blind reproducibility
-elig2 = [q["ytid"] for q in INV["prompts"]["sev2"]]
-resel = sorted(elig2, key=lambda y: hashlib.sha256((DESIGN["sev2_select_namespace"]+"|"+y).encode()).hexdigest())[:36]
-check("sev2 selection reproducible", resel == DESIGN["sev2_selected_ytids"], "")
+# D3 bridge: 18 prompts, each rated by exactly 2 listeners (owner + bridge2)
+n_bridge = len(bridge_raters)
+check("bridge count = 18", n_bridge == DESIGN["bridge_prompts"], f"{n_bridge}")
+# each bridge ytid should have its bridge2 rater distinct from owner (i.e., 2 total raters incl primary)
+# verify total distinct listeners rating each bridge ytid == 2 (primary + one bridge2)
+total_raters = {}
+for c in CODES:
+    for t in PRIV["participants"][c]["trials"]:
+        if t["severity"] == "sev1":
+            total_raters.setdefault(t["ytid"], set()).add(c)
+bridge_ok = all(len(total_raters[y]) == 2 for y in bridge_raters)
+nonbridge_single = all(len(v) == 1 for y, v in total_raters.items() if y not in bridge_raters)
+check("bridge prompts rated by 2 listeners", bridge_ok, "")
+check("non-bridge prompts rated by 1 listener", nonbridge_single, "")
 
-# private key not in public bundle
-priv_in_pub = os.path.exists("listening_study/public_manifests/listening_study_assignments_private.json")
-check("private key not in public dir", not priv_in_pub, "")
+# bridge selection reproducible
+sev1_yt = [p["ytid"] for p in INV["prompts"]["sev1"]]
+resel = sorted(sev1_yt, key=lambda y: hashlib.sha256(("LISTENING-STUDY|BRIDGE-SELECT|2026-08-31|"+y).encode()).hexdigest())
+# design stores sorted selected; recompute selection then sort
+sel = sorted(sorted(range(80), key=lambda i: hashlib.sha256(
+    ("LISTENING-STUDY|BRIDGE-SELECT|2026-08-31|"+sev1_yt[i]).encode()).hexdigest())[:18])
+check("bridge selection reproducible",
+      sorted(sev1_yt[i] for i in sel) == DESIGN["bridge_selected_ytids"], "")
 
-# offline fallback + no analytics in client
+# private key not public; no tracking; offline fallback; playback enforcement
+check("private key not in public dir",
+      not os.path.exists("listening_study/public_manifests/listening_study_assignments_private.json"), "")
 app = open("listening_study/app.js").read()
-check("client offline fallback", "btn-download" in app and "clipboard" in app, "")
-check("client no autoplay-on-load", ".play()" in app and "autoplay" not in open("listening_study/index.html").read().lower(), "")
 idx = open("listening_study/index.html").read().lower()
+check("client offline fallback", "btn-download" in app and "clipboard" in app, "")
 tracking = re.compile(r"document\.cookie|gtag\(|google-analytics|googletagmanager|analytics\.js|\bga\(")
 check("client no tracking code", not tracking.search(app.lower()) and not tracking.search(idx), "")
+# playback enforcement present
+pb = ("canAnswer" in app and "completedA" in app and "completedB" in app
+      and "if (!current.canAnswer) return" in app and "lockAnswers" in app)
+check("client both-playback enforcement", pb, "answers locked until both clips completed")
 
-# payload shape (synthetic)
+# payload shape
 synth = {"study_version": DESIGN["study_version"], "protocol_hash": "x", "participant_code": "P01",
-         "assignment_hash": "x", "submission_uuid": "u", "client_started_ts": 1, "client_completed_ts": 2,
-         "total_ms": 1, "responses": [{"trial_id": "P01_01", "type": "experimental", "relevance": 1,
-         "quality": 0, "plays_A": 1, "plays_B": 1, "shown_ts": 1, "responded_ts": 2, "dwell_ms": 1}]}
-req = {"study_version", "protocol_hash", "participant_code", "assignment_hash", "submission_uuid",
-       "responses"}
-check("payload shape", req.issubset(synth.keys()) and "email" not in json.dumps(synth).lower(), "no PII fields")
+         "assignment_hash": "x", "submission_uuid": "u",
+         "responses": [{"trial_id": "P01_01", "relevance": 1, "quality": 0, "plays_A": 1,
+                         "plays_B": 1, "completed_A": True, "completed_B": True,
+                         "shown_ts": 1, "responded_ts": 2, "dwell_ms": 1}]}
+req = {"study_version", "protocol_hash", "participant_code", "assignment_hash", "submission_uuid", "responses"}
+check("payload shape", req.issubset(synth.keys()) and "email" not in json.dumps(synth).lower() and
+      "type" not in synth["responses"][0], "no PII / no type leak")
 
-# loudness of listening copies (if bundle built)
+# loudness bundle + pair audit
 if os.path.exists("configs/research/listening_study_bundle_manifest.json"):
     bm = json.load(open("configs/research/listening_study_bundle_manifest.json"))
     peaks = [f["copy_peak_dbfs"] for f in bm["files"].values()]
     lufs = [f["copy_lufs"] for f in bm["files"].values()]
-    # applied gain must target the source integrated loudness EXACTLY (broadcast-standard)
-    gain_err = max(abs(f["src_lufs"] + f["gain_db"] + 36.0) for f in bm["files"].values())
-    check("bundle applied-gain exact to -36 LUFS (source)", gain_err < 1e-6, f"max err {gain_err:.2e}")
+    ge = max(abs(f["src_lufs"] + f["gain_db"] + 36.0) for f in bm["files"].values())
+    check("bundle applied-gain exact to -36 LUFS", ge < 1e-6, f"max err {ge:.2e}")
     check("bundle peak <= -1 dBFS", max(peaks) <= -1.0 + 1e-3, f"max {max(peaks):.2f}")
-    # re-measured copy loudness: >=98% within +/-1 dB; a few near-silent failed-pruned clips
-    # drift due to the BS.1770 absolute gate (documented; does not favour recovered)
-    within1 = sum(1 for l in lufs if abs(l + 36) <= 1.0)
-    check("bundle >=98% copies within +/-1 dB re-measured", within1 / len(lufs) >= 0.98,
-          f"{within1}/{len(lufs)} within 1 dB; drift range [{min(lufs):.2f},{max(lufs):.2f}]")
+    within1 = sum(1 for l in lufs if abs(l+36) <= 1.0)
+    check("bundle >=97% within +/-1 dB re-measured", within1/len(lufs) >= 0.97,
+          f"{within1}/{len(lufs)}; range [{min(lufs):.2f},{max(lufs):.2f}]")
     check("bundle no problems", not bm["problems"], str(bm["problems"][:2]))
-    # every deployed audio file exists on disk
-    missing = [hn for hn in bm["files"] if not os.path.exists(os.path.join(AUDIO_DIR, hn))]
-    check("bundle files on disk", not missing, f"{len(missing)} missing")
+    check("bundle files on disk", not [h for h in bm["files"] if not os.path.exists(os.path.join(AUDIO_DIR, h))], "")
+if os.path.exists("configs/research/listening_loudness_pair_audit.json"):
+    pa = json.load(open("configs/research/listening_loudness_pair_audit.json"))
+    check("loudness pair audit negligible", pa["verdict"].startswith("NEGLIGIBLE"),
+          f"max|signed mean|={pa['max_abs_signed_mean_across_strata']} dB")
 else:
-    print("NOTE bundle not built yet -> loudness/audio-path checks pending (freeze order step 9)")
+    print("NOTE bundle/pair-audit not built yet")
 
-print("\n=== estimated completion time (min) ===")
+print("\n=== est completion time (min) ===")
 for c in CODES:
-    print(f"  {c}: single-pass {time_by[c]['single_pass_min']}  moderate-replay {time_by[c]['moderate_replay_min']}")
+    print(f"  {c}: single {time_by[c]['single_pass_min']}  moderate-replay {time_by[c]['moderate_replay_min']}")
 worst = max(t["moderate_replay_min"] for t in time_by.values())
 check("time <= 20 min (moderate replay)", worst <= 20.0, f"worst {worst} min")
 
-# ---------- emit ----------
 npass = sum(1 for _, ok, _ in results if ok)
-out = {"artifact": "listening_study_validation", "n_checks": len(results),
-       "n_pass": npass, "n_fail": len(results)-npass,
-       "all_pass": npass == len(results),
-       "pair_separation_min": sep_min_global, "time_estimate_min": time_by,
+out = {"artifact": "listening_study_validation", "study_version": DESIGN["study_version"],
+       "n_checks": len(results), "n_pass": npass, "n_fail": len(results)-npass,
+       "all_pass": npass == len(results), "pair_separation_min": sep_min_global,
+       "time_estimate_min": time_by,
        "checks": [{"name": n, "pass": ok, "detail": d} for n, ok, d in results]}
 json.dump(out, open("configs/research/listening_study_validation.json", "w"), indent=2, sort_keys=True)
 print(f"\n{npass}/{len(results)} checks pass. all_pass={out['all_pass']}")

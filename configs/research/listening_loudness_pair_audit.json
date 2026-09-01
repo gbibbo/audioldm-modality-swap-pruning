@@ -1,0 +1,37 @@
+{
+  "artifact": "listening_loudness_pair_audit",
+  "by_stratum": {
+    "sev1_native": {
+      "abs_max": 0.448,
+      "abs_mean": 0.0177,
+      "abs_median": 0.0,
+      "abs_p95": 0.1013,
+      "frac_abs_gt_1dB": 0.0,
+      "frac_abs_gt_2dB": 0.0,
+      "n": 98,
+      "signed_mean_recovered_minus_pruned": -0.0006,
+      "signed_median": 0.0
+    },
+    "sev1_short": {
+      "abs_max": 4.712,
+      "abs_mean": 0.1253,
+      "abs_median": 0.0,
+      "abs_p95": 0.4419,
+      "frac_abs_gt_1dB": 0.0306,
+      "frac_abs_gt_2dB": 0.0204,
+      "n": 98,
+      "signed_mean_recovered_minus_pruned": 0.0057,
+      "signed_median": 0.0
+    }
+  },
+  "favour_limit_dB": 0.5,
+  "max_abs_signed_mean_across_strata": 0.0057,
+  "note": "differences are of LISTENING COPIES (post -36 LUFS normalization) as heard.",
+  "overall_signed_mean": 0.0025,
+  "remeasurement_outliers_by_category": {
+    "pruned|short": 2,
+    "recovered|short": 1
+  },
+  "self_sha256": "0a1fad97ecbf97b9137d0b5f7014062743032a97bbcbf8671d3bec586303c45e",
+  "verdict": "NEGLIGIBLE \u2014 no systematic loudness advantage"
+}

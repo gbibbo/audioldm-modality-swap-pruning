@@ -1,0 +1,667 @@
+{
+  "artifact": "listening_study_realref_pool",
+  "excluded_study_ytids": 190,
+  "n_pool": 48,
+  "native_samples": 163872,
+  "peak_ceiling_dbfs": -1.0,
+  "pool": {
+    "-BUWGM7qeUM": {
+      "caption": "Rain falling and wind blowing hard with rustling leaves",
+      "integrated_lufs": -13.065,
+      "labels": [
+        "/m/06mb1"
+      ],
+      "post_gain_peak_dbfs": -22.866,
+      "sample_peak_dbfs": 0.069,
+      "sha256": "9f08a4876c93f9865225eafddd1db787e10f211648fbf3b6e222bb5aeeaead89",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_-BUWGM7qeUM.wav",
+      "ytid": "-BUWGM7qeUM"
+    },
+    "-nQHwrRLfc0": {
+      "caption": "A mid-size motor is idling, vibrating and humming",
+      "integrated_lufs": -17.881,
+      "labels": [
+        "/m/02mk9",
+        "/m/07pb8fc",
+        "/t/dd00066"
+      ],
+      "post_gain_peak_dbfs": -22.74,
+      "sample_peak_dbfs": -4.622,
+      "sha256": "45d4ac75868f78712fc35aac248c94c36262b3ebad46ccc92a9bb729348db189",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_-nQHwrRLfc0.wav",
+      "ytid": "-nQHwrRLfc0"
+    },
+    "0Rpjl1AO-P0": {
+      "caption": "A vehicle driving then accelerating alongside a series of plastic clicks",
+      "integrated_lufs": -14.213,
+      "labels": [
+        "/m/07yv9",
+        "/m/0k4j",
+        "/t/dd00134"
+      ],
+      "post_gain_peak_dbfs": -25.465,
+      "sample_peak_dbfs": -3.678,
+      "sha256": "34efc73f769a11abec5464776450dfa48c8928a49aff7dbccfb0208e7e6224ba",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_0Rpjl1AO-P0.wav",
+      "ytid": "0Rpjl1AO-P0"
+    },
+    "0jGH7A_hpBM": {
+      "caption": "One man speaking, then another man speaking",
+      "integrated_lufs": -17.473,
+      "labels": [
+        "/m/02qldy",
+        "/m/05zppz",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -18.469,
+      "sample_peak_dbfs": 0.058,
+      "sha256": "18bb5f4190d929b5aa097afb55eecab532cf634054decfd9e07fb71798c18709",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_0jGH7A_hpBM.wav",
+      "ytid": "0jGH7A_hpBM"
+    },
+    "1nUOGZgSzZo": {
+      "caption": "Plastic thumping as a man laughs followed by a kid speaking in the distance as water splashes and wind blows into a microphone",
+      "integrated_lufs": -31.278,
+      "labels": [
+        "/m/07swgks",
+        "/m/09x0r",
+        "/m/0j6m2"
+      ],
+      "post_gain_peak_dbfs": -12.417,
+      "sample_peak_dbfs": -7.695,
+      "sha256": "8d9e5f00891b79fda8e18476cb97ffaadd018ebea78a3724f5400e9d11eb96d3",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_1nUOGZgSzZo.wav",
+      "ytid": "1nUOGZgSzZo"
+    },
+    "1vCYiVvZ7VE": {
+      "caption": "A woman speaking",
+      "integrated_lufs": -35.712,
+      "labels": [
+        "/m/02qldy",
+        "/m/02zsn",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -14.659,
+      "sample_peak_dbfs": -14.371,
+      "sha256": "01850dbf06bf0d2f5b9443a40f09fb69d41d10c853b6826e2a1fce44f6b198ea",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_1vCYiVvZ7VE.wav",
+      "ytid": "1vCYiVvZ7VE"
+    },
+    "2RjqBRzmxaM": {
+      "caption": "Females voice narrating a scene as music is playing and rain drops are falling",
+      "integrated_lufs": -20.798,
+      "labels": [
+        "/m/06mb1",
+        "/m/07r10fb",
+        "/t/dd00038"
+      ],
+      "post_gain_peak_dbfs": -19.203,
+      "sample_peak_dbfs": -4.001,
+      "sha256": "70172ae040a09e9050780086889ca3429f3dd75840443a68de36e1b11005355c",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_2RjqBRzmxaM.wav",
+      "ytid": "2RjqBRzmxaM"
+    },
+    "473wBEwC35M": {
+      "caption": "A car honks in the background while a man speaks",
+      "integrated_lufs": -18.302,
+      "labels": [
+        "/m/02qldy",
+        "/m/05zppz",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -18.383,
+      "sample_peak_dbfs": -0.686,
+      "sha256": "d73791f536ad4eec6fde824e4c684af3c8d911c944d4844f7680f34e58541ca1",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_473wBEwC35M.wav",
+      "ytid": "473wBEwC35M"
+    },
+    "4fz0-Kx2oNs": {
+      "caption": "Loud, continuous sizzling",
+      "integrated_lufs": -25.06,
+      "labels": [
+        "/m/0dxrf"
+      ],
+      "post_gain_peak_dbfs": -12.32,
+      "sample_peak_dbfs": -1.38,
+      "sha256": "a94e0db274a2062d80ec2925b48ea5861ffb6f827f0e492c48ddb86289f6db47",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_4fz0-Kx2oNs.wav",
+      "ytid": "4fz0-Kx2oNs"
+    },
+    "4pv3w--cRrA": {
+      "caption": "A machine makes a constant rumbling noise",
+      "integrated_lufs": -30.192,
+      "labels": [
+        "/m/09t49"
+      ],
+      "post_gain_peak_dbfs": -6.173,
+      "sample_peak_dbfs": -0.365,
+      "sha256": "ffc17f4a633d129d13f11a241d296d714990cc513e7eb95314c3b76d1e2e4975",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_4pv3w--cRrA.wav",
+      "ytid": "4pv3w--cRrA"
+    },
+    "54eRRbCtPn8": {
+      "caption": "A woman speaking",
+      "integrated_lufs": -31.636,
+      "labels": [
+        "/m/02qldy",
+        "/m/02zsn",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -18.739,
+      "sample_peak_dbfs": -14.375,
+      "sha256": "e3a2666a4f46406596c85ded2ec90cea54c40efc7bd6d6d16960af5a1574d6e2",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_54eRRbCtPn8.wav",
+      "ytid": "54eRRbCtPn8"
+    },
+    "9BukzlPNqC8": {
+      "caption": "'A power tool vibrating with men speaking",
+      "integrated_lufs": -22.087,
+      "labels": [
+        "/m/01d380",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -22.081,
+      "sample_peak_dbfs": -8.168,
+      "sha256": "25740014c47b18b76c37ae476b73b5d0ee911ae69d81b9f5473cdd78b4578dc2",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_9BukzlPNqC8.wav",
+      "ytid": "9BukzlPNqC8"
+    },
+    "A61Mry8zBwE": {
+      "caption": "A man speaking over an intercom followed by a crowd of people talking then applauding",
+      "integrated_lufs": -15.133,
+      "labels": [
+        "/m/07rv9rh",
+        "/m/09x0r",
+        "/m/0jbk"
+      ],
+      "post_gain_peak_dbfs": -21.248,
+      "sample_peak_dbfs": -0.382,
+      "sha256": "cbea97eae03b0140f050124b11c9fa5b3543aed52e4649447b57bc72cd424618",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_A61Mry8zBwE.wav",
+      "ytid": "A61Mry8zBwE"
+    },
+    "AJtNitYMa1I": {
+      "caption": "Food sizzling and oil popping",
+      "integrated_lufs": -24.279,
+      "labels": [
+        "/m/07p9k1k",
+        "/m/0dxrf"
+      ],
+      "post_gain_peak_dbfs": -18.28,
+      "sample_peak_dbfs": -6.559,
+      "sha256": "823b15af0f2e196fb8877c43961dc8a169a9ef1e2f04cbedcd6bf894743bbf40",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_AJtNitYMa1I.wav",
+      "ytid": "AJtNitYMa1I"
+    },
+    "CO6-i8NLbeo": {
+      "caption": "A man talking followed by a goat baaing then a metal gate sliding as ducks quack and wind blows into a microphone",
+      "integrated_lufs": -13.715,
+      "labels": [
+        "/m/03fwl",
+        "/m/09x0r",
+        "/m/0jbk"
+      ],
+      "post_gain_peak_dbfs": -22.163,
+      "sample_peak_dbfs": 0.122,
+      "sha256": "9316beb0c171f0b30d7b9dca770ecc011a928b462f111bba033f98eed6be0dcd",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_CO6-i8NLbeo.wav",
+      "ytid": "CO6-i8NLbeo"
+    },
+    "CefFMA3klxk": {
+      "caption": "Humming from a truck with a blowing horn",
+      "integrated_lufs": -24.482,
+      "labels": [
+        "/m/012f08",
+        "/m/07r04",
+        "/m/07yv9",
+        "/m/0912c9"
+      ],
+      "post_gain_peak_dbfs": -15.661,
+      "sample_peak_dbfs": -4.144,
+      "sha256": "9d8219245feee4fad5c92490d7f95ed1071bd691cc20c72ad61f31a6960389aa",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_CefFMA3klxk.wav",
+      "ytid": "CefFMA3klxk"
+    },
+    "D1Sy7kRoaR8": {
+      "caption": "A woman talking over an intercom speaker as a crowd of people talk in the background",
+      "integrated_lufs": -19.346,
+      "labels": [
+        "/m/03k3r",
+        "/m/07rv9rh",
+        "/m/09x0r",
+        "/m/0jbk"
+      ],
+      "post_gain_peak_dbfs": -19.603,
+      "sample_peak_dbfs": -2.949,
+      "sha256": "f33e82371477ade653d4c7f28ec773ef9246a5798b18e02ccada305e3e4cd6fe",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_D1Sy7kRoaR8.wav",
+      "ytid": "D1Sy7kRoaR8"
+    },
+    "EbpOXac13yo": {
+      "caption": "A man talking followed by another man talking in the background as a vehicle drives and other vehicles pass by",
+      "integrated_lufs": -15.191,
+      "labels": [
+        "/m/01bjv",
+        "/m/07yv9",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -21.527,
+      "sample_peak_dbfs": -0.718,
+      "sha256": "75414c0c6920c3dd69a6d0fd4006e261ed325e53e39968cb11db072d66dd125c",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_EbpOXac13yo.wav",
+      "ytid": "EbpOXac13yo"
+    },
+    "IdBDl9Wr51A": {
+      "caption": "Male speaking with sword clanging followed by a females giggle",
+      "integrated_lufs": -16.701,
+      "labels": [
+        "/m/07rqsjt"
+      ],
+      "post_gain_peak_dbfs": -19.759,
+      "sample_peak_dbfs": -0.46,
+      "sha256": "c7fe632108b62ee0fdf708da455c30a9fee0f4ecfffc7e9044d0e6f488d9afd3",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_IdBDl9Wr51A.wav",
+      "ytid": "IdBDl9Wr51A"
+    },
+    "JhGp7HmRQxg": {
+      "caption": "Humming of engines followed by the neigh of a horse and birds chirping in the background",
+      "integrated_lufs": -22.058,
+      "labels": [
+        "/m/03k3r",
+        "/m/07q5rw0",
+        "/m/09x0r",
+        "/m/0jbk"
+      ],
+      "post_gain_peak_dbfs": -17.529,
+      "sample_peak_dbfs": -3.586,
+      "sha256": "6d098ea0d7689316e09c0323d780a583b84d69f2147229bdfcc33c0002c59c84",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_JhGp7HmRQxg.wav",
+      "ytid": "JhGp7HmRQxg"
+    },
+    "KOBkbROPv4c": {
+      "caption": "A distant engine hums and gets louder as it approaches with squealing tires",
+      "integrated_lufs": -11.692,
+      "labels": [
+        "/m/07rknqz",
+        "/m/07yv9",
+        "/m/0h9mv",
+        "/m/0ltv"
+      ],
+      "post_gain_peak_dbfs": -24.135,
+      "sample_peak_dbfs": 0.173,
+      "sha256": "a084cb4cfe258eaa21629c2bbe166847acd4376b2e2ef0c74de59dd01620388f",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_KOBkbROPv4c.wav",
+      "ytid": "KOBkbROPv4c"
+    },
+    "MdlEswBfZMQ": {
+      "caption": "A group of children and a woman talking followed by a young girl talking",
+      "integrated_lufs": -15.184,
+      "labels": [
+        "/m/07rgt08",
+        "/m/09x0r",
+        "/m/0ytgt",
+        "/t/dd00125"
+      ],
+      "post_gain_peak_dbfs": -20.842,
+      "sample_peak_dbfs": -0.025,
+      "sha256": "ec924b26f8cd4603205d9a6bc99d9fdd6b6cc9a9ae6f64d6a595163aeed3deff",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_MdlEswBfZMQ.wav",
+      "ytid": "MdlEswBfZMQ"
+    },
+    "OTLtzk0W4zg": {
+      "caption": "An engine running and then a male speaking while the engine continues running",
+      "integrated_lufs": -12.799,
+      "labels": [
+        "/m/07yv9",
+        "/m/09x0r",
+        "/m/0k4j",
+        "/t/dd00128",
+        "/t/dd00130"
+      ],
+      "post_gain_peak_dbfs": -23.127,
+      "sample_peak_dbfs": 0.074,
+      "sha256": "13553624c0fafe4bf02ebeba2cef18a8452625952fb34b50d1a7aa07a70aa3b1",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_OTLtzk0W4zg.wav",
+      "ytid": "OTLtzk0W4zg"
+    },
+    "PVvi2SDOjVc": {
+      "caption": "A vehicle horn honking",
+      "integrated_lufs": -3.052,
+      "labels": [
+        "/m/07yv9",
+        "/m/0912c9",
+        "/m/0k4j",
+        "/t/dd00128"
+      ],
+      "post_gain_peak_dbfs": -32.186,
+      "sample_peak_dbfs": 0.762,
+      "sha256": "44ad877c79d6f9acbdefb96b74220b4411f942eab0baec7c4dab435f7eb0fdbc",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_PVvi2SDOjVc.wav",
+      "ytid": "PVvi2SDOjVc"
+    },
+    "R8bHTHnF8j4": {
+      "caption": "Vibrations and wind with loud humming of an engine",
+      "integrated_lufs": -10.491,
+      "labels": [
+        "/m/07yv9",
+        "/m/09ct_",
+        "/m/0k5j"
+      ],
+      "post_gain_peak_dbfs": -25.661,
+      "sample_peak_dbfs": -0.152,
+      "sha256": "d604a710f6a3b06b44a99d631fbe44eca7a37c7548c51f0244d248548f541dbd",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_R8bHTHnF8j4.wav",
+      "ytid": "R8bHTHnF8j4"
+    },
+    "S0SQyFXbqF8": {
+      "caption": "An animal gurgling followed by a bell clinking as a kid yells and a man laughs then speaks",
+      "integrated_lufs": -18.047,
+      "labels": [
+        "/m/09ld4"
+      ],
+      "post_gain_peak_dbfs": -18.082,
+      "sample_peak_dbfs": -0.129,
+      "sha256": "0f65e073d89071763b287f69fbd6a9fd5ac0c19e400a3d0c864a471092b206f0",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_S0SQyFXbqF8.wav",
+      "ytid": "S0SQyFXbqF8"
+    },
+    "SCow4mpBsGY": {
+      "caption": "Woosh of air and loud snoring",
+      "integrated_lufs": -27.916,
+      "labels": [
+        "/m/01d3sd"
+      ],
+      "post_gain_peak_dbfs": -20.392,
+      "sample_peak_dbfs": -12.308,
+      "sha256": "64e37a0eb70e90f176804d25b46fef16036198b58d565c3727f6be5325e9d4bf",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_SCow4mpBsGY.wav",
+      "ytid": "SCow4mpBsGY"
+    },
+    "TaQKhIRwii4": {
+      "caption": "A quick repeat of applause followed by continued applause",
+      "integrated_lufs": -11.428,
+      "labels": [
+        "/m/028ght"
+      ],
+      "post_gain_peak_dbfs": -23.984,
+      "sample_peak_dbfs": 0.588,
+      "sha256": "1eb238567ea1384aa4f71308ade449dd0eea3a1f9fb18fc80756c20a83bc6127",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_TaQKhIRwii4.wav",
+      "ytid": "TaQKhIRwii4"
+    },
+    "Tgxst7Ft9js": {
+      "caption": "Sanding and scraping followed by a man speaking",
+      "integrated_lufs": -20.565,
+      "labels": [
+        "/m/02p01q",
+        "/m/07pdjhy"
+      ],
+      "post_gain_peak_dbfs": -16.182,
+      "sample_peak_dbfs": -0.747,
+      "sha256": "389d7cd57c2b91c7b2544d14ba64683f85ef8c1076da295938704acdcdcdf882",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_Tgxst7Ft9js.wav",
+      "ytid": "Tgxst7Ft9js"
+    },
+    "UQtBt6CQpwg": {
+      "caption": "Short rapid vibrations of a sewing machine",
+      "integrated_lufs": -6.915,
+      "labels": [
+        "/m/09x0r",
+        "/m/0llzx"
+      ],
+      "post_gain_peak_dbfs": -28.487,
+      "sample_peak_dbfs": 0.598,
+      "sha256": "2a2b76b07ca74e5635c021de90a2a6f24a9f802c11a7732bd91068882544ece8",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_UQtBt6CQpwg.wav",
+      "ytid": "UQtBt6CQpwg"
+    },
+    "VQnmlf2OsUg": {
+      "caption": "A high pitched engine running consistently with intermittent scraping",
+      "integrated_lufs": -12.56,
+      "labels": [
+        "/m/09ct_"
+      ],
+      "post_gain_peak_dbfs": -23.72,
+      "sample_peak_dbfs": -0.28,
+      "sha256": "ba82ed34eba171db03b12f626a7633b95389fed718633c0a985c894748a26392",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_VQnmlf2OsUg.wav",
+      "ytid": "VQnmlf2OsUg"
+    },
+    "XJba7pTbpD0": {
+      "caption": "Air spraying followed by fire igniting then loud audio static followed by pressurized air releasing",
+      "integrated_lufs": -9.877,
+      "labels": [
+        "/m/07qlf79"
+      ],
+      "post_gain_peak_dbfs": -23.721,
+      "sample_peak_dbfs": 2.402,
+      "sha256": "3668bd2e485ae629650f86ba1a57960617bf2f5e1aab3ed750c8d3a5cf0135eb",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_XJba7pTbpD0.wav",
+      "ytid": "XJba7pTbpD0"
+    },
+    "XPebkNzsnRI": {
+      "caption": "A person whistling followed by a young girl laughing as a man talks in the background then another person whistling",
+      "integrated_lufs": -13.041,
+      "labels": [
+        "/m/01w250",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -25.967,
+      "sample_peak_dbfs": -3.008,
+      "sha256": "ecb7954911ec6ff7f24632755d9972ff70968ba44893f862936093f5adee2156",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_XPebkNzsnRI.wav",
+      "ytid": "XPebkNzsnRI"
+    },
+    "XrJcmftCY04": {
+      "caption": "A crowd of people shout and give applause",
+      "integrated_lufs": -18.467,
+      "labels": [
+        "/m/028ght"
+      ],
+      "post_gain_peak_dbfs": -23.585,
+      "sample_peak_dbfs": -6.052,
+      "sha256": "54a5a197fb99d378483424f6196f5ae2c5e711d68d8e466db4a3670d9e894c6a",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_XrJcmftCY04.wav",
+      "ytid": "XrJcmftCY04"
+    },
+    "_C2HinL8VlM": {
+      "caption": "Humming of an engine with sirens ringing",
+      "integrated_lufs": -9.913,
+      "labels": [
+        "/m/03j1ly",
+        "/m/03kmc9",
+        "/m/04qvtq"
+      ],
+      "post_gain_peak_dbfs": -25.903,
+      "sample_peak_dbfs": 0.184,
+      "sha256": "bdcd401a36de6915d4cb2f7560e67517ccb0c022fcbfbf566904fbb3076c8354",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr__C2HinL8VlM.wav",
+      "ytid": "_C2HinL8VlM"
+    },
+    "_GI7meqlYZk": {
+      "caption": "A cat meowing and young female speaking",
+      "integrated_lufs": -15.188,
+      "labels": [
+        "/m/01yrx",
+        "/m/068hy",
+        "/m/07qrkrw",
+        "/m/09x0r",
+        "/m/0jbk"
+      ],
+      "post_gain_peak_dbfs": -21.644,
+      "sample_peak_dbfs": -0.832,
+      "sha256": "d857a8717c3b6696bf6755fd4d830f171fccf3774b2fd418411b0a38df9b3dfc",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr__GI7meqlYZk.wav",
+      "ytid": "_GI7meqlYZk"
+    },
+    "eNG6fEiAE8c": {
+      "caption": "Laughing and speech with a sheep bleat",
+      "integrated_lufs": -28.767,
+      "labels": [
+        "/m/07bgp",
+        "/m/07q0h5t",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -18.526,
+      "sample_peak_dbfs": -11.293,
+      "sha256": "ebac68acc7f61b88145f84990672aa11c0b7cb1c6a8620b9d3b81b72e0806eea",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_eNG6fEiAE8c.wav",
+      "ytid": "eNG6fEiAE8c"
+    },
+    "gbi6MxPf3hA": {
+      "caption": "Gusts of wind blowing followed by harp music then more wind blowing and birds chirping in the background",
+      "integrated_lufs": -37.701,
+      "labels": [
+        "/m/034srq",
+        "/m/03m9d0z",
+        "/m/05kq4",
+        "/t/dd00092"
+      ],
+      "post_gain_peak_dbfs": -18.148,
+      "sample_peak_dbfs": -19.849,
+      "sha256": "c6744fc31045fb061c24ff009e603feb49bace8b2771feafe4b985f667550367",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_gbi6MxPf3hA.wav",
+      "ytid": "gbi6MxPf3hA"
+    },
+    "i6MQCm58zlY": {
+      "caption": "Screeching and male speech",
+      "integrated_lufs": -25.305,
+      "labels": [
+        "/m/020bb7",
+        "/m/068hy",
+        "/m/0jbk"
+      ],
+      "post_gain_peak_dbfs": -17.531,
+      "sample_peak_dbfs": -6.836,
+      "sha256": "f12e5d99ef279938b01931ff032b19b55117fef3587164938d7473fe97e7a74b",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_i6MQCm58zlY.wav",
+      "ytid": "i6MQCm58zlY"
+    },
+    "jYPU6aSDo88": {
+      "caption": "Wind blowing with the distant humming of a jet engine",
+      "integrated_lufs": -19.568,
+      "labels": [
+        "/m/014yck",
+        "/m/07yv9",
+        "/m/09x0r",
+        "/m/0k5j"
+      ],
+      "post_gain_peak_dbfs": -20.639,
+      "sample_peak_dbfs": -4.208,
+      "sha256": "d04e2ba1abcb41a1e73ac0ed660d2ddf81fa585b685922278b427d2531d1dea2",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_jYPU6aSDo88.wav",
+      "ytid": "jYPU6aSDo88"
+    },
+    "jf4iyQPJSvk": {
+      "caption": "Water trickles down continuously",
+      "integrated_lufs": -37.231,
+      "labels": [
+        "/m/07pqc89",
+        "/m/0838f",
+        "/m/0j2kx",
+        "/t/dd00129"
+      ],
+      "post_gain_peak_dbfs": -17.684,
+      "sample_peak_dbfs": -18.915,
+      "sha256": "f09741ca9cbee93ef8ab14c223e5e12ecb9db7f3e51766733c3dda1a6ac72abf",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_jf4iyQPJSvk.wav",
+      "ytid": "jf4iyQPJSvk"
+    },
+    "jjHIINDfE1c": {
+      "caption": "Humming of a passing vehicle with a honking engine and wind blowing",
+      "integrated_lufs": -8.593,
+      "labels": [
+        "/m/07yv9",
+        "/m/0912c9",
+        "/t/dd00129"
+      ],
+      "post_gain_peak_dbfs": -26.759,
+      "sample_peak_dbfs": 0.647,
+      "sha256": "d63ed83cf2b503c176cdb31778369dbdd6f4d0a46d6468911eb8e633ab1c9473",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_jjHIINDfE1c.wav",
+      "ytid": "jjHIINDfE1c"
+    },
+    "lHh0SwUhP8U": {
+      "caption": "Metal clicking before a gunshot firing followed by a person sighing and metal clanking while wood clacks proceeded by another gunshot firing as ducks quack in the distance",
+      "integrated_lufs": -23.611,
+      "labels": [
+        "/m/09ddx"
+      ],
+      "post_gain_peak_dbfs": -15.955,
+      "sample_peak_dbfs": -3.566,
+      "sha256": "cc20e042733871df9ccd2fd56712702643ec2ebee575a8e01ab8c1e853b54d72",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_lHh0SwUhP8U.wav",
+      "ytid": "lHh0SwUhP8U"
+    },
+    "niwgMbB6tpQ": {
+      "caption": "A person snoring",
+      "integrated_lufs": -30.302,
+      "labels": [
+        "/m/01d3sd"
+      ],
+      "post_gain_peak_dbfs": -21.649,
+      "sample_peak_dbfs": -15.951,
+      "sha256": "1938a48ed6e601c161284e77b6a15cb2a6eda786a1177cd0547457352b1819e2",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_niwgMbB6tpQ.wav",
+      "ytid": "niwgMbB6tpQ"
+    },
+    "ram-QPKSQYc": {
+      "caption": "Helicopter flying away",
+      "integrated_lufs": -21.554,
+      "labels": [
+        "/m/09ct_"
+      ],
+      "post_gain_peak_dbfs": -24.243,
+      "sample_peak_dbfs": -9.797,
+      "sha256": "3b8512f15c961edf03a63297aff5be1a36e2edada2a9dcd85e44b9cc0d612380",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_ram-QPKSQYc.wav",
+      "ytid": "ram-QPKSQYc"
+    },
+    "rp3CQsWxVgE": {
+      "caption": "Traffic is present nearby, and a car horn plays the theme to the godfather",
+      "integrated_lufs": -6.214,
+      "labels": [
+        "/m/07yv9",
+        "/m/0912c9",
+        "/m/0k4j",
+        "/t/dd00128"
+      ],
+      "post_gain_peak_dbfs": -29.61,
+      "sample_peak_dbfs": 0.176,
+      "sha256": "9195c263f27095caab473cd9f368ef9030ce3fdac82709d2f7815c1e4040dbef",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_rp3CQsWxVgE.wav",
+      "ytid": "rp3CQsWxVgE"
+    },
+    "sbW7XwwUtSU": {
+      "caption": "A ticktock noise from a bell",
+      "integrated_lufs": -22.207,
+      "labels": [
+        "/m/07qjznl",
+        "/m/07qjznt"
+      ],
+      "post_gain_peak_dbfs": -20.58,
+      "sample_peak_dbfs": -6.786,
+      "sha256": "13b9534bf9850ef0e1340e3944be2ccb424d963c4ac4f1b83467cdae2986a727",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_sbW7XwwUtSU.wav",
+      "ytid": "sbW7XwwUtSU"
+    },
+    "vEWmHtiznF8": {
+      "caption": "A man is talking while a bus is idling in the background.",
+      "integrated_lufs": -16.89,
+      "labels": [
+        "/m/012f08",
+        "/m/01bjv",
+        "/m/07yv9",
+        "/m/09x0r"
+      ],
+      "post_gain_peak_dbfs": -23.246,
+      "sample_peak_dbfs": -4.135,
+      "sha256": "b77ef6c72e3159e766c9495cbcc1d0a26bf2addee967d3fab6d1546c0209ff95",
+      "staged_path": "/teamspace/studios/this_studio/audioldm-modality-swap-pruning/artifacts/listening_study/real_refs/rr_vEWmHtiznF8.wav",
+      "ytid": "vEWmHtiznF8"
+    }
+  },
+  "salt": "LISTENING-STUDY|REALREF-CATCH|2026-08-31",
+  "self_sha256": "0f23d549e92a076a8ae735c0df14c08d7469fedcefcc3ff4c504cce643cd00b6",
+  "target_lufs": -36.0
+}

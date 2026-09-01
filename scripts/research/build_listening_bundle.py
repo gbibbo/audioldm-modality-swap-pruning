@@ -25,18 +25,16 @@ CEIL = -1.0
 def main():
     os.chdir(ROOT)
     priv = json.load(open(PRIV))
-    inv = json.load(open(INV))
-    stim = inv["stimuli"]
-    render = priv["audio_render_map"]  # hash_name -> stim_id
+    render = priv["audio_render_map"]  # hash_name -> {stim_id, src_path, src_sha256}
     os.makedirs(AUDIO_DIR, exist_ok=True)
 
-    # cache normalized arrays per stim_id (many hash copies share a source)
+    # cache normalized arrays per source path (many hash copies share a source)
     cache = {}
     problems = []
     bundle = {}
-    for hn, sid in sorted(render.items()):
+    for hn, meta in sorted(render.items()):
+        sid = meta["stim_id"]; src = meta["src_path"]; src_sha = meta["src_sha256"]
         if sid not in cache:
-            src = stim[sid]["src_path"]
             x, sr = sf.read(src)
             if x.ndim > 1:
                 x = x.mean(axis=1)
@@ -56,7 +54,7 @@ def main():
         sf.write(out, y, sr, subtype="PCM_16")
         copy_sha = hashlib.sha256(open(out, "rb").read()).hexdigest()
         bundle[hn] = {
-            "stim_id": sid, "src_sha256": stim[sid]["sha256"], "copy_sha256": copy_sha,
+            "stim_id": sid, "src_sha256": src_sha, "copy_sha256": copy_sha,
             "src_lufs": round(lufs, 3), "gain_db": round(gain_db, 3),
             "copy_peak_dbfs": round(peak_db, 3), "copy_lufs": round(lufs_after, 3),
             "sr": sr, "n_samples": int(len(y)),

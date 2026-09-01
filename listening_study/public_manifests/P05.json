@@ -1,255 +1,220 @@
 {
-  "assignment_hash": "d293c3f9957f54d7ec66fcc8377c3c9bc040e3401c59960de83ca51dd3312a77",
-  "level_check_audio": "audio/a323a556e7bc9f825.wav",
+  "assignment_hash": "7acc0fde910261c5805421368fab3ea14b106f18f4791206402b6a2639e5cde1",
+  "level_check_audio": "audio/a9f6d6bf4e6eec84d.wav",
   "n_trials": 35,
   "participant_code": "P05",
-  "protocol_hash": "9222507996561a7bd831c6977e429a965377c06be40c5b4133bc3d14804f5827",
-  "study_version": "LSTUDY-2026-08-31-v1",
+  "protocol_hash": "a7445ab5f93709ea8f03382e7c7d734be3abaa887881358c23e790bff9b92abb",
+  "study_version": "LSTUDY-2026-08-31-v1.1",
   "trials": [
     {
-      "audio_A": "audio/af4020f4eb05a8f79.wav",
-      "audio_B": "audio/a06ad877530ae2062.wav",
-      "prompt_text": "A faucet pouring water as a plastic container fills with liquid and scrubbing against a plastic surface while water trickles",
-      "trial_id": "P05_01",
-      "type": "experimental"
+      "audio_A": "audio/a2ec3b6769a59bf08.wav",
+      "audio_B": "audio/aa7d9889a093653bd.wav",
+      "prompt_text": "Waves and wind rake a shore",
+      "trial_id": "P05_01"
     },
     {
-      "audio_A": "audio/ad4fdf4f6c84ea6c6.wav",
-      "audio_B": "audio/a89e8811dceaa9bef.wav",
-      "prompt_text": "A train honks horn and passes by",
-      "trial_id": "P05_02",
-      "type": "experimental"
+      "audio_A": "audio/aa01be0870d5b979d.wav",
+      "audio_B": "audio/ac782a69f102f2942.wav",
+      "prompt_text": "Males speaking and then a clock ticks twice",
+      "trial_id": "P05_02"
     },
     {
-      "audio_A": "audio/a492c73109448a222.wav",
-      "audio_B": "audio/a3c10be747870cc34.wav",
-      "prompt_text": "A man speaking continuously",
-      "trial_id": "P05_03",
-      "type": "experimental"
+      "audio_A": "audio/ae2d9e643e7e529e7.wav",
+      "audio_B": "audio/adfcf8a5e43ffc2b3.wav",
+      "prompt_text": "Whimpering of several small dogs",
+      "trial_id": "P05_03"
     },
     {
-      "audio_A": "audio/a3a8b0406590d204b.wav",
-      "audio_B": "audio/a5fcf7b04bebb6e8c.wav",
-      "prompt_text": "Computer keyboard clicks as typing occurs",
-      "trial_id": "P05_04",
-      "type": "experimental"
+      "audio_A": "audio/adb508585ec36ba06.wav",
+      "audio_B": "audio/a00184eb8ba229f79.wav",
+      "prompt_text": "A man speaks with distant traffic passing and some nearby rattling",
+      "trial_id": "P05_04"
     },
     {
-      "audio_A": "audio/a69e1fec5c02c01db.wav",
-      "audio_B": "audio/a5bde8d7dd8334cb1.wav",
-      "prompt_text": "A woman speaking",
-      "trial_id": "P05_05",
-      "type": "experimental"
+      "audio_A": "audio/a1de7bc10e9e353b9.wav",
+      "audio_B": "audio/a0a2cdeb04b3a9ff5.wav",
+      "prompt_text": "Water trickling with man speaking",
+      "trial_id": "P05_05"
     },
     {
-      "audio_A": "audio/ac4c494700c992f50.wav",
-      "audio_B": "audio/ae37f118414a3180b.wav",
-      "prompt_text": "An adult male speaks, a tapping sound occurs, and frogs croak",
-      "trial_id": "P05_06",
-      "type": "experimental"
+      "audio_A": "audio/afa02379022cef261.wav",
+      "audio_B": "audio/a970f3587d29c0269.wav",
+      "prompt_text": "A cat meowing and young female speaking",
+      "trial_id": "P05_06"
     },
     {
-      "audio_A": "audio/a9de9ed43173b01ed.wav",
-      "audio_B": "audio/a882bd4dc39af0be7.wav",
-      "prompt_text": "Pigeons coo and flap their wings",
-      "trial_id": "P05_07",
-      "type": "experimental"
+      "audio_A": "audio/a0dfa346b98740c93.wav",
+      "audio_B": "audio/a41c62fde3301fad1.wav",
+      "prompt_text": "An adult male speaks, a bird chirps harshly, and then the adult male and an adult female speak",
+      "trial_id": "P05_07"
     },
     {
-      "audio_A": "audio/acf85dde95bc92a03.wav",
-      "audio_B": "audio/a3d771aaba65f078f.wav",
-      "prompt_text": "A car idling and revving",
-      "trial_id": "P05_08",
-      "type": "experimental"
+      "audio_A": "audio/ab5222b2a975728e6.wav",
+      "audio_B": "audio/ade7ba6a86178cbf2.wav",
+      "prompt_text": "A baby cries and a small child speaks",
+      "trial_id": "P05_08"
     },
     {
-      "audio_A": "audio/ae815071e8fd4732a.wav",
-      "audio_B": "audio/a0a0b5562a877030f.wav",
-      "prompt_text": "A man talking followed by a camera muffling and footsteps shuffling then wood lightly clanking",
-      "trial_id": "P05_09",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/ae4753526160d1e04.wav",
-      "audio_B": "audio/a58bb2303ad7d60c8.wav",
-      "prompt_text": "One long chime",
-      "trial_id": "P05_10",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/accc14daac9e5f58b.wav",
-      "audio_B": "audio/a3a64cb4a5523627a.wav",
-      "prompt_text": "A man speaking as vehicles drive by and leaves rustling",
-      "trial_id": "P05_11",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/adfedecf58b5d0ac0.wav",
-      "audio_B": "audio/acd7fe59374b2dee6.wav",
-      "prompt_text": "A train honks horn and passes by",
-      "trial_id": "P05_12",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a744b76e24709a332.wav",
-      "audio_B": "audio/aca473aa2f2eca9d9.wav",
+      "audio_A": "audio/a61f008d81fa09e81.wav",
+      "audio_B": "audio/a954e9e9a5bc335c9.wav",
       "prompt_text": "A vehicle engine running idle then revving as a crowd of people talk in the background",
-      "trial_id": "P05_13",
-      "type": "experimental"
+      "trial_id": "P05_09"
     },
     {
-      "audio_A": "audio/a0e68f869c585079d.wav",
-      "audio_B": "audio/a38350c512967a23f.wav",
-      "prompt_text": "A male speech and metal clanging.",
-      "trial_id": "P05_14",
-      "type": "experimental"
+      "audio_A": "audio/ac5411b495e742272.wav",
+      "audio_B": "audio/a112a77f1b112dcca.wav",
+      "prompt_text": "A man speaks with distant traffic passing and some nearby rattling",
+      "trial_id": "P05_10"
     },
     {
-      "audio_A": "audio/a7dd51b1b49f503e7.wav",
-      "audio_B": "audio/a5c19b968cbf779b5.wav",
+      "audio_A": "audio/a1f1a0590a154db58.wav",
+      "audio_B": "audio/ac84c2531c0707dfd.wav",
+      "prompt_text": "A mid-size motor vehicle engine is revving repeatedly, while people talk in the background",
+      "trial_id": "P05_11"
+    },
+    {
+      "audio_A": "audio/a22ff1aca596a0359.wav",
+      "audio_B": "audio/a56ffbdf4524f866c.wav",
+      "prompt_text": "Water hissing followed by a man breathing aloud then a toilet flushing",
+      "trial_id": "P05_12"
+    },
+    {
+      "audio_A": "audio/aac496857a6efabcb.wav",
+      "audio_B": "audio/adcc1967cd9b263de.wav",
+      "prompt_text": "A man speaks with low speech in the background",
+      "trial_id": "P05_13"
+    },
+    {
+      "audio_A": "audio/a1b849acf22596f00.wav",
+      "audio_B": "audio/a2b45b76eaf5d4994.wav",
+      "prompt_text": "Eructation sounds in slow motion followed by speech in slow motion",
+      "trial_id": "P05_14"
+    },
+    {
+      "audio_A": "audio/aa27859788ec339cb.wav",
+      "audio_B": "audio/a0dfae7e26ac5b051.wav",
       "prompt_text": "A man talking as a dog barks in the distance while wind blows into a microphone",
-      "trial_id": "P05_15",
-      "type": "experimental"
+      "trial_id": "P05_15"
     },
     {
-      "audio_A": "audio/aba0379c6f9233f45.wav",
-      "audio_B": "audio/afe39de822a61ccea.wav",
-      "prompt_text": "A domestic pet is making noises and a baby cries",
-      "trial_id": "P05_16",
-      "type": "catch"
+      "audio_A": "audio/af04614d2bcea037b.wav",
+      "audio_B": "audio/a9cb857a259537868.wav",
+      "prompt_text": "An adult male speaks, a bird chirps harshly, and then the adult male and an adult female speak",
+      "trial_id": "P05_16"
     },
     {
-      "audio_A": "audio/a3b743bcab58b4dbe.wav",
-      "audio_B": "audio/a400889e8326d5e80.wav",
-      "prompt_text": "Rain falls, tapping on metal, a vehicle runs in the distance, the tapping sound fades as the rain continues",
-      "trial_id": "P05_17",
-      "type": "experimental"
+      "audio_A": "audio/a524bd44f9a7ef2f9.wav",
+      "audio_B": "audio/a6ba9433f06faa413.wav",
+      "prompt_text": "A baby cries and a small child speaks",
+      "trial_id": "P05_17"
     },
     {
-      "audio_A": "audio/ac22bb07f71dfdd5b.wav",
-      "audio_B": "audio/a34eec1d34f2696e2.wav",
-      "prompt_text": "A man speaking continuously",
-      "trial_id": "P05_18",
-      "type": "experimental"
+      "audio_A": "audio/ace1390b3f7498648.wav",
+      "audio_B": "audio/a1a8cca43811e070a.wav",
+      "prompt_text": "Water trickling with man speaking",
+      "trial_id": "P05_18"
     },
     {
-      "audio_A": "audio/af7710c8987d2fb0a.wav",
-      "audio_B": "audio/a6103a68c635bfa1a.wav",
-      "prompt_text": "Mechanical humming with pigeons cooing and a person speaking briefly",
-      "trial_id": "P05_19",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/ab015ce57522f2955.wav",
-      "audio_B": "audio/af623eefe527b71df.wav",
-      "prompt_text": "Pigeons cooing as wood clanks and an animal hisses",
-      "trial_id": "P05_20",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/add52d056d87e2f20.wav",
-      "audio_B": "audio/a1fb34906f15683fc.wav",
-      "prompt_text": "A faucet pouring water as a plastic container fills with liquid and scrubbing against a plastic surface while water trickles",
-      "trial_id": "P05_21",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a74baa0d81c7e1fa3.wav",
-      "audio_B": "audio/ad7361e8df1fbaa11.wav",
+      "audio_A": "audio/aee9fe4f1e88cea1e.wav",
+      "audio_B": "audio/a31abacfb3799649f.wav",
       "prompt_text": "A person is sawing wood and music is playing in the background",
-      "trial_id": "P05_22",
-      "type": "catch"
+      "trial_id": "P05_19"
     },
     {
-      "audio_A": "audio/ae4c84941a9594d42.wav",
-      "audio_B": "audio/a870748b6a52f5281.wav",
-      "prompt_text": "Rain falls, tapping on metal, a vehicle runs in the distance, the tapping sound fades as the rain continues",
-      "trial_id": "P05_23",
-      "type": "experimental"
+      "audio_A": "audio/a8fa3d329ae6288ae.wav",
+      "audio_B": "audio/a66e92c41a940e784.wav",
+      "prompt_text": "A man speaks with low speech in the background",
+      "trial_id": "P05_20"
     },
     {
-      "audio_A": "audio/a88b9610cf329318e.wav",
-      "audio_B": "audio/a883b83b3c2813ce5.wav",
-      "prompt_text": "An elderly man speaking",
-      "trial_id": "P05_24",
-      "type": "experimental"
+      "audio_A": "audio/aac58b492ef8aa9bc.wav",
+      "audio_B": "audio/a123957a3e4b7c734.wav",
+      "prompt_text": "A man speaks nearby and another speaks over the phone",
+      "trial_id": "P05_21"
     },
     {
-      "audio_A": "audio/a7e8c249fd4349d7a.wav",
-      "audio_B": "audio/a0788cd96e1bbb5ed.wav",
-      "prompt_text": "A man talking followed by a camera muffling and footsteps shuffling then wood lightly clanking",
-      "trial_id": "P05_25",
-      "type": "experimental"
+      "audio_A": "audio/aa47438d7860ffe6d.wav",
+      "audio_B": "audio/a9017c7299a1657bf.wav",
+      "prompt_text": "Males speaking and then a clock ticks twice",
+      "trial_id": "P05_22"
     },
     {
-      "audio_A": "audio/a6ce0b37b94ec5f8d.wav",
-      "audio_B": "audio/afb382863cf2d9b87.wav",
-      "prompt_text": "A woman speaking",
-      "trial_id": "P05_26",
-      "type": "experimental"
+      "audio_A": "audio/a9a4e20a2c51f7f0b.wav",
+      "audio_B": "audio/a4a6f5911a7afab0d.wav",
+      "prompt_text": "Whimpering of several small dogs",
+      "trial_id": "P05_23"
     },
     {
-      "audio_A": "audio/a05b96cad4a64993e.wav",
-      "audio_B": "audio/a453cb18e3cacd66d.wav",
-      "prompt_text": "One long chime",
-      "trial_id": "P05_27",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a3243051467e35cef.wav",
-      "audio_B": "audio/a91523c9a376c1ec6.wav",
-      "prompt_text": "A man speaking as vehicles drive by and leaves rustling",
-      "trial_id": "P05_28",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/af015d850db3da301.wav",
-      "audio_B": "audio/ad98638fef8dac410.wav",
-      "prompt_text": "An adult male speaks, a tapping sound occurs, and frogs croak",
-      "trial_id": "P05_29",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a12f9251fe1109f05.wav",
-      "audio_B": "audio/a6f51c0910591dbf4.wav",
-      "prompt_text": "Race cars are racing and skidding tires",
-      "trial_id": "P05_30",
-      "type": "catch"
-    },
-    {
-      "audio_A": "audio/ae460b3c9d2b24269.wav",
-      "audio_B": "audio/a07ffc57e84aa6a42.wav",
-      "prompt_text": "An aircraft engine is running smoothly and consistently",
-      "trial_id": "P05_31",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/af16f813786c62bd4.wav",
-      "audio_B": "audio/a71971f4f895ee1e4.wav",
-      "prompt_text": "A vehicle engine running idle then revving as a crowd of people talk in the background",
-      "trial_id": "P05_32",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/adf166f19ff4b747b.wav",
-      "audio_B": "audio/acf7e96182566b0c9.wav",
-      "prompt_text": "Mechanical humming with pigeons cooing and a person speaking briefly",
-      "trial_id": "P05_33",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/ab295288dd28e6a34.wav",
-      "audio_B": "audio/afa29b9482e86b090.wav",
+      "audio_A": "audio/a75b708f661fa71a0.wav",
+      "audio_B": "audio/a96c0cd70dbd83147.wav",
       "prompt_text": "A male speech and metal clanging.",
-      "trial_id": "P05_34",
-      "type": "experimental"
+      "trial_id": "P05_24"
     },
     {
-      "audio_A": "audio/a6d5161a017686b29.wav",
-      "audio_B": "audio/a1a3945df962ea3d9.wav",
-      "prompt_text": "A man talking as a dog barks in the distance while wind blows into a microphone",
-      "trial_id": "P05_35",
-      "type": "experimental"
+      "audio_A": "audio/a2a26e2f35b511a09.wav",
+      "audio_B": "audio/ae4d592cb0a63e56d.wav",
+      "prompt_text": "An aircraft taking off with some wind noises in the background",
+      "trial_id": "P05_25"
+    },
+    {
+      "audio_A": "audio/a85f662e2d483c884.wav",
+      "audio_B": "audio/a7c1e9ed94dfacd6b.wav",
+      "prompt_text": "A mid-size motor vehicle engine is revving repeatedly, while people talk in the background",
+      "trial_id": "P05_26"
+    },
+    {
+      "audio_A": "audio/a75edf20f5adf3270.wav",
+      "audio_B": "audio/a2ea4e6f72bbf7aee.wav",
+      "prompt_text": "Eructation sounds in slow motion followed by speech in slow motion",
+      "trial_id": "P05_27"
+    },
+    {
+      "audio_A": "audio/a860850a432c5208d.wav",
+      "audio_B": "audio/a16f7707217e87e0e.wav",
+      "prompt_text": "Water hissing followed by a man breathing aloud then a toilet flushing",
+      "trial_id": "P05_28"
+    },
+    {
+      "audio_A": "audio/a5fda26d48af914ab.wav",
+      "audio_B": "audio/a56a1b5d23d2aa8fe.wav",
+      "prompt_text": "A man speaks nearby and another speaks over the phone",
+      "trial_id": "P05_29"
+    },
+    {
+      "audio_A": "audio/a6f53f0e203ab4800.wav",
+      "audio_B": "audio/a665273ff31ca1122.wav",
+      "prompt_text": "Metal clanking followed by plastic rattling and air spraying with a group of people talking faintly in the background",
+      "trial_id": "P05_30"
+    },
+    {
+      "audio_A": "audio/a880cd6032ffb2b20.wav",
+      "audio_B": "audio/a53a2f9dde6628c24.wav",
+      "prompt_text": "A person is sawing wood and music is playing in the background",
+      "trial_id": "P05_31"
+    },
+    {
+      "audio_A": "audio/aafb17ae32b894e65.wav",
+      "audio_B": "audio/ab27e3a6c7c1e9878.wav",
+      "prompt_text": "An aircraft taking off with some wind noises in the background",
+      "trial_id": "P05_32"
+    },
+    {
+      "audio_A": "audio/a6761cd45e3a1cd1f.wav",
+      "audio_B": "audio/a4686a55930d2340f.wav",
+      "prompt_text": "A male speech and metal clanging.",
+      "trial_id": "P05_33"
+    },
+    {
+      "audio_A": "audio/a647f4d44d5ba6df0.wav",
+      "audio_B": "audio/a9b5fba98041893bb.wav",
+      "prompt_text": "Waves and wind rake a shore",
+      "trial_id": "P05_34"
+    },
+    {
+      "audio_A": "audio/a4a378e3ab2e5eb1f.wav",
+      "audio_B": "audio/a32840211f1225fc0.wav",
+      "prompt_text": "A vehicle engine running idle then revving as a crowd of people talk in the background",
+      "trial_id": "P05_35"
     }
   ]
 }

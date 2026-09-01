@@ -3,13 +3,23 @@
   "artifact": "listening_study_validation",
   "checks": [
     {
-      "detail": "37 == 37",
+      "detail": "37==37",
       "name": "P01 n_trials",
       "pass": true
     },
     {
       "detail": "3",
       "name": "P01 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P01 sev2 human absent",
+      "pass": true
+    },
+    {
+      "detail": "trial_id/prompt_text/audio_A/audio_B only",
+      "name": "P01 public keys minimal",
       "pass": true
     },
     {
@@ -23,22 +33,32 @@
       "pass": true
     },
     {
-      "detail": "14 prompts",
+      "detail": "17 prompts",
       "name": "P01 sev1 both durations",
       "pass": true
     },
     {
-      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "detail": "min gap 6 (target>=6)",
       "name": "P01 pair separation",
       "pass": true
     },
     {
-      "detail": "[10, 21, 23]",
+      "detail": "[2, 14, 18]",
       "name": "P01 catch placement",
       "pass": true
     },
     {
-      "detail": "recovered-as-A 17/34=0.50",
+      "detail": "['identical_native', 'identical_short', 'matched_vs_unrelated_real']",
+      "name": "P01 catch kinds",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P01 realref catch is real",
+      "pass": true
+    },
+    {
+      "detail": "recA 16/34=0.47",
       "name": "P01 AB balance",
       "pass": true
     },
@@ -48,13 +68,23 @@
       "pass": true
     },
     {
-      "detail": "37 == 37",
+      "detail": "37==37",
       "name": "P02 n_trials",
       "pass": true
     },
     {
       "detail": "3",
       "name": "P02 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P02 sev2 human absent",
+      "pass": true
+    },
+    {
+      "detail": "trial_id/prompt_text/audio_A/audio_B only",
+      "name": "P02 public keys minimal",
       "pass": true
     },
     {
@@ -68,22 +98,32 @@
       "pass": true
     },
     {
-      "detail": "14 prompts",
+      "detail": "17 prompts",
       "name": "P02 sev1 both durations",
       "pass": true
     },
     {
-      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "detail": "min gap 7 (target>=6)",
       "name": "P02 pair separation",
       "pass": true
     },
     {
-      "detail": "[12, 20, 27]",
+      "detail": "[8, 28, 30]",
       "name": "P02 catch placement",
       "pass": true
     },
     {
-      "detail": "recovered-as-A 17/34=0.50",
+      "detail": "['identical_native', 'identical_short', 'matched_vs_unrelated_real']",
+      "name": "P02 catch kinds",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P02 realref catch is real",
+      "pass": true
+    },
+    {
+      "detail": "recA 16/34=0.47",
       "name": "P02 AB balance",
       "pass": true
     },
@@ -93,13 +133,23 @@
       "pass": true
     },
     {
-      "detail": "35 == 35",
+      "detail": "35==35",
       "name": "P03 n_trials",
       "pass": true
     },
     {
       "detail": "3",
       "name": "P03 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P03 sev2 human absent",
+      "pass": true
+    },
+    {
+      "detail": "trial_id/prompt_text/audio_A/audio_B only",
+      "name": "P03 public keys minimal",
       "pass": true
     },
     {
@@ -113,22 +163,32 @@
       "pass": true
     },
     {
-      "detail": "13 prompts",
+      "detail": "16 prompts",
       "name": "P03 sev1 both durations",
       "pass": true
     },
     {
-      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "detail": "min gap 6 (target>=6)",
       "name": "P03 pair separation",
       "pass": true
     },
     {
-      "detail": "[3, 23, 29]",
+      "detail": "[7, 11, 13]",
       "name": "P03 catch placement",
       "pass": true
     },
     {
-      "detail": "recovered-as-A 15/32=0.47",
+      "detail": "['identical_native', 'identical_short', 'matched_vs_unrelated_real']",
+      "name": "P03 catch kinds",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P03 realref catch is real",
+      "pass": true
+    },
+    {
+      "detail": "recA 16/32=0.50",
       "name": "P03 AB balance",
       "pass": true
     },
@@ -138,13 +198,23 @@
       "pass": true
     },
     {
-      "detail": "35 == 35",
+      "detail": "35==35",
       "name": "P04 n_trials",
       "pass": true
     },
     {
       "detail": "3",
       "name": "P04 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P04 sev2 human absent",
+      "pass": true
+    },
+    {
+      "detail": "trial_id/prompt_text/audio_A/audio_B only",
+      "name": "P04 public keys minimal",
       "pass": true
     },
     {
@@ -158,22 +228,32 @@
       "pass": true
     },
     {
-      "detail": "13 prompts",
+      "detail": "16 prompts",
       "name": "P04 sev1 both durations",
       "pass": true
     },
     {
-      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "detail": "min gap 8 (target>=6)",
       "name": "P04 pair separation",
       "pass": true
     },
     {
-      "detail": "[3, 20, 23]",
+      "detail": "[8, 24, 27]",
       "name": "P04 catch placement",
       "pass": true
     },
     {
-      "detail": "recovered-as-A 15/32=0.47",
+      "detail": "['identical_native', 'identical_short', 'matched_vs_unrelated_real']",
+      "name": "P04 catch kinds",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P04 realref catch is real",
+      "pass": true
+    },
+    {
+      "detail": "recA 16/32=0.50",
       "name": "P04 AB balance",
       "pass": true
     },
@@ -183,13 +263,23 @@
       "pass": true
     },
     {
-      "detail": "35 == 35",
+      "detail": "35==35",
       "name": "P05 n_trials",
       "pass": true
     },
     {
       "detail": "3",
       "name": "P05 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P05 sev2 human absent",
+      "pass": true
+    },
+    {
+      "detail": "trial_id/prompt_text/audio_A/audio_B only",
+      "name": "P05 public keys minimal",
       "pass": true
     },
     {
@@ -203,22 +293,32 @@
       "pass": true
     },
     {
-      "detail": "13 prompts",
+      "detail": "16 prompts",
       "name": "P05 sev1 both durations",
       "pass": true
     },
     {
-      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "detail": "min gap 6 (target>=6)",
       "name": "P05 pair separation",
       "pass": true
     },
     {
-      "detail": "[15, 21, 29]",
+      "detail": "[5, 14, 29]",
       "name": "P05 catch placement",
       "pass": true
     },
     {
-      "detail": "recovered-as-A 15/32=0.47",
+      "detail": "['identical_native', 'identical_short', 'matched_vs_unrelated_real']",
+      "name": "P05 catch kinds",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P05 realref catch is real",
+      "pass": true
+    },
+    {
+      "detail": "recA 16/32=0.50",
       "name": "P05 AB balance",
       "pass": true
     },
@@ -228,13 +328,23 @@
       "pass": true
     },
     {
-      "detail": "35 == 35",
+      "detail": "35==35",
       "name": "P06 n_trials",
       "pass": true
     },
     {
       "detail": "3",
       "name": "P06 catch=3",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P06 sev2 human absent",
+      "pass": true
+    },
+    {
+      "detail": "trial_id/prompt_text/audio_A/audio_B only",
+      "name": "P06 public keys minimal",
       "pass": true
     },
     {
@@ -248,22 +358,32 @@
       "pass": true
     },
     {
-      "detail": "13 prompts",
+      "detail": "16 prompts",
       "name": "P06 sev1 both durations",
       "pass": true
     },
     {
-      "detail": "min gap 6 (target>= 6, non-adjacent>=2)",
+      "detail": "min gap 6 (target>=6)",
       "name": "P06 pair separation",
       "pass": true
     },
     {
-      "detail": "[4, 13, 32]",
+      "detail": "[12, 14, 18]",
       "name": "P06 catch placement",
       "pass": true
     },
     {
-      "detail": "recovered-as-A 15/32=0.47",
+      "detail": "['identical_native', 'identical_short', 'matched_vs_unrelated_real']",
+      "name": "P06 catch kinds",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "P06 realref catch is real",
+      "pass": true
+    },
+    {
+      "detail": "recA 16/32=0.50",
       "name": "P06 AB balance",
       "pass": true
     },
@@ -273,7 +393,7 @@
       "pass": true
     },
     {
-      "detail": "94/196=0.480",
+      "detail": "96/196=0.490",
       "name": "global AB balance",
       "pass": true
     },
@@ -283,8 +403,23 @@
       "pass": true
     },
     {
+      "detail": "18",
+      "name": "bridge count = 18",
+      "pass": true
+    },
+    {
       "detail": "",
-      "name": "sev2 selection reproducible",
+      "name": "bridge prompts rated by 2 listeners",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "non-bridge prompts rated by 1 listener",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "bridge selection reproducible",
       "pass": true
     },
     {
@@ -299,22 +434,22 @@
     },
     {
       "detail": "",
-      "name": "client no autoplay-on-load",
-      "pass": true
-    },
-    {
-      "detail": "",
       "name": "client no tracking code",
       "pass": true
     },
     {
-      "detail": "no PII fields",
+      "detail": "answers locked until both clips completed",
+      "name": "client both-playback enforcement",
+      "pass": true
+    },
+    {
+      "detail": "no PII / no type leak",
       "name": "payload shape",
       "pass": true
     },
     {
-      "detail": "max err 7.11e-15",
-      "name": "bundle applied-gain exact to -36 LUFS (source)",
+      "detail": "max err 0.00e+00",
+      "name": "bundle applied-gain exact to -36 LUFS",
       "pass": true
     },
     {
@@ -323,8 +458,8 @@
       "pass": true
     },
     {
-      "detail": "430/434 within 1 dB; drift range [-40.71,-34.30]",
-      "name": "bundle >=98% copies within +/-1 dB re-measured",
+      "detail": "431/434; range [-40.71,-34.30]",
+      "name": "bundle >=97% within +/-1 dB re-measured",
       "pass": true
     },
     {
@@ -333,44 +468,50 @@
       "pass": true
     },
     {
-      "detail": "0 missing",
+      "detail": "",
       "name": "bundle files on disk",
       "pass": true
     },
     {
-      "detail": "worst 17.67 min",
+      "detail": "max|signed mean|=0.0057 dB",
+      "name": "loudness pair audit negligible",
+      "pass": true
+    },
+    {
+      "detail": "worst 16.8 min",
       "name": "time <= 20 min (moderate replay)",
       "pass": true
     }
   ],
-  "n_checks": 68,
+  "n_checks": 96,
   "n_fail": 0,
-  "n_pass": 68,
+  "n_pass": 96,
   "pair_separation_min": 6,
+  "study_version": "LSTUDY-2026-08-31-v1.1",
   "time_estimate_min": {
     "P01": {
-      "moderate_replay_min": 17.67,
-      "single_pass_min": 14.37
+      "moderate_replay_min": 16.8,
+      "single_pass_min": 13.73
     },
     "P02": {
-      "moderate_replay_min": 17.67,
-      "single_pass_min": 14.37
+      "moderate_replay_min": 16.8,
+      "single_pass_min": 13.73
     },
     "P03": {
-      "moderate_replay_min": 16.77,
-      "single_pass_min": 13.63
+      "moderate_replay_min": 15.9,
+      "single_pass_min": 12.99
     },
     "P04": {
-      "moderate_replay_min": 16.77,
-      "single_pass_min": 13.63
+      "moderate_replay_min": 15.9,
+      "single_pass_min": 12.99
     },
     "P05": {
-      "moderate_replay_min": 16.77,
-      "single_pass_min": 13.63
+      "moderate_replay_min": 15.9,
+      "single_pass_min": 12.99
     },
     "P06": {
-      "moderate_replay_min": 16.77,
-      "single_pass_min": 13.63
+      "moderate_replay_min": 15.9,
+      "single_pass_min": 12.99
     }
   }
 }

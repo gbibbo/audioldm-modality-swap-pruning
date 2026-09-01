@@ -87,9 +87,10 @@
   function renderTrial() {
     var t = state.trials[state.i];
     current = {
-      trial_id: t.trial_id, type: t.type, shownAt: Date.now(),
+      trial_id: t.trial_id, shownAt: Date.now(),
       relevance: null, quality: null,
-      playsA: 0, playsB: 0, firstResponseAt: null
+      playsA: 0, playsB: 0, completedA: false, completedB: false,
+      canAnswer: false, firstResponseAt: null
     };
     $("#progress-bar").style.width = ((state.i) / state.trials.length * 100) + "%";
     $("#progress-text").textContent = "Trial " + (state.i + 1) + " of " + state.trials.length;
@@ -105,10 +106,25 @@
     $$(".replay-note").forEach(function (n) { n.textContent = ""; });
     $$(".play").forEach(function (b) { b.classList.remove("playing"); b.disabled = false; });
 
-    // reset answers
+    // reset answers + lock until both clips heard in full
     $$(".scale button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
     $("#btn-next").disabled = true;
+    lockAnswers(true);
     setActiveQuestion("relevance");
+  }
+
+  function lockAnswers(locked) {
+    $$(".question").forEach(function (f) { f.classList.toggle("locked", locked); });
+    $$(".scale button").forEach(function (b) { b.disabled = locked; });
+    var hint = $("#answer-lock-hint");
+    if (hint) hint.textContent = locked ? "Play both A and B in full to unlock the answers." : "";
+  }
+
+  function maybeUnlock() {
+    if (current.completedA && current.completedB && !current.canAnswer) {
+      current.canAnswer = true;
+      lockAnswers(false);
+    }
   }
 
   function stopAll() {
@@ -132,7 +148,11 @@
     var note = $('.replay-note[data-side="' + side + '"]');
     note.textContent = playCounts[side] >= 2 ? "no replays left" : "1 replay left";
     if (playCounts[side] >= 2) btn.disabled = true;
-    a.onended = function () { btn.classList.remove("playing"); };
+    a.onended = function () {
+      btn.classList.remove("playing");
+      current["completed" + side] = true;
+      maybeUnlock();
+    };
   }
 
   function setActiveQuestion(q) {
@@ -142,6 +162,7 @@
   }
 
   function answer(q, v) {
+    if (!current.canAnswer) return;   // both clips must be heard in full first
     current[q] = v;
     if (!current.firstResponseAt) current.firstResponseAt = Date.now();
     var wrap = $('.scale[data-q="' + q + '"]');
@@ -158,9 +179,10 @@
     current.respondedAt = Date.now();
     current.dwell_ms = current.respondedAt - current.shownAt;
     state.responses.push({
-      trial_id: current.trial_id, type: current.type,
+      trial_id: current.trial_id,
       relevance: current.relevance, quality: current.quality,
       plays_A: current.playsA, plays_B: current.playsB,
+      completed_A: current.completedA, completed_B: current.completedB,
       shown_ts: current.shownAt, responded_ts: current.respondedAt,
       dwell_ms: current.dwell_ms
     });

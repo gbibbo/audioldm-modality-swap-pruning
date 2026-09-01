@@ -1,269 +1,232 @@
 {
-  "assignment_hash": "37bb9eaab749a5b79e1b6d0297bcd4a47f3c8c0370af807f427041d146ae4278",
-  "level_check_audio": "audio/a43f9531068b78419.wav",
+  "assignment_hash": "9ce80bb31cc28b9d5e2f2fe845bce049567b8b03fc02a52406ccd8354f6297aa",
+  "level_check_audio": "audio/aaa6c5a885c69b107.wav",
   "n_trials": 37,
   "participant_code": "P01",
-  "protocol_hash": "9222507996561a7bd831c6977e429a965377c06be40c5b4133bc3d14804f5827",
-  "study_version": "LSTUDY-2026-08-31-v1",
+  "protocol_hash": "a7445ab5f93709ea8f03382e7c7d734be3abaa887881358c23e790bff9b92abb",
+  "study_version": "LSTUDY-2026-08-31-v1.1",
   "trials": [
     {
-      "audio_A": "audio/a615723011c214c75.wav",
-      "audio_B": "audio/aeefa49db357f8543.wav",
-      "prompt_text": "A man talking then meowing and hissing",
-      "trial_id": "P01_01",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a173f6eaf6ed2d5fc.wav",
-      "audio_B": "audio/ade7d5ea0db4b2ffe.wav",
-      "prompt_text": "People are giggling, and a man speaks",
-      "trial_id": "P01_02",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/af7a16f838c9fdb33.wav",
-      "audio_B": "audio/a15b759d1dfa40827.wav",
-      "prompt_text": "Ocean waves crashing and water trickling",
-      "trial_id": "P01_03",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/afe9c9c335a795dbb.wav",
-      "audio_B": "audio/a40551c9bcd934f19.wav",
-      "prompt_text": "A person sneezes and then speaks with clock ticking in the background",
-      "trial_id": "P01_04",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a006aaf5114e51916.wav",
-      "audio_B": "audio/a14e459ef5baee0a2.wav",
-      "prompt_text": "Wind and then a short ambulance siren repeats several times",
-      "trial_id": "P01_05",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/ad3f643dd0dcca28b.wav",
-      "audio_B": "audio/a5a866fdc08454a25.wav",
-      "prompt_text": "A duck quacks while a rooster crows and a crowd chatters followed by a girl laughing",
-      "trial_id": "P01_06",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/ab5f72dc09b4867cb.wav",
-      "audio_B": "audio/a789b8c168b9a32cb.wav",
-      "prompt_text": "Bells ringing with voices in background and wind blowing",
-      "trial_id": "P01_07",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a67bc7d77b52b7ed3.wav",
-      "audio_B": "audio/a9f6bf7f3c2a95e06.wav",
-      "prompt_text": "A man is talking as water is running along with tapping noises",
-      "trial_id": "P01_08",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/ac931bedcfdb8c55b.wav",
-      "audio_B": "audio/a2b17cbcbc011f440.wav",
+      "audio_A": "audio/aa2b949b264b22415.wav",
+      "audio_B": "audio/ac6c3383cf3d189d2.wav",
       "prompt_text": "Metal clanking followed by plastic rattling and air spraying with a group of people talking faintly in the background",
-      "trial_id": "P01_09",
-      "type": "experimental"
+      "trial_id": "P01_01"
     },
     {
-      "audio_A": "audio/ae7d2e1fba6f3b985.wav",
-      "audio_B": "audio/a98a6b66cec51c676.wav",
-      "prompt_text": "A man talking then meowing and hissing",
-      "trial_id": "P01_10",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a17320052d6aa87c6.wav",
-      "audio_B": "audio/adea7511ca632257d.wav",
-      "prompt_text": "An idle vehicle engine running followed by a gear cranking then revving",
-      "trial_id": "P01_11",
-      "type": "catch"
-    },
-    {
-      "audio_A": "audio/a88a887a8ae98aff4.wav",
-      "audio_B": "audio/a73b1a88f46654e93.wav",
-      "prompt_text": "Birds chirping and then a dog barking and a duck quaking",
-      "trial_id": "P01_12",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a7a34d764edb1b30b.wav",
-      "audio_B": "audio/a8682055599efdf86.wav",
-      "prompt_text": "Bells ringing with voices in background and wind blowing",
-      "trial_id": "P01_13",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a1c2f9d5bf0765061.wav",
-      "audio_B": "audio/a4deceb6a683b87f0.wav",
-      "prompt_text": "A man is talking as water is running along with tapping noises",
-      "trial_id": "P01_14",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a3f19f9a8eb98ca3f.wav",
-      "audio_B": "audio/aca121460694f0f1c.wav",
-      "prompt_text": "Hissing and vibrating from an idling engine",
-      "trial_id": "P01_15",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a311e2f877f3c3005.wav",
-      "audio_B": "audio/a4b6e7b1e67320da4.wav",
-      "prompt_text": "The sound of horn from a car approaching from a distance",
-      "trial_id": "P01_16",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a2fe0af2af3a64cfe.wav",
-      "audio_B": "audio/a5887fbf6525e76c9.wav",
-      "prompt_text": "A man speaks with distant traffic passing and some nearby rattling",
-      "trial_id": "P01_17",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a5cee90a9a92e82f6.wav",
-      "audio_B": "audio/acad12175770d874c.wav",
-      "prompt_text": "Race car racing by some people laughing",
-      "trial_id": "P01_18",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a6c00528b417cccf4.wav",
-      "audio_B": "audio/a08e31686e3f9ffea.wav",
-      "prompt_text": "People are giggling, and a man speaks",
-      "trial_id": "P01_19",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/ac12420fe7b11d5d5.wav",
-      "audio_B": "audio/a09ce08d1b74c7499.wav",
-      "prompt_text": "Repeated ticking culminates in a sliding click",
-      "trial_id": "P01_20",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/aafd5f7a02ac2fd92.wav",
-      "audio_B": "audio/a01dd32e7506b3380.wav",
+      "audio_A": "audio/a742d8d437868c8e3.wav",
+      "audio_B": "audio/af9567ca5ca96aa33.wav",
       "prompt_text": "Rustling and shaking followed by a horn and gusts of wind",
-      "trial_id": "P01_21",
-      "type": "experimental"
+      "trial_id": "P01_02"
     },
     {
-      "audio_A": "audio/a0560c07527e36822.wav",
-      "audio_B": "audio/a9e3945960e4b00e8.wav",
-      "prompt_text": "A man shouting then laughing as wind blows heavily into a microphone",
-      "trial_id": "P01_22",
-      "type": "catch"
+      "audio_A": "audio/a15a365b2f871fef1.wav",
+      "audio_B": "audio/a5797738e49e8179a.wav",
+      "prompt_text": "Humming from a truck with a blowing horn",
+      "trial_id": "P01_03"
     },
     {
-      "audio_A": "audio/a5227d71fa63a397c.wav",
-      "audio_B": "audio/a56c70798d9fe2f3d.wav",
-      "prompt_text": "A man speaks with distant traffic passing and some nearby rattling",
-      "trial_id": "P01_23",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/aca725f78913781c1.wav",
-      "audio_B": "audio/a63bba65ca6df4073.wav",
-      "prompt_text": "One long chime",
-      "trial_id": "P01_24",
-      "type": "catch"
-    },
-    {
-      "audio_A": "audio/a5b1fddaa7e146e66.wav",
-      "audio_B": "audio/a85680d9078508d8a.wav",
-      "prompt_text": "Sheep bleating with a baby sheep baaing",
-      "trial_id": "P01_25",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/a3c951d235e15c891.wav",
-      "audio_B": "audio/a85f0d37b4dcef84d.wav",
-      "prompt_text": "A man talking then another man talking followed by a group of people laughing then another man talking",
-      "trial_id": "P01_26",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/aa6add2043985a368.wav",
-      "audio_B": "audio/a119c51afad225687.wav",
-      "prompt_text": "Birds chirping and then a dog barking and a duck quaking",
-      "trial_id": "P01_27",
-      "type": "experimental"
-    },
-    {
-      "audio_A": "audio/aea105462ec6c396f.wav",
-      "audio_B": "audio/a242d8e9bf6eae948.wav",
+      "audio_A": "audio/abf83de54894044b7.wav",
+      "audio_B": "audio/ae9df0f003f7125aa.wav",
       "prompt_text": "A person sneezes and then speaks with clock ticking in the background",
-      "trial_id": "P01_28",
-      "type": "experimental"
+      "trial_id": "P01_04"
     },
     {
-      "audio_A": "audio/a658be1c2d4cab290.wav",
-      "audio_B": "audio/a949b7593894e0c39.wav",
-      "prompt_text": "Ocean waves crashing and water trickling",
-      "trial_id": "P01_29",
-      "type": "experimental"
+      "audio_A": "audio/ae9a0ebaae37cd856.wav",
+      "audio_B": "audio/a1f87b5156231a328.wav",
+      "prompt_text": "A duck quacking and a bird chirping followed by footsteps on a wooden surface then a man talking",
+      "trial_id": "P01_05"
     },
     {
-      "audio_A": "audio/a6d7f3ed4761f3a6f.wav",
-      "audio_B": "audio/a1f70e105e52efa26.wav",
-      "prompt_text": "Wind and then a short ambulance siren repeats several times",
-      "trial_id": "P01_30",
-      "type": "experimental"
+      "audio_A": "audio/a6b277ee78a86f655.wav",
+      "audio_B": "audio/abf19a156ac395d02.wav",
+      "prompt_text": "A bus engine running as several vehicles pass by and car horns honk in the distance",
+      "trial_id": "P01_06"
     },
     {
-      "audio_A": "audio/ac9484cfd049d0a09.wav",
-      "audio_B": "audio/a2b961b066d477160.wav",
-      "prompt_text": "Mid frequency of multiple people in the distance talking and yelling, followed by coughing",
-      "trial_id": "P01_31",
-      "type": "experimental"
+      "audio_A": "audio/a39605b6ae3e11ffa.wav",
+      "audio_B": "audio/a566ee6997de0db34.wav",
+      "prompt_text": "Rapid gunfire with far away voice",
+      "trial_id": "P01_07"
     },
     {
-      "audio_A": "audio/aab876f25863fe54e.wav",
-      "audio_B": "audio/a5fe9ef37bce9334e.wav",
-      "prompt_text": "A helicopter is in motion",
-      "trial_id": "P01_32",
-      "type": "experimental"
+      "audio_A": "audio/a83c67c5bf7ca7639.wav",
+      "audio_B": "audio/a574c7140c271675e.wav",
+      "prompt_text": "Race cars are racing and skidding tires",
+      "trial_id": "P01_08"
     },
     {
-      "audio_A": "audio/a9fe3c7d00cbb13b1.wav",
-      "audio_B": "audio/ac411c2acf05dae9a.wav",
-      "prompt_text": "Rustling and shaking followed by a horn and gusts of wind",
-      "trial_id": "P01_33",
-      "type": "experimental"
+      "audio_A": "audio/ad59c9f4de76de0f0.wav",
+      "audio_B": "audio/a565f409af3676493.wav",
+      "prompt_text": "An infant and a woman laughing followed by someone spits then a woman talking",
+      "trial_id": "P01_09"
     },
     {
-      "audio_A": "audio/a43619946e02ffa26.wav",
-      "audio_B": "audio/aaf9e6192a63c23a1.wav",
-      "prompt_text": "Repeated ticking culminates in a sliding click",
-      "trial_id": "P01_34",
-      "type": "experimental"
+      "audio_A": "audio/a367eba7aa58c0a0c.wav",
+      "audio_B": "audio/af7ff8bf1a88cc698.wav",
+      "prompt_text": "Whimpering of several small dogs",
+      "trial_id": "P01_10"
     },
     {
-      "audio_A": "audio/a1d515fc755cef878.wav",
-      "audio_B": "audio/ae1ec26c5af51d666.wav",
+      "audio_A": "audio/a9133b8b324fda794.wav",
+      "audio_B": "audio/aee4f708978cb654a.wav",
+      "prompt_text": "A man and a woman talking followed by a bell ringing and a cat meowing as a crowd of people applaud",
+      "trial_id": "P01_11"
+    },
+    {
+      "audio_A": "audio/a2ffe1a0b9a2b9b73.wav",
+      "audio_B": "audio/a64307daf481b3eae.wav",
+      "prompt_text": "Rain falls, tapping on metal, a vehicle runs in the distance, the tapping sound fades as the rain continues",
+      "trial_id": "P01_12"
+    },
+    {
+      "audio_A": "audio/a003f1e52d52e5823.wav",
+      "audio_B": "audio/a1f07de5da0e54bd2.wav",
+      "prompt_text": "Bells ringing with voices in background and wind blowing",
+      "trial_id": "P01_13"
+    },
+    {
+      "audio_A": "audio/aa4c6c9a11b234f85.wav",
+      "audio_B": "audio/a17de5db0f535b809.wav",
+      "prompt_text": "Humming noise then sneezing and coughing",
+      "trial_id": "P01_14"
+    },
+    {
+      "audio_A": "audio/a1f8420bb0f04511b.wav",
+      "audio_B": "audio/a9ecfdf79a02d8703.wav",
+      "prompt_text": "A woman speaking then coughing as a river stream flows followed by a series of plastic clacking",
+      "trial_id": "P01_15"
+    },
+    {
+      "audio_A": "audio/adf907fdf5583de43.wav",
+      "audio_B": "audio/a5f625195c679df52.wav",
+      "prompt_text": "A toilet flushing",
+      "trial_id": "P01_16"
+    },
+    {
+      "audio_A": "audio/aa76748832758d943.wav",
+      "audio_B": "audio/a806772ee54047173.wav",
+      "prompt_text": "A man and a woman talking followed by a bell ringing and a cat meowing as a crowd of people applaud",
+      "trial_id": "P01_17"
+    },
+    {
+      "audio_A": "audio/a49b5d16f7661f2df.wav",
+      "audio_B": "audio/a042454d17703f43e.wav",
+      "prompt_text": "A gun cocking then firing as metal clanks on a hard surface followed by a man talking during an electronic laser effect as gunshots and explosions go off in the distance",
+      "trial_id": "P01_18"
+    },
+    {
+      "audio_A": "audio/ab142d3a6be59fe9a.wav",
+      "audio_B": "audio/af927c1800d9a3e05.wav",
+      "prompt_text": "Birds chirping and then a dog barking and a duck quaking",
+      "trial_id": "P01_19"
+    },
+    {
+      "audio_A": "audio/af7dd4fb38a9672cb.wav",
+      "audio_B": "audio/a428bfac9329d6be1.wav",
+      "prompt_text": "Humming noise then sneezing and coughing",
+      "trial_id": "P01_20"
+    },
+    {
+      "audio_A": "audio/a1d6155b1fa3a5edc.wav",
+      "audio_B": "audio/a14c13511d9f5934e.wav",
+      "prompt_text": "A person sneezes and then speaks with clock ticking in the background",
+      "trial_id": "P01_21"
+    },
+    {
+      "audio_A": "audio/a5f41f9786698bc8e.wav",
+      "audio_B": "audio/a6e6fb3189954620a.wav",
+      "prompt_text": "A man speaking followed by a crowd applauding and cheering",
+      "trial_id": "P01_22"
+    },
+    {
+      "audio_A": "audio/a7bdc99648ba8e1d5.wav",
+      "audio_B": "audio/a4d47cbad83aed7c5.wav",
+      "prompt_text": "An infant and a woman laughing followed by someone spits then a woman talking",
+      "trial_id": "P01_23"
+    },
+    {
+      "audio_A": "audio/afacacc7bf967bbef.wav",
+      "audio_B": "audio/a6136aac18edbb4c6.wav",
+      "prompt_text": "Rain falls, tapping on metal, a vehicle runs in the distance, the tapping sound fades as the rain continues",
+      "trial_id": "P01_24"
+    },
+    {
+      "audio_A": "audio/a939fb8aeaf93dbaa.wav",
+      "audio_B": "audio/ad6c1c241f3fdf2c0.wav",
       "prompt_text": "Metal clanking followed by plastic rattling and air spraying with a group of people talking faintly in the background",
-      "trial_id": "P01_35",
-      "type": "experimental"
+      "trial_id": "P01_25"
     },
     {
-      "audio_A": "audio/aa1ff1d915bc0076a.wav",
-      "audio_B": "audio/a3456317c60ba2452.wav",
-      "prompt_text": "A man talking then another man talking followed by a group of people laughing then another man talking",
-      "trial_id": "P01_36",
-      "type": "experimental"
+      "audio_A": "audio/a7942c29d23e35040.wav",
+      "audio_B": "audio/a98a6fc1b47e40437.wav",
+      "prompt_text": "A man talking followed by a camera muffling and footsteps shuffling then wood lightly clanking",
+      "trial_id": "P01_26"
     },
     {
-      "audio_A": "audio/a5e5878603e1a6c75.wav",
-      "audio_B": "audio/aa92d57ad9e742605.wav",
-      "prompt_text": "Mid frequency of multiple people in the distance talking and yelling, followed by coughing",
-      "trial_id": "P01_37",
-      "type": "experimental"
+      "audio_A": "audio/aa359f1badd450d0e.wav",
+      "audio_B": "audio/aba2a44fe99fe820b.wav",
+      "prompt_text": "Rustling and shaking followed by a horn and gusts of wind",
+      "trial_id": "P01_27"
+    },
+    {
+      "audio_A": "audio/a51f0c80413e86441.wav",
+      "audio_B": "audio/aabe8aa2517bc8788.wav",
+      "prompt_text": "Rapid gunfire with far away voice",
+      "trial_id": "P01_28"
+    },
+    {
+      "audio_A": "audio/afc8b87df79351566.wav",
+      "audio_B": "audio/abd658653ff23c200.wav",
+      "prompt_text": "A man speaking followed by a crowd applauding and cheering",
+      "trial_id": "P01_29"
+    },
+    {
+      "audio_A": "audio/a72ae8e1440623330.wav",
+      "audio_B": "audio/ab20825f65f70d6d0.wav",
+      "prompt_text": "A toilet flushing",
+      "trial_id": "P01_30"
+    },
+    {
+      "audio_A": "audio/a134c1eb5edc0d1fa.wav",
+      "audio_B": "audio/adb2f2a3807762d9c.wav",
+      "prompt_text": "Bells ringing with voices in background and wind blowing",
+      "trial_id": "P01_31"
+    },
+    {
+      "audio_A": "audio/a34510e7b7db02fdd.wav",
+      "audio_B": "audio/abdf5fbc317962b00.wav",
+      "prompt_text": "A man talking followed by a camera muffling and footsteps shuffling then wood lightly clanking",
+      "trial_id": "P01_32"
+    },
+    {
+      "audio_A": "audio/ab10ba02350bab630.wav",
+      "audio_B": "audio/aa509f42e0d126b31.wav",
+      "prompt_text": "A bus engine running as several vehicles pass by and car horns honk in the distance",
+      "trial_id": "P01_33"
+    },
+    {
+      "audio_A": "audio/a3ca026ac709499dc.wav",
+      "audio_B": "audio/a3a4383e55b12fb03.wav",
+      "prompt_text": "Race cars are racing and skidding tires",
+      "trial_id": "P01_34"
+    },
+    {
+      "audio_A": "audio/a20b5f5629332f7a2.wav",
+      "audio_B": "audio/aa043cab83cfade69.wav",
+      "prompt_text": "A duck quacking and a bird chirping followed by footsteps on a wooden surface then a man talking",
+      "trial_id": "P01_35"
+    },
+    {
+      "audio_A": "audio/a8373153fb5bb361b.wav",
+      "audio_B": "audio/a9dc7a7c17d6ded87.wav",
+      "prompt_text": "A gun cocking then firing as metal clanks on a hard surface followed by a man talking during an electronic laser effect as gunshots and explosions go off in the distance",
+      "trial_id": "P01_36"
+    },
+    {
+      "audio_A": "audio/a604aa5403ba6eba1.wav",
+      "audio_B": "audio/aad3b4ae2ede358bc.wav",
+      "prompt_text": "Whimpering of several small dogs",
+      "trial_id": "P01_37"
     }
   ]
 }
