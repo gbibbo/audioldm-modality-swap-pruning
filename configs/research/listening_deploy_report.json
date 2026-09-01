@@ -6,59 +6,59 @@
   "files": {
     "P01": {
       "blinding_leaks": [],
-      "bytes": 10874433,
-      "mb": 10.87,
+      "bytes": 10876344,
+      "mb": 10.88,
       "n_audio_embedded": 75,
       "n_trials": 37,
-      "sha256": "78f3463a3d695e95acb4cfd132d87ad246fcd8d1264dc4112352a41b43a0f27c",
+      "sha256": "c6482c68806b6fa5d7a9cade8f97380bc8fbcb9cc2665e71a4e20a40b64f0149",
       "under_20mb": true
     },
     "P02": {
       "blinding_leaks": [],
-      "bytes": 10006483,
+      "bytes": 10008394,
       "mb": 10.01,
       "n_audio_embedded": 75,
       "n_trials": 37,
-      "sha256": "78a09446bbb8bd9a9289a79ddf4630dc9a8d6abb20c756056603193e816898e9",
+      "sha256": "a77a6ad991a7e4350a9be52c395ea4d50cfb999155751f1079011251ed43b66a",
       "under_20mb": true
     },
     "P03": {
       "blinding_leaks": [],
-      "bytes": 10401487,
+      "bytes": 10403398,
       "mb": 10.4,
       "n_audio_embedded": 71,
       "n_trials": 35,
-      "sha256": "e982bb2ded912ca101be80acea9426674b45cb40de6289451972b45e8ea035be",
+      "sha256": "badd740fd814704a16a7908f9f22738b96a1f1bd53f0f294602265292468343a",
       "under_20mb": true
     },
     "P04": {
       "blinding_leaks": [],
-      "bytes": 9927324,
+      "bytes": 9929235,
       "mb": 9.93,
       "n_audio_embedded": 71,
       "n_trials": 35,
-      "sha256": "89651dec0e603bbf525230913f5731a86b764fcaa08b83592e8216d3809c7ca2",
+      "sha256": "c36039d0925bf47780516200e2adbf6773f85cfc87523e839164b8277a8f351f",
       "under_20mb": true
     },
     "P05": {
       "blinding_leaks": [],
-      "bytes": 10429317,
+      "bytes": 10431228,
       "mb": 10.43,
       "n_audio_embedded": 71,
       "n_trials": 35,
-      "sha256": "cbd1e9d989dda4a5204e5cfc03da57960675f68b2f7f29838410ec73ec927511",
+      "sha256": "4e9ebb6959de7cb26e8acc6e94ecdb6d70cde80247a8f675a7807e2906e2d9c3",
       "under_20mb": true
     },
     "P06": {
       "blinding_leaks": [],
-      "bytes": 10608109,
+      "bytes": 10610020,
       "mb": 10.61,
       "n_audio_embedded": 71,
       "n_trials": 35,
-      "sha256": "2c1f0d21935207e3039bfa4d78e77fe36ac080000db8d81f9dd9b9cca01e9d66",
+      "sha256": "eefb154f89fb3362e8aedc62d7847569ec4d91a74e8b179b52f74a9aad4dc4f0",
       "under_20mb": true
     }
   },
   "max_bytes": 20971520,
-  "self_sha256": "9fc19573e978b7aa17475d15ddb3b361d7032691a7fa6ad8912440f483037430"
+  "self_sha256": "90fd7b7f040e2e33f7cac2471783278218bc6ea50b5299e8db41b72edf0339c6"
 }
