@@ -418,6 +418,36 @@
       "pass": true
     },
     {
+      "detail": "80",
+      "name": "80 unique sev1 prompts",
+      "pass": true
+    },
+    {
+      "detail": "18/62",
+      "name": "18 bridge (2-rater) + 62 single-rater",
+      "pass": true
+    },
+    {
+      "detail": "LSTUDY-2026-08-31-v1.2",
+      "name": "study_version v1.2",
+      "pass": true
+    },
+    {
+      "detail": "prompt-first estimator frozen; fails closed on != 80 unique prompts",
+      "name": "analyzer unique-prompt primary (prompt is unit)",
+      "pass": true
+    },
+    {
+      "detail": "primary uses experimental sev1 only",
+      "name": "analyzer primary ignores catch trials",
+      "pass": true
+    },
+    {
+      "detail": "payload contract updated to v1.2",
+      "name": "receiver README payload has no type / has completed_A",
+      "pass": true
+    },
+    {
       "detail": "",
       "name": "bridge selection reproducible",
       "pass": true
@@ -483,11 +513,11 @@
       "pass": true
     }
   ],
-  "n_checks": 96,
+  "n_checks": 102,
   "n_fail": 0,
-  "n_pass": 96,
+  "n_pass": 102,
   "pair_separation_min": 6,
-  "study_version": "LSTUDY-2026-08-31-v1.1",
+  "study_version": "LSTUDY-2026-08-31-v1.2",
   "time_estimate_min": {
     "P01": {
       "moderate_replay_min": 16.8,

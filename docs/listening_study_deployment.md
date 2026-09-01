@@ -3,11 +3,20 @@
 Static bundle for the blinded expert listening study. Target host:
 `https://sharing.edgeaudiolabs.com/`. Desktop Chrome/Firefox/Safari + headphones.
 
-**Version: `LSTUDY-2026-08-31-v1.1`** (amendment `docs/listening_study_protocol_v1_1_amendment.md`).
-Design **D3** (80 sev-1 prompts × both durations single-rated + 18 bridge prompts double-rated; no
-sev-2 human arm). Inference target = **fixed panel** (six listeners; listener-stratified prompt
-bootstrap, pooled as sensitivity). Matched-vs-unrelated catch uses **real AudioCaps references**.
-Answers are **locked until both clips play in full**.
+**Version: `LSTUDY-2026-08-31-v1.2`** (amendments `docs/listening_study_protocol_v1_1_amendment.md`,
+`…_v1_2_amendment.md`). Design **D3** (80 sev-1 prompts × both durations single-rated + 18 bridge
+prompts double-rated; no sev-2 human arm). Inference target = **fixed panel** (six listeners). **Primary
+estimator = unique-prompt** (ratings averaged within prompt; each of the 80 prompts counts once; bridge
+prompts NOT double-weighted; unique-prompt bootstrap, B=10000). v1.1 listener-stratified + pooled +
+leave-one-listener-out + bridge agreement are non-gating sensitivities. Matched-vs-unrelated catch uses
+**real AudioCaps references**. Answers are **locked until both clips play in full**.
+
+**Receiver Script Properties to set (exact values):**
+```
+EXPECT_STUDY     = LSTUDY-2026-08-31-v1.2
+EXPECT_PROTOCOL  = fd53a5babda774efc8186a2601e2366f8e59f7ad8739ae5648a4f328a075719d
+RECIPIENTS       = <organiser email(s), comma-separated>   # server-side only, never in the bundle
+```
 
 ## What is committed vs. local-only
 

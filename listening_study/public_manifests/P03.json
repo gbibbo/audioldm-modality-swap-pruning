@@ -3,8 +3,8 @@
   "level_check_audio": "audio/a56e6d0bb2002c6ff.wav",
   "n_trials": 35,
   "participant_code": "P03",
-  "protocol_hash": "a7445ab5f93709ea8f03382e7c7d734be3abaa887881358c23e790bff9b92abb",
-  "study_version": "LSTUDY-2026-08-31-v1.1",
+  "protocol_hash": "fd53a5babda774efc8186a2601e2366f8e59f7ad8739ae5648a4f328a075719d",
+  "study_version": "LSTUDY-2026-08-31-v1.2",
   "trials": [
     {
       "audio_A": "audio/aa1bba28ae9af6dba.wav",

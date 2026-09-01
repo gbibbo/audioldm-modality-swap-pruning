@@ -124,6 +124,22 @@ bridge_ok = all(len(total_raters[y]) == 2 for y in bridge_raters)
 nonbridge_single = all(len(v) == 1 for y, v in total_raters.items() if y not in bridge_raters)
 check("bridge prompts rated by 2 listeners", bridge_ok, "")
 check("non-bridge prompts rated by 1 listener", nonbridge_single, "")
+# v1.2: unique-prompt estimand structure
+check("80 unique sev1 prompts", len(total_raters) == 80, f"{len(total_raters)}")
+n2 = sum(1 for v in total_raters.values() if len(v) == 2)
+n1 = sum(1 for v in total_raters.values() if len(v) == 1)
+check("18 bridge (2-rater) + 62 single-rater", n2 == 18 and n1 == 62, f"{n2}/{n1}")
+check("study_version v1.2", DESIGN["study_version"] == "LSTUDY-2026-08-31-v1.2", DESIGN["study_version"])
+an = open("scripts/research/listening_analyze.py").read()
+check("analyzer unique-prompt primary (prompt is unit)",
+      "unique-prompt" in an and "HUMAN-BOOTSTRAP|V1.2" in an and "!= 80" in an and "average within prompt" in an.lower(),
+      "prompt-first estimator frozen; fails closed on != 80 unique prompts")
+check("analyzer primary ignores catch trials",
+      'type"] == "experimental"' in an and 'severity"] == "sev1"' in an, "primary uses experimental sev1 only")
+rd = open("receiver/google_apps_script/README.md").read()
+check("receiver README payload has no type / has completed_A",
+      ("completed_A" in rd) and (", type," not in rd) and ("type, relevance" not in rd),
+      "payload contract updated to v1.2")
 
 # bridge selection reproducible
 sev1_yt = [p["ytid"] for p in INV["prompts"]["sev1"]]

@@ -1,0 +1,104 @@
+{
+  "B": 3000,
+  "cells": {
+    "nullA-naive|pooled_all": {
+      "H1": 0.175,
+      "H1_H2": 0.043
+    },
+    "nullA-naive|strat_v11": {
+      "H1": 0.232,
+      "H1_H2": 0.064
+    },
+    "nullA-naive|uniqueprompt": {
+      "H1": 0.188,
+      "H1_H2": 0.045
+    },
+    "nullA|pooled_all": {
+      "H1": 0.021,
+      "H1_H2": 0.006
+    },
+    "nullA|strat_v11": {
+      "H1": 0.039,
+      "H1_H2": 0.009
+    },
+    "nullA|uniqueprompt": {
+      "H1": 0.019,
+      "H1_H2": 0.005
+    },
+    "nullJ|pooled_all": {
+      "H1": 0.719,
+      "H1_H2": 0.023
+    },
+    "nullJ|strat_v11": {
+      "H1": 0.811,
+      "H1_H2": 0.038
+    },
+    "nullJ|uniqueprompt": {
+      "H1": 0.68,
+      "H1_H2": 0.026
+    },
+    "pow-anchor|pooled_all": {
+      "H1": 0.987,
+      "H1_H2": 0.694
+    },
+    "pow-anchor|strat_v11": {
+      "H1": 0.996,
+      "H1_H2": 0.725
+    },
+    "pow-anchor|uniqueprompt": {
+      "H1": 0.982,
+      "H1_H2": 0.641
+    },
+    "pow-conserv|pooled_all": {
+      "H1": 0.833,
+      "H1_H2": 0.272
+    },
+    "pow-conserv|strat_v11": {
+      "H1": 0.909,
+      "H1_H2": 0.342
+    },
+    "pow-conserv|uniqueprompt": {
+      "H1": 0.816,
+      "H1_H2": 0.256
+    },
+    "pow-stress|pooled_all": {
+      "H1": 0.963,
+      "H1_H2": 0.634
+    },
+    "pow-stress|strat_v11": {
+      "H1": 0.99,
+      "H1_H2": 0.723
+    },
+    "pow-stress|uniqueprompt": {
+      "H1": 0.956,
+      "H1_H2": 0.597
+    }
+  },
+  "design": "D3",
+  "estimators": [
+    "uniqueprompt",
+    "strat_v11",
+    "pooled_all"
+  ],
+  "n_sims": 3000,
+  "params": {
+    "rho_dur": 0.5,
+    "sigma_L": 0.5,
+    "sigma_Ld": 0.3,
+    "sigma_e": 0.6,
+    "sigma_p": 0.6,
+    "sigma_pl": 0.3,
+    "sigma_side": 0.4
+  },
+  "params_stress": {
+    "rho_dur": 0.5,
+    "sigma_L": 0.8,
+    "sigma_Ld": 0.5,
+    "sigma_e": 0.6,
+    "sigma_p": 0.6,
+    "sigma_pl": 0.3,
+    "sigma_side": 0.4
+  },
+  "seed": 2169802586,
+  "self_sha256": "02d5c2b63441429f6a545c83897ce8dbe825ddc8d59a1bc1e459592630e3f843"
+}

@@ -26,10 +26,12 @@ so responses are never lost even if the endpoint is down.
 ```
 study_version, protocol_hash, participant_code, assignment_hash,
 submission_uuid, client_started_ts, client_completed_ts, total_ms,
-responses[ {trial_id, type, relevance, quality, plays_A, plays_B,
-            shown_ts, responded_ts, dwell_ms} ]
+responses[ {trial_id, relevance, quality, plays_A, plays_B,
+            completed_A, completed_B, shown_ts, responded_ts, dwell_ms} ]
 ```
-`submission_uuid` lets you de-duplicate accidental double submissions.
+`submission_uuid` lets you de-duplicate accidental double submissions. Note: there is NO
+`type` field — catch-trial identity is never sent to the browser/participant (it lives only
+in the private analysis key). The receiver does not depend on `type`.
 
 ## Alternative receivers
 Any HTTPS endpoint honouring the same contract works (e.g. a Cloud Function or a

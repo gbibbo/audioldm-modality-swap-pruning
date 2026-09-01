@@ -29,8 +29,9 @@ PRIV = os.path.join(ROOT, "configs/research/listening_study_assignments_private.
 PUB_DIR = os.path.join(ROOT, "listening_study/public_manifests")
 PROTO_BASE = os.path.join(ROOT, "docs/listening_study_protocol.md")
 PROTO_AMEND = os.path.join(ROOT, "docs/listening_study_protocol_v1_1_amendment.md")
+PROTO_AMEND_V12 = os.path.join(ROOT, "docs/listening_study_protocol_v1_2_amendment.md")
 
-STUDY_VERSION = "LSTUDY-2026-08-31-v1.1"
+STUDY_VERSION = "LSTUDY-2026-08-31-v1.2"
 N_LISTENERS = 6
 BRIDGE_N = 18
 N_CATCH = 3
@@ -60,9 +61,11 @@ def main():
     os.chdir(ROOT)
 
     protocol_hash = hashlib.sha256(
-        open(PROTO_BASE, "rb").read() + open(PROTO_AMEND, "rb").read()).hexdigest()
+        open(PROTO_BASE, "rb").read() + open(PROTO_AMEND, "rb").read()
+        + open(PROTO_AMEND_V12, "rb").read()).hexdigest()
     base_sha = hashlib.sha256(open(PROTO_BASE, "rb").read()).hexdigest()
     amend_sha = hashlib.sha256(open(PROTO_AMEND, "rb").read()).hexdigest()
+    amend_v12_sha = hashlib.sha256(open(PROTO_AMEND_V12, "rb").read()).hexdigest()
 
     inv = json.load(open(INV))
     stim = inv["stimuli"]
@@ -227,10 +230,14 @@ def main():
                 "total": 2 * len(rate_prompts[c]) + N_CATCH} for c in codes}
     design = {
         "artifact": "listening_study_design", "study_version": STUDY_VERSION,
-        "amends": "LSTUDY-2026-08-31-v1", "design": "D3",
+        "amends": "LSTUDY-2026-08-31-v1.1", "design": "D3",
         "protocol_base_doc": "docs/listening_study_protocol.md", "protocol_base_sha256": base_sha,
         "protocol_amendment_doc": "docs/listening_study_protocol_v1_1_amendment.md",
-        "protocol_amendment_sha256": amend_sha, "protocol_sha256": protocol_hash,
+        "protocol_amendment_sha256": amend_sha,
+        "protocol_amendment_v12_doc": "docs/listening_study_protocol_v1_2_amendment.md",
+        "protocol_amendment_v12_sha256": amend_v12_sha, "protocol_sha256": protocol_hash,
+        "primary_estimator": "unique-prompt (prompt is the unit; ratings averaged within prompt; "
+                             "unique-prompt bootstrap B=10000)",
         "n_listeners": N_LISTENERS, "sev1_prompts_total": 80, "bridge_prompts": BRIDGE_N,
         "bridge_select_namespace": NS_BRIDGE,
         "bridge_selected_ytids": sorted(sev1_prompts[i]["ytid"] for i in bridge_idx),
