@@ -1,24 +1,15 @@
-# MANUSCRIPT_NOTES — ICASSP first draft
+# MANUSCRIPT_NOTES - ICASSP Draft 2
 
-**Project folder:** everything lives in `icassp/` (this folder): `icassp_operating_point.tex`, the
-official style files `spconf.sty` + `IEEEbib.bst`, `figs/`, the built `icassp_operating_point.pdf`,
-this notes file, `README_OVERLEAF.md`, and the ready-to-upload `icassp_operating_point_overleaf.zip`
-(gitignored; regenerable). The paper is **4 pages total** (content + references). Written from the
-frozen scientific state at repository HEAD `e3d761c` (`docs/final_scientific_story.md` +
-`configs/research/final_claim_registry.json`, self-sha `ff023016…`). Every number is read from a
-committed frozen artifact under `configs/research/`; none was copied from chat or an old draft.
-All work here is CPU-only (LaTeX + Matplotlib), 0 GPU, 0 credits.
+**Everything lives in `icassp/`:** `icassp_operating_point.tex`, official style files
+`spconf.sty` + `IEEEbib.bst`, `figs/`, the built `icassp_operating_point.pdf`, this file,
+`README_OVERLEAF.md`, and the ready-to-upload `icassp_operating_point_overleaf.zip`
+(gitignored; regenerable). **4 pages total** (content + references), 0 overfull boxes.
+Written from the frozen scientific state at HEAD `e3d761c` (`docs/final_scientific_story.md`
++ `configs/research/final_claim_registry.json`, self-sha `ff023016...`). Every number is read
+from a committed frozen artifact under `configs/research/`. CPU-only (LaTeX + Matplotlib), 0 GPU,
+0 credits. **No new experiment, GPU run, scoring, or inferential analysis was performed for Draft 2.**
 
-## Template and how to build
-
-The manuscript is on the **official ICASSP/ICIP LaTeX template** — `\documentclass{article}` +
-`\usepackage{spconf,...}`, with `spconf.sty` and `IEEEbib.bst` bundled in this folder (fetched from
-the public ICASSP paper kit; these files are stable across ICASSP years incl. 2027). spconf sets
-Times and the ICASSP page geometry and centered numbered headings. The body uses the template's
-sanctioned **9 pt mode** (`\ninept`, enabled right after `\begin{document}`) so the full content
-fits the 4-page limit; comment that line out for 10 pt (then trim to fit). The bibliography is an
-inline `\thebibliography` (no `.bib`/BibTeX pass needed; `IEEEbib.bst` is bundled only in case you
-switch to BibTeX).
+## Build
 
 ```bash
 # figures (reads durable artifacts, writes icassp/figs/*.pdf)
@@ -27,119 +18,135 @@ OPENBLAS_CORETYPE=Haswell python scripts/research/paper_figs/make_manuscript_fig
 cd icassp && tectonic -X compile icassp_operating_point.tex --outdir build
 ```
 
-Overleaf: upload `icassp_operating_point_overleaf.zip` (New Project → Upload Project; files are at
-the zip root), set the compiler to **pdfLaTeX** (proper Times; no font warnings). On tectonic/XeTeX
-locally the paper compiles but emits harmless Times-shape substitution warnings.
+## Draft 1 -> Draft 2: major changes
 
-## Narrative decisions
+* **Positive-first reframe.** Results now LEAD with the severity-2 prospective replication
+  (J, K, R_native) and the "advantage present at the short point too", then fold the failed
+  domain-specialisation hypothesis into the Results as the scientific *path* (Sec. 4.3), not a
+  headline. The Introduction's contribution bullets are three positive items (framework;
+  prospective cross-severity interaction + seam sensitivity; multi-metric/frame-level
+  characterisation with boundary conditions) - no "list of failures" bullet.
+* **Declarative title:** "Post-Pruning Fine-Tuning Gains Depend on the Temporal Evaluation
+  Operating Point in AudioLDM" (scoped to AudioLDM; no universal-law claim).
+* **Abstract** rewritten to ~155 words (was 233): problem -> operating-point finding -> sev-2 J
+  as the headline number -> prospective replication + seam robustness -> short-point still
+  positive -> methodological implication + one-line limitation. No caveat pile-up.
+* **Absolute levels exposed.** Table 1 (core) now shows, per severity/operating point, the
+  absolute Pruned and Post-FT mean CLAP cosine AND the paired contrast R with 95% CI; the text
+  states the sev-2 native pruned score (0.055) vs post-FT (0.299) explicitly ("recovery matters
+  most where pruning hurts most"). No "restoration to dense" claim.
+* **Uncertainty is visible.** Fig. 1 draws 95% CI whiskers of the paired contrast about the
+  post-FT mean at each operating point; Fig. 2(a) is a forest plot of all six contrasts + J with
+  95% CI (filled = CI excludes 0).
+* **FineLAP figure added.** Fig. 2(b) is a descriptive time-course of the frame-level
+  Delta-grounding (post-FT - pruned) vs. time with the 3.84 s early/late boundary and the
+  D_early/D_late window means, making "broad, not late" (T ~ 0) visible.
+* **Efficiency/pruning context.** Table 1 (systems) reports exact U-Net parameter counts
+  (Dense 415.96 M -> sev-1 145.67 M, -65.0% -> sev-2 71.08 M, -82.9%) with the channel
+  multipliers. Counts computed on CPU from the materialised checkpoints (sum of `numel` over
+  tensors keyed `model.diffusion_model.*`); validated bit-exact against the two independently
+  documented values (415.955 M dense, 145.674 M sev-1). No FLOPs/MACs/latency/RTF/memory were
+  fabricated; no Singh efficiency number was borrowed.
+* **Tables de-scaled.** `\resizebox` removed from all tables; they are redesigned to fit the
+  column at normal 9 pt (shorter labels, `\multirow` severity groups). The secondary
+  corroboration table was folded into one prose sentence to save space.
+* **Related Work** uses `\rwhead` (bold run-in headings on their own paragraph break) so the
+  three sub-topics are skimmable, not a wall of text.
+* **Named + cited evaluators.** CLAP `laion/clap-htsat-fused` (rev 365dea6e); Human-CLAP
+  (`sarulab-speech/human-clap-wsce-mae`, Takano et al., arXiv:2506.23553) explicitly labelled a
+  CLAP-family *model* fine-tuned on human scores, NOT a listening test; FineLAP (Li et al.,
+  arXiv:2604.01155, ACL 2026) named with its EAT audio encoder; DDIM, AudioCaps, MusicLM cited.
+* **Discussion is actionable:** a concrete 7-point reporting checklist for post-pruning recovery
+  studies (native + >=1 off-native operating point; absolute levels; paired common-noise
+  contrasts; prompt-unit uncertainty; interaction contrast; automatic-vs-human separation).
+* **Limitations** compressed to one section (mechanism blocked; only two temporal points, no
+  continuous trend; short is off-native; CLAP-family primary; no human eval; off-recipe DDIM50;
+  cross-severity exploratory; FineLAP post-result).
+* **Placeholders removed:** author affiliations resolved (Gabriel Bibbo = Independent researcher;
+  Singh & Plumbley = King's College London, per Gabriel 2026-09-01); Singh et al. citation
+  resolved ("Efficient text-to-audio generation via pruning," DCASE 2026, arXiv:2607.13330);
+  evaluators named/cited; no "to be confirmed" / "identifier to verify" remain.
 
-* **Framing = evaluation/audit of post-pruning fine-tuning.** Not a new pruning or fine-tuning
-  method; not a mechanistic explanation. The released pruned and post-fine-tuning checkpoints are
-  the object of study.
-* **Central claim = temporal operating-point sensitivity.** The confirmatory quantity is the
-  temporal interaction `J = R_native − R_short`. Severity 1 is directional evidence; severity 2 is
-  the prospective confirmation (disjoint set, stronger severity, frozen estimands/gates).
-* **Terminology.** "post-fine-tuning checkpoint" / "pruned checkpoint" throughout; the word
-  "recovered model" is avoided in the body per the registry. "Recovery" is used only as the name of
-  the fine-tuning stage / as a general concept, never as an achieved restoration.
-* **The failed reversal is the opening move.** The pre-registered severity-1
-  domain-specialization/reversal hypothesis (`R_AC ≈ 0`, gate FALSE) motivates and reframes the
-  paper; it is presented as a genuine negative, not hidden.
-* **`K` is a bundled context contrast (domain + duration), never a pure-domain effect.** Stated in
-  Methods and in the Table I footnote. The matched-duration domain residual (a post-hoc descriptive
-  decomposition) is deliberately NOT promoted to a confirmatory domain claim.
-* **CASE C is reported honestly:** context (`K`) and duration (`J`) dependence replicate at
-  severity 2, but the specific severity-1 native-positive/music-negative *sign pattern* does not
-  (`R_music ≈ 0`; `H_music` FALSE). The short-operating-point advantage is explicitly **present, not
-  absent**, at severity 2 (`R_short` resolved > 0; equivalence FAILS).
-* **A′/B′ seam.** A′ is the method-consistent primary pruning convention; B′ reproduces the
-  published `dp1` decoder-seam convention and is a pre-specified sensitivity analysis. The paper
-  states the main result (`J`, `K`) is robust to the convention and never describes A′ as the proven
-  exact parent of the public post-fine-tuning checkpoint.
-* **Secondaries are conservative.** CLAP is primary. Human-CLAP is labeled a "second CLAP-family
-  scorer … not human evaluation." KL and the PANN top-10 *captured-label count* (a count, not a
-  rate) are pre-specified secondaries implemented after the primary result, reported with paired
-  CIs. FD/FAD are descriptive (no paired CI).
-* **FineLAP** is labeled a prospectively frozen **post-result diagnostic**: a broad native-duration
-  frame-level grounding gain, but the late-redistribution hypothesis is rejected (`T ≈ 0`, gate
-  fails). It is described as frame-level grounding evidence, not calibrated probability, causal
-  activation, or perceptual quality. To save space it has no figure and is one paragraph.
-* **Discussion** keeps the "evaluate across operating points" message as a methodological
-  implication, explicitly *not* a universal empirical law.
+## External review criticisms -> disposition
 
-## What was omitted for the ICASSP page budget
+Addressed (presentation-only, freeze respected): A1 (fig on p4 -> Fig 1 on p3, before p4);
+A2 (only one figure -> two figures incl. the un-embedded forest, now Fig 2a); A3 (no uncertainty
+-> CI whiskers + forest); A4 (no FineLAP figure -> Fig 2b); A5 (heterogeneity now shown as a
+traceable 64%/44% native-vs-short win-rate); A6 (Related Work headings); A7 (`\resizebox`
+removed); A8 (abstract ~155 w); A9/A10 (citations + named evaluators; no placeholders);
+B11 (efficiency: exact U-Net params); B12 (absolute levels exposed); B14 (two-points-not-a-trend
+stated in Limitations); B15 (duration-extrapolation alternative: dense@3.84 vs dense@10.24 shown
+in Fig 1a and discussed as "short is off-native for the whole family"); B17 (positive-first);
+B18 (actionable checklist); B19 (declarative title).
 
-* **Figure 2 (forest plot of all six context×severity contrasts).** Generated and retained at
-  `icassp/figs/fig2_forest.pdf` (+ `.png`) by the same script, but **not embedded** in the
-  4-page body; its information is fully carried by Table I and the results text. It is a ready
-  drop-in for a longer/journal version.
-* **Cross-severity magnitude deltas** (post-hoc, CI-excluding-0 but confounded) — reduced to a
-  single qualitative "exploratory only" sentence; the numeric Δ values live in
-  `docs/xsev_postresult_adversarial_audit.md` §5.
-* **Provenance detail** — per-experiment SHAs, seeds, oracle proofs, the music eligibility funnel,
-  EMA reconstruction specifics, and the exact FineLAP window/τ definitions — left to the repository.
-* **Dense secondary numbers** (`G_pruned`, `G_post-FT`) compressed to "neither resolves a residual
-  gap to dense nor establishes equivalence."
-* **The public-examples heterogeneity illustration** (e.g. Example 4) is referenced as
-  "heterogeneous across prompts" without enumerating a sample, to avoid elevating an illustration to
-  evidence.
+**Intentionally NOT addressed (would require NEW post-result inferential analysis, forbidden by
+the current freeze; flagged for a separate authorised pass):**
+* B13 - rank/robust-scale sensitivity check on J (a new estimand on the raw scores).
+* B15 (inferential part) - subset-matched dense@3.84 vs dense@10.24 *paired* means as a formal
+  duration-extrapolation control (a new paired contrast). Only the existing descriptive dense
+  scores are shown.
+* B16 - a formal multiplicity correction / stated testing hierarchy beyond the existing
+  primary/secondary + prospectively-frozen labels.
+These are recorded here per the instruction to stop any presentation change that would need new
+analysis; they need explicit approval to implement.
 
-## Claim inventory (class per the registry)
+## Figures / tables retained (and why)
 
-| Result in paper | Class |
-|---|---|
-| Severity-2 `J`, `K`, `R_native`, `R_short`, `R_music` (CASE C) + seam B′ | prospectively frozen **primary** |
-| Severity-1 duration interaction `J` (directional; CI includes 0) | prospectively specified **follow-up** |
-| Severity-1 reversal `R_AC` (PASS=FALSE) | prospectively frozen **primary NEGATIVE** |
-| Human-CLAP contrasts | **secondary**, corroborative, not human eval |
-| KL / PANN captured-label count | **secondary** (pre-specified, implemented after primary), inferential |
-| FD / FAD | **descriptive** (no CI) |
-| FineLAP grounding + `T` | prospectively frozen **post-result diagnostic** |
-| Cross-severity magnitude | **exploratory/confounded** (not in the main claims) |
+| Element | Content | Why |
+|---|---|---|
+| Fig. 1 (single col, stacked) | pruned vs post-FT CLAP at short/native, sev 1 & 2; CI whiskers; dense ref | the central operating-point interaction + absolute levels + uncertainty, before p4 |
+| Fig. 2 (single col, 2-panel) | (a) forest of 6 contrasts + J w/ 95% CI; (b) FineLAP Delta-grounding vs time | inferential summary + the "broad, not late" negative, next to their arguments |
+| Table 1 | systems: channel_mult, exact U-Net params, reduction | efficiency/pruning context, reader-immediate |
+| Table 2 | absolute Pruned/Post-FT + R [95% CI] per severity/op-point + J, K rows + reversal footnote | absolute levels + primary contrasts + the pre-registered negative in one place |
+
+Both severity panels of Fig. 1 were made single-column (stacked) so all four floats are
+single-column; this resolved a float-placement logjam that otherwise forced a 5th page.
+Fig. 2 merges the forest and FineLAP into one two-panel float (one caption) for the page budget;
+single-panel spares `fig2_forest.pdf` / `fig3_finelap.pdf` are generated and committed for a
+longer/journal version but not embedded.
+
+## Provenance guard on the FineLAP figure
+
+Fig. 2(b) reconstructs the per-frame Delta-grounding curve from the raw frame scores
+`artifacts/finelap_temporal/scores_sev{1,2}.json` (gitignored). The figure script ASSERTS their
+`scores_sha256` equals the value recorded in the committed frozen verdict
+`configs/research/finelap_temporal_result.json`, and that the reconstructed window means reproduce
+the frozen `D_early`/`D_late` to < 1e-6 (they do, bit-exact). The plotted curve is therefore
+provably the same object as the frozen post-result diagnostic - a visualisation, not a new
+statistic.
 
 ## Items that still need Gabriel's editorial decision
 
-1. **Authors set; affiliations to CONFIRM.** Byline is now Gabriel Bibb\'o
-   (`gabobibbo@gmail.com`), Arshdeep Singh and Mark D. Plumbley
-   (`{arshdeep.singh,mark.plumbley}@kcl.ac.uk`). Affiliations were **inferred from the e-mail
-   domains**: the two `@kcl.ac.uk` authors are set to *King's College London, UK*, and Gabriel's is a
-   visible placeholder ("Affiliation to be confirmed"). **Confirm both** — note these researchers are
-   frequently associated with the University of Surrey / CVSSP, so verify KCL vs Surrey and fill in
-   Gabriel's affiliation. (The `\twoauthors` block in the `.tex` is a one-line edit.)
-2. **Reference `[2]` (Singh et al.).** Title/author list/venue and the arXiv identifier are marked
-   "(identifier to verify)". Confirm the exact citation (the prior draft used arXiv:2607.13330).
-3. **Naming the secondary scorers/evaluators.** The draft calls Human-CLAP "a second CLAP-family
-   scorer" and FineLAP "a non-CLAP audio–text grounding model" without naming them, to avoid
-   under-explained acronyms in 4 pages. Decide whether to name Human-CLAP
-   (`sarulab-speech/human-clap-wsce-mae`) and FineLAP (EAT audio encoder + text encoder) and add
-   their citations.
-4. **References** are compact (first-author "et al.", short venues). Expand author lists and verify
-   every venue/year before submission; add DDIM/EAT/RoBERTa/AudioCaps-vs-MusicCaps citations if the
-   named-scorer decision (item 3) is taken.
-5. **Title.** "When Does Post-Pruning Fine-Tuning Help? Temporal Operating-Point Sensitivity in
-   Text-to-Audio Diffusion Evaluation" — confirm or replace.
-6. **Whether to reinstate Figure 2** (forest) for a longer/journal version.
-7. **Camera-ready boilerplate** not included in this draft: acknowledgements, a data/repro
-   availability statement, and (if desired) an explicit companion-page footnote beyond the
-   Conclusion link.
+1. **Author affiliations** are now filled (Independent researcher; King's College London) per the
+   2026-09-01 decision. Note the paper under study (arXiv:2607.13330) lists the CVSSP/University of
+   Surrey group (Singh, Yuan, Chen, W. Wang, Plumbley); the @kcl.ac.uk / KCL byline was Gabriel's
+   explicit instruction - confirm once more before submission if a Surrey affiliation is intended.
+2. **Reference completeness.** Long author lists were shortened to "et al." after three names to
+   fit four pages (AudioLDM, BK-SDM, CLAP, PANNs, FAD, MusicLM, Human-CLAP, FineLAP). Expand for a
+   camera-ready/journal version if space allows. EAT (FineLAP's audio encoder) is named in text but
+   not separately cited (page budget); add the EAT citation for the journal version.
+3. **Camera-ready boilerplate** not included: acknowledgements, data/reproducibility statement.
 
-## Verification performed
+## Verification performed (Draft 2)
 
-* Compiled on the official ICASSP `spconf` template with tectonic; inspected the rendered PDF —
-  **4 pages total, no overfull-hbox overflow** (one negligible 0.9pt line remains; the contributions
-  list is set `\raggedright` so `domain-specialization`, which TeX cannot re-hyphenate, no longer
-  overflows the narrow 9pt column). `\emergencystretch` absorbs other tight lines.
-* On tectonic/XeTeX, `spconf` requests Times (`\rmdefault=ptm`), so XeTeX emits harmless
-  `Font shape TU/ptm ... undefined` substitution warnings; the serif renders clean and **pdfLaTeX on
-  Overleaf uses real Times with no warnings**. No action needed.
-* Numbers, forbidden-language, evidence-class, figure/table consistency, and required-negatives
-  completeness were re-checked against the frozen artifacts by a 5-agent adversarial pass
-  (Workflow tool) plus a manual scan. Result: **PASS**. Three minor issues were found and fixed:
-  (i) the seam-B′ interaction was printed `+0.162` (double-rounding of the story's 4-dp `0.1615`);
-  corrected to `+0.161` (artifact `0.16145…`). (ii) Table I's severity-1 `R_music` (−0.094,
-  CI excludes 0) was missing the `†` its own legend implies; added. (iii) §Corroboration now
-  discloses that the second CLAP-family scorer shows a small severity-2 music-negative (−0.037)
-  that the primary CLAP does not, with no gate role (it was previously one-sided). The manual
-  forbidden-language scan confirmed every "restore/pure-domain/perceptual/causal" token appears only
-  inside an explicit negation, and "recovery" is used only for the fine-tuning stage, never
-  "recovered model."
+* Compiled with tectonic (official spconf template): **4 pages, 0 overfull/underfull-hbox** beyond
+  the harmless XeTeX `TU/ptm` Times-substitution font warnings (pdfLaTeX on Overleaf uses real
+  Times, no warnings).
+* Both figure PDFs checked for out-of-bounds text blocks (clipping): **none**; all labels present.
+* Every numeric value cross-checked against the frozen artifacts (Table 1/2, corroboration prose,
+  FineLAP paragraph, dense reference, parameter counts). The 64%/44% heterogeneity figures are the
+  committed per-prompt win-rates (recovered > pruned) at native/short (sev-1, n=80).
+* Forbidden-language scan: every "restor*/pure-domain/causal/perceptual/single restored score"
+  token appears only inside an explicit negation; no "recovered model", "consistently improves",
+  "advantage disappears at 3.84 s", or "human listeners confirmed".
+* Placeholder scan: no "to be confirmed" / "identifier to verify" / "TODO" / `\resizebox`.
+* Bibliography: all 12 `\cite` keys have a `\bibitem` and every `\bibitem` is cited (no unused).
+* Author lists for the two newest citations verified against arXiv (Human-CLAP = Takano et al.,
+  NOT the earlier guessed "Yamamoto"; FineLAP = Li et al.).
+
+## NOTE on visual inspection
+
+Page-by-page image rendering to the operator was unavailable this session (the IDE display host was
+unreachable), so the compiled PDF was verified by text/geometry extraction (page count, float page
+assignment, per-block bounding boxes for clipping, and full text of both figures) rather than by
+eye. A final human glance on Overleaf is advisable before submission.

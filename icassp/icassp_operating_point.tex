@@ -1,31 +1,37 @@
-%% ICASSP manuscript on the OFFICIAL ICASSP/ICIP template (spconf.sty + IEEEbib.bst,
+%% ICASSP manuscript (Draft 2) on the OFFICIAL ICASSP/ICIP template (spconf.sty + IEEEbib.bst,
 %% bundled alongside this file). spconf.sty sets Times (ptm) and the ICASSP page geometry.
-%% Framing: EVALUATION of post-pruning fine-tuning (not a new pruning method, not a
-%% mechanistic explanation). Every number is traceable to a committed frozen artifact
-%% under configs/research/ ; see MANUSCRIPT_NOTES.md.
+%% Framing: EVALUATION of post-pruning fine-tuning (not a new pruning method, not a mechanistic
+%% explanation). Every number is traceable to a committed frozen artifact under configs/research/ ;
+%% see MANUSCRIPT_NOTES.md for the Draft-1 -> Draft-2 change log and provenance.
 %%
-%% Compiles with pdfLaTeX (Overleaf default; proper Times) or with tectonic/XeTeX
-%% (compiles; emits harmless Times-shape substitution warnings).
+%% Compiles with pdfLaTeX (Overleaf default; proper Times) or tectonic/XeTeX (harmless Times-shape
+%% substitution warnings).
 \documentclass{article}
-\usepackage{spconf,amsmath,amssymb,graphicx,booktabs,array,url,cite}
+\usepackage{spconf,amsmath,amssymb,graphicx,booktabs,array,multirow,url,cite}
 
 \newcommand{\Rn}{R_{\mathrm{nat}}}
 \newcommand{\Rs}{R_{\mathrm{short}}}
 \newcommand{\Rm}{R_{\mathrm{music}}}
 \newcommand{\ci}[2]{[{#1},\,{#2}]}
+\newcommand{\rwhead}[1]{\par\smallskip\noindent\textbf{#1}\ }
 \emergencystretch=1em  % absorb rare tight lines in the narrow ICASSP column
+% denser float packing so all floats fit within 4 pages (standard typesetting relaxation)
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{4}
 
 \begin{document}
 \ninept  % ICASSP template's sanctioned 9pt mode, to fit full content within 4 pages
 
-\title{When Does Post-Pruning Fine-Tuning Help?
-Temporal Operating-Point Sensitivity in Text-to-Audio Diffusion Evaluation}
+\title{Post-Pruning Fine-Tuning Gains Depend on the Temporal Evaluation
+Operating Point in AudioLDM}
 
-% Author affiliations are placeholders derived from the supplied e-mail domains
-% (see MANUSCRIPT_NOTES.md) -- confirm before submission.
 \twoauthors
   {Gabriel Bibb\'o}
-  {Affiliation to be confirmed \\
+  {Independent researcher \\
    \texttt{gabobibbo@gmail.com}}
   {Arshdeep Singh, \, Mark D. Plumbley}
   {King's College London, UK \\
@@ -34,351 +40,338 @@ Temporal Operating-Point Sensitivity in Text-to-Audio Diffusion Evaluation}
 \maketitle
 
 \begin{abstract}
-Structured pruning of a text-to-audio diffusion model is usually followed by recovery
-fine-tuning, and the benefit of that fine-tuning is typically summarized by a single
-aggregate score at one inference setting. We show that, for the published pruned and
-post-fine-tuning checkpoints of AudioLDM-M-Full, the measured advantage of the
-post-fine-tuning checkpoint over the pruned checkpoint depends strongly on the temporal
-evaluation operating point. Using a paired, common-noise design with prompt-level
-bootstrap confidence intervals, we define a temporal interaction $J$ as the difference
-between the fine-tuning advantage evaluated at the model's native $10.24$\,s scale and at
-a shorter $3.84$\,s scale. A pre-registered domain-specialization hypothesis fails at the
-matched short operating point. The interaction $J$ is positive but borderline at a milder
-pruning severity, and is prospectively confirmed at a stronger severity on a disjoint
-evaluation set ($J=+0.159$, $95\%$~CI~$\ci{+0.131}{+0.187}$), robust to a pruning-seam
-convention. The advantage is nonetheless still present at the short operating point, so it
-is not a $10$\,s-only effect, and a severity-1 music-negative pattern does not replicate.
-An independent frame-level grounding evaluator corroborates a broad native-duration gain
-but rejects a simple late-event explanation. We conclude that recovery should not be
-treated as a checkpoint-intrinsic scalar and should be evaluated across inference
-operating points. We report explicit negatives and state that no matched dense
-fine-tuned control and no human evaluation are available, so the claims are about
-evaluation, not causal mechanism or perceptual quality.
+Structured pruning of a text-to-audio diffusion model is followed by recovery
+fine-tuning, whose benefit is usually summarised by a single aggregate score at one
+inference setting. Studying the publicly released pruned and post-fine-tuning
+checkpoints of AudioLDM-M-Full, we show that this benefit depends strongly on the
+temporal evaluation operating point. With a paired, common-noise design we define a
+temporal interaction $J$: the fine-tuning advantage at the native $10.24$\,s scale minus
+that at a shorter $3.84$\,s scale. $J$ is borderline at a milder pruning severity and is
+prospectively confirmed at a stronger severity on a disjoint set
+($J=+0.159$, $95\%$~CI~$\ci{+0.131}{+0.187}$), robust to the pruning-seam convention. The
+advantage stays positive at the short point (not a $10$\,s-only effect), and an
+independent frame-level model shows the native gain is temporally broad. Post-pruning
+recovery should therefore be reported across inference operating points, not collapsed to
+one score; lacking a matched dense fine-tuned control or human listening, the claim is
+about evaluation, not mechanism.
 \end{abstract}
 
 \begin{keywords}
-text-to-audio generation, diffusion models, structured pruning, fine-tuning, evaluation,
-CLAP.
+text-to-audio generation, diffusion models, structured pruning, fine-tuning, evaluation
 \end{keywords}
 
 \section{Introduction}
 Structured pruning followed by recovery fine-tuning is a standard route to cheaper
-generative diffusion models~\cite{fang2023diffpruning,kim2024bksdm}, including for
+generative diffusion models~\cite{fang2023diffpruning,kim2024bksdm}, including
 text-to-audio (TTA) generation with AudioLDM~\cite{liu2023audioldm,singh2026pruning}.
-The effect of the recovery stage is normally reported as the restoration of an aggregate
-benchmark number, such as Fr\'echet Audio Distance or a KL divergence on an in-domain test
-set at a fixed sampler setting.
+The effect of the recovery stage is normally reported as the restoration of one
+aggregate benchmark number---a Fr\'echet Audio Distance or a KL divergence on an
+in-domain test set at a fixed sampler setting.
 
-A generative model, however, is queried at an inference operating point---clip duration,
-sampler steps, guidance---and there is no guarantee that a single aggregate number
-characterizes the fine-tuned checkpoint at every operating point a user might choose. In
-this paper we ask a narrow, empirical question: \emph{does the advantage of a
-post-pruning fine-tuned checkpoint over the pruned checkpoint depend on the temporal
-evaluation operating point?} We study this for the publicly released pruned and
-post-fine-tuning checkpoints of AudioLDM-M-Full, treating the released checkpoints as the
-object of study rather than proposing a new pruning or fine-tuning method.
-
-Our contribution is an evaluation, not a mechanism. Concretely:
-\begin{itemize}\raggedright
-\item A paired, common-noise evaluation with prompt-level bootstrap that isolates the
-      post-fine-tuning$-$pruned contrast at two temporal operating points, and a temporal
-      interaction $J$ that quantifies how that contrast changes with duration.
-\item A prospectively frozen, cross-severity test: the interaction is borderline at a
-      milder pruning severity and is confirmed at a stronger severity on a disjoint
-      evaluation set with new seeds, robust to a pruning-seam convention.
-\item Honest negatives---a pre-registered domain-specialization hypothesis fails, the
-      advantage at the short point does not vanish, a severity-1 music-negative pattern does
-      not replicate, and an independent diagnostic rejects a simple late-event
-      explanation---together with the single limitation (no matched dense fine-tuned
-      control) that bounds the claim to evaluation.
+A generative model, however, is queried at an inference \emph{operating point}---clip
+duration, sampler steps, guidance---and there is no guarantee that a single aggregate
+number characterises the fine-tuned checkpoint at every operating point a user might
+choose. We ask a narrow, empirical question: \emph{does the advantage of a post-pruning
+fine-tuned checkpoint over the pruned checkpoint depend on the temporal evaluation
+operating point?} We study the publicly released pruned and post-fine-tuning checkpoints
+of AudioLDM-M-Full, treating them as the object of study rather than proposing a new
+pruning or fine-tuning method. The contribution is therefore an \emph{evaluation}:
+\begin{itemize}\itemsep2pt \parskip0pt \topsep2pt
+\item a paired, common-noise evaluation framework that isolates the
+      post-fine-tuning$-$pruned contrast at two temporal operating points and a temporal
+      interaction $J$ that quantifies how that contrast changes with duration;
+\item a prospectively confirmed interaction at a stronger pruning severity on a disjoint
+      set, robust to a pre-specified pruning-seam convention;
+\item a multi-metric and frame-level characterisation showing the native-scale advantage
+      is broad but heterogeneous, with explicit boundary conditions on what can and
+      cannot be concluded.
 \end{itemize}
+The originally hypothesised out-of-domain specialisation effect does \emph{not} survive
+testing; we report it in Section~\ref{sec:results} as the step that motivated the
+operating-point question, and keep every other negative.
 
 \section{Related work}
-\textbf{Diffusion pruning and recovery.} Structural pruning of diffusion U-Nets with
-fine-tuning recovery has been studied for image models~\cite{fang2023diffpruning,
-kim2024bksdm} and, for TTA, by Singh et al.~\cite{singh2026pruning}, who prune an
-AudioLDM-family U-Net and recover with fine-tuning on the AudioCaps training set, reporting
-in-domain FAD/KL and event-capture metrics at a fixed sampler. These works evaluate
-recovery at a single operating point; we instead vary the operating point and measure the
-change in the fine-tuning advantage.
-\textbf{Compression and inference regime.} Compression error is known to interact with the
-reverse diffusion trajectory and the number of sampling steps. We are not aware of prior work
-establishing, for structural pruning of a TTA model, an \emph{evaluation-time} interaction
-between the recovery advantage and the temporal operating point.
-\textbf{TTA evaluation.} CLAP similarity~\cite{wu2023clap} is a standard automatic proxy
-for text--audio alignment; distributional metrics such as FAD~\cite{kilgour2019fad} and
-event classifiers such as PANNs~\cite{kong2020panns} are common but sample-size and
-encoder sensitive. These limits motivate a paired, multi-metric treatment.
+\label{sec:related}
+\rwhead{Diffusion pruning and recovery.}
+Structural pruning of diffusion U-Nets with fine-tuning recovery has been studied for
+image models~\cite{fang2023diffpruning,kim2024bksdm} and, for TTA, by Singh et
+al.~\cite{singh2026pruning}, who L1-prune an AudioLDM-family U-Net and recover on AudioCaps,
+reporting in-domain FAD/KL at a fixed sampler. These works evaluate recovery at one operating
+point; we vary it and measure the change in the fine-tuning advantage.
+
+\rwhead{Compression and inference regime.}
+We are not aware of prior work establishing, for structural pruning of a TTA model, an
+\emph{evaluation-time} interaction between the recovery advantage and the temporal
+operating point; compression error is known to interact with the sampler step count.
+
+\rwhead{TTA evaluation.}
+CLAP similarity~\cite{wu2023clap} is a standard automatic proxy for text--audio alignment;
+distributional metrics such as FAD~\cite{kilgour2019fad} and event classifiers such as
+PANNs~\cite{kong2020panns} are common but sample-size and encoder sensitive. These limits
+motivate a paired, multi-metric treatment.
 
 \section{Method}
 \subsection{Systems and pruning severities}
 The dense model is AudioLDM-M-Full~\cite{liu2023audioldm}, a latent-diffusion U-Net with
-\texttt{channel\_mult}~$=(1,2,3,5)$ and $\approx\!416$\,M U-Net parameters, itself AudioCaps-
-specialized by the original authors. We use the publicly released L1 structurally pruned
-checkpoints at two severities, denoted by the pruned per-stage channel multipliers: a
-milder \emph{severity~1} $(1,2,3,1)$ ($145.7$\,M U-Net parameters, $-65.0\%$) and a stronger
-\emph{severity~2} $(1,2,1,1)$ ($\approx\!83\%$ U-Net reduction). Each severity prunes the
-deeper U-Net stages more aggressively. We verified that our pruning operator reproduces the
-released pruned weights bit-exactly (per-tensor oracle checks). We do not train any system.
+stage multipliers \texttt{channel\_mult}~$=(1,2,3,5)$ ($415.96$\,M U-Net parameters),
+itself AudioCaps-specialised by the original authors. We use the publicly released L1
+structurally pruned checkpoints at two severities that prune the deeper U-Net stages more
+aggressively (Table~\ref{tab:eff}): a milder \emph{severity~1} $(1,2,3,1)$ and a stronger
+\emph{severity~2} $(1,2,1,1)$, reducing the U-Net by $65.0\%$ and $82.9\%$ respectively.
+We verified that our pruning operator reproduces the released pruned weights bit-exactly
+(per-tensor oracle checks) and we train no system.
+
+\begin{table}[t]
+\centering
+\caption{U-Net size of AudioLDM-M-Full at each pruning severity. Parameter counts are exact, summed
+over the diffusion-model tensors of the materialised checkpoints.}
+\label{tab:eff}
+\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+System & \texttt{channel\_mult} & U-Net & Reduction\\
+\midrule
+Dense      & $(1,2,3,5)$ & $415.96$\,M & --- \\
+Severity~1 & $(1,2,3,1)$ & $145.67$\,M & $-65.0\%$\\
+Severity~2 & $(1,2,1,1)$ & $\phantom{0}71.08$\,M & $-82.9\%$\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Post-pruning fine-tuning checkpoints}
 The \emph{post-fine-tuning checkpoint} at each severity is the released checkpoint obtained
 by fine-tuning the pruned U-Net on AudioCaps for $10^{6}$ steps~\cite{singh2026pruning}; we
-load it and materialize its exponential-moving-average (EMA) weights, and verify its
-checksum. We refer to the pruned checkpoint and the post-fine-tuning checkpoint throughout;
-the recovery fine-tuning is AudioCaps fine-tuning of the pruned U-Net.
+load it, materialise its exponential-moving-average weights, and verify its checksum.
+``Recovery'' names the AudioCaps fine-tuning stage, not an achieved restoration.
 
-\subsection{Evaluation batteries and operating points}
-The in-domain battery is AudioCaps \textsc{test} captions; the out-of-domain battery is a
-held-out music set of hip-hop-style captions derived from a MusicCaps-style
-source~\cite{agostinelli2023musiclm}, with near-zero exposure to that subdomain in the
-recovery corpus. We generate at two temporal operating points: a \emph{short} point
-($3.84$\,s, latent length $96$) and the fine-tuning-native \emph{native} point ($10.24$\,s,
-latent length $256$). All generation uses DDIM with $50$ steps, guidance $2.5$, $\eta=0$,
-\texttt{fp32}, single generation, EMA weights. The music battery is generated only at the
-short point (its recipe).
+\subsection{Batteries and operating points}
+The in-domain battery is AudioCaps~\cite{kim2019audiocaps} \textsc{test} captions; the
+out-of-domain battery is a held-out set of hip-hop-style captions derived from a
+MusicCaps-style source~\cite{agostinelli2023musiclm}, with near-zero exposure to that
+subdomain in the recovery corpus. We generate at a \emph{short} point ($3.84$\,s, latent
+length $96$) and the fine-tuning-native \emph{native} point ($10.24$\,s, latent length
+$256$); the music battery is generated only at the short point. All generation uses
+DDIM~\cite{song2021ddim} with $50$ steps, guidance $2.5$, $\eta=0$, \texttt{fp32}, single
+generation, EMA weights. The severity-2 sets were constructed \emph{after} the severity-1 results and are disjoint
+from them: $192$ AudioCaps prompts (excluding severity-1 and training prompts) and $64$ new music
+prompts. Severity~1 uses $96$ AudioCaps prompts for the controlled test, a matched $80$-prompt
+subset for the temporal comparison, and $64$ music prompts.
 
-The severity-2 evaluation uses \emph{disjoint} sets constructed after the severity-1
-results were known: $192$ AudioCaps prompts that exclude the severity-1 prompts, the
-training set and the severity-1 music set, and $64$ new music prompts with zero overlap with
-the severity-1 music set, all under new selection salts and generation seeds. Severity-1
-uses $96$ AudioCaps prompts for the controlled reversal test, a matched $80$-prompt subset
-for the temporal comparison, and $64$ music prompts.
+\subsection{Paired design, scoring, statistics}
+For each prompt and operating point the compared systems receive identical generation noise
+$x_T$ (common random numbers), so a per-prompt contrast is not confounded by sampling noise.
+The primary scorer is CLAP (\texttt{laion/\allowbreak clap-htsat-fused}, rev.\ \texttt{365dea6e})~\cite{wu2023clap},
+applied with a fixed batch/order/seed convention that is part of the endpoint. The unit is the
+prompt (music replicates averaged first); intervals are $95\%$ prompt-level percentile bootstrap
+($B=10^{4}$).
 
-\subsection{Paired design, scoring, and statistics}
-For each prompt and operating point, the compared systems receive identical generation
-noise $x_T$ (common random numbers), so a per-prompt contrast is not confounded by sampling
-noise. The primary scorer is CLAP (\texttt{laion/clap-htsat-fused}, revision
-\texttt{365dea6e})~\cite{wu2023clap}, applied with a fixed batch, order and seed convention
-that is part of the endpoint definition. The statistical unit is the prompt; the three
-music replicates are averaged to a per-prompt contrast before analysis. Confidence
-intervals are $95\%$ prompt-level percentile bootstrap ($B=10^{4}$).
-
-\subsection{Estimands and gates}
-We first ask, at a single operating point, how the fine-tuned checkpoint compares to the
-pruned one. Let $R(\text{context})$ be the mean per-prompt CLAP cosine of the
-post-fine-tuning checkpoint minus the pruned checkpoint in that context; positive values
-favour the post-fine-tuning checkpoint. We write $\Rn$, $\Rs$ and $\Rm$ for the AudioCaps
-native, AudioCaps short and held-out music contrasts.
-
-The central quantity is whether the fine-tuning advantage \emph{changes} with temporal
-scale. We define the temporal interaction
+\subsection{Estimands, gates, evidence classes}
+Let $R(\text{context})$ be the mean per-prompt CLAP cosine of the post-fine-tuning checkpoint
+minus the pruned checkpoint; $\Rn,\Rs,\Rm$ denote the AudioCaps-native, AudioCaps-short and
+held-out-music contrasts. The central quantity is whether the advantage \emph{changes} with
+temporal scale, the temporal interaction
 \begin{equation}
 J \;=\; \Rn \;-\; \Rs ,
 \end{equation}
-the difference between the advantage at the native and short operating points, estimated as
-a paired per-prompt contrast. A pre-specified gate declares the interaction resolved when
-the lower $95\%$ bound satisfies $\mathrm{lo}_{95}(J)>0$. We also report a context contrast
-$K=\Rn-\Rm$; because it changes both the prompt domain and the duration at once, we treat
-$K$ as a bundled context effect, not a pure-domain effect. Sign-of-effect gates use a
-smallest effect size of interest $\text{SESOI}=0.025$; a short-operating-point equivalence
-test asks whether the $90\%$ CI of $\Rs$ lies within $[-0.025,+0.025]$.
-
-\subsection{Evidence classes}
-We separate: (i)~\emph{prospectively frozen primary} results (the severity-2 replication and
-its seam sensitivity; the pre-registered severity-1 negative), whose protocol and gates were
-frozen before scoring; (ii)~a \emph{prospectively specified follow-up} (the severity-1
-temporal comparison); (iii)~\emph{secondary} corroboration (a second CLAP-family scorer, and
-KL/event-count metrics named in the frozen protocol but implemented after the primary
-result); and (iv)~a \emph{post-result diagnostic} (frame-level grounding). Cross-severity
-magnitude comparisons are exploratory and confounded (different experiments, prompts, sample
-sizes and checkpoints) and are never promoted to confirmatory evidence.
+estimated as a paired per-prompt contrast; a pre-specified gate declares it resolved when
+$\mathrm{lo}_{95}(J)>0$. We also report a context contrast $K=\Rn-\Rm$; because it changes
+\emph{both} the prompt domain and the duration, we read $K$ as a bundled context effect, not a
+pure-domain effect. Sign gates use a smallest effect size of interest $\text{SESOI}=0.025$; a
+short-point equivalence test asks whether the $90\%$ CI of $\Rs$ lies within $[-0.025,+0.025]$.
+Epistemically: the severity-2 replication and its seam sensitivity are \emph{prospectively
+frozen primary} (protocol/gates fixed before scoring), the severity-1 comparison a
+\emph{prospectively specified follow-up}, the second scorer and KL/event metrics \emph{secondary}
+corroboration, and the frame-level analysis a \emph{post-result diagnostic}. Cross-severity
+magnitude comparisons are exploratory and confounded, and never gate.
 
 \section{Results}
-
-\subsection{A controlled test rejects domain specialization}
-A severity-1 music observation motivated a strict hypothesis: that fine-tuning trades
-in-domain for out-of-domain alignment (a recovery reversal). We tested it prospectively at
-the matched short operating point ($3.84$\,s). It fails: the in-domain contrast is
-essentially zero, $R_{\text{AC}}=-0.002$ ($n=96$; Table~\ref{tab:core}), so there is no
-in-domain sacrifice to trade, and the pre-registered gate does not pass. This reframed the
-work from a mechanism claim to an evaluation question. The held-out music contrast at this
-severity is negative, $\Rm=-0.094$.
-
-\subsection{A temporal operating-point hypothesis}
-The recovery fine-tuning operates at a native temporal scale of $10.24$\,s (latent length
-$256$), whereas the controlled test above used $3.84$\,s (latent length $96$). If the
-apparent absence of an advantage is specific to the short operating point, then evaluating
-at the native scale should change the picture. We therefore compare the fine-tuning
-advantage at the two temporal operating points directly.
-
-\subsection{Severity 1: a larger native advantage, borderline interaction}
-On a matched $80$-prompt subset, changing only the temporal extent yields a near-zero short
-advantage, $\Rs=+0.008$, and a resolved native advantage, $\Rn=+0.052$
-(Table~\ref{tab:core}). The interaction is positive but borderline,
-$J=+0.044$ $\ci{-0.001}{+0.087}$: the $95\%$ CI narrowly includes zero, so the gate does not
-pass, and we report it as directional evidence (Fig.~\ref{fig:interaction}a). A second
-CLAP-family scorer gives a resolved interaction in the same direction ($J=+0.075$), but it is
-a corroborative secondary, not the primary endpoint.
+\label{sec:results}
 
 \subsection{Severity 2: a prospective replication}
-We then tested the pattern prospectively at the stronger severity~2 on the disjoint
-evaluation sets, with the estimands and gates frozen before any severity-2 output was
-scored. The interaction is clearly positive and resolved,
-$J=+0.159$ $\ci{+0.131}{+0.187}$, driven by a large native-duration advantage,
-$\Rn=+0.244$ (Fig.~\ref{fig:interaction}b, Table~\ref{tab:core}). The context contrast is
-also resolved, $K=+0.235$. Both $J$ and $K$ are
-robust to the pruning-seam convention: an alternative baseline that reproduces the released
-checkpoint's decoder-seam convention (differing in exactly three tensors) gives
-$J=+0.161$ and $K=+0.238$, with the same gate outcomes. The primary severity-2 baseline is
-the convention consistent with severity~1; the seam alternative is a pre-specified
-sensitivity analysis and never rescues a failed primary gate.
+We tested the operating-point pattern prospectively at the stronger severity~2 on the disjoint
+sets, with estimands and gates frozen before any severity-2 output was scored. The interaction
+is clearly resolved, $J=+0.159$~$\ci{+0.131}{+0.187}$, driven by a large native-duration
+advantage, $\Rn=+0.244$ (Fig.~\ref{fig:interaction}b, Table~\ref{tab:core}). At the native
+point the pruned checkpoint scores only $0.055$ and the post-fine-tuning checkpoint $0.299$, so
+recovery matters most where pruning hurts most. The context contrast is also resolved, $K=+0.235$. Both
+$J$ and $K$ are robust to the pruning-seam convention: an alternative baseline reproducing the
+released checkpoint's decoder-seam convention (differing in three tensors) gives $J=+0.161$ and
+$K=+0.238$ with the same gate outcomes. The seam alternative is a pre-specified sensitivity
+analysis and never rescues a failed primary gate.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{figs/fig1_interaction.pdf}
-\caption{The fine-tuning advantage grows with the temporal operating point. Mean CLAP
-cosine of the pruned and post-fine-tuning checkpoints at the short ($3.84$\,s) and native
-($10.24$\,s) points, for (a)~severity~1 and (b)~severity~2. The vertical gaps are the
-paired contrasts $\Rs$ and $\Rn$; the temporal interaction $J=\Rn-\Rs$ (with $95\%$~CI) is
-annotated per panel. The advantage is present at both points but larger at the native
-scale, and the interaction is borderline at severity~1 and resolved at severity~2. The
-dense reference (severity~1, native) is a secondary control. Note the $y$-axis is a mean
-score, so the interaction is the change in the gap, not the overall rise.}
+\includegraphics[width=\columnwidth]{figs/fig1_interaction.pdf}
+\caption{The fine-tuning advantage grows with the temporal operating point. Mean CLAP cosine of
+the pruned (dashed) and post-fine-tuning (solid) checkpoints at the short ($3.84$\,s) and native
+($10.24$\,s) points, for (a)~severity~1 and (b)~severity~2. Whiskers are the $95\%$ CI of the
+paired contrast $R$, drawn about the post-fine-tuning mean; the interaction $J=\Rn-\Rs$ (with CI)
+is annotated per panel. The advantage is present at both points but larger at the native scale.
+The dense model (grey, panel a; a descriptive reference, unpaired) also scores far higher at the
+native scale, i.e.\ the short point is off-native for the whole family.}
 \label{fig:interaction}
-\end{figure*}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figs/fig_summary.pdf}
+\caption{(a)~Paired contrasts $R$ (post-fine-tuning $-$ pruned) with $95\%$ CI; filled markers
+exclude $0$, open markers include $0$. At severity~2 the native and short advantages and the
+interaction $J$ are resolved while $\Rm$ is null; at severity~1 $\Rm$ is negative ($K$ bundles
+domain and duration, see Table~\ref{tab:core}). (b)~FineLAP frame-level grounding gain vs.\ time in
+the $10.24$\,s clip (dotted segments: window means $D_{\text{early}},D_{\text{late}}$; vertical
+line: $3.84$\,s early/late boundary). The native-scale gain is broad across time, not back-loaded
+($T=D_{\text{late}}-D_{\text{early}}\approx0$); descriptive reconstruction of the frozen diagnostic,
+no smoothing.}
+\label{fig:summary}
+\end{figure}
 
 \subsection{The advantage is present, not absent, at the short point}
-The interaction does not mean ``fine-tuning helps only at $10$\,s.'' At severity~2 the short
-advantage is itself resolved and positive, $\Rs=+0.085$, and the equivalence test fails
-($90\%$ CI $\ci{+0.069}{+0.102}$, outside the $\pm0.025$ margin): the advantage is smaller at
-the short point, not gone. The specific severity-1 music-negative pattern also does not
-replicate: at severity~2 the music contrast is approximately null, $\Rm=+0.009$
-(Table~\ref{tab:core}). Thus the context and temporal dependence replicate, but the exact
-severity-1 sign pattern does not. The stronger effects at severity~2
-are consistent with a severity dependence, but a cross-severity comparison mixes two
-experiments, prompt sets and checkpoints and is treated as exploratory only.
+The interaction does not mean ``fine-tuning helps only at $10$\,s.'' At severity~2 the short-point
+advantage is itself resolved and positive, $\Rs=+0.085$, and the equivalence test fails ($90\%$ CI
+$\ci{+0.069}{+0.102}$, outside $\pm0.025$): the advantage is smaller at the short point, not gone.
+The specific severity-1 music-negative pattern also does not replicate: at severity~2 the music
+contrast is approximately null, $\Rm=+0.009$ (Table~\ref{tab:core}, Fig.~\ref{fig:summary}a). Thus
+the temporal interaction replicates prospectively, the bundled context contrast $K$ is also
+positive, while the exact severity-1 music-negative sign does not replicate.
+
+\subsection{Severity 1: the path, and a borderline interaction}
+The severity-2 test did not come first. A severity-1 music observation had motivated a strict
+hypothesis---that fine-tuning trades in-domain for out-of-domain alignment (a recovery reversal).
+Tested prospectively at the matched short point, with hypothesis, estimand and gate fixed before
+scoring, it fails: the in-domain contrast is essentially zero, $R_{\text{AC}}=-0.002$ ($n=96$;
+Table~\ref{tab:core}), so there is no in-domain alignment to sacrifice, while held-out music is
+negative, $\Rm=-0.094$. This reframed the work from a mechanism claim to an operating-point
+evaluation. Across duration on the matched $80$-prompt subset the short advantage is near zero
+($\Rs=+0.008$) and the native advantage resolved ($\Rn=+0.052$), a positive but borderline
+interaction $J=+0.044$~$\ci{-0.001}{+0.087}$ (CI narrowly includes zero; directional,
+Fig.~\ref{fig:interaction}a)---which motivated the prospective severity-2 confirmation.
 
 \begin{table}[t]
 \centering
-\caption{Primary CLAP contrasts (post-fine-tuning $-$ pruned) with $95\%$ bootstrap CI.
-Positive favours the post-fine-tuning checkpoint. $\dagger$: CI excludes $0$. $\ddagger$:
-pre-registered gate passed ($\mathrm{lo}_{95}>0$).}
+\caption{Primary CLAP evaluation: absolute mean cosine of each checkpoint and the paired contrast
+$R=$ post-fine-tuning $-$ pruned, $95\%$ CI. $\dagger$: CI excludes $0$. $\ddagger$: frozen gate
+$\mathrm{lo}_{95}>0$ passes. Positive favours the post-fine-tuning checkpoint.}
 \label{tab:core}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.2}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}lcc@{}}
+\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}llccl@{}}
 \toprule
-Quantity & Sev.\,1 $(1,2,3,1)$ & Sev.\,2 $(1,2,1,1)$\\
+Sev. & Setting & Pruned & Post-FT & $R$~[95\% CI]\\
 \midrule
-$\Rn$ ($10.24$\,s)          & $+0.052$~\ci{+0.009}{+0.093}$^\dagger$   & $+0.244$~\ci{+0.215}{+0.273}$^\dagger$\\
-$\Rs$ ($3.84$\,s)           & $+0.008$~\ci{-0.023}{+0.039}            & $+0.085$~\ci{+0.066}{+0.105}$^\dagger$\\
-$J=\Rn-\Rs$                 & $+0.044$~\ci{-0.001}{+0.087}            & $+0.159$~\ci{+0.131}{+0.187}$^\ddagger$\\
-$\Rm$ ($3.84$\,s)           & $-0.094$~\ci{-0.124}{-0.065}$^\dagger$  & $+0.009$~\ci{-0.013}{+0.032}\\
-$K=\Rn-\Rm$                 & ---                                     & $+0.235$~\ci{+0.197}{+0.272}$^\ddagger$\\
+\multirow{3}{*}{1}
+ & $3.84$\,s  & $0.104$ & $0.111$ & $+0.008$~\ci{-0.023}{+0.039}\\
+ & $10.24$\,s & $0.253$ & $0.304$ & $+0.052^{\dagger}$~\ci{+0.009}{+0.093}\\
+ & \multicolumn{3}{l}{\itshape $J=\Rn-\Rs$} & $+0.044$~\ci{-0.001}{+0.087}\\
+\midrule
+\multirow{5}{*}{2}
+ & $3.84$\,s  & $0.015$ & $0.100$ & $+0.085^{\dagger}$~\ci{+0.066}{+0.105}\\
+ & $10.24$\,s & $0.055$ & $0.299$ & $+0.244^{\dagger}$~\ci{+0.215}{+0.273}\\
+ & music      & $0.005$ & $0.014$ & $+0.009$~\ci{-0.013}{+0.032}\\
+ & \multicolumn{3}{l}{\itshape $J=\Rn-\Rs$} & $+0.159^{\ddagger}$~\ci{+0.131}{+0.187}\\
+ & \multicolumn{3}{l}{\itshape $K=\Rn-\Rm$} & $+0.235^{\ddagger}$~\ci{+0.197}{+0.272}\\
 \bottomrule
-\end{tabular}}
+\end{tabular}
 \par\vspace{2pt}
 {\footnotesize\raggedright $n$: sev.\,1 AudioCaps $80$ (matched), music $64$; sev.\,2 AudioCaps
-$192$, music $64$. Pre-registered sev.\,1 reversal test (matched $3.84$\,s, $n{=}96$):
-$R_{\text{AC}}{=}-0.002$ \ci{-0.027}{+0.021}, gate FALSE. $K$ mixes domain and duration.\par}
+$192$, music $64$. Prospective sev.\,1 reversal test (matched $3.84$\,s, $n{=}96$):
+$R_{\text{AC}}{=}-0.002$~\ci{-0.027}{+0.021}, gate fails; sev.\,1 music
+$\Rm{=}-0.094$~\ci{-0.124}{-0.065}. $K$ bundles domain and duration.\par}
 \end{table}
 
 \subsection{Corroboration}
-We use secondary metrics conservatively; CLAP is the primary endpoint. At the severity-2
-native point, a second CLAP-family scorer agrees on a large advantage ($\Rn=+0.375$,
-$J=+0.185$; both CIs exclude $0$) but is not human evaluation; on held-out music this scorer
-shows a small negative contrast ($\Rm=-0.037$) that the primary CLAP does not, with no gate
-role, so the music sign pattern remains unestablished. Two pre-specified event-level metrics, implemented after the primary result,
-also favour the post-fine-tuning checkpoint with paired CIs excluding zero
-(Table~\ref{tab:secondary}): a lower KL to real references and a higher count of PANN
-top-$10$ captured ground-truth labels. Distribution-level FAD and FD point in the same
-direction but are single scalars per system without paired CIs, so we report them as
-descriptive.
-
-\begin{table}[t]
-\centering
-\caption{Severity-2 native-duration corroboration (post-fine-tuning vs.\ pruned). CLAP is
-primary; all others are secondary/corroborative and do not gate.}
-\label{tab:secondary}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}llc@{}}
-\toprule
-Metric & Value & Inference class\\
-\midrule
-KL to ref.\ ($\downarrow$)      & $\Delta=+2.22$~\ci{+1.93}{+2.53} & paired CI\\
-PANN capture count ($\uparrow$) & $\Delta=+0.86$~\ci{+0.70}{+1.02} & paired CI\\
-FD (PANN-$2048$, $\downarrow$)  & $48.7$ vs.\ $107.2$              & descriptive\\
-FAD (VGGish, $\downarrow$)      & $6.92$ vs.\ $27.4$               & descriptive\\
-\bottomrule
-\end{tabular}}
-\end{table}
+We use secondary metrics conservatively; CLAP is the primary endpoint. At the severity-2 native
+point a second CLAP-family scorer, Human-CLAP~\cite{takano2025humanclap} (a CLAP model
+fine-tuned on human perceptual scores---an \emph{automatic} model, not a listening test), agrees
+on a large advantage ($\Rn=+0.375$~$\ci{+0.340}{+0.408}$, $J=+0.185$); on held-out music it shows
+a small negative contrast ($\Rm=-0.037$) that the primary CLAP does not, with no gate role, so the
+music sign remains unestablished. Two pre-specified event-level metrics implemented after the
+primary result also favour the post-fine-tuning checkpoint with paired CIs excluding zero: a lower
+KL to real references ($2.23$ vs.\ $4.45$; $\Delta=+2.22$~$\ci{+1.93}{+2.53}$) and a higher count of
+PANN top-$10$ captured ground-truth labels ($1.46$ vs.\ $0.60$; $\Delta=+0.86$~$\ci{+0.70}{+1.02}$).
+Distribution-level FAD ($6.92$ vs.\ $27.4$) and FD ($48.7$ vs.\ $107.2$) point the same way but are
+single scalars per system without paired CIs, so we report them as descriptive.
 
 \subsection{Frame-level diagnostic}
-As a prospectively frozen post-result diagnostic, an independent frame-level evaluator
-(a non-CLAP audio--text grounding model) measures where in the clip the requested events are
-grounded. At the native scale the post-fine-tuning checkpoint shows a large increase in
-frame-level grounding of requested events across the whole clip (semantic mass
-$+0.27$~$\ci{+0.22}{+0.33}$, occupancy $+0.27$, quarter-coverage $+0.38$, peak $+0.41$; CIs
-exclude $0$; both severities; seam-robust). But the gain is not concentrated late: the
-late-minus-early difference is essentially zero, $T=-0.002$ $\ci{-0.024}{+0.020}$ at
-severity~2 (gate fails; $-0.020$ at severity~1, point not positive). The diagnostic therefore
-supports a broad native-duration grounding gain and rejects a simple explanation in which
-the benefit comes from events being shifted into the late portion of the clip. It is
-frame-level grounding evidence, not calibrated event probability, local causal activation, or
-perceptual quality.
+As a prospectively frozen post-result diagnostic we score the native $10.24$\,s clips with
+FineLAP~\cite{li2026finelap}, a non-CLAP frame-level language--audio grounding model built on an
+EAT audio encoder, which reports where in the clip a requested event is
+grounded. The post-fine-tuning checkpoint shows a large increase in frame-level grounding across
+the whole clip (semantic mass $+0.27$~$\ci{+0.22}{+0.33}$, occupancy $+0.27$, quarter-coverage
+$+0.38$, peak $+0.41$; CIs exclude $0$; both severities; seam-robust). Crucially the gain is
+\emph{not} concentrated late: the late-minus-early difference is essentially zero, $T=-0.002$
+$\ci{-0.024}{+0.020}$ at severity~2 (gate fails; $-0.020$ at severity~1), so the improvement is
+temporally broad (Fig.~\ref{fig:summary}b). This is frame-level grounding evidence, not calibrated
+event probability, local causal activation, or perceptual quality.
 
 \section{Discussion}
-The advantage of post-pruning fine-tuning over the pruned checkpoint is not a single number:
-in our automatic evaluation it depends on the temporal operating point and the evaluation
-context, and it is heterogeneous across prompts (some favour the pruned checkpoint on both
-CLAP and the frame-level diagnostic). The methodological implication is that recovery should
-not be treated as a checkpoint-intrinsic scalar: recovery claims for a generative model
-should be evaluated across several inference operating points rather than at one aggregate
-setting. We state this as an implication for evaluation, not a universal law---our study
-covers one model family, two pruning severities and one temporal axis.
+In our automatic evaluation the post-pruning fine-tuning advantage is not a single number: it
+depends on the temporal operating point and the evaluation context, and it
+is heterogeneous across prompts ($64\%$ favour post-fine-tuning at the native point vs.\ $44\%$ at
+the short point; some favour the pruned one). Recovery should therefore not be treated as a
+checkpoint-intrinsic scalar.
+Concretely, we recommend that post-pruning recovery studies for generative models report: (1)~the
+native or training-matched inference operating point; (2)~at least one scientifically motivated
+off-native operating point; (3)~absolute pruned and post-fine-tuning performance at each point;
+(4)~paired post-fine-tuning$-$pruned contrasts using common random numbers where generation is
+stochastic; (5)~uncertainty at the prompt/sample unit, not over generated replicates treated as
+independent; (6)~an explicit interaction contrast across operating points; and (7)~a clear
+separation between automatic semantic metrics and human perceptual evidence. We state this as an
+implication motivated by this case study, not a universal law: it covers one model family, two
+pruning severities and one temporal axis.
 
 \section{Limitations}
-The main limitation is that mechanistic attribution is blocked. The ideal control---a dense,
-unpruned model given a matched AudioCaps fine-tune---is unavailable (the checkpoint was
-confirmed deleted), and the public dense text-fine-tuned release is not an equivalent
-substitute (different data and recipe, dense start). We therefore cannot attribute the
-observed dependence to pruning specifically, and we do not claim that fine-tuning restores
-the pruned model, that it restores dense performance, or that it consistently improves
-individual samples; the dense reference (Fig.~\ref{fig:interaction}a) neither resolves a
-residual gap to dense nor establishes equivalence to it. The primary scorer family is CLAP
-(the second scorer is CLAP-derived), and there is no human evaluation: a designed listening
-study was cancelled before launch with zero participants, so it contributes no evidence, and
-the public audio examples are illustrative only. The operating point differs from the
-published recipe (DDIM $50$ vs.\ $200$ steps), so external validity to that recipe is
-untested although both systems are scored identically. The cross-severity comparison is
-exploratory and confounded, and the frame-level diagnostic is a post-result grounding
-measure, native-duration only.
+Mechanistic attribution is blocked: the ideal control---a dense, unpruned model given a matched
+AudioCaps fine-tune---is unavailable (confirmed deleted), and the public dense text-fine-tuned
+release is not equivalent, so we cannot attribute the dependence to pruning specifically and make no
+restoration-to-dense claim (the dense reference in
+Fig.~\ref{fig:interaction}a neither resolves a residual gap nor establishes equivalence). Only two
+temporal points were tested, so no continuous duration trend is established; the short point is
+off-native and may affect other checkpoints differently. Primary inference relies on CLAP-family
+semantic metrics (the second scorer is CLAP-derived) and there is no human evaluation (a designed
+listening study was cancelled pre-launch, zero participants). The operating point differs from the
+published recipe (DDIM $50$ vs.\ $200$), so external validity to it is untested (both systems are
+scored identically). The cross-severity magnitude comparison is exploratory
+and confounded, and the frame-level diagnostic is a post-result grounding measure, native-duration
+only.
 
 \section{Conclusion}
-For the released pruned and post-fine-tuning checkpoints of AudioLDM-M-Full, the advantage of
-fine-tuning over pruning depends on the temporal evaluation operating point: an interaction
-that is borderline at a milder pruning severity is prospectively confirmed at a stronger
-severity on a disjoint set, robust to a pruning-seam convention, present at the short point,
-and corroborated by an independent frame-level measure. Post-pruning recovery is better
-described as multi-operating-point behaviour than as a single restored score. Companion audio
+For the released pruned and post-fine-tuning checkpoints of AudioLDM-M-Full, the fine-tuning
+advantage depends on the temporal evaluation operating point: an interaction borderline at a milder
+severity is prospectively confirmed at a stronger severity on a disjoint set, robust to the seam
+convention, present at the short point, and corroborated
+by an independent frame-level measure that shows a temporally broad gain. Post-pruning recovery is
+better described as multi-operating-point behaviour than as a single restored score. Companion audio
 examples are online.\footnote{\url{https://gbibbo.github.io/audioldm-modality-swap-pruning/}}
 
+{\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}
 \begin{thebibliography}{99}
-\bibitem{liu2023audioldm} H.~Liu \emph{et al.}, ``AudioLDM: Text-to-audio generation with
-latent diffusion models,'' in \emph{Proc.\ ICML}, 2023.
-\bibitem{singh2026pruning} A.~Singh \emph{et al.}, ``Structured pruning of AudioLDM for
-efficient text-to-audio generation,'' \emph{arXiv preprint}, 2026. (identifier to verify)
-\bibitem{fang2023diffpruning} G.~Fang, X.~Ma, and X.~Wang, ``Structural pruning for
-diffusion models,'' in \emph{Proc.\ NeurIPS}, 2023.
-\bibitem{kim2024bksdm} B.-K.~Kim \emph{et al.}, ``BK-SDM: A lightweight, fast, and cheap
-version of Stable Diffusion,'' in \emph{Proc.\ ECCV}, 2024.
-\bibitem{wu2023clap} Y.~Wu \emph{et al.}, ``Large-scale contrastive language-audio
-pretraining with feature fusion and keyword-to-caption augmentation,'' in \emph{Proc.\
-ICASSP}, 2023.
-\bibitem{kong2020panns} Q.~Kong \emph{et al.}, ``PANNs: Large-scale pretrained audio neural
-networks for audio pattern recognition,'' \emph{IEEE/ACM Trans.\ Audio, Speech, Lang.\
-Process.}, 2020.
-\bibitem{kilgour2019fad} K.~Kilgour \emph{et al.}, ``Fr\'echet Audio Distance: A reference-
-free metric for evaluating music enhancement algorithms,'' in \emph{Proc.\ Interspeech},
-2019.
-\bibitem{kim2019audiocaps} C.~D.~Kim \emph{et al.}, ``AudioCaps: Generating captions for
-audios in the wild,'' in \emph{Proc.\ NAACL-HLT}, 2019.
-\bibitem{agostinelli2023musiclm} A.~Agostinelli \emph{et al.}, ``MusicLM: Generating music
-from text,'' \emph{arXiv preprint arXiv:2301.11325}, 2023.
-\end{thebibliography}
+\bibitem{liu2023audioldm} H.~Liu, Z.~Chen, Y.~Yuan \emph{et al.}, ``AudioLDM: Text-to-audio generation with latent diffusion models,'' in
+\emph{Proc.\ ICML}, 2023.
+\bibitem{singh2026pruning} A.~Singh, Y.~Yuan, Y.~Chen, W.~Wang, and M.~D.~Plumbley, ``Efficient
+text-to-audio generation via pruning,'' in \emph{Proc.\ DCASE Workshop}, 2026,
+arXiv:2607.13330.
+\bibitem{fang2023diffpruning} G.~Fang, X.~Ma, and X.~Wang, ``Structural pruning for diffusion
+models,'' in \emph{Proc.\ NeurIPS}, 2023.
+\bibitem{kim2024bksdm} B.-K.~Kim, H.-K.~Song, T.~Castells \emph{et al.}, ``BK-SDM: A lightweight,
+fast, and cheap version of Stable Diffusion,'' in \emph{Proc.\ ECCV}, 2024.
+\bibitem{wu2023clap} Y.~Wu, K.~Chen, T.~Zhang \emph{et al.},
+``Large-scale contrastive language-audio pretraining with feature fusion and
+keyword-to-caption augmentation,'' in \emph{Proc.\ ICASSP}, 2023.
+\bibitem{kong2020panns} Q.~Kong, Y.~Cao, T.~Iqbal \emph{et al.}, ``PANNs:
+Large-scale pretrained audio neural networks for audio pattern recognition,'' \emph{IEEE/ACM
+Trans.\ Audio, Speech, Lang.\ Process.}, vol.~28, pp.~2880--2894, 2020.
+\bibitem{kilgour2019fad} K.~Kilgour, M.~Zuluaga, D.~Roblek \emph{et al.}, ``Fr\'echet Audio
+Distance: A reference-free metric for evaluating music enhancement algorithms,'' in
+\emph{Proc.\ Interspeech}, 2019.
+\bibitem{kim2019audiocaps} C.~D.~Kim, B.~Kim, H.~Lee, and G.~Kim, ``AudioCaps: Generating captions
+for audios in the wild,'' in \emph{Proc.\ NAACL-HLT}, 2019.
+\bibitem{agostinelli2023musiclm} A.~Agostinelli, T.~I.~Denk, Z.~Borsos \emph{et al.}, ``MusicLM: Generating music from text,'' arXiv:2301.11325, 2023.
+\bibitem{song2021ddim} J.~Song, C.~Meng, and S.~Ermon, ``Denoising diffusion implicit models,'' in
+\emph{Proc.\ ICLR}, 2021.
+\bibitem{takano2025humanclap} T.~Takano, Y.~Okamoto, Y.~Kanamori \emph{et al.}, ``Human-CLAP:
+Human-perception-based contrastive language-audio pretraining,'' arXiv:2506.23553, 2025.
+\bibitem{li2026finelap} X.~Li, X.~Xu, Z.~Ma \emph{et al.}, ``FineLAP: Taming heterogeneous supervision for
+fine-grained language-audio pretraining,'' in \emph{Proc.\ ACL}, 2026, arXiv:2604.01155.
+\end{thebibliography}}
 
 \end{document}
