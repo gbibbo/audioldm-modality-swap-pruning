@@ -1,5 +1,48 @@
 # Listening Study — Deployment Guide
 
+## Hosting route (decided 2026-09-01): Claude Artifacts
+
+**EAL Sharing (`sharing.edgeaudiolabs.com`) was REJECTED** for this study: its landing page states
+*"Team only. Sign in with your authorized Google account."* It is a login-gated internal tool, so
+(a) external panelists have no authorized EAL Google accounts, and (b) Google-OAuth login would break
+the anonymity the frozen consent promises. Not usable for an anonymous external panel.
+
+**Chosen route: six private Claude Artifacts (one per participant)**, built by
+`scripts/research/build_listening_artifact.py` (self-contained: inline CSS/JS, embedded blinded
+manifest, all audio as lossless FLAC `data:` URIs; each < 16 MB; no external requests). Published
+private; Gabriel shares each from the artifact's share menu.
+
+Participant links (private until shared):
+```
+P01  https://claude.ai/code/artifact/2840cebd-99a8-450a-888a-4b2545c73441
+P02  https://claude.ai/code/artifact/22504abe-1abe-453e-9561-eb04882c31df
+P03  https://claude.ai/code/artifact/0a43bdee-adaf-49d9-99fc-3974e5a386f6
+P04  https://claude.ai/code/artifact/52a53898-ad16-4f4a-ba6c-18a189dd798c
+P05  https://claude.ai/code/artifact/01f7094b-1e31-492d-98b7-852fc51bf21d
+P06  https://claude.ai/code/artifact/88cf21d4-9859-4a17-bbe4-da30523df80d
+```
+
+**Collection under the artifact route = MANUAL.** The artifact CSP blocks external `fetch`, so the
+live Apps Script receiver (verified working, see below) is NOT reachable from inside an artifact. On
+submit the page shows Download (via the `downloads` capability — `<a download>` is inert in artifacts)
+and Copy-to-clipboard; the participant sends the JSON to the organiser. The Apps Script receiver
+remains available only if the study is instead hosted on a plain static site (see the alternative).
+
+**Two pre-launch items requiring Gabriel's decision/confirmation:**
+1. **Human browser QA** (cannot be done from the CLI): open one artifact and confirm FLAC audio plays
+   in full, the answer-lock unlocks only after both clips finish, one replay works, and Download/Copy work.
+2. **Privacy/consent**: the frozen consent says "no cookies or analytics." claude.ai frames artifacts
+   and may record view-level engagement telemetry, and viewers likely need claude.ai access. If that
+   conflicts with the consent text, either add a pre-participant consent note (supervisor decision — do
+   NOT change consent silently) or host on a static no-analytics site instead.
+
+**Alternative (automatic collection, no login):** the six self-contained files from
+`scripts/research/build_listening_deploy.py` on a plain static host (e.g. GitHub Pages) — external
+POST is allowed there, so the live Apps Script receiver collects automatically and no login is needed.
+
+---
+
+
 Static bundle for the blinded expert listening study. Target host:
 `https://sharing.edgeaudiolabs.com/`. Desktop Chrome/Firefox/Safari + headphones.
 

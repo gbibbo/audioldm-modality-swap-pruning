@@ -1,0 +1,80 @@
+{
+  "all_blinded": true,
+  "all_under_16mb": true,
+  "artifact": "listening_artifact_report",
+  "capabilities": {
+    "downloads": true
+  },
+  "collection": "manual (downloads capability + clipboard); external POST blocked by artifact CSP",
+  "files": {
+    "P01": {
+      "blinding_leaks": [],
+      "bytes": 10876016,
+      "has_doctype": false,
+      "mb": 10.88,
+      "n_audio": 75,
+      "n_trials": 37,
+      "sha256": "6d1ca1b1a7c38dfa196503ad1f18f2a1e5a1346f01b171be3c631c8ff2f018cc",
+      "title": "Listening Study P01",
+      "under_16mb": true
+    },
+    "P02": {
+      "blinding_leaks": [],
+      "bytes": 10008066,
+      "has_doctype": false,
+      "mb": 10.01,
+      "n_audio": 75,
+      "n_trials": 37,
+      "sha256": "ecfc6027dfcc963d967db05ae21b4370d0034727faf6fc748a3b9bc99129f1ca",
+      "title": "Listening Study P02",
+      "under_16mb": true
+    },
+    "P03": {
+      "blinding_leaks": [],
+      "bytes": 10403070,
+      "has_doctype": false,
+      "mb": 10.4,
+      "n_audio": 71,
+      "n_trials": 35,
+      "sha256": "cc47870706e0e6ed155f280cb3ccbb9d1ccda53f3762aa3d92ac3391dcbd581c",
+      "title": "Listening Study P03",
+      "under_16mb": true
+    },
+    "P04": {
+      "blinding_leaks": [],
+      "bytes": 9928907,
+      "has_doctype": false,
+      "mb": 9.93,
+      "n_audio": 71,
+      "n_trials": 35,
+      "sha256": "c377489ffebb14fd5025dbf168443f17d855e8d6a1180166c37dca9e970a4f44",
+      "title": "Listening Study P04",
+      "under_16mb": true
+    },
+    "P05": {
+      "blinding_leaks": [],
+      "bytes": 10430900,
+      "has_doctype": false,
+      "mb": 10.43,
+      "n_audio": 71,
+      "n_trials": 35,
+      "sha256": "b56737d838ca2e08d2459f9a34a6ed3b4cfbb373188dfeb2336785ec7fecea91",
+      "title": "Listening Study P05",
+      "under_16mb": true
+    },
+    "P06": {
+      "blinding_leaks": [],
+      "bytes": 10609692,
+      "has_doctype": false,
+      "mb": 10.61,
+      "n_audio": 71,
+      "n_trials": 35,
+      "sha256": "cfe960a48d5842fb4564b681b3799fc4d36de18d2005f0fa3dc7e6de5324a53c",
+      "title": "Listening Study P06",
+      "under_16mb": true
+    }
+  },
+  "no_doctype": true,
+  "page_cap_bytes": 16777216,
+  "self_sha256": "e170dddd3442b32c9a81624d060794813657a19eac0d210acc5dd4c003c93ea3"
+}

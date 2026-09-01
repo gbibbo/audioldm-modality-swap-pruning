@@ -25,10 +25,27 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
 
+  // resolve an audio URL through the embedded (single-file) audio map when present
+  function resolveAudio(u) {
+    return (window.EMBEDDED_AUDIO && window.EMBEDDED_AUDIO[u]) || u;
+  }
+
   /* ---------- load ---------- */
   function boot() {
-    var p = qs("p");
     state.submissionUUID = uuid();
+    // Single-file (self-contained) deployment: manifest is embedded, no fetch, no ?p= needed.
+    if (window.EMBEDDED_MANIFEST) {
+      var m0 = window.EMBEDDED_MANIFEST;
+      state.participant = m0.participant_code;
+      state.manifest = m0;
+      state.trials = m0.trials || [];
+      $("#consent-participant").textContent = "Participant: " + state.participant;
+      if (!state.trials.length) return fail("empty trial list");
+      wireConsent();
+      show("#screen-consent");
+      return;
+    }
+    var p = qs("p");
     if (!p || !/^P0[1-9]$|^P1[0-9]$/.test(p)) {
       return fail("No valid participant code in the link (expected ...?p=P01). " +
         "Please use the personal link you were given.");
@@ -70,7 +87,7 @@
     lp.addEventListener("click", function () {
       var f = state.manifest.level_check_audio;
       if (!f) { $("#levelcheck-note").textContent = "(no level-check clip configured)"; return; }
-      if (!levelAudio) levelAudio = new Audio(f);
+      if (!levelAudio) levelAudio = new Audio(resolveAudio(f));
       levelAudio.currentTime = 0; levelAudio.play();
       $("#levelcheck-note").textContent = "Playing… set a comfortable level.";
     });
@@ -99,8 +116,8 @@
     // reset audio + counts
     stopAll();
     players = {
-      A: new Audio(t.audio_A),
-      B: new Audio(t.audio_B)
+      A: new Audio(resolveAudio(t.audio_A)),
+      B: new Audio(resolveAudio(t.audio_B))
     };
     playCounts = { A: 0, B: 0 };
     $$(".replay-note").forEach(function (n) { n.textContent = ""; });
@@ -244,10 +261,28 @@
     });
     $("#btn-download").addEventListener("click", function () {
       var p = payload || buildPayload();
-      var blob = new Blob([JSON.stringify(p, null, 2)], { type: "application/json" });
+      var txt = JSON.stringify(p, null, 2);
+      var fname = "listening_" + state.participant + "_" + state.submissionUUID + ".json";
+      // Prefer the sanctioned downloads capability (an <a download> is inert inside an Artifact).
+      var used = false;
+      if (window.claude && typeof window.claude.use === "function") {
+        try {
+          window.claude.use("downloads").then(function (d) {
+            if (!d) return; // capability unavailable -> blob fallback already ran below
+            used = true;
+            d.save({ filename: fname, data: txt }).then(function () {
+              $("#submit-status").textContent = "Downloaded. Please send the file to the study organiser.";
+            }).catch(function () {
+              $("#submit-status").textContent = "Download declined/failed — use Copy to clipboard instead.";
+            });
+          });
+        } catch (e) { /* fall through to blob */ }
+      }
+      // Blob download for ordinary static hosts (inert in the Artifact sandbox, harmless).
+      var blob = new Blob([txt], { type: "application/json" });
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "listening_" + state.participant + "_" + state.submissionUUID + ".json";
+      a.download = fname;
       document.body.appendChild(a); a.click(); a.remove();
     });
     $("#btn-copy").addEventListener("click", function () {
@@ -272,7 +307,13 @@
     var ep = CFG.RESULTS_ENDPOINT;
     $("#btn-submit").disabled = true;
     status.textContent = "Submitting…";
-    if (!ep) { onSubmitFail("no endpoint configured"); return; }
+    if (!ep) {
+      // Manual-submission mode (e.g. hosted as a Claude Artifact, where external POST is blocked).
+      $("#btn-submit").hidden = true;
+      $("#fallback").hidden = false;
+      status.textContent = "Please save your responses with Download or Copy below, then send them to the study organiser.";
+      return;
+    }
     // text/plain avoids CORS preflight for Apps Script; try to read {ok:true}
     fetch(ep, {
       method: "POST", mode: "cors",

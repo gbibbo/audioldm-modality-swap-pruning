@@ -1,0 +1,64 @@
+{
+  "all_blinded": true,
+  "all_under_20mb": true,
+  "artifact": "listening_deploy_report",
+  "endpoint_present": true,
+  "files": {
+    "P01": {
+      "blinding_leaks": [],
+      "bytes": 10874433,
+      "mb": 10.87,
+      "n_audio_embedded": 75,
+      "n_trials": 37,
+      "sha256": "78f3463a3d695e95acb4cfd132d87ad246fcd8d1264dc4112352a41b43a0f27c",
+      "under_20mb": true
+    },
+    "P02": {
+      "blinding_leaks": [],
+      "bytes": 10006483,
+      "mb": 10.01,
+      "n_audio_embedded": 75,
+      "n_trials": 37,
+      "sha256": "78a09446bbb8bd9a9289a79ddf4630dc9a8d6abb20c756056603193e816898e9",
+      "under_20mb": true
+    },
+    "P03": {
+      "blinding_leaks": [],
+      "bytes": 10401487,
+      "mb": 10.4,
+      "n_audio_embedded": 71,
+      "n_trials": 35,
+      "sha256": "e982bb2ded912ca101be80acea9426674b45cb40de6289451972b45e8ea035be",
+      "under_20mb": true
+    },
+    "P04": {
+      "blinding_leaks": [],
+      "bytes": 9927324,
+      "mb": 9.93,
+      "n_audio_embedded": 71,
+      "n_trials": 35,
+      "sha256": "89651dec0e603bbf525230913f5731a86b764fcaa08b83592e8216d3809c7ca2",
+      "under_20mb": true
+    },
+    "P05": {
+      "blinding_leaks": [],
+      "bytes": 10429317,
+      "mb": 10.43,
+      "n_audio_embedded": 71,
+      "n_trials": 35,
+      "sha256": "cbd1e9d989dda4a5204e5cfc03da57960675f68b2f7f29838410ec73ec927511",
+      "under_20mb": true
+    },
+    "P06": {
+      "blinding_leaks": [],
+      "bytes": 10608109,
+      "mb": 10.61,
+      "n_audio_embedded": 71,
+      "n_trials": 35,
+      "sha256": "2c1f0d21935207e3039bfa4d78e77fe36ac080000db8d81f9dd9b9cca01e9d66",
+      "under_20mb": true
+    }
+  },
+  "max_bytes": 20971520,
+  "self_sha256": "9fc19573e978b7aa17475d15ddb3b361d7032691a7fa6ad8912440f483037430"
+}

@@ -1,15 +1,34 @@
+/* Listening study — neutral, low-distraction instrument. Token-driven so it renders
+   correctly in all three artifact theme states (system / explicit light / explicit dark). */
 :root {
-  --bg: #f4f5f7; --card: #ffffff; --ink: #1c2230; --muted: #66707f;
+  --bg: #f4f5f7; --card: #ffffff; --card2: #f7f9fc; --ink: #1c2230; --muted: #66707f;
   --line: #d9dee6; --brand: #2b5cb8; --brand-ink: #ffffff;
+  --btn-bg: #ffffff; --btn-hover: #f0f3f8; --kbd-bg: #eef1f6;
   --ok: #1a7f52; --err: #b3261e; --sel: #2b5cb8; --sel-bg: #e8effb;
   --radius: 12px; --maxw: 720px;
 }
+/* dark tokens — defined once, applied for system-dark (unless explicit light) and explicit dark */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#12151b; --card:#1a1f27; --card2:#20262f; --ink:#e7ebf1; --muted:#9aa4b2;
+    --line:#2c333d; --brand:#4a82e0; --brand-ink:#ffffff;
+    --btn-bg:#222833; --btn-hover:#2a313c; --kbd-bg:#2a313c;
+    --sel:#4a82e0; --sel-bg:#22303f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#12151b; --card:#1a1f27; --card2:#20262f; --ink:#e7ebf1; --muted:#9aa4b2;
+  --line:#2c333d; --brand:#4a82e0; --brand-ink:#ffffff;
+  --btn-bg:#222833; --btn-hover:#2a313c; --kbd-bg:#2a313c;
+  --sel:#4a82e0; --sel-bg:#22303f;
+}
+
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--ink);
   font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 main { max-width: var(--maxw); margin: 0 auto; padding: 24px 18px 64px; }
-h1 { font-size: 1.5rem; margin: 0 0 .4em; }
-h2 { font-size: 1.25rem; margin: 0 0 .6em; }
+h1 { font-size: 1.5rem; margin: 0 0 .4em; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 0 0 .6em; text-wrap: balance; }
 .lede { font-size: 1.05rem; }
 .muted { color: var(--muted); font-size: .92rem; }
 .error { color: var(--err); font-weight: 600; }
@@ -21,32 +40,29 @@ ul.consent li, ol.instructions li { margin: .35em 0; }
 .row { margin: 14px 0; }
 .vol-check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 button { font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line);
-  padding: 11px 16px; background: #fff; color: var(--ink); }
+  padding: 11px 16px; background: var(--btn-bg); color: var(--ink); }
 button:disabled { opacity: .5; cursor: not-allowed; }
+button:focus-visible { outline: 3px solid var(--sel); outline-offset: 2px; }
 button.primary { background: var(--brand); color: var(--brand-ink); border-color: var(--brand);
   font-weight: 600; margin-top: 18px; width: 100%; padding: 14px; }
-button.secondary { background: #fff; }
-button.secondary:hover:not(:disabled) { background: #f0f3f8; }
+button.secondary { background: var(--btn-bg); }
+button.secondary:hover:not(:disabled) { background: var(--btn-hover); }
 
-/* progress */
-.progress { height: 8px; background: #e6e9ef; border-radius: 6px; overflow: hidden; }
+.progress { height: 8px; background: var(--line); border-radius: 6px; overflow: hidden; }
 #progress-bar { height: 100%; width: 0; background: var(--brand); transition: width .2s; }
 #progress-text { margin: 8px 0 16px; }
 
-/* prompt */
-.prompt-card { background: #f7f9fc; border: 1px solid var(--line); border-radius: 10px;
+.prompt-card { background: var(--card2); border: 1px solid var(--line); border-radius: 10px;
   padding: 14px 16px; margin-bottom: 18px; }
 .prompt-label { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 #prompt-text { margin: .3em 0 0; font-size: 1.12rem; font-weight: 600; }
 
-/* players */
 .players { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
 .player { display: flex; flex-direction: column; gap: 4px; }
 .play { width: 100%; padding: 16px; font-weight: 600; }
 .play.playing { background: var(--sel-bg); border-color: var(--sel); }
 .replay-note { font-size: .8rem; color: var(--muted); min-height: 1em; }
 
-/* questions */
 .question { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 0 0 16px; }
 .question legend { font-weight: 600; padding: 0 6px; }
 .question.active { border-color: var(--sel); box-shadow: 0 0 0 2px var(--sel-bg); }
@@ -56,7 +72,7 @@ button.secondary:hover:not(:disabled) { background: #f0f3f8; }
 .scale button { padding: 10px 4px; font-size: .82rem; line-height: 1.2; text-align: center; }
 .scale button[aria-pressed="true"] { background: var(--sel); color: #fff; border-color: var(--sel); }
 .kbd-hint { margin-top: 8px; }
-kbd { background: #eef1f6; border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; font-size: .8em; }
+kbd { background: var(--kbd-bg); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; font-size: .8em; }
 
 .levelcheck { margin: 16px 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 #fallback { margin-top: 16px; display: grid; gap: 10px; }
@@ -65,11 +81,4 @@ kbd { background: #eef1f6; border: 1px solid var(--line); border-radius: 5px; pa
   .scale { grid-template-columns: 1fr 1fr; }
   .players { grid-template-columns: 1fr; }
 }
-@media (prefers-color-scheme: dark) {
-  :root { --bg:#12151b; --card:#1a1f27; --ink:#e7ebf1; --muted:#9aa4b2; --line:#2c333d;
-    --brand:#4a82e0; --sel:#4a82e0; --sel-bg:#22303f; }
-  button { background:#222833; color:var(--ink); }
-  button.secondary:hover:not(:disabled){ background:#2a313c; }
-  .prompt-card{ background:#20262f; }
-  kbd{ background:#2a313c; }
-}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
