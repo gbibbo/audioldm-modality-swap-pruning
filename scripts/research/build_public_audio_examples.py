@@ -213,12 +213,12 @@ def _matrix_card(rec, n):
             '<div class="mx-col">3.84 s</div><div class="mx-col">10.24 s</div>'
             '<div class="mx-row"><span class="chip chip-pruned">Pruned</span></div>'
             '<div class="mx-cell">{p1}</div><div class="mx-cell">{p2}</div>'
-            '<div class="mx-row"><span class="chip chip-recovered">Recovered</span></div>'
+            '<div class="mx-row"><span class="chip chip-recovered">Post-fine-tuning</span></div>'
             '<div class="mx-cell">{r1}</div><div class="mx-cell">{r2}</div>'
             '</div></article>').format(
                 sec=rec["example_id"], n=n, cap=html.escape(rec["caption"]),
                 p1=_player(P384, "Pruned · 3.84 s"), p2=_player(P1024, "Pruned · 10.24 s"),
-                r1=_player(R384, "Recovered · 3.84 s"), r2=_player(R1024, "Recovered · 10.24 s"))
+                r1=_player(R384, "Post-fine-tuning · 3.84 s"), r2=_player(R1024, "Post-fine-tuning · 10.24 s"))
 
 
 def _music_card(rec, n):
@@ -229,10 +229,10 @@ def _music_card(rec, n):
             '<details class="cap"><summary class="prompt">{cap}</summary></details>'
             '<div class="duo" role="group" aria-label="Audio comparison">'
             '<div class="duo-cell"><span class="chip chip-pruned">Pruned · 3.84 s</span>{p}</div>'
-            '<div class="duo-cell"><span class="chip chip-recovered">Recovered · 3.84 s</span>{r}</div>'
+            '<div class="duo-cell"><span class="chip chip-recovered">Post-fine-tuning · 3.84 s</span>{r}</div>'
             '</div></article>').format(
                 n=n, cap=html.escape(rec["caption"]),
-                p=_player(P, "Pruned · 3.84 s (music)"), r=_player(R, "Recovered · 3.84 s (music)"))
+                p=_player(P, "Pruned · 3.84 s (music)"), r=_player(R, "Post-fine-tuning · 3.84 s (music)"))
 
 
 def write_page(examples):
@@ -250,7 +250,7 @@ PAGE_HTML = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>AudioLDM Post-Pruning Recovery — Audio Examples</title>
+<title>AudioLDM Post-Pruning Fine-Tuning — Audio Examples</title>
 <style>
 :root{
   --bg:#f7f8fa; --bg2:#eef1f5; --card:#ffffff; --ink:#171b23; --ink2:#3a4150; --muted:#6a7280;
@@ -318,6 +318,7 @@ a:hover{text-decoration:underline}
 .callout h3{margin:.1em 0 .3em;font-size:1rem}
 .callout p{margin:0;color:var(--ink2);font-size:.95rem}
 .callout .sub{margin-top:.5em;font-size:.88rem;color:var(--muted)}
+.term{color:var(--muted);font-size:.9rem;margin:14px 2px 2px;max-width:74ch}
 
 /* sections */
 section.sec{padding:30px 0 6px;scroll-margin-top:64px}
@@ -414,7 +415,7 @@ footer.foot b{color:var(--ink2);font-weight:620}
 </head>
 <body>
 <nav class="nav"><div class="nav-in">
-  <span class="brand">AudioLDM · <b>Recovery</b></span>
+  <span class="brand">AudioLDM · <b>Fine-tuning</b></span>
   <div class="nav-links">
     <a href="#sec1">Severity 1</a><a href="#sec2">Severity 2</a>
     <a href="#sec3">Music</a><a href="#prov">Provenance</a>
@@ -424,7 +425,7 @@ footer.foot b{color:var(--ink2);font-weight:620}
 <div class="wrap">
 <header class="hero">
   <span class="eyebrow">Research companion · Audio examples</span>
-  <h1>AudioLDM Post-Pruning Recovery</h1>
+  <h1>AudioLDM Post-Pruning Fine-Tuning</h1>
   <p class="lead">Representative audio comparisons across pruning severity and generation duration.</p>
   <div class="chips">
     <span>AudioLDM</span><span>2 pruning severities</span><span>3.84 s / 10.24 s</span>
@@ -445,6 +446,8 @@ footer.foot b{color:var(--ink2);font-weight:620}
     <p class="sub">All quantitative conclusions use the complete evaluation sets, not the examples shown here.</p>
   </div>
 </div>
+
+<p class="term">“Post-fine-tuning” denotes the pruned checkpoint after the recovery fine-tuning stage. It does not imply improvement for every individual sample.</p>
 
 <section class="sec" id="sec1">
   <div class="sec-head"><h2>Severity 1</h2><span class="tier tier-1">Milder pruning</span>
@@ -483,7 +486,7 @@ footer.foot b{color:var(--ink2);font-weight:620}
 </section>
 
 <footer class="foot">
-  <span><b>AudioLDM Post-Pruning Recovery</b> · Companion audio examples · 2026</span>
+  <span><b>AudioLDM Post-Pruning Fine-Tuning</b> · Companion audio examples · 2026</span>
   <a href="__REPO__" target="_blank" rel="noopener">Repository ↗</a>
 </footer>
 </div>

@@ -1,0 +1,383 @@
+{
+  "aggregate": {
+    "dCLAP_post_ft_higher": 11,
+    "dCLAP_pruned_higher": 2,
+    "near_zero": 5
+  },
+  "artifact": "public_audio_examples_score_audit",
+  "clap_scorer": {
+    "model": "laion/clap-htsat-fused",
+    "revision": "365dea6ef167def6676140ed93bbc43f84dabb28"
+  },
+  "examples": [
+    {
+      "caption": "Wood lightly shuffling as insects buzz and birds chirp in the background",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.4155,
+          "CLAP_pruned": 0.1928,
+          "dCLAP": 0.2227
+        },
+        "3.84s": {
+          "CLAP_band": "near_zero",
+          "CLAP_post_ft": 0.1571,
+          "CLAP_pruned": 0.1763,
+          "dCLAP": -0.0192
+        }
+      },
+      "example": 1,
+      "finelap_native": {
+        "eligible": true,
+        "post_ft": {
+          "early": 0.194,
+          "late": 0.2651,
+          "mean": 0.2385
+        },
+        "pruned": {
+          "early": 0.2076,
+          "late": 0.2215,
+          "mean": 0.2163
+        }
+      },
+      "human_clap": "UNAVAILABLE per-example (only aggregate op_duration Human-CLAP exists)",
+      "section": "sev1_audiocaps",
+      "ytid": "g5l3Bz6lWnc"
+    },
+    {
+      "caption": "Birds chirping and then a dog barking and a duck quaking",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.3731,
+          "CLAP_pruned": 0.0078,
+          "dCLAP": 0.3652
+        },
+        "3.84s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": -0.0304,
+          "CLAP_pruned": -0.0813,
+          "dCLAP": 0.0509
+        }
+      },
+      "example": 2,
+      "finelap_native": {
+        "eligible": true,
+        "post_ft": {
+          "early": 0.4814,
+          "late": 0.399,
+          "mean": 0.4299
+        },
+        "pruned": {
+          "early": 0.0075,
+          "late": 0.016,
+          "mean": 0.0128
+        }
+      },
+      "human_clap": "UNAVAILABLE per-example (only aggregate op_duration Human-CLAP exists)",
+      "section": "sev1_audiocaps",
+      "ytid": "a3GzZKxUTy8"
+    },
+    {
+      "caption": "A baby is crying and a person sneezes then another person speaks",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.318,
+          "CLAP_pruned": 0.1674,
+          "dCLAP": 0.1505
+        },
+        "3.84s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.2083,
+          "CLAP_pruned": -0.0436,
+          "dCLAP": 0.2519
+        }
+      },
+      "example": 3,
+      "finelap_native": {
+        "eligible": true,
+        "post_ft": {
+          "early": 0.7427,
+          "late": 0.8216,
+          "mean": 0.792
+        },
+        "pruned": {
+          "early": 0.3598,
+          "late": 0.1613,
+          "mean": 0.2357
+        }
+      },
+      "human_clap": "UNAVAILABLE per-example (only aggregate op_duration Human-CLAP exists)",
+      "section": "sev1_audiocaps",
+      "ytid": "6aWnK1GyeJY"
+    },
+    {
+      "caption": "Eructation sounds in slow motion followed by speech in slow motion",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "pruned_higher",
+          "CLAP_post_ft": 0.2434,
+          "CLAP_pruned": 0.5184,
+          "dCLAP": -0.275
+        },
+        "3.84s": {
+          "CLAP_band": "near_zero",
+          "CLAP_post_ft": 0.0919,
+          "CLAP_pruned": 0.0984,
+          "dCLAP": -0.0065
+        }
+      },
+      "example": 4,
+      "finelap_native": {
+        "eligible": true,
+        "post_ft": {
+          "early": 0.0022,
+          "late": 0.001,
+          "mean": 0.0014
+        },
+        "pruned": {
+          "early": 0.0303,
+          "late": 0.0752,
+          "mean": 0.0584
+        }
+      },
+      "human_clap": "UNAVAILABLE per-example (only aggregate op_duration Human-CLAP exists)",
+      "section": "sev1_audiocaps",
+      "ytid": "emGPabOePzA"
+    },
+    {
+      "caption": "Pigeons coo and flap their wings",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.1372,
+          "CLAP_pruned": 0.0821,
+          "dCLAP": 0.055
+        },
+        "3.84s": {
+          "CLAP_band": "near_zero",
+          "CLAP_post_ft": 0.1419,
+          "CLAP_pruned": 0.1265,
+          "dCLAP": 0.0154
+        }
+      },
+      "example": 1,
+      "finelap_native": {
+        "eligible": true,
+        "post_ft": {
+          "early": 0.0,
+          "late": 0.0,
+          "mean": 0.0
+        },
+        "pruned": {
+          "early": 0.0,
+          "late": 0.0,
+          "mean": 0.0
+        }
+      },
+      "human_clap": {
+        "10.24s": {
+          "HC_post_ft": 0.1268,
+          "HC_pruned": 0.1452,
+          "dHC": -0.0184
+        },
+        "3.84s": {
+          "HC_post_ft": 0.0384,
+          "HC_pruned": 0.1263,
+          "dHC": -0.0879
+        }
+      },
+      "section": "sev2_audiocaps",
+      "ytid": "gkWd1HugK2w"
+    },
+    {
+      "caption": "A loud engine idles followed by an increase and decrease in the engine sounds",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.1257,
+          "CLAP_pruned": -0.0487,
+          "dCLAP": 0.1743
+        },
+        "3.84s": {
+          "CLAP_band": "near_zero",
+          "CLAP_post_ft": -0.1699,
+          "CLAP_pruned": -0.1615,
+          "dCLAP": -0.0084
+        }
+      },
+      "example": 2,
+      "finelap_native": {
+        "eligible": false,
+        "post_ft": null,
+        "pruned": null
+      },
+      "human_clap": {
+        "10.24s": {
+          "HC_post_ft": 0.29,
+          "HC_pruned": 0.1758,
+          "dHC": 0.1142
+        },
+        "3.84s": {
+          "HC_post_ft": 0.1368,
+          "HC_pruned": 0.0705,
+          "dHC": 0.0663
+        }
+      },
+      "section": "sev2_audiocaps",
+      "ytid": "B3O476LeuXY"
+    },
+    {
+      "caption": "Hissing and vibrating from an idling engine",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.2026,
+          "CLAP_pruned": -0.0935,
+          "dCLAP": 0.2961
+        },
+        "3.84s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.0404,
+          "CLAP_pruned": -0.0217,
+          "dCLAP": 0.0621
+        }
+      },
+      "example": 3,
+      "finelap_native": {
+        "eligible": true,
+        "post_ft": {
+          "early": 0.0486,
+          "late": 0.0507,
+          "mean": 0.0499
+        },
+        "pruned": {
+          "early": 0.0,
+          "late": 0.0,
+          "mean": 0.0
+        }
+      },
+      "human_clap": {
+        "10.24s": {
+          "HC_post_ft": 0.4862,
+          "HC_pruned": -0.1318,
+          "dHC": 0.618
+        },
+        "3.84s": {
+          "HC_post_ft": 0.3989,
+          "HC_pruned": -0.0175,
+          "dHC": 0.4164
+        }
+      },
+      "section": "sev2_audiocaps",
+      "ytid": "lVr-PxhZo8s"
+    },
+    {
+      "caption": "A truck engine running while warning beeps sound followed by a man yelling then compressed air releasing",
+      "durations": {
+        "10.24s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.4243,
+          "CLAP_pruned": -0.0517,
+          "dCLAP": 0.4761
+        },
+        "3.84s": {
+          "CLAP_band": "post_ft_higher",
+          "CLAP_post_ft": 0.1012,
+          "CLAP_pruned": -0.0125,
+          "dCLAP": 0.1137
+        }
+      },
+      "example": 4,
+      "finelap_native": {
+        "eligible": true,
+        "post_ft": {
+          "early": 0.6462,
+          "late": 0.6204,
+          "mean": 0.6301
+        },
+        "pruned": {
+          "early": 0.0001,
+          "late": 0.0001,
+          "mean": 0.0001
+        }
+      },
+      "human_clap": {
+        "10.24s": {
+          "HC_post_ft": 0.2888,
+          "HC_pruned": -0.0377,
+          "dHC": 0.3266
+        },
+        "3.84s": {
+          "HC_post_ft": 0.1135,
+          "HC_pruned": -0.0581,
+          "dHC": 0.1716
+        }
+      },
+      "section": "sev2_audiocaps",
+      "ytid": "vfNKduToki4"
+    },
+    {
+      "caption": "This is a hip-hop dance music piece. There is a male vocalist who is singing in a flamboyant manner. There is an electric guitar playing the melody joined by a strong bass sound. There is a groovy, urban atmosphere. This piece can be used as an accompaniment piece in modern dancing courses.",
+      "durations": {
+        "3.84s": {
+          "CLAP_band": "pruned_higher",
+          "CLAP_post_ft": -0.1027,
+          "CLAP_pruned": 0.0146,
+          "dCLAP": -0.1173
+        }
+      },
+      "example": 1,
+      "finelap_native": {
+        "eligible": false,
+        "note": "FineLAP eligibility is AudioCaps-only; music not covered"
+      },
+      "human_clap": {
+        "3.84s": {
+          "HC_post_ft": 0.1155,
+          "HC_pruned": 0.2874,
+          "dHC": -0.1719
+        }
+      },
+      "music_note": "CLAP/HC are the r0 clip (the displayed audio); per-prompt frozen analysis used the 3-rep mean.",
+      "section": "sev2_music",
+      "ytid": "V9EFYFKlYbE"
+    },
+    {
+      "caption": "A male vocalist sings this energetic rap. The tempo is fast with electronic music and synthesiser arrangements with digital drum rhythm and boomy bass. The song is upbeat, energetic, buoyant, punchy and youthful with a bright dance groove. This song is an EDM/Synth pop.",
+      "durations": {
+        "3.84s": {
+          "CLAP_band": "near_zero",
+          "CLAP_post_ft": -0.0435,
+          "CLAP_pruned": -0.0372,
+          "dCLAP": -0.0063
+        }
+      },
+      "example": 2,
+      "finelap_native": {
+        "eligible": false,
+        "note": "FineLAP eligibility is AudioCaps-only; music not covered"
+      },
+      "human_clap": {
+        "3.84s": {
+          "HC_post_ft": -0.0006,
+          "HC_pruned": 0.2325,
+          "dHC": -0.2331
+        }
+      },
+      "music_note": "CLAP/HC are the r0 clip (the displayed audio); per-prompt frozen analysis used the 3-rep mean.",
+      "section": "sev2_music",
+      "ytid": "u6tgeRXOxnU"
+    }
+  ],
+  "n_displayed_clap_comparisons": 18,
+  "near_zero_band": {
+    "basis": "project SESOI (frozen before inspection)",
+    "metric": "|dCLAP|",
+    "threshold": 0.025
+  },
+  "public_manifest_self_sha256": "723982bb84822f1e54a32e8cd4ca045d0541ae8ea4f0fcd14a8f48e61ce7c966",
+  "self_sha256": "5c2f54dfa4fd18ce619d4be2a8f74d6a774f5e6edf03c3af881e2406cb478315",
+  "status": "INTERNAL descriptive audit \u2014 NOT deployed; selection unchanged; no scores on public page"
+}
