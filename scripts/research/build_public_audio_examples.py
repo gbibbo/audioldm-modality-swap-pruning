@@ -187,32 +187,64 @@ def main():
     print("out:", OUT)
 
 
-def audio_tag(e):
-    return ('<div class="sys"><span class="sys-label">%s</span>'
-            '<audio controls preload="none" src="%s"></audio></div>') % (html.escape(e["system_label"]), e["file"])
+
+def _cell_file(rec, system, dur):
+    for a in rec["audio"]:
+        if a["system_label"] == system and a["duration_label"] == dur:
+            return a["file"]
+    return ""
 
 
-def dur_block(rec, dur):
-    cells = [e for e in rec["audio"] if e["duration_label"] == dur]
-    return ('<div class="dur"><h4>%s</h4>%s</div>' %
-            (dur.replace("p", ".") if "p" in dur else dur, "".join(audio_tag(e) for e in cells)))
+def _player(file, label):
+    return ('<div class="player" data-label="%s">'
+            '<audio controls preload="none" src="%s"></audio>'
+            '<span class="cell-tag">%s</span></div>') % (html.escape(label), file, html.escape(label))
 
 
-def card(rec, durs):
-    blocks = "".join(dur_block(rec, d) for d in durs)
-    return ('<article class="card"><p class="prompt">%s</p><div class="grid">%s</div></article>'
-            % (html.escape(rec["caption"]), blocks))
+def _matrix_card(rec, n):
+    P384 = _cell_file(rec, "Pruned", "3.84s"); R384 = _cell_file(rec, "Recovered", "3.84s")
+    P1024 = _cell_file(rec, "Pruned", "10.24s"); R1024 = _cell_file(rec, "Recovered", "10.24s")
+    return ('<article class="card" id="{sec}">'
+            '<div class="card-head"><span class="eyebrow">Example {n:02d}</span>'
+            '<span class="badge">AudioCaps</span></div>'
+            '<p class="prompt">{cap}</p>'
+            '<div class="matrix" role="group" aria-label="Audio comparison">'
+            '<div class="mx-corner" aria-hidden="true"></div>'
+            '<div class="mx-col">3.84 s</div><div class="mx-col">10.24 s</div>'
+            '<div class="mx-row"><span class="chip chip-pruned">Pruned</span></div>'
+            '<div class="mx-cell">{p1}</div><div class="mx-cell">{p2}</div>'
+            '<div class="mx-row"><span class="chip chip-recovered">Recovered</span></div>'
+            '<div class="mx-cell">{r1}</div><div class="mx-cell">{r2}</div>'
+            '</div></article>').format(
+                sec=rec["example_id"], n=n, cap=html.escape(rec["caption"]),
+                p1=_player(P384, "Pruned · 3.84 s"), p2=_player(P1024, "Pruned · 10.24 s"),
+                r1=_player(R384, "Recovered · 3.84 s"), r2=_player(R1024, "Recovered · 10.24 s"))
+
+
+def _music_card(rec, n):
+    P = _cell_file(rec, "Pruned", "3.84s"); R = _cell_file(rec, "Recovered", "3.84s")
+    return ('<article class="card card-music">'
+            '<div class="card-head"><span class="eyebrow">Example {n:02d}</span>'
+            '<span class="badge badge-music">Music</span></div>'
+            '<details class="cap"><summary class="prompt">{cap}</summary></details>'
+            '<div class="duo" role="group" aria-label="Audio comparison">'
+            '<div class="duo-cell"><span class="chip chip-pruned">Pruned · 3.84 s</span>{p}</div>'
+            '<div class="duo-cell"><span class="chip chip-recovered">Recovered · 3.84 s</span>{r}</div>'
+            '</div></article>').format(
+                n=n, cap=html.escape(rec["caption"]),
+                p=_player(P, "Pruned · 3.84 s (music)"), r=_player(R, "Recovered · 3.84 s (music)"))
 
 
 def write_page(examples):
-    A = "".join(card(r, ["3.84s", "10.24s"]) for r in examples["A"])
-    B = "".join(card(r, ["3.84s", "10.24s"]) for r in examples["B"])
-    C = "".join(card(r, ["3.84s"]) for r in examples["C"])
-    page = PAGE_TMPL.format(A=A, B=B, C=C, repo=REPO_URL)
+    A = "".join(_matrix_card(r, i) for i, r in enumerate(examples["A"], 1))
+    B = "".join(_matrix_card(r, i) for i, r in enumerate(examples["B"], 1))
+    C = "".join(_music_card(r, i) for i, r in enumerate(examples["C"], 1))
+    page = (PAGE_HTML.replace("__A__", A).replace("__B__", B)
+            .replace("__C__", C).replace("__REPO__", REPO_URL))
     open(os.path.join(OUT, "index.html"), "w").write(page)
 
 
-PAGE_TMPL = """<!doctype html>
+PAGE_HTML = r"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -220,72 +252,285 @@ PAGE_TMPL = """<!doctype html>
 <meta name="robots" content="noindex,nofollow">
 <title>AudioLDM Post-Pruning Recovery — Audio Examples</title>
 <style>
-:root{{--bg:#f6f7f9;--card:#fff;--ink:#1b2130;--muted:#5c6675;--line:#dde2ea;--accent:#2b5cb8;--chip:#eef2f8;}}
-@media (prefers-color-scheme:dark){{:root{{--bg:#12151b;--card:#1a1f27;--ink:#e7ebf1;--muted:#9aa4b2;--line:#2c333d;--accent:#6fa0ec;--chip:#222a35;}}}}
-*{{box-sizing:border-box}}
-html,body{{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}}
-main{{max-width:900px;margin:0 auto;padding:32px 18px 72px}}
-h1{{font-size:1.7rem;margin:0 0 .15em;text-wrap:balance}}
-.sub{{color:var(--muted);font-size:1.05rem;margin:0 0 1.3em}}
-h2{{font-size:1.25rem;margin:1.9em 0 .2em;border-bottom:2px solid var(--line);padding-bottom:.25em}}
-h2 .ctx{{color:var(--muted);font-weight:400;font-size:.95rem}}
-.note{{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:12px 16px;color:var(--ink);margin:1em 0}}
-.card{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}}
-.prompt{{font-size:1.06rem;font-weight:600;margin:.1em 0 .8em}}
-.prompt::before{{content:"\\201C"}} .prompt::after{{content:"\\201D"}}
-.grid{{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
-.dur h4{{margin:.1em 0 .5em;font-size:.95rem;letter-spacing:.02em}}
-.sys{{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}}
-.sys-label{{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}}
-audio{{width:100%}}
-.section-c .grid{{grid-template-columns:1fr}}
-footer{{margin-top:2.5em;border-top:1px solid var(--line);padding-top:1em;color:var(--muted);font-size:.92rem}}
-footer h3{{color:var(--ink);font-size:1.05rem;margin:.4em 0}}
-a{{color:var(--accent)}}
-@media (max-width:600px){{.grid{{grid-template-columns:1fr}}}}
+:root{
+  --bg:#f7f8fa; --bg2:#eef1f5; --card:#ffffff; --ink:#171b23; --ink2:#3a4150; --muted:#6a7280;
+  --line:#e4e7ee; --line2:#d7dbe4; --accent:#4f46e5; --accent-ink:#4f46e5;
+  --pruned:#5b6472; --pruned-bg:#eceef3; --recovered:#0d8f80; --recovered-bg:#e5f4f1;
+  --sev1:#5a6270; --sev2:#7a5ea8;
+  --shadow:0 1px 2px rgba(20,25,40,.04),0 6px 20px rgba(20,25,40,.05);
+  --radius:14px; --maxw:1140px;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0d1016; --bg2:#12161d; --card:#161b23; --ink:#e8ebf1; --ink2:#c2c8d4; --muted:#8b93a3;
+  --line:#242a34; --line2:#2e3542; --accent:#8b8cf9; --accent-ink:#a5a6ff;
+  --pruned:#9aa3b4; --pruned-bg:#1e2531; --recovered:#3fbfae; --recovered-bg:#132a29;
+  --sev1:#9aa3b4; --sev2:#b49ce0;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{background:
+  radial-gradient(1100px 380px at 50% -140px, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
+  var(--bg);}
+a{color:var(--accent-ink);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;backdrop-filter:saturate(1.4) blur(10px);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);border-bottom:1px solid var(--line)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:10px 22px;display:flex;align-items:center;gap:16px}
+.brand{font-weight:640;letter-spacing:-.01em;font-size:.95rem;white-space:nowrap}
+.brand b{color:var(--accent-ink)}
+.nav-links{margin-left:auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--ink2);font-size:.86rem;font-weight:540;padding:6px 12px;border-radius:999px;
+  white-space:nowrap;border:1px solid transparent}
+.nav-links a:hover{background:var(--bg2);text-decoration:none}
+.nav-links a.active{color:var(--accent-ink);background:color-mix(in srgb,var(--accent) 12%,transparent);
+  border-color:color-mix(in srgb,var(--accent) 26%,transparent)}
+
+/* hero */
+.hero{padding:52px 0 26px}
+.eyebrow{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:680}
+.hero h1{font-size:clamp(2rem,4.4vw,3rem);line-height:1.05;letter-spacing:-.025em;margin:.32em 0 .18em;
+  font-weight:720;text-wrap:balance}
+.hero .lead{font-size:1.12rem;color:var(--ink2);max-width:58ch;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 4px}
+.chips span{font-size:.82rem;color:var(--ink2);background:var(--card);border:1px solid var(--line);
+  padding:5px 11px;border-radius:999px;box-shadow:var(--shadow)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:7px;font-size:.9rem;font-weight:580;padding:9px 16px;
+  border-radius:10px;border:1px solid var(--line2);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.btn:hover{text-decoration:none;border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{color:#fff;filter:brightness(1.06)}
+
+/* callout */
+.callout{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px;margin:22px 0 6px;box-shadow:var(--shadow)}
+.callout .dot{flex:0 0 auto;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent-ink);font-weight:800}
+.callout h3{margin:.1em 0 .3em;font-size:1rem}
+.callout p{margin:0;color:var(--ink2);font-size:.95rem}
+.callout .sub{margin-top:.5em;font-size:.88rem;color:var(--muted)}
+
+/* sections */
+section.sec{padding:30px 0 6px;scroll-margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:6px}
+.sec-head h2{font-size:1.32rem;letter-spacing:-.02em;margin:0;font-weight:660}
+.sec-head .tier{font-size:.8rem;font-weight:640;padding:3px 9px;border-radius:999px}
+.tier-1{color:var(--sev1);background:color-mix(in srgb,var(--sev1) 14%,transparent)}
+.tier-2{color:var(--sev2);background:color-mix(in srgb,var(--sev2) 16%,transparent)}
+.sec-head .ctx{margin-left:auto;color:var(--muted);font-size:.86rem}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.card-head .eyebrow{color:var(--muted);letter-spacing:.1em}
+.badge{margin-left:auto;font-size:.72rem;letter-spacing:.04em;color:var(--ink2);background:var(--bg2);
+  border:1px solid var(--line);padding:3px 9px;border-radius:999px}
+.badge-music{color:var(--sev2)}
+.prompt{font-size:1.08rem;font-weight:560;color:var(--ink);margin:.1em 0 1em;line-height:1.5;max-width:70ch}
+.prompt::before{content:"\201C"} .prompt::after{content:"\201D"}
+
+/* comparison matrix: systems=rows, durations=cols */
+.matrix{display:grid;grid-template-columns:minmax(96px,auto) 1fr 1fr;gap:12px;align-items:center}
+.mx-col{font-size:.82rem;font-weight:640;color:var(--muted);text-align:center;letter-spacing:.02em}
+.mx-row{display:flex}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:.86rem;font-weight:620;padding:5px 11px;
+  border-radius:8px;border:1px solid var(--line2)}
+.chip::before{content:"";width:9px;height:9px;border-radius:3px;background:currentColor;opacity:.9}
+.chip-pruned{color:var(--pruned);background:var(--pruned-bg)}
+.chip-recovered{color:var(--recovered);background:var(--recovered-bg)}
+.cell-tag{display:none}
+
+/* duo (music) */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.duo-cell{display:flex;flex-direction:column;gap:8px}
+
+/* player */
+.player{--pc:var(--muted)}
+.mx-cell .player, .duo-cell .player{}
+.player{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:8px 10px}
+.mx-cell:nth-child(5) .player,.mx-cell:nth-child(6) .player{border-left:3px solid var(--pruned)}
+.mx-cell:nth-child(8) .player,.mx-cell:nth-child(9) .player{border-left:3px solid var(--recovered)}
+.player.enhanced{display:flex}
+.pctl{display:flex;align-items:center;gap:10px;width:100%}
+.pp{flex:0 0 auto;width:38px;height:38px;border-radius:9px;border:1px solid var(--line2);background:var(--card);
+  color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:background .12s,border-color .12s}
+.pp:hover{border-color:var(--accent);color:var(--accent-ink)}
+.player.playing .pp{background:var(--accent);border-color:var(--accent);color:#fff}
+.pp svg{width:16px;height:16px;display:block}
+.pbar{flex:1 1 auto;height:7px;border-radius:6px;background:var(--line2);position:relative;cursor:pointer;overflow:hidden}
+.pfill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);border-radius:6px}
+.ptime{flex:0 0 auto;font-family:var(--mono);font-size:.76rem;color:var(--muted);min-width:78px;text-align:right;
+  font-variant-numeric:tabular-nums}
+audio{width:100%}
+
+/* provenance */
+.prov{margin-top:40px;padding-top:8px}
+.prov .sec-head h2{font-size:1.18rem}
+.prov p{color:var(--ink2);font-size:.95rem;max-width:78ch}
+.prov code{font-family:var(--mono);font-size:.86em;background:var(--bg2);border:1px solid var(--line);
+  padding:1px 6px;border-radius:6px}
+details.tech{margin:14px 0;border:1px solid var(--line);border-radius:11px;background:var(--card);box-shadow:var(--shadow)}
+details.tech summary{cursor:pointer;padding:12px 16px;font-weight:580;font-size:.92rem;list-style:none}
+details.tech summary::-webkit-details-marker{display:none}
+details.tech summary::after{content:"＋";float:right;color:var(--muted)}
+details.tech[open] summary::after{content:"－"}
+details.tech .body{padding:0 16px 14px;color:var(--ink2);font-size:.92rem}
+details.cap>summary{cursor:pointer;list-style:none;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+  overflow:hidden}
+details.cap>summary::-webkit-details-marker{display:none}
+details.cap[open]>summary{-webkit-line-clamp:unset}
+details.cap>summary::after{content:" — show full prompt";color:var(--accent-ink);font-weight:600;font-size:.82rem;
+  -webkit-line-clamp:unset;font-style:normal}
+details.cap[open]>summary::after{content:" — show less"}
+
+footer.foot{margin-top:44px;border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);
+  font-size:.9rem;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+footer.foot b{color:var(--ink2);font-weight:620}
+
+@media (max-width:820px){
+  .sec-head .ctx{display:none}
+}
+@media (max-width:640px){
+  .matrix{grid-template-columns:1fr;gap:10px}
+  .mx-corner,.mx-col,.mx-row{display:none}
+  .mx-cell .cell-tag{display:block;font-size:.76rem;font-weight:640;color:var(--muted);margin-bottom:5px}
+  .mx-cell:nth-child(5) .cell-tag,.mx-cell:nth-child(6) .cell-tag{color:var(--pruned)}
+  .mx-cell:nth-child(8) .cell-tag,.mx-cell:nth-child(9) .cell-tag{color:var(--recovered)}
+  .duo{grid-template-columns:1fr}
+  .ptime{min-width:70px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
 <body>
-<main>
-<h1>AudioLDM Post-Pruning Recovery</h1>
-<p class="sub">Representative Audio Examples</p>
-<div class="note">These examples are illustrative companion material. Quantitative conclusions are based
-on the complete evaluation sets, not on the examples shown here. Examples were selected deterministically
-by a hash of their identifiers, without using any evaluation score, to avoid cherry-picking.</div>
+<nav class="nav"><div class="nav-in">
+  <span class="brand">AudioLDM · <b>Recovery</b></span>
+  <div class="nav-links">
+    <a href="#sec1">Severity 1</a><a href="#sec2">Severity 2</a>
+    <a href="#sec3">Music</a><a href="#prov">Provenance</a>
+  </div>
+</div></nav>
 
-<p>Each card shows one text prompt and the audio generated by the <b>Pruned</b> and <b>Recovered</b>
-models at two clip lengths (<b>3.84&nbsp;s</b> and <b>10.24&nbsp;s</b>). Two pruning severities are shown,
-plus a separate music context. Labels indicate the system and clip length; listen and compare.</p>
+<div class="wrap">
+<header class="hero">
+  <span class="eyebrow">Research companion · Audio examples</span>
+  <h1>AudioLDM Post-Pruning Recovery</h1>
+  <p class="lead">Representative audio comparisons across pruning severity and generation duration.</p>
+  <div class="chips">
+    <span>AudioLDM</span><span>2 pruning severities</span><span>3.84 s / 10.24 s</span>
+    <span>AudioCaps + music context</span><span>36 audio clips</span>
+  </div>
+  <div class="cta">
+    <a class="btn primary" href="__REPO__" target="_blank" rel="noopener">View repository ↗</a>
+    <a class="btn" href="#prov">Selection methodology ↓</a>
+  </div>
+</header>
 
-<h2>1. Severity&nbsp;1 &mdash; <span class="ctx">AudioCaps evaluation context</span></h2>
-{A}
-
-<h2>2. Severity&nbsp;2 &mdash; <span class="ctx">AudioCaps evaluation context</span></h2>
-{B}
-
-<h2>3. Music context <span class="ctx">(severity&nbsp;2)</span></h2>
-<div class="note">These examples illustrate the separate music evaluation context. They are not matched
-to the AudioCaps prompts above.</div>
-<div class="section-c">
-{C}
+<div class="callout">
+  <span class="dot">✓</span>
+  <div>
+    <h3>Representative, not hand-picked</h3>
+    <p>Examples were selected deterministically from the frozen evaluation sets using prompt identifiers
+    only. Evaluation scores were never used for selection.</p>
+    <p class="sub">All quantitative conclusions use the complete evaluation sets, not the examples shown here.</p>
+  </div>
 </div>
 
-<footer>
-<h3>Selection and provenance</h3>
-<p>Examples were selected deterministically by ranking each section's frozen candidate prompts on
-<code>SHA256(namespace | section | ytid)</code> and taking the first few; the selection used only prompt
-identifiers and ignored every evaluation score (CLAP, Human-CLAP, FineLAP, KL, PANN, FAD, FD). All audio
-is taken directly from the frozen experimental model outputs (original generated waveforms, converted to
-lossless FLAC with bit-identical samples — no normalization, resampling, or gain change). Quantitative
-results in the paper use the complete evaluation populations, not these examples. Severity-1 music audio
-and a dense reference are not shown because those files were not fully retained; this does not affect any
-reported result. Source and selection details: <a href="{repo}">{repo}</a>.</p>
+<section class="sec" id="sec1">
+  <div class="sec-head"><h2>Severity 1</h2><span class="tier tier-1">Milder pruning</span>
+    <span class="ctx">AudioCaps evaluation context</span></div>
+  __A__
+</section>
+
+<section class="sec" id="sec2">
+  <div class="sec-head"><h2>Severity 2</h2><span class="tier tier-2">Stronger pruning</span>
+    <span class="ctx">AudioCaps evaluation context</span></div>
+  __B__
+</section>
+
+<section class="sec" id="sec3">
+  <div class="sec-head"><h2>Music context</h2><span class="tier tier-2">Severity 2</span>
+    <span class="ctx">Separate evaluation context</span></div>
+  <p style="color:var(--ink2);font-size:.95rem;margin:.4em 0 0;max-width:76ch">These examples illustrate the
+  separate music evaluation context. They are not matched to the AudioCaps prompts above.</p>
+  __C__
+</section>
+
+<section class="sec prov" id="prov">
+  <div class="sec-head"><h2>Selection &amp; provenance</h2></div>
+  <p>Examples were selected deterministically by ranking each section's frozen candidate prompts on
+  <code>SHA256(namespace | section | ytid)</code> and taking the first few; the selection used only prompt
+  identifiers and ignored every evaluation score (CLAP, Human-CLAP, FineLAP, KL, PANN, FAD, FD). All audio is
+  taken directly from the frozen experimental model outputs — original generated waveforms converted to
+  lossless FLAC with bit-identical samples (no normalization, resampling, or gain change). Quantitative
+  results in the paper use the complete evaluation populations, not these examples.</p>
+  <details class="tech"><summary>Technical notes</summary>
+    <div class="body">Severity-1 music audio and a dense (unpruned) reference are not shown here because those
+    files were not fully retained on disk; this affects only which examples can be displayed and does not affect
+    any reported result. Audio is served as lossless FLAC (16-bit PCM, bit-identical to the source waveforms).</div>
+  </details>
+  <p style="margin-top:16px"><a class="btn" href="__REPO__" target="_blank" rel="noopener">Source repository ↗</a></p>
+</section>
+
+<footer class="foot">
+  <span><b>AudioLDM Post-Pruning Recovery</b> · Companion audio examples · 2026</span>
+  <a href="__REPO__" target="_blank" rel="noopener">Repository ↗</a>
 </footer>
-</main>
+</div>
+
+<script>
+(function(){
+  var PLAY='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+  var PAUSE='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>';
+  var audios=[];
+  function fmt(t){t=Math.max(0,t||0);var m=Math.floor(t/60),s=Math.floor(t%60);return m+':'+(s<10?'0':'')+s;}
+  Array.prototype.forEach.call(document.querySelectorAll('.player'),function(p){
+    var a=p.querySelector('audio'); if(!a) return;
+    a.removeAttribute('controls'); audios.push(a);
+    var label=p.getAttribute('data-label')||'audio';
+    var ctl=document.createElement('div'); ctl.className='pctl';
+    var btn=document.createElement('button'); btn.type='button'; btn.className='pp';
+    btn.setAttribute('aria-label','Play '+label); btn.innerHTML=PLAY;
+    var bar=document.createElement('div'); bar.className='pbar'; bar.setAttribute('role','progressbar');
+    bar.setAttribute('aria-label','Playback progress'); bar.setAttribute('aria-valuemin','0'); bar.setAttribute('aria-valuemax','100');
+    var fill=document.createElement('div'); fill.className='pfill'; bar.appendChild(fill);
+    var time=document.createElement('span'); time.className='ptime'; time.textContent='0:00 / --:--';
+    ctl.appendChild(btn); ctl.appendChild(bar); ctl.appendChild(time);
+    p.appendChild(ctl); p.classList.add('enhanced');
+    function upd(){var d=a.duration||0; fill.style.width=(d?a.currentTime/d*100:0)+'%';
+      bar.setAttribute('aria-valuenow',String(Math.round(d?a.currentTime/d*100:0)));
+      time.textContent=fmt(a.currentTime)+' / '+(isFinite(d)&&d?fmt(d):'--:--');}
+    btn.addEventListener('click',function(){ if(a.paused){audios.forEach(function(o){if(o!==a)o.pause();}); a.play();} else {a.pause();} });
+    a.addEventListener('play',function(){btn.innerHTML=PAUSE; btn.setAttribute('aria-label','Pause '+label); p.classList.add('playing');});
+    a.addEventListener('pause',function(){btn.innerHTML=PLAY; btn.setAttribute('aria-label','Play '+label); p.classList.remove('playing');});
+    a.addEventListener('ended',function(){btn.innerHTML=PLAY; p.classList.remove('playing'); a.currentTime=0; upd();});
+    a.addEventListener('timeupdate',upd); a.addEventListener('loadedmetadata',upd);
+    bar.addEventListener('click',function(e){var r=bar.getBoundingClientRect(); var f=(e.clientX-r.left)/r.width;
+      if(a.duration){a.currentTime=Math.min(1,Math.max(0,f))*a.duration;}});
+  });
+  // nav active state
+  var links={}; Array.prototype.forEach.call(document.querySelectorAll('.nav-links a'),function(l){links[l.getAttribute('href').slice(1)]=l;});
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(es){es.forEach(function(en){var l=links[en.target.id];
+      if(l&&en.isIntersecting){for(var k in links)links[k].classList.remove('active'); l.classList.add('active');}});},
+      {rootMargin:'-45% 0px -50% 0px'});
+    Array.prototype.forEach.call(document.querySelectorAll('section.sec'),function(s){obs.observe(s);});
+  }
+})();
+</script>
 </body>
 </html>
 """
-
 
 if __name__ == "__main__":
     main()
