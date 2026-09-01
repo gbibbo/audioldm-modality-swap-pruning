@@ -1,0 +1,295 @@
+{
+  "artifact": "final_claim_registry",
+  "clap_scorer": {
+    "model": "laion/clap-htsat-fused",
+    "revision": "365dea6ef167def6676140ed93bbc43f84dabb28"
+  },
+  "contribution_one_sentence": "Post-pruning fine-tuning of a text-to-audio diffusion model cannot be characterized by a single aggregate evaluation point: its advantage over the pruned checkpoint is context- and temporal-operating-point-dependent and prompt-heterogeneous, established by a prospectively frozen cross-severity evaluation with independent frame-level corroboration and explicit negatives.",
+  "corroborative_secondaries": [
+    {
+      "R_music": {
+        "ci95": [
+          -0.1241,
+          -0.0646
+        ],
+        "point": -0.0941
+      },
+      "class": "prospectively_frozen_secondary",
+      "id": "sev1_music_clap",
+      "note": "music-negative at severity 1",
+      "provenance": "configs/research/reversal_v1_r_music_clap.json"
+    },
+    {
+      "R_music": {
+        "ci95": [
+          -0.0685,
+          -0.005
+        ],
+        "point": -0.0365
+      },
+      "R_native": {
+        "ci95": [
+          0.3396,
+          0.4083
+        ],
+        "point": 0.3745
+      },
+      "class": "prospectively_frozen_secondary_no_gate",
+      "id": "human_clap_sev2",
+      "note": "HC shows a small music-negative that the PRIMARY CLAP does not; HC has no gate role.",
+      "provenance": "configs/research/xsev_hc_secondary.json"
+    },
+    {
+      "R_KL": {
+        "ci95": [
+          1.9257218372983818,
+          2.529839189525713
+        ],
+        "inference": "paired ytid bootstrap, CI excludes 0",
+        "point": 2.224
+      },
+      "R_cap_captured_label_count": {
+        "ci95": [
+          0.6979166666666666,
+          1.0209635416666647
+        ],
+        "inference": "paired, CI excludes 0; a COUNT not a rate",
+        "point": 0.859
+      },
+      "class": "pre_specified_secondary_implemented_after_primary_result",
+      "id": "kl_pann_sev2",
+      "provenance": "configs/research/xsev_secondary_metrics.json"
+    },
+    {
+      "FAD": {
+        "post_ft": 6.92,
+        "pruned": 27.41
+      },
+      "FD": {
+        "post_ft": 48.7,
+        "pruned": 107.2
+      },
+      "class": "descriptive_distribution_level_no_CI",
+      "id": "fd_fad_sev2",
+      "note": "DESCRIPTIVE ONLY \u2014 single scalar per system, NO paired CI",
+      "provenance": "configs/research/xsev_secondary_metrics.json"
+    }
+  ],
+  "exploratory_posthoc": [
+    {
+      "class": "exploratory_posthoc_confounded",
+      "id": "cross_severity_magnitude",
+      "note": "Severity is entangled with two experiments, prompt sets, n, and checkpoints; never promotable to preregistered evidence."
+    }
+  ],
+  "forbidden_claims": [
+    "fine-tuning restores the pruned model",
+    "post-fine-tuning consistently improves samples",
+    "post-fine-tuning restores dense performance",
+    "recovery causes specialization",
+    "pruning causes the domain dependence",
+    "fine-tuning causes OOD degradation",
+    "the post-fine-tuning advantage disappears at 3.84 s",
+    "the improvement occurs because later events are generated",
+    "severity 2 is universally better/worse",
+    "FineLAP measures local causal activations",
+    "FineLAP measures perceptual audio quality",
+    "human listeners confirmed the results",
+    "recovered/post-fine-tuning is better (for an individual sample)"
+  ],
+  "framing": "evaluation of post-pruning fine-tuning; mechanistic attribution BLOCKED (no matched dense-FT control)",
+  "human_listening": {
+    "for_inference": "VOID",
+    "human_data": 0,
+    "participants": 0,
+    "public_examples": "illustrative companion only; not human evidence; https://gbibbo.github.io/audioldm-modality-swap-pruning/",
+    "status": "CANCELLED_PRE_LAUNCH"
+  },
+  "limitations": [
+    "mechanistic attribution BLOCKED (no matched dense-FT control; audioldm-m-text-ft is NOT equivalent) -> evaluation claim only, not falsification",
+    "single primary scorer family (CLAP); no human evaluation; FineLAP is a different family + post-result diagnostic",
+    "off-recipe operating point vs Singh (DDIM50, 3.84/10.24s, guidance 2.5, single-gen) -> external validity untested",
+    "cross-severity comparison exploratory/confounded",
+    "sample-level heterogeneity: population advantages not monotonic per prompt",
+    "public examples illustrative, deterministically selected, not human evidence; sev1 music + full dense reference not retained"
+  ],
+  "negative_results": [
+    "severity-1 recovery-reversal/domain-specialization FAILED (R_AC~0, PASS=FALSE)",
+    "severity-1 primary temporal J narrowly missed gate (CI includes 0)",
+    "severity-2 native-positive/music-negative sign pattern FAILED (H_music FALSE)",
+    "severity-2 short-duration equivalence FAILED (R_short lo95>0)",
+    "FineLAP late-redistribution FAILED (T_2~0, seam-robust; T_1 not>0)",
+    "no demonstrated restoration to dense (G_post_ft CI includes 0; no TOST)",
+    "no dense fine-tuned control available (deleted)",
+    "no human listening study (cancelled pre-launch; 0 participants, 0 data)",
+    "sample-level post-fine-tuning failures exist (heterogeneity; e.g. public Example 4 sev1 10.24s: dCLAP -0.275, FineLAP pruned>post-FT) \u2014 illustration only, not evidence"
+  ],
+  "post_result_diagnostics": [
+    {
+      "D_early2": {
+        "ci95": [
+          0.2191,
+          0.3336
+        ],
+        "point": 0.2746
+      },
+      "D_late2": {
+        "ci95": [
+          0.216,
+          0.3327
+        ],
+        "point": 0.2729
+      },
+      "T_1": {
+        "ci95": [
+          -0.0532,
+          0.0112
+        ],
+        "point": -0.0203
+      },
+      "T_2": {
+        "ci95": [
+          -0.0236,
+          0.0201
+        ],
+        "point": -0.0017
+      },
+      "branch": "A2_frame_gain_no_late_redistribution",
+      "class": "prospectively_frozen_POST_RESULT_diagnostic",
+      "id": "finelap_temporal",
+      "interpretation_boundary": "frame-level grounding evidence; NOT calibrated probability, NOT causal activation, NOT perceptual quality; NOT an independent preregistered confirmation",
+      "late_gain_wording_allowed": false,
+      "provenance": "configs/research/finelap_temporal_result.json (ce5519c8)",
+      "seam_T2_B": {
+        "ci95": [
+          -0.0229,
+          0.0207
+        ],
+        "point": -0.0011
+      },
+      "statement": "Large temporally-broad frame-level grounding gain after fine-tuning (mass/occupancy/coverage/peak CIs exclude 0), but NO preferential late redistribution (T_2 gate FAILS)."
+    }
+  ],
+  "primary_findings": [
+    {
+      "J": {
+        "ci95": [
+          0.1309,
+          0.1873
+        ],
+        "point": 0.1594
+      },
+      "K": {
+        "ci95": [
+          0.1974,
+          0.2719
+        ],
+        "point": 0.2351
+      },
+      "R_music": {
+        "ci95": [
+          -0.0134,
+          0.0319
+        ],
+        "point": 0.0092
+      },
+      "R_native": {
+        "ci95": [
+          0.2145,
+          0.2729
+        ],
+        "point": 0.2443
+      },
+      "R_short": {
+        "ci95": [
+          0.0659,
+          0.1051
+        ],
+        "point": 0.0849
+      },
+      "case": "C",
+      "class": "prospectively_frozen_primary",
+      "gates": {
+        "H_music": false,
+        "H_native": true,
+        "J_pass_lo95_gt0": true,
+        "K_pass_lo95_gt0": true,
+        "short_equivalence_pass": false
+      },
+      "id": "sev2_CASE_C",
+      "provenance": "configs/research/xsev_result.json (02e3bd11)",
+      "statement": "Severity-2 context (K) and duration (J) dependence replicate with a large native advantage; music-negative sign pattern does NOT replicate (CASE C)."
+    },
+    {
+      "I": {
+        "ci95": [
+          0.0535,
+          0.1311
+        ],
+        "point": 0.0917
+      },
+      "PASS": false,
+      "R_AC": {
+        "ci95": [
+          -0.0267,
+          0.0214
+        ],
+        "point": -0.0024
+      },
+      "class": "prospectively_frozen_primary_negative",
+      "id": "sev1_reversal_negative",
+      "provenance": "configs/research/reversal_v1_1_result.json (cad7c454)",
+      "statement": "The severity-1 recovery-reversal / domain-specialization hypothesis is a pre-registered NEGATIVE at the controlled 3.84 s operating point."
+    }
+  ],
+  "prospective_replications": [
+    {
+      "J": {
+        "ci95": [
+          -0.0008,
+          0.0872
+        ],
+        "point": 0.0442
+      },
+      "R_native": {
+        "ci95": [
+          0.0089,
+          0.0933
+        ],
+        "point": 0.0518
+      },
+      "R_short": {
+        "ci95": [
+          -0.0235,
+          0.0388
+        ],
+        "point": 0.0076
+      },
+      "class": "prospectively_specified_followup",
+      "id": "sev1_duration_interaction_directional",
+      "note": "Severity-1 J is DIRECTIONAL: 95% CI narrowly includes 0 (gate not passed); severity-2 J resolves it.",
+      "provenance": "configs/research/op_duration_discriminator_1_result.json (9c92552a)"
+    },
+    {
+      "J_seam_robust": true,
+      "K_seam_robust": true,
+      "class": "prospectively_frozen_primary",
+      "id": "sev2_seam_robustness",
+      "provenance": "xsev_result.json:seam_robustness",
+      "sign_pattern_seam_robust": false
+    }
+  ],
+  "readiness": "READY_FOR_MANUSCRIPT (drafting only after explicit Gabriel GO; do not reopen experiments)",
+  "self_sha256": "ff02301675e6180eb4c62a850f32a362aae14c66ba452274b82200f047afe7c3",
+  "status": "FROZEN pre-manuscript source of truth; not manuscript prose; no result changed",
+  "terminology_safe": [
+    "pruned checkpoint",
+    "post-fine-tuning checkpoint",
+    "post-pruning fine-tuning",
+    "native-duration semantic advantage",
+    "temporal operating-point interaction",
+    "context dependence",
+    "frame-level grounding evidence",
+    "sample-level heterogeneity"
+  ]
+}
