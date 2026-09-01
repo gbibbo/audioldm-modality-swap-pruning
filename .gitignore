@@ -59,3 +59,7 @@ configs/research/listening_study_assignments_private.json
 configs/research/listening_study_bundle_manifest.json
 configs/research/listening_deploy_slugs.local.json
 public_examples/
+
+# ICASSP manuscript build intermediates & raster previews (keep .tex, .pdf deliverables, vector figs)
+docs/manuscript/build/
+docs/manuscript/figs/*.png
