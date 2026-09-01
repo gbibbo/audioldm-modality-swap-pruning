@@ -1,34 +1,35 @@
-%% ICASSP first-draft manuscript.
+%% ICASSP manuscript on the OFFICIAL ICASSP/ICIP template (spconf.sty + IEEEbib.bst,
+%% bundled alongside this file). spconf.sty sets Times (ptm) and the ICASSP page geometry.
 %% Framing: EVALUATION of post-pruning fine-tuning (not a new pruning method, not a
 %% mechanistic explanation). Every number is traceable to a committed frozen artifact
-%% under configs/research/ ; see docs/manuscript/MANUSCRIPT_NOTES.md.
+%% under configs/research/ ; see MANUSCRIPT_NOTES.md.
 %%
-%% Built with tectonic (IEEEtran conference class, from the tectonic bundle). For the
-%% official ICASSP camera-ready, swap the preamble to \documentclass{article} +
-%% \usepackage{spconf,times} (drop-in; see MANUSCRIPT_NOTES.md).
-\documentclass[conference]{IEEEtran}
-\usepackage{cite}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{url}
-\usepackage[hidelinks]{hyperref}
+%% Compiles with pdfLaTeX (Overleaf default; proper Times) or with tectonic/XeTeX
+%% (compiles; emits harmless Times-shape substitution warnings).
+\documentclass{article}
+\usepackage{spconf,amsmath,amssymb,graphicx,booktabs,array,url,cite}
 
 \newcommand{\Rn}{R_{\mathrm{nat}}}
 \newcommand{\Rs}{R_{\mathrm{short}}}
 \newcommand{\Rm}{R_{\mathrm{music}}}
 \newcommand{\ci}[2]{[{#1},\,{#2}]}
+\emergencystretch=1em  % absorb rare tight lines in the narrow ICASSP column
 
 \begin{document}
+\ninept  % ICASSP template's sanctioned 9pt mode, to fit full content within 4 pages
 
-\title{When Does Post-Pruning Fine-Tuning Help?\\
-Temporal Operating-Point Sensitivity in\\
-Text-to-Audio Diffusion Evaluation}
+\title{When Does Post-Pruning Fine-Tuning Help?
+Temporal Operating-Point Sensitivity in Text-to-Audio Diffusion Evaluation}
 
-\author{\IEEEauthorblockN{Gabriel Bibb\'o}
-\IEEEauthorblockA{Affiliation to be finalized\\
-\texttt{gabriel@edgeaudiolabs.com}}}
+% Author affiliations are placeholders derived from the supplied e-mail domains
+% (see MANUSCRIPT_NOTES.md) -- confirm before submission.
+\twoauthors
+  {Gabriel Bibb\'o}
+  {Affiliation to be confirmed \\
+   \texttt{gabobibbo@gmail.com}}
+  {Arshdeep Singh, \, Mark D. Plumbley}
+  {King's College London, UK \\
+   \{\texttt{arshdeep.singh}, \texttt{mark.plumbley}\}\texttt{@kcl.ac.uk}}
 
 \maketitle
 
@@ -55,10 +56,10 @@ fine-tuned control and no human evaluation are available, so the claims are abou
 evaluation, not causal mechanism or perceptual quality.
 \end{abstract}
 
-\begin{IEEEkeywords}
+\begin{keywords}
 text-to-audio generation, diffusion models, structured pruning, fine-tuning, evaluation,
 CLAP.
-\end{IEEEkeywords}
+\end{keywords}
 
 \section{Introduction}
 Structured pruning followed by recovery fine-tuning is a standard route to cheaper
@@ -78,7 +79,7 @@ post-fine-tuning checkpoints of AudioLDM-M-Full, treating the released checkpoin
 object of study rather than proposing a new pruning or fine-tuning method.
 
 Our contribution is an evaluation, not a mechanism. Concretely:
-\begin{itemize}
+\begin{itemize}\raggedright
 \item A paired, common-noise evaluation with prompt-level bootstrap that isolates the
       post-fine-tuning$-$pruned contrast at two temporal operating points, and a temporal
       interaction $J$ that quantifies how that contrast changes with duration.
@@ -86,8 +87,8 @@ Our contribution is an evaluation, not a mechanism. Concretely:
       milder pruning severity and is confirmed at a stronger severity on a disjoint
       evaluation set with new seeds, robust to a pruning-seam convention.
 \item Honest negatives---a pre-registered domain-specialization hypothesis fails, the
-      short-operating-point advantage does not vanish, a severity-1 music-negative pattern
-      does not replicate, and an independent diagnostic rejects a simple late-event
+      advantage at the short point does not vanish, a severity-1 music-negative pattern does
+      not replicate, and an independent diagnostic rejects a simple late-event
       explanation---together with the single limitation (no matched dense fine-tuned
       control) that bounds the claim to evaluation.
 \end{itemize}

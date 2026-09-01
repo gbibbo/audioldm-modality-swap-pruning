@@ -4,7 +4,7 @@
 CPU, 0 GPU, 0 credits. Every plotted number is read from a committed frozen result JSON, so the
 figures are traceable to the same source of truth as the manuscript tables.
 
-Outputs (vector PDF + PNG preview) under docs/manuscript/figs/:
+Outputs (vector PDF + PNG preview) under icassp/figs/:
   fig1_interaction.pdf   -- system x temporal-operating-point interaction, severity 1 vs 2 (CENTRAL)
   fig2_forest.pdf        -- post-FT minus pruned paired contrasts w/ 95% CI across context x severity
 
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-OUT = os.path.join(ROOT, "docs", "manuscript", "figs")
+OUT = os.path.join(ROOT, "icassp", "figs")
 os.makedirs(OUT, exist_ok=True)
 
 

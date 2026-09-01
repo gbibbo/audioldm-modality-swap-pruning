@@ -1,26 +1,35 @@
 # MANUSCRIPT_NOTES — ICASSP first draft
 
-**Draft:** `docs/manuscript/icassp_operating_point.tex` → `build/icassp_operating_point.pdf`
-(4 pages of content + a references-only 5th page). Written from the frozen scientific state at
-repository HEAD `e3d761c` (`docs/final_scientific_story.md` +
+**Project folder:** everything lives in `icassp/` (this folder): `icassp_operating_point.tex`, the
+official style files `spconf.sty` + `IEEEbib.bst`, `figs/`, the built `icassp_operating_point.pdf`,
+this notes file, `README_OVERLEAF.md`, and the ready-to-upload `icassp_operating_point_overleaf.zip`
+(gitignored; regenerable). The paper is **4 pages total** (content + references). Written from the
+frozen scientific state at repository HEAD `e3d761c` (`docs/final_scientific_story.md` +
 `configs/research/final_claim_registry.json`, self-sha `ff023016…`). Every number is read from a
 committed frozen artifact under `configs/research/`; none was copied from chat or an old draft.
 All work here is CPU-only (LaTeX + Matplotlib), 0 GPU, 0 credits.
 
-## How to build
+## Template and how to build
+
+The manuscript is on the **official ICASSP/ICIP LaTeX template** — `\documentclass{article}` +
+`\usepackage{spconf,...}`, with `spconf.sty` and `IEEEbib.bst` bundled in this folder (fetched from
+the public ICASSP paper kit; these files are stable across ICASSP years incl. 2027). spconf sets
+Times and the ICASSP page geometry and centered numbered headings. The body uses the template's
+sanctioned **9 pt mode** (`\ninept`, enabled right after `\begin{document}`) so the full content
+fits the 4-page limit; comment that line out for 10 pt (then trim to fit). The bibliography is an
+inline `\thebibliography` (no `.bib`/BibTeX pass needed; `IEEEbib.bst` is bundled only in case you
+switch to BibTeX).
 
 ```bash
-# figures (reads durable artifacts, writes docs/manuscript/figs/*.pdf)
+# figures (reads durable artifacts, writes icassp/figs/*.pdf)
 OPENBLAS_CORETYPE=Haswell python scripts/research/paper_figs/make_manuscript_figs.py
-# manuscript (tectonic engine; downloads its own bundle incl. IEEEtran on first run)
-cd docs/manuscript && tectonic -X compile icassp_operating_point.tex --outdir build
+# manuscript (pdfLaTeX on Overleaf; locally, tectonic -- spconf.sty must sit beside the .tex)
+cd icassp && tectonic -X compile icassp_operating_point.tex --outdir build
 ```
 
-The draft uses `\documentclass[conference]{IEEEtran}` because it is guaranteed reproducible from
-the tectonic/TeX Live bundle (no fabricated style file) and gives the correct IEEE
-numbered-section two-column look. **For the official ICASSP camera-ready, swap the preamble to the
-official kit:** `\documentclass{article}` + `\usepackage{spconf,times}` (a drop-in; the body,
-tables, and figures are unchanged). This is the only structural change needed for the ICASSP style.
+Overleaf: upload `icassp_operating_point_overleaf.zip` (New Project → Upload Project; files are at
+the zip root), set the compiler to **pdfLaTeX** (proper Times; no font warnings). On tectonic/XeTeX
+locally the paper compiles but emits harmless Times-shape substitution warnings.
 
 ## Narrative decisions
 
@@ -61,9 +70,9 @@ tables, and figures are unchanged). This is the only structural change needed fo
 ## What was omitted for the ICASSP page budget
 
 * **Figure 2 (forest plot of all six context×severity contrasts).** Generated and retained at
-  `docs/manuscript/figs/fig2_forest.pdf` (+ `.png`) by the same script, but **not embedded** in the
-  4-page body; its information is fully carried by Table I and §IV-E. It is a ready drop-in if a
-  longer version (or a fifth content page, if the venue allows) is desired.
+  `icassp/figs/fig2_forest.pdf` (+ `.png`) by the same script, but **not embedded** in the
+  4-page body; its information is fully carried by Table I and the results text. It is a ready
+  drop-in for a longer/journal version.
 * **Cross-severity magnitude deltas** (post-hoc, CI-excluding-0 but confounded) — reduced to a
   single qualitative "exploratory only" sentence; the numeric Δ values live in
   `docs/xsev_postresult_adversarial_audit.md` §5.
@@ -90,9 +99,13 @@ tables, and figures are unchanged). This is the only structural change needed fo
 
 ## Items that still need Gabriel's editorial decision
 
-1. **Affiliation.** Currently a placeholder ("Affiliation to be finalized"). Note: the login email
-   is an Edge Audio Labs address, but per `AGENTS.md` this is an **independent** research project,
-   not an EAL workspace — set the correct affiliation/byline for submission.
+1. **Authors set; affiliations to CONFIRM.** Byline is now Gabriel Bibb\'o
+   (`gabobibbo@gmail.com`), Arshdeep Singh and Mark D. Plumbley
+   (`{arshdeep.singh,mark.plumbley}@kcl.ac.uk`). Affiliations were **inferred from the e-mail
+   domains**: the two `@kcl.ac.uk` authors are set to *King's College London, UK*, and Gabriel's is a
+   visible placeholder ("Affiliation to be confirmed"). **Confirm both** — note these researchers are
+   frequently associated with the University of Surrey / CVSSP, so verify KCL vs Surrey and fill in
+   Gabriel's affiliation. (The `\twoauthors` block in the `.tex` is a one-line edit.)
 2. **Reference `[2]` (Singh et al.).** Title/author list/venue and the arXiv identifier are marked
    "(identifier to verify)". Confirm the exact citation (the prior draft used arXiv:2607.13330).
 3. **Naming the secondary scorers/evaluators.** The draft calls Human-CLAP "a second CLAP-family
@@ -112,12 +125,13 @@ tables, and figures are unchanged). This is the only structural change needed fo
 
 ## Verification performed
 
-* Compiled with tectonic; inspected the rendered PDF (no overfull-hbox *overflow* boxes; two
-  cosmetic underfull-hbox spacing warnings in the contribution bullet list remain and are harmless).
-* Tectonic uses the XeTeX engine, which emits harmless `Font shape TU/ptm ... undefined` warnings
-  because IEEEtran requests Times PostScript shapes that XeTeX substitutes; the rendered serif is
-  clean. These disappear entirely under the camera-ready spconf + pdflatex toolchain, so no action is
-  needed for the draft.
+* Compiled on the official ICASSP `spconf` template with tectonic; inspected the rendered PDF —
+  **4 pages total, no overfull-hbox overflow** (one negligible 0.9pt line remains; the contributions
+  list is set `\raggedright` so `domain-specialization`, which TeX cannot re-hyphenate, no longer
+  overflows the narrow 9pt column). `\emergencystretch` absorbs other tight lines.
+* On tectonic/XeTeX, `spconf` requests Times (`\rmdefault=ptm`), so XeTeX emits harmless
+  `Font shape TU/ptm ... undefined` substitution warnings; the serif renders clean and **pdfLaTeX on
+  Overleaf uses real Times with no warnings**. No action needed.
 * Numbers, forbidden-language, evidence-class, figure/table consistency, and required-negatives
   completeness were re-checked against the frozen artifacts by a 5-agent adversarial pass
   (Workflow tool) plus a manual scan. Result: **PASS**. Three minor issues were found and fixed:
