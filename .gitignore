@@ -63,3 +63,6 @@ public_examples/
 # ICASSP manuscript build intermediates & raster previews (keep .tex, .pdf deliverables, vector figs)
 docs/manuscript/build/
 docs/manuscript/figs/*.png
+
+# Overleaf delivery bundle (derivable from docs/manuscript/; not versioned)
+/icassp_operating_point_overleaf.zip
