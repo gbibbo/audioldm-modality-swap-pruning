@@ -1,152 +1,92 @@
-# MANUSCRIPT_NOTES - ICASSP Draft 2
+# MANUSCRIPT_NOTES - ICASSP Draft 3
 
 **Everything lives in `icassp/`:** `icassp_operating_point.tex`, official style files
 `spconf.sty` + `IEEEbib.bst`, `figs/`, the built `icassp_operating_point.pdf`, this file,
 `README_OVERLEAF.md`, and the ready-to-upload `icassp_operating_point_overleaf.zip`
-(gitignored; regenerable). **4 pages total** (content + references), 0 overfull boxes.
-Written from the frozen scientific state at HEAD `e3d761c` (`docs/final_scientific_story.md`
-+ `configs/research/final_claim_registry.json`, self-sha `ff023016...`). Every number is read
-from a committed frozen artifact under `configs/research/`. CPU-only (LaTeX + Matplotlib), 0 GPU,
-0 credits. **No new experiment, GPU run, scoring, or inferential analysis was performed for Draft 2.**
+(gitignored; regenerable). **4 pages total** (content + references) at 9 pt (`\ninept`).
+Draft 3 = rewrite of Draft 2 per the scientific review
+`docs/review/2026-09-02_manuscript_draft2_scientific_review.md` (Gabriel GO 2026-09-02, 18:16,
+condition: minimal credit use). Gabriel compiles on Overleaf; the local `tectonic` build is only
+the page-limit check.
 
 ## Build
 
 ```bash
 # figures (reads durable artifacts, writes icassp/figs/*.pdf)
-OPENBLAS_CORETYPE=Haswell python scripts/research/paper_figs/make_manuscript_figs.py
-# manuscript (pdfLaTeX on Overleaf; locally, tectonic -- spconf.sty must sit beside the .tex)
-cd icassp && tectonic -X compile icassp_operating_point.tex --outdir build
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/make_draft3_figs.py
+# manuscript (pdfLaTeX on Overleaf; locally tectonic -- spconf.sty must sit beside the .tex)
+cd icassp && mkdir -p build && ~/.local/bin/tectonic -X compile icassp_operating_point.tex --outdir build --keep-logs
 ```
 
-## Draft 1 -> Draft 2: major changes
+## Draft 2 -> Draft 3: what changed and why
 
-* **Positive-first reframe.** Results now LEAD with the severity-2 prospective replication
-  (J, K, R_native) and the "advantage present at the short point too", then fold the failed
-  domain-specialisation hypothesis into the Results as the scientific *path* (Sec. 4.3), not a
-  headline. The Introduction's contribution bullets are three positive items (framework;
-  prospective cross-severity interaction + seam sensitivity; multi-metric/frame-level
-  characterisation with boundary conditions) - no "list of failures" bullet.
-* **Declarative title:** "Post-Pruning Fine-Tuning Gains Depend on the Temporal Evaluation
-  Operating Point in AudioLDM" (scoped to AudioLDM; no universal-law claim).
-* **Abstract** rewritten to ~155 words (was 233): problem -> operating-point finding -> sev-2 J
-  as the headline number -> prospective replication + seam robustness -> short-point still
-  positive -> methodological implication + one-line limitation. No caveat pile-up.
-* **Absolute levels exposed.** Table 1 (core) now shows, per severity/operating point, the
-  absolute Pruned and Post-FT mean CLAP cosine AND the paired contrast R with 95% CI; the text
-  states the sev-2 native pruned score (0.055) vs post-FT (0.299) explicitly ("recovery matters
-  most where pruning hurts most"). No "restoration to dense" claim.
-* **Uncertainty is visible.** Fig. 1 draws 95% CI whiskers of the paired contrast about the
-  post-FT mean at each operating point; Fig. 2(a) is a forest plot of all six contrasts + J with
-  95% CI (filled = CI excludes 0).
-* **FineLAP figure added.** Fig. 2(b) is a descriptive time-course of the frame-level
-  Delta-grounding (post-FT - pruned) vs. time with the 3.84 s early/late boundary and the
-  D_early/D_late window means, making "broad, not late" (T ~ 0) visible.
-* **Efficiency/pruning context.** Table 1 (systems) reports exact U-Net parameter counts
-  (Dense 415.96 M -> sev-1 145.67 M, -65.0% -> sev-2 71.08 M, -82.9%) with the channel
-  multipliers. Counts computed on CPU from the materialised checkpoints (sum of `numel` over
-  tensors keyed `model.diffusion_model.*`); validated bit-exact against the two independently
-  documented values (415.955 M dense, 145.674 M sev-1). No FLOPs/MACs/latency/RTF/memory were
-  fabricated; no Singh efficiency number was borrowed.
-* **Tables de-scaled.** `\resizebox` removed from all tables; they are redesigned to fit the
-  column at normal 9 pt (shorter labels, `\multirow` severity groups). The secondary
-  corroboration table was folded into one prose sentence to save space.
-* **Related Work** uses `\rwhead` (bold run-in headings on their own paragraph break) so the
-  three sub-topics are skimmable, not a wall of text.
-* **Named + cited evaluators.** CLAP `laion/clap-htsat-fused` (rev 365dea6e); Human-CLAP
-  (`sarulab-speech/human-clap-wsce-mae`, Takano et al., arXiv:2506.23553) explicitly labelled a
-  CLAP-family *model* fine-tuned on human scores, NOT a listening test; FineLAP (Li et al.,
-  arXiv:2604.01155, ACL 2026) named with its EAT audio encoder; DDIM, AudioCaps, MusicLM cited.
-* **Discussion is actionable:** a concrete 7-point reporting checklist for post-pruning recovery
-  studies (native + >=1 off-native operating point; absolute levels; paired common-noise
-  contrasts; prompt-unit uncertainty; interaction contrast; automatic-vs-human separation).
-* **Limitations** compressed to one section (mechanism blocked; only two temporal points, no
-  continuous trend; short is off-native; CLAP-family primary; no human eval; off-recipe DDIM50;
-  cross-severity exploratory; FineLAP post-result).
-* **Placeholders removed:** author affiliations resolved (Gabriel Bibbo = Independent researcher;
-  Singh & Plumbley = King's College London, per Gabriel 2026-09-01); Singh et al. citation
-  resolved ("Efficient text-to-audio generation via pruning," DCASE 2026, arXiv:2607.13330);
-  evaluators named/cited; no "to be confirmed" / "identifier to verify" remain.
+* **Title:** "How Much Does Recovery Fine-Tuning Recover? Operating-Point-Dependent Gains in Pruned
+  Text-to-Audio Diffusion" (review D1, option 1).
+* **Terminology (review D2):** *recovery fine-tuning* (the stage; Singh et al.'s term), *pruned
+  checkpoint* P and *fine-tuned checkpoint* P+FT, *recovery gain* R, native/short duration,
+  in-domain / held-out music; "pre-registered" once; "post-hoc sensitivity" / "post-result
+  diagnostic" as labels. The frozen-story ban on "recovered model" is honoured (neutral labels).
+* **Contributions are findings** (duration; domain at matched duration; where the gain lives), not
+  apparatus. Abstract (~150 w) opens with the vivid absolute numbers.
+* **Evidence hierarchy** is a 7-row Table 1 (analysis / registered / role) instead of ~30 % of the
+  prose. Parameter-count table removed (numbers in text + Singh's 39 % MAC figure cited).
+* **Pruned-baseline provenance stated correctly** (review A5): released L1 channel selection applied
+  to the dense EMA weights; bit-exact vs the released raw weights at sev-1; 3-tensor seam ambiguity
+  at sev-2 -> A'/B'.
+* **New analyses added (all 0 cr; authorised 2026-09-02):**
+  * **B1 scale-free interaction** (`configs/research/draft3_sensitivity_result.json`, post-hoc
+    sensitivity): win-rate W(P+FT>P) 0.44->0.64 (sev-1, dW +0.20 [+0.06,+0.34]) and 0.72->0.87
+    (sev-2, +0.15 [+0.07,+0.22]); duration slopes P/P+FT; paired d. Column W in Table 2.
+  * **B2 matched-duration domain contrast** replaces K: sev-1 frozen I = +0.092 [+0.054,+0.131]
+    (reversal_v1_1_result.json), sev-2 R_short - R_music = +0.076 [+0.047,+0.105].
+  * **B3 crop analysis** (`configs/research/native_crop_analysis_result.json`, post-hoc diagnostic;
+    first 3.84 s of the frozen native WAVs scored with the frozen CLAP convention): sev-1 R_crop
+    +0.051 [+0.016,+0.085] = R_native (R_crop - R_short +0.043 [+0.002,+0.085]); sev-2 R_crop +0.172
+    [+0.150,+0.194], R_crop - R_short +0.087 [+0.065,+0.110], R_nat - R_crop +0.072 [+0.055,+0.089]
+    (B' identical). Fig. 2(b). Reading: the short-duration deficit is a generation-length effect.
+  * **Frozen Human-CLAP sev-1 J** (+0.075 [+0.012,+0.137]) and Singh et al.'s in-domain
+    "fine-tuned pruned > unpruned" (FAD 1.57 vs 3.95) now used (review A6/A7).
+  * **XSEV-MUSIC-NATIVE-1** (protocol `docs/xsev_music_native_1.md`, frozen before generation;
+    music-64 x r0 @10.24 s, P and P+FT, generated on CPU, 0 cr): fills the `[[MN-*]]` placeholders
+    (Table 2 rows "music 10.24 s" and "domain 10.24 s", Sec. 4.2 sentence, Sec. 3.2 cell list,
+    Intro bullet). **Until filled, the .tex still contains `[[MN-...]]` markers** — a dummy-filled
+    scratch compile (`build/scratch_fill.tex`) is used to verify the 4-page fit with realistic
+    widths.
+* **Figures:** Fig. 1 unchanged in content (interaction, CI whiskers, dense reference). Fig. 2 =
+  (a) FineLAP grounding-gain-vs-time (label collisions fixed) + (b) generation length vs scoring
+  window (R at generated 3.84 s / first 3.84 s of 10.24 s / full 10.24 s). The Draft-2 forest panel
+  is redundant with Table 2 and dropped (`fig_summary.pdf`, `fig2_forest.pdf`, `fig3_finelap.pdf`
+  kept on disk as spares).
+* **Citations fixed against arXiv (2026-09-02):** Singh et al. cited as arXiv:2607.13330 ("Submitted
+  to DCASE 2026 Workshop" — not a proceedings entry); Human-CLAP = Takano, Okamoto, Kanamori et al.,
+  arXiv:2506.23553 (the Draft-2 *PDF* still carried a stale "Yamamoto" byline — PDF was out of
+  date vs the .tex); FineLAP cited as arXiv:2604.01155 (ACL venue not confirmed by the record).
+  Added: TinyFusion (CVPR 2025), AudioLDM 2 (TASLP 2024), Stable Audio Open (ICASSP 2025), Gui et
+  al. FAD (ICASSP 2024), KAD (arXiv 2502.15602), Kumar et al. (ICLR 2022). 18 references.
+  **Verify venue/pages of every added reference before submission** (bibliographic details were
+  written from memory of the records, not fetched one by one).
+* **Documented protocol details** (review A8-A10): cross-duration pairing is prompt-paired, not
+  noise-paired; CLAP repeat-pads 3.84 s to 10 s and centre-crops 10.24 s to 10 s; sampler deviations
+  from the published recipe listed (DDIM 50 vs 200, guidance 2.5 vs 3.5, single vs best-of-3).
+* **Discussion:** recovery gain tracks the fine-tuning operating point; four-item reporting
+  recommendation (was seven); limitations folded in.
 
-## External review criticisms -> disposition
+## Number provenance (every number in the .tex)
 
-Addressed (presentation-only, freeze respected): A1 (fig on p4 -> Fig 1 on p3, before p4);
-A2 (only one figure -> two figures incl. the un-embedded forest, now Fig 2a); A3 (no uncertainty
--> CI whiskers + forest); A4 (no FineLAP figure -> Fig 2b); A5 (heterogeneity now shown as a
-traceable 64%/44% native-vs-short win-rate); A6 (Related Work headings); A7 (`\resizebox`
-removed); A8 (abstract ~155 w); A9/A10 (citations + named evaluators; no placeholders);
-B11 (efficiency: exact U-Net params); B12 (absolute levels exposed); B14 (two-points-not-a-trend
-stated in Limitations); B15 (duration-extrapolation alternative: dense@3.84 vs dense@10.24 shown
-in Fig 1a and discussed as "short is off-native for the whole family"); B17 (positive-first);
-B18 (actionable checklist); B19 (declarative title).
+| Where | Source artifact |
+|---|---|
+| sev-2 R_native/R_short/R_music/J/K, B', dense control | `configs/research/xsev_result.json` (frozen) |
+| sev-1 R_short/R_native/J, HC J, raw cosines | `configs/research/op_duration_discriminator_1_result.json` (frozen) |
+| sev-1 domain test R_AC, I, dense 3.84 s | `configs/research/reversal_v1_1_result.json` (frozen) |
+| sev-1 music R (-0.094), means 0.117/0.023, W 0.20 | `configs/research/reversal_v1_r_music_clap.json` + persisted `artifacts/icassp_gate0/_phenom_groups_out.json` |
+| HC sev-2, KL, PANN, FAD/FD | `configs/research/xsev_hc_secondary.json`, `xsev_secondary_metrics.json` |
+| FineLAP D_early/D_late/T, mass/occupancy/coverage/peak | `configs/research/finelap_temporal_result.json` |
+| win-rates, dW, slopes, sev-2 domain gap | `configs/research/draft3_sensitivity_result.json` (post-hoc) |
+| R_crop and differences | `configs/research/native_crop_analysis_result.json` (post-hoc) |
+| music @10.24 s (`[[MN-*]]`) | `configs/research/xsev_music_native_1_result.json` (pending generation) |
+| parameter counts | Draft-2 CPU count (415.96 / 145.67 / 71.08 M), validated bit-exact |
 
-**Intentionally NOT addressed (would require NEW post-result inferential analysis, forbidden by
-the current freeze; flagged for a separate authorised pass):**
-* B13 - rank/robust-scale sensitivity check on J (a new estimand on the raw scores).
-* B15 (inferential part) - subset-matched dense@3.84 vs dense@10.24 *paired* means as a formal
-  duration-extrapolation control (a new paired contrast). Only the existing descriptive dense
-  scores are shown.
-* B16 - a formal multiplicity correction / stated testing hierarchy beyond the existing
-  primary/secondary + prospectively-frozen labels.
-These are recorded here per the instruction to stop any presentation change that would need new
-analysis; they need explicit approval to implement.
+## Known compile notes
 
-## Figures / tables retained (and why)
-
-| Element | Content | Why |
-|---|---|---|
-| Fig. 1 (single col, stacked) | pruned vs post-FT CLAP at short/native, sev 1 & 2; CI whiskers; dense ref | the central operating-point interaction + absolute levels + uncertainty, before p4 |
-| Fig. 2 (single col, 2-panel) | (a) forest of 6 contrasts + J w/ 95% CI; (b) FineLAP Delta-grounding vs time | inferential summary + the "broad, not late" negative, next to their arguments |
-| Table 1 | systems: channel_mult, exact U-Net params, reduction | efficiency/pruning context, reader-immediate |
-| Table 2 | absolute Pruned/Post-FT + R [95% CI] per severity/op-point + J, K rows + reversal footnote | absolute levels + primary contrasts + the pre-registered negative in one place |
-
-Both severity panels of Fig. 1 were made single-column (stacked) so all four floats are
-single-column; this resolved a float-placement logjam that otherwise forced a 5th page.
-Fig. 2 merges the forest and FineLAP into one two-panel float (one caption) for the page budget;
-single-panel spares `fig2_forest.pdf` / `fig3_finelap.pdf` are generated and committed for a
-longer/journal version but not embedded.
-
-## Provenance guard on the FineLAP figure
-
-Fig. 2(b) reconstructs the per-frame Delta-grounding curve from the raw frame scores
-`artifacts/finelap_temporal/scores_sev{1,2}.json` (gitignored). The figure script ASSERTS their
-`scores_sha256` equals the value recorded in the committed frozen verdict
-`configs/research/finelap_temporal_result.json`, and that the reconstructed window means reproduce
-the frozen `D_early`/`D_late` to < 1e-6 (they do, bit-exact). The plotted curve is therefore
-provably the same object as the frozen post-result diagnostic - a visualisation, not a new
-statistic.
-
-## Items that still need Gabriel's editorial decision
-
-1. **Author affiliations** are now filled (Independent researcher; King's College London) per the
-   2026-09-01 decision. Note the paper under study (arXiv:2607.13330) lists the CVSSP/University of
-   Surrey group (Singh, Yuan, Chen, W. Wang, Plumbley); the @kcl.ac.uk / KCL byline was Gabriel's
-   explicit instruction - confirm once more before submission if a Surrey affiliation is intended.
-2. **Reference completeness.** Long author lists were shortened to "et al." after three names to
-   fit four pages (AudioLDM, BK-SDM, CLAP, PANNs, FAD, MusicLM, Human-CLAP, FineLAP). Expand for a
-   camera-ready/journal version if space allows. EAT (FineLAP's audio encoder) is named in text but
-   not separately cited (page budget); add the EAT citation for the journal version.
-3. **Camera-ready boilerplate** not included: acknowledgements, data/reproducibility statement.
-
-## Verification performed (Draft 2)
-
-* Compiled with tectonic (official spconf template): **4 pages, 0 overfull/underfull-hbox** beyond
-  the harmless XeTeX `TU/ptm` Times-substitution font warnings (pdfLaTeX on Overleaf uses real
-  Times, no warnings).
-* Both figure PDFs checked for out-of-bounds text blocks (clipping): **none**; all labels present.
-* Every numeric value cross-checked against the frozen artifacts (Table 1/2, corroboration prose,
-  FineLAP paragraph, dense reference, parameter counts). The 64%/44% heterogeneity figures are the
-  committed per-prompt win-rates (recovered > pruned) at native/short (sev-1, n=80).
-* Forbidden-language scan: every "restor*/pure-domain/causal/perceptual/single restored score"
-  token appears only inside an explicit negation; no "recovered model", "consistently improves",
-  "advantage disappears at 3.84 s", or "human listeners confirmed".
-* Placeholder scan: no "to be confirmed" / "identifier to verify" / "TODO" / `\resizebox`.
-* Bibliography: all 12 `\cite` keys have a `\bibitem` and every `\bibitem` is cited (no unused).
-* Author lists for the two newest citations verified against arXiv (Human-CLAP = Takano et al.,
-  NOT the earlier guessed "Yamamoto"; FineLAP = Li et al.).
-
-## NOTE on visual inspection
-
-Page-by-page image rendering to the operator was unavailable this session (the IDE display host was
-unreachable), so the compiled PDF was verified by text/geometry extraction (page count, float page
-assignment, per-block bounding boxes for clipping, and full text of both figures) rather than by
-eye. A final human glance on Overleaf is advisable before submission.
+`tectonic` (XeTeX engine) prints harmless `TU/ptm` Times-shape substitution warnings; Overleaf
+pdfLaTeX uses real Times. Remaining overfull boxes: <4 pt (equation line and Table 1), negligible.
