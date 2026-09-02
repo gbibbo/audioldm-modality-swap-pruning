@@ -4,7 +4,7 @@
 Systems: pruned2_A / pruned2_B (prune_operator on dense EMA @[1,2,1,1]), recovered2 (public dp1
 recovered, EMA), dense (severity-1 dense EMA, NATIVE control only). Contexts: ac_short (192×1, 3.84s/
 latent96), ac_native (192×1, 10.24s/latent256), music (64×3, 3.84s/latent96), dense_native (Arm-D 80×1,
-10.24s/latent256). CRN: x_T = f(ytid,rep) via the frozen generation salt, shared across systems within a
+10.24s/latent256), music_native (64×1, 10.24s/latent256; XSEV-MUSIC-NATIVE-1). CRN: x_T = f(ytid,rep) via the frozen generation salt, shared across systems within a
 (context,ytid,rep). EMA convention; DDIM50/g2.5/eta0/fp32/single. Reuses gate0_generator core.
 
 Run (GPU): .venv/bin/python scripts/research/reversal_xsev_gen.py --system pruned2_A --context ac_native
@@ -33,6 +33,10 @@ CTX = {
     "ac_native":    (AC_MANIFEST, 1, 256, 10.24, GEN_SALT, "ytid", "prompt_index"),
     "music":        (MUSIC_MANIFEST, 3, 96, 3.84, GEN_SALT, "ytid", "prompt_index"),
     "dense_native": (ARMD_SUBSET, 1, 256, 10.24, "ARMD", "ytid", "subset_prompt_index"),
+    # XSEV-MUSIC-NATIVE-1 (docs/xsev_music_native_1.md): the missing factorial cell, music @10.24 s.
+    # 64 prompts x replicate 0 only; integer seed = the frozen music replicate-0 seed (same convention
+    # as ac_short/ac_native: same integer seed per ytid, x_T shape (1,8,256,16) differs from 3.84 s).
+    "music_native": (MUSIC_MANIFEST, 1, 256, 10.24, GEN_SALT, "ytid", "prompt_index"),
 }
 
 
