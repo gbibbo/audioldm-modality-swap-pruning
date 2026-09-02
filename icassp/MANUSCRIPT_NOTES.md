@@ -47,11 +47,11 @@ cd icassp && mkdir -p build && ~/.local/bin/tectonic -X compile icassp_operating
   * **Frozen Human-CLAP sev-1 J** (+0.075 [+0.012,+0.137]) and Singh et al.'s in-domain
     "fine-tuned pruned > unpruned" (FAD 1.57 vs 3.95) now used (review A6/A7).
   * **XSEV-MUSIC-NATIVE-1** (protocol `docs/xsev_music_native_1.md`, frozen before generation;
-    music-64 x r0 @10.24 s, P and P+FT, generated on CPU, 0 cr): fills the `[[MN-*]]` placeholders
-    (Table 2 rows "music 10.24 s" and "domain 10.24 s", Sec. 4.2 sentence, Sec. 3.2 cell list,
-    Intro bullet). **Until filled, the .tex still contains `[[MN-...]]` markers** — a dummy-filled
-    scratch compile (`build/scratch_fill.tex`) is used to verify the 4-page fit with realistic
-    widths.
+    music-64 x r0 @10.24 s, P and P+FT; T4 job `xsev-music-native-1`, settled 0.4651 cr — Gabriel
+    switched it from CPU to GPU for speed): **branch (a)** — R_music_nat +0.005 [-0.028, +0.039]
+    (null; W 0.53), J_music -0.004 [-0.043, +0.034], D_nat = R_nat(AC) - R_music_nat +0.239
+    [+0.195, +0.283]. Filled by `fill_music_native.py` into Table 2 (rows "music 10.24 s", "domain
+    10.24 s"), Sec. 4.2, Sec. 3.2 and the Intro bullet. No placeholders remain.
 * **Figures:** Fig. 1 unchanged in content (interaction, CI whiskers, dense reference). Fig. 2 =
   (a) FineLAP grounding-gain-vs-time (label collisions fixed) + (b) generation length vs scoring
   window (R at generated 3.84 s / first 3.84 s of 10.24 s / full 10.24 s). The Draft-2 forest panel
@@ -83,10 +83,10 @@ cd icassp && mkdir -p build && ~/.local/bin/tectonic -X compile icassp_operating
 | FineLAP D_early/D_late/T, mass/occupancy/coverage/peak | `configs/research/finelap_temporal_result.json` |
 | win-rates, dW, slopes, sev-2 domain gap | `configs/research/draft3_sensitivity_result.json` (post-hoc) |
 | R_crop and differences | `configs/research/native_crop_analysis_result.json` (post-hoc) |
-| music @10.24 s (`[[MN-*]]`) | `configs/research/xsev_music_native_1_result.json` (pending generation) |
+| music @10.24 s (Table 2, Sec. 4.2) | `configs/research/xsev_music_native_1_result.json` (frozen protocol `docs/xsev_music_native_1.md`) |
 | parameter counts | Draft-2 CPU count (415.96 / 145.67 / 71.08 M), validated bit-exact |
 
 ## Known compile notes
 
 `tectonic` (XeTeX engine) prints harmless `TU/ptm` Times-shape substitution warnings; Overleaf
-pdfLaTeX uses real Times. Remaining overfull boxes: <4 pt (equation line and Table 1), negligible.
+pdfLaTeX uses real Times. Remaining overfull boxes: <4 pt (equation line and Table 1), negligible. `verify_draft3_numbers.py`: 59/59 numbers reproduced from artifacts.

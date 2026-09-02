@@ -1,0 +1,77 @@
+{
+ "artifact": "xsev_music_native_1_result",
+ "protocol_doc": "docs/xsev_music_native_1.md",
+ "protocol_doc_sha256": "69caa3d363e2979bd17116819f0afec7b7cb3914f6b47fcd8e7f95e7e71149d2",
+ "class": "prospective follow-up (design completion); NO gate; changes no frozen verdict",
+ "scorer": {
+  "model": "laion/clap-htsat-fused",
+  "hf_revision": "365dea6ef167def6676140ed93bbc43f84dabb28",
+  "lib_versions": {
+   "torch": "2.2.2+cpu",
+   "transformers": "4.30.2",
+   "librosa": "0.11.0"
+  },
+  "scoring_git_sha": "deff2bb10af6c5875fb6358da6fdbc67dba21759",
+  "sr": 48000,
+  "convention": {
+   "unit": "one 192-item scorer call per system (64 prompts x 3 replicates)",
+   "order": "(prompt_index, replicate_index)",
+   "rng": "np.random.seed(20260826) reset once before each 192-item system",
+   "quirk": "transformers 4.30.2 CLAP-fused has a batch-level stochastic is_longer selection for short-audio batches; frozen batch/order/seed makes it reproducible AND paired by position across systems",
+   "revision": "365dea6ef167def6676140ed93bbc43f84dabb28"
+  }
+ },
+ "generation_provenance": {
+  "recovered2": {
+   "gen_manifest_sha256": "79db5b21203808352306fa24a5bf3bcad3fe2db4f7f18e308d9e9b06cd09757f",
+   "device": "cuda",
+   "checkpoint": "recovered2_dp1_ema",
+   "git_sha": "a45e643305ef16e836fa467e8756c7600c8fb841"
+  },
+  "pruned2_A": {
+   "gen_manifest_sha256": "3ad1687de453f3bed6ca805d7aab9ef57b67ba91f938f88d3ff2d0a013961a65",
+   "device": "cuda",
+   "checkpoint": "pruneA(dense_ema)[1,2,1,1]",
+   "git_sha": "a45e643305ef16e836fa467e8756c7600c8fb841"
+  }
+ },
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "XSEV-MUSIC-NATIVE-1|BOOTSTRAP|2026-09-02",
+  "seed_pcg64": 1712164339,
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/music_native_groups_out.json": "5acbc6e1d048586372b4de934cc4ace82e7a515ae3bc556d49a49ce83b0d4bf2",
+  "artifacts/icassp_gate0/_score_tmp/xsev_sev2_groups_out.json": "6235857f87b5e9e2cb44cc3c7a3c42627ad234262eb631c2df20fdb737b8f7dc"
+ },
+ "means": {
+  "rec_music_native": 0.09375088370870799,
+  "pruned_music_native": 0.08887428099114913,
+  "rec_music_short_frozen": 0.014087596760267237,
+  "pruned_music_short_frozen": 0.004909242471815863
+ },
+ "PRIMARY_R_music_native": {
+  "point": 0.004876602717558853,
+  "lo": -0.028344495395140258,
+  "hi": 0.038647412539648936,
+  "n": 64
+ },
+ "win_rate_music_native": 0.53125,
+ "secondary_J_music": {
+  "point": -0.004301751570892517,
+  "lo": -0.04311401015626566,
+  "hi": 0.034332285030480615,
+  "n": 64
+ },
+ "secondary_D_native_domain_contrast_AC_minus_music": {
+  "point": 0.2394125001495316,
+  "lo": 0.19463877667161192,
+  "hi": 0.2832188420405145,
+  "n_a": 192,
+  "n_b": 64
+ },
+ "R_music_short_frozen_point": 0.009178354288451374,
+ "branch": "a_domain_specific_native_gain"
+}

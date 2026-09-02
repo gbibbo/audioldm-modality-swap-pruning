@@ -78,7 +78,7 @@ and two prompt domains. Our findings are:
       prompt set at the stronger severity, seam-robust, and holds on a scale-free (win-rate)
       statistic at both severities.
 \item \textbf{Domain.} At matched duration the gain is present in-domain (AudioCaps) and absent on
-      held-out music at both severities [[MN-INTRO]].
+      held-out music at both severities and at both durations.
 \item \textbf{Where the gain lives.} A frame-level grounding model shows the native-duration gain
       spread uniformly over the clip, and a crop analysis shows the short-duration deficit arises from
       \emph{generating} short clips, not from scoring short excerpts: the first $3.84$\,s of a native
@@ -130,7 +130,7 @@ Two durations: the \emph{native} point ($10.24$\,s, latent length $256$; the fin
 captions~\cite{kim2019audiocaps} and held-out hip-hop music captions from
 MusicCaps~\cite{agostinelli2023musiclm}, a sub-domain with near-zero exposure in the recovery corpus.
 Severity~2 uses $192$ AudioCaps prompts (disjoint from all severity-1 and training prompts) and $64$
-music prompts ($3$ replicates at $3.84$\,s[[MN-CELLS]]); severity~1 uses $96$ AudioCaps prompts for
+music prompts ($3$ replicates at $3.84$\,s, plus $10.24$\,s at severity~2); severity~1 uses $96$ AudioCaps prompts for
 the pre-registered domain test, a matched $80$-prompt subset for the duration comparison, and $64$ music
 prompts at $3.84$\,s. Generation uses DDIM~\cite{song2021ddim}, $50$ steps, guidance $2.5$, $\eta=0$,
 \texttt{fp32}, single generation, EMA weights (off the published recipe, Sec.~5).
@@ -218,7 +218,7 @@ matched-duration domain contrast of $+0.076$ $\ci{+0.047}{+0.105}$. At severity~
 domain test ($96$ prompts) found no in-domain gain at $3.84$\,s ($R_{\mathrm{AC}}=-0.002$ $\ci{-0.027}{+0.021}$)
 and a \emph{negative} music contrast ($\Rm=-0.094$ $\ci{-0.124}{-0.065}$), a domain contrast of
 $+0.092$ $\ci{+0.054}{+0.131}$. The music penalty is severity-specific; the absence of a music gain
-replicates. [[MN-RESULT]]
+replicates. At the native duration the music contrast is likewise null ($+0.005$ \ci{-0.028}{+0.039}; $W=0.53$), so the large native gain is confined to the fine-tuning domain: the $10.24$\,s domain contrast is $+0.239$ \ci{+0.195}{+0.283}.
 
 \begin{table}[t]
 \centering
@@ -245,10 +245,10 @@ domain $3.84$\,s ($n{=}96$) & & & $+0.092^{\dagger}$~\ci{+0.054}{+0.131} & \\
 AudioCaps $3.84$\,s & $0.015$ & $0.100$ & $+0.085^{\dagger}$~\ci{+0.066}{+0.105} & $0.72$\\
 AudioCaps $10.24$\,s & $0.055$ & $0.299$ & $+0.244^{\dagger}$~\ci{+0.215}{+0.273} & $0.87$\\
 music $3.84$\,s & $0.005$ & $0.014$ & $+0.009$~\ci{-0.013}{+0.032} & $0.48$\\
-music $10.24$\,s & [[MN-P]] & [[MN-PFT]] & [[MN-R]] & [[MN-W]]\\
+music $10.24$\,s & $0.089$ & $0.094$ & $+0.005$~\ci{-0.028}{+0.039} & $0.53$\\
 $J=\Rn-\Rs$ & & & $+0.159^{\ddagger}$~\ci{+0.131}{+0.187} & \\
 domain $3.84$\,s & & & $+0.076^{\dagger}$~\ci{+0.047}{+0.105} & \\
-domain $10.24$\,s & & & [[MN-D]] & \\
+domain $10.24$\,s & & & $+0.239^{\dagger}$~\ci{+0.195}{+0.283} & \\
 \bottomrule
 \end{tabular}
 
