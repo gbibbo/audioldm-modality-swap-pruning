@@ -1,6 +1,6 @@
 # XSEV-DENSE-192-CONTROL — paired dense control on the severity-2 prompt set (protocol, frozen before generation)
 
-**Status:** PROPOSED / FROZEN DESIGN, **NOT LAUNCHED** (2026-09-02, America/Montevideo). No output exists.
+**Status:** FROZEN DESIGN (2026-09-02); **Gabriel GO 2026-09-03 00:52 MVD** ("apruebo lanzar el job"); amended pre-launch (this revision) and launched as ONE T4 job (see ledger XSEV-DENSE-192-CONTROL-GEN-LAUNCH). No output had been inspected at the time of this amendment.
 **Class:** prospective design completion (post-result of RECOVERY-CROSS-SEVERITY-REP-1); **no gate**; every
 outcome is reportable. It cannot change any frozen verdict (V1.1, Arm-D, xsev CASE C, music-native branch (a)).
 
@@ -26,15 +26,17 @@ severity 2 become paired, inferential quantities.
   frozen pruned2_A / recovered2 clips of the same (context, ytid). Generator: `reversal_xsev_gen.py`
   with `--system dense --context ac_short|ac_native` (one-line relaxation of the "dense only for
   dense_native" guard; no other change).
-* **Device rule:** all 384 dense WAVs come from ONE device (either one T4 job or one CPU run). If the run
-  is split or restarted on another device, the partial output is discarded. (The paired systems were
-  generated on T4; a device-consistency check regenerates 4 pruned2_A native clips on the chosen device
-  and requires |ΔCLAP| < 0.01 per clip — descriptive, reported.)
+* **Device rule (amended pre-launch, 2026-09-03):** all 384 dense WAVs come from the same hardware class
+  as the frozen P / P+FT clips (T4, `cuda`, fp32). If a job dies (e.g. OUT_OF_FUNDS), the missing prompts
+  are regenerated with `--indices` in another T4 job (seeds and x_T are deterministic per (context, ytid));
+  what is NOT allowed is mixing CPU-generated and GPU-generated clips within the dense system. A
+  device-consistency check regenerates 4 pruned2_A native clips (prompt_index 0–3) in the same job under
+  `device_check/` and reports |ΔCLAP| per clip against the frozen clips (descriptive; expected < 0.01).
 * **Scoring:** frozen fused-CLAP convention (rev 365dea6e; ONE seed-once 192-item call per cell in
   `prompt_index` order), plus the Draft-5 shuffled-caption floor for both dense cells.
 
 ## 3. Estimands (unit = prompt, n = 192, percentile bootstrap B = 10 000, seed namespace
-`XSEV-DENSE-192-CONTROL|BOOTSTRAP|<launch date>`)
+`XSEV-DENSE-192-CONTROL|BOOTSTRAP|2026-09-03`)
 
 | Symbol | Definition | Role |
 |---|---|---|
@@ -55,9 +57,14 @@ if s(dense) is much smaller on this set, the "dense magnitude" wording is withdr
 * **CPU fallback (0 cr):** measured on this 4-core Studio: dense at latent 96 ≈ 1.7 s/DDIM step
   (≈ 95 s/clip → 192 clips ≈ 5 h); latent 256 ≈ 4× → ≈ 4 min/clip → ≈ 13 h. Total ≈ 18 h; resumable via
   `--indices`.
-* Launch script: `scripts/research/run_xsev_dense_192_gen.sh` (`DEV=cuda` in a job, or `DEV=cpu`).
-* After generation (CPU, 0 cr): emit the two 192-item groups, score with `gate0_clap_scorer.py
-  --score-groups`, run the verdict script (to be written on launch; mirrors `draft4_dense_duration_control.py`).
+* Launch script: `scripts/research/run_xsev_dense_192_gen.sh` (`DEV=cuda` in a job). Watchdog
+  `scripts/sa3/job_watchdog.py --max-cost 1.5 --max-minutes 120`.
+* After generation (CPU, 0 cr): `scripts/research/xsev_dense_192_verdict.py --emit` (structural
+  validation: 384 WAVs, 163 872 / 61 472 samples, manifests, device) → `--score` (frozen fused-CLAP
+  convention, one seed-once 192-item call per cell in prompt_index order, text+audio embeddings so the
+  Draft-5 chance floor comes for free; guard: the frozen P / P+FT cells are NOT re-scored, their committed
+  per-item cosines are read from `artifacts/icassp_gate0/_score_tmp/xsev_sev2_groups_out.json`) →
+  `--verdict` → `configs/research/xsev_dense_192_control_result.json`.
 
 ## 5. What it does NOT do
 

@@ -14,4 +14,7 @@ for CTX in ac_native ac_short; do
   OPENBLAS_CORETYPE=Haswell "$PY" scripts/research/reversal_xsev_gen.py --system dense --context "$CTX" --device "$DEV" --out "$OUT"
   echo "=== dense / $CTX DONE ==="
 done
-echo "XSEV-DENSE-192-GEN DONE: 384 WAVs under $OUT"
+# device-consistency check (protocol §2): 4 pruned2_A native clips regenerated in this job, separate dir
+echo "=== device check: pruned2_A / ac_native / indices 0-3 ($DEV) ==="
+OPENBLAS_CORETYPE=Haswell "$PY" scripts/research/reversal_xsev_gen.py --system pruned2_A --context ac_native --device "$DEV" --indices 0,1,2,3 --out "$OUT/device_check"
+echo "XSEV-DENSE-192-GEN DONE: 384 dense WAVs under $OUT (+4 device-check WAVs)"
