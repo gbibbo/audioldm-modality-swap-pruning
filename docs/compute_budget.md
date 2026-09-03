@@ -4,6 +4,10 @@ Do not invent GPU-hour estimates. Every number below is either **MEASURED** on r
 hardware or **DERIVED** from measured values by the master-plan §7.3 formulas, and each is
 labelled. Anything still unmeasured says so.
 
+## DRAFT-4 ANALYSES — CPU ONLY (2026-09-02)
+
+Dense duration control: 80 existing WAVs re-scored with the frozen fused-CLAP scorer on the Studio CPU (~2 min); robustness/multiplicity/rank/caption-length analyses on committed raw scores. **0 GPU, 0 cr.** No generation. Account balance unchanged.
+
 ## XSEV-MUSIC-NATIVE-1 — SETTLED (job `xsev-music-native-1`, T4, 2026-09-02)
 
 128 native WAVs (2 systems × 64 music prompts × r0 @10.24 s / DDIM 50): **settled `total_cost` = 0.4651 cr**, 30.7 min wall (provisioning + 2 checkpoint loads + generation), watchdog cap 0.70 never reached → **≈0.0036 cr/WAV**, consistent with the Arm-D native rate. CPU alternative measured at 115 s/clip (≈4.2 h) and abandoned at 13/128 on Gabriel's instruction (speed). Scoring/verdict/manuscript: CPU, 0 cr.

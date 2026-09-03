@@ -68,8 +68,16 @@ s1 = dict(
 )
 # dense descriptive reference: short 3.84 s from the pre-registered V1.1 (n=96), native 10.24 s from
 # the Arm-D dense union (n=80). Descriptive anchors only (different n, not paired).
-dense_short_s1 = rev1["PRIMARY"]["C_dense"]          # 0.2039 @ 3.84 s
+dense_short_s1 = rev1["PRIMARY"]["C_dense"]          # 0.2039 @ 3.84 s (V1.1, n=96; Draft-2/3 anchor)
 dense_native_s1 = xsev["DENSE_CONTROL"]["C_dense_10s"]  # 0.3520 @ 10.24 s
+# Draft 4: MATCHED dense duration control (same 80 prompts, same 80-item scoring convention at both
+# durations; configs/research/draft4_dense_duration_control_result.json). When present it replaces the
+# unmatched 3.84 s anchor so the grey line in Fig. 1(a) is prompt-paired and convention-matched.
+_ddc_path = os.path.join(ROOT, "configs/research/draft4_dense_duration_control_result.json")
+dense_control = load("configs/research/draft4_dense_duration_control_result.json") if os.path.exists(_ddc_path) else None
+if dense_control is not None:
+    dense_short_s1 = dense_control["means"]["dense_short"]      # 0.2023 @ 3.84 s, 80-item call
+    assert abs(dense_control["means"]["dense_native"] - dense_native_s1) < 1e-9
 
 # severity 2 (1,2,1,1) primary A'
 s2m = xsev["PRIMARY_A"]["means"]
@@ -132,18 +140,30 @@ def figure1():
             yerr = np.array([[post_val - (pruned_val + lo)], [(pruned_val + hi) - post_val]])
             ax.errorbar([xpos], [post_val], yerr=yerr, fmt="none", ecolor=C_POST,
                         elinewidth=1.0, capsize=2.6, capthick=1.0, zorder=5, clip_on=False)
+        # R_short label: below the pair when the two short points nearly coincide (sev-1), else in the
+        # gap between the two lines (sev-2) -- keeps it off both curves, the markers and the y-axis.
+        _mid = 0.5 * (s["pruned_short"] + s["post_short"])
+        _below = (s["post_short"] - s["pruned_short"]) < 0.03
         ax.annotate(r"$R_{\mathrm{short}}\,%+.3f$" % ci(s["R_short"])[0],
-                    (0.0, 0.5 * (s["pruned_short"] + s["post_short"])), xytext=(-6, 0),
-                    textcoords="offset points", ha="right", va="center", fontsize=6.6, color="0.15")
+                    (0.0, _mid), xytext=(9, -9 if _below else 4),
+                    textcoords="offset points", ha="left", va="top" if _below else "bottom",
+                    fontsize=6.6, color="0.15")
         ax.annotate(r"$R_{\mathrm{nat}}\,%+.3f$" % ci(s["R_native"])[0],
                     (1.0, 0.5 * (s["pruned_native"] + s["post_native"])), xytext=(7, 0),
                     textcoords="offset points", ha="left", va="center", fontsize=6.6, color="0.15")
         if show_dense:
             ax.plot(x, [dense_short_s1, dense_native_s1], color=C_DENSE, ls=":", lw=1.0,
                     marker="*", ms=8, mec="white", mew=0.4, zorder=2, clip_on=False)
-            ax.annotate("dense (ref.)", (1.0, dense_native_s1), xytext=(-4, 7),
+            ax.annotate("dense (matched)" if dense_control is not None else "dense (ref.)",
+                        (1.0, dense_native_s1), xytext=(-4, 7),
                         textcoords="offset points", ha="right", va="bottom",
                         fontsize=6.6, color=C_DENSE)
+            if dense_control is not None:   # duration responses s(.) of the three systems, same 80 prompts
+                sl = dense_control["slopes"]
+                ax.annotate(r"$s$: dense $%+.3f$, P $%+.3f$, P+FT $%+.3f$" % (
+                    sl["dense"]["point"], sl["pruned"]["point"], sl["postft"]["point"]),
+                    (-0.30, 0.398), xytext=(0, 0), textcoords="offset points", ha="left", va="top",
+                    fontsize=6.0, color="0.25")
         p, lo, hi = ci(s["J"])
         ax.set_title(title + "\n" + r"$J=%+.3f$  [$%+.3f,\,%+.3f$]" % (p, lo, hi), fontsize=7.8)
         ax.set_xticks(x)
@@ -161,9 +181,9 @@ def figure1():
     axes[0].set_ylim(-0.03, 0.40)
     axes[0].set_xlabel("")
     handles = [
-        Line2D([0], [0], color=C_POST, ls="-", marker="o", ms=5.5, mec="white", label="post-fine-tuning"),
-        Line2D([0], [0], color=C_PRUN, ls="--", marker="s", ms=5.5, mec="white", label="pruned"),
-        Line2D([0], [0], color=C_DENSE, ls=":", marker="*", ms=8, mec="white", label="dense (ref.)"),
+        Line2D([0], [0], color=C_POST, ls="-", marker="o", ms=5.5, mec="white", label="P+FT (fine-tuned)"),
+        Line2D([0], [0], color=C_PRUN, ls="--", marker="s", ms=5.5, mec="white", label="P (pruned)"),
+        Line2D([0], [0], color=C_DENSE, ls=":", marker="*", ms=8, mec="white", label="dense"),
     ]
     axes[1].legend(handles=handles, loc="upper left", bbox_to_anchor=(0.02, 1.0),
                    handlelength=1.7, borderaxespad=0.2, fontsize=6.5)

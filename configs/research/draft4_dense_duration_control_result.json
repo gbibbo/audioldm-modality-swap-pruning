@@ -1,0 +1,148 @@
+{
+ "artifact": "draft4_dense_duration_control_result",
+ "class": "POST-HOC CONTROL (Draft-4 review pass, 2026-09-02); no new generation; changes no frozen verdict",
+ "design": "80 Arm-D prompts (subset of the pre-specified V1.1 96), r0, three systems x two durations, each cell one seed-once 80-item fused-CLAP call in subset order (frozen convention)",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "DRAFT4-DENSE-DURATION-CONTROL|BOOTSTRAP|2026-09-02",
+  "seed_pcg64": 1060089347,
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "inputs": {
+  "configs/research/op_duration_discriminator_1_subset.json": "09996993e03a3fadabf1425eb1481212b677523f7bfb4a12e6e1b58f7e85ddb2",
+  "configs/research/op_duration_discriminator_1_result.json": "d878af127c3dd0476b7eba3e7952d70a28b1ad5721e365e0742dbe804c16f6ef",
+  "configs/research/xsev_result.json": "02e3bd1165c5a9716f10b0ad42b5751a0d2e0c8ec278a7843b88f838d771c9db",
+  "artifacts/icassp_gate0/_score_tmp/xsev_dense_groups_out.json": "e116741e00f5d3ed1a291fef7e371ec5a595ca829cf3df61dac186b9d60fe92b",
+  "artifacts/icassp_gate0/_score_tmp/draft4_dense_short_groups_out.json": "29bf090b93a85eb193ce5bc17e9f679559522a910ff8fc2e70f2efb062a8cf75",
+  "artifacts/icassp_gate0/_score_tmp/draft4_dense_short_groups_in.json": "6ecb70057e92f9716333a2f50a0c5ca78d5fa1a62425d92de44220f0ed4634cb"
+ },
+ "scorer": {
+  "model": "laion/clap-htsat-fused",
+  "revision": "365dea6ef167def6676140ed93bbc43f84dabb28",
+  "lib_versions": {
+   "torch": "2.2.2+cpu",
+   "transformers": "4.30.2",
+   "librosa": "0.11.0"
+  }
+ },
+ "consistency_guards_max_abs_diff": 0.0,
+ "means": {
+  "dense_short": 0.20226746149710378,
+  "dense_native": 0.3520238741301,
+  "pruned_short": 0.1038504117517732,
+  "postft_short": 0.11142862605629489,
+  "pruned_native": 0.2525792172411457,
+  "postft_native": 0.30437950463965535
+ },
+ "slopes": {
+  "dense": {
+   "point": 0.14975641263299622,
+   "lo": 0.09950455198108103,
+   "hi": 0.19776651440479326,
+   "n": 80,
+   "boot_frac_le0": 0.0
+  },
+  "pruned": {
+   "point": 0.14872880548937245,
+   "lo": 0.11869006647058995,
+   "hi": 0.17821476647019155,
+   "n": 80,
+   "boot_frac_le0": 0.0
+  },
+  "postft": {
+   "point": 0.19295087858336046,
+   "lo": 0.1518107969565608,
+   "hi": 0.23227394198984255,
+   "n": 80,
+   "boot_frac_le0": 0.0
+  }
+ },
+ "dslope_postft_minus_dense": {
+  "point": 0.04319446595036425,
+  "lo": -0.019704584490245907,
+  "hi": 0.10882786110523736,
+  "n": 80,
+  "boot_frac_le0": 0.0872
+ },
+ "dslope_pruned_minus_dense": {
+  "point": -0.0010276071436237544,
+  "lo": -0.05575441996217705,
+  "hi": 0.05474116357552702,
+  "n": 80,
+  "boot_frac_le0": 0.5258
+ },
+ "dense_gap": {
+  "short_pruned": {
+   "point": 0.09841704974533058,
+   "lo": 0.06442250541207613,
+   "hi": 0.1321295080437267,
+   "n": 80,
+   "boot_frac_le0": 0.0
+  },
+  "short_postft": {
+   "point": 0.09083883544080891,
+   "lo": 0.05417431550755282,
+   "hi": 0.12671848266356392,
+   "n": 80,
+   "boot_frac_le0": 0.0
+  },
+  "native_pruned": {
+   "point": 0.09944465688895435,
+   "lo": 0.05629609013558365,
+   "hi": 0.14045330860535613,
+   "n": 80,
+   "boot_frac_le0": 0.0
+  },
+  "native_postft": {
+   "point": 0.04764436949044466,
+   "lo": -0.0017532050603767855,
+   "hi": 0.09558066114259416,
+   "n": 80,
+   "boot_frac_le0": 0.0278
+  }
+ },
+ "gap_closed_fraction": {
+  "short": {
+   "point": 0.07700103106251903,
+   "lo": -0.29634633582267883,
+   "hi": 0.3646373440678367,
+   "n": 80,
+   "boot_frac_le0": 0.3195
+  },
+  "native": {
+   "point": 0.5208956319931083,
+   "lo": 0.10682089863554062,
+   "hi": 1.029209413957523,
+   "n": 80,
+   "boot_frac_le0": 0.0091
+  }
+ },
+ "gap_closed_difference_native_minus_short": {
+  "point": 0.44389460093058924,
+  "lo": -0.01808054525648485,
+  "hi": 1.0021883875457696,
+  "n": 80,
+  "boot_frac_le0": 0.03
+ },
+ "batch_composition_diagnostic": {
+  "note": "identical WAVs (V1.1 r0, 80 prompts) scored inside the 192-item V1.1 call vs a matched 80-item call; fused-CLAP's batch-level is_longer draw makes absolute means batch-dependent, which is why every contrast in the paper is taken within one scoring convention",
+  "dense_short_mean_192call_vs_80call": [
+   0.20152627196512185,
+   0.20226746149710378
+  ],
+  "pruned_short_mean_192call_vs_80call": [
+   0.10456070335349069,
+   0.1038504117517732
+  ],
+  "postft_short_mean_192call_vs_80call": [
+   0.11022171982331201,
+   0.11142862605629489
+  ],
+  "R_short_192call_vs_80call": [
+   0.005661016469821334,
+   0.00757821430452168
+  ],
+  "max_abs_per_item_diff_dense": 0.10395899415016174
+ }
+}

@@ -1,12 +1,13 @@
-%% ICASSP manuscript (Draft 3) on the OFFICIAL ICASSP/ICIP template (spconf.sty + IEEEbib.bst,
+%% ICASSP manuscript (Draft 4) on the OFFICIAL ICASSP/ICIP template (spconf.sty + IEEEbib.bst,
 %% bundled alongside this file). spconf.sty sets Times (ptm) and the ICASSP page geometry.
 %% Framing: EVALUATION of recovery fine-tuning after structured pruning (not a new method, not a
 %% mechanistic explanation). Every number is traceable to a committed artifact under configs/research/;
-%% see MANUSCRIPT_NOTES.md for the change log and provenance. Draft 3 = rewrite per
-%% docs/review/2026-09-02_manuscript_draft2_scientific_review.md (Gabriel GO 2026-09-02).
+%% see MANUSCRIPT_NOTES.md for the change log and provenance. Draft 4 = rewrite per
+%% docs/review/2026-09-02_manuscript_draft3_review.md (matched dense duration control, multiplicity,
+%% rank-scale checks, caption-length check; sharper narrative and terminology).
 %%
 %% Compiles with pdfLaTeX (Overleaf default; proper Times) or tectonic/XeTeX (harmless Times-shape
-%% substitution warnings).
+%% substitution warnings). ICASSP allows 4 pages of content plus a 5th page for references only.
 \documentclass{article}
 \usepackage{spconf,amsmath,amssymb,graphicx,booktabs,array,multirow,url,cite}
 
@@ -27,8 +28,8 @@
 \begin{document}
 \ninept
 
-\title{How Much Does Recovery Fine-Tuning Recover?\\
-Operating-Point-Dependent Gains in Pruned Text-to-Audio Diffusion}
+\title{Recovery Fine-Tuning Recovers Where It Was Trained:\\
+Duration- and Domain-Dependent Gains in Pruned Text-to-Audio Diffusion}
 
 \twoauthors
   {Gabriel Bibb\'o}
@@ -42,14 +43,16 @@ Operating-Point-Dependent Gains in Pruned Text-to-Audio Diffusion}
 
 \begin{abstract}
 Structured pruning of text-to-audio diffusion models is followed by recovery fine-tuning, whose benefit
-is usually reported as one score at one inference setting. Using the released pruned and fine-tuned
+is usually certified by one score at one inference setting. Using the released pruned and fine-tuned
 AudioLDM-M checkpoints at two pruning severities ($65\%$ and $83\%$ of U-Net parameters removed), we
 measure the recovery gain in text--audio alignment with a paired, common-noise protocol across clip
 duration and prompt domain. The gain is large at the fine-tuning duration of $10.24$\,s (CLAP
 $0.055\!\to\!0.299$ at $83\%$ pruning), several-fold smaller at $3.84$\,s ($0.015\!\to\!0.100$), and
-absent on held-out music. The duration dependence is pre-registered, replicated on a disjoint prompt set,
-robust to the pruning-seam convention, and corroborated by a second scorer, event-level metrics and a
-frame-level grounding model, which shows the native-duration gain spread across the whole clip. Recovery
+absent or negative on held-out music. The duration dependence was pre-specified, replicates on a
+disjoint prompt set, survives a family-wise correction, rank-based statistics and the pruning-seam
+convention, and is corroborated by a second scorer, event-level metrics and a frame-level grounding
+model. A matched dense control shows that the fine-tuned checkpoint responds to clip duration at least
+as strongly as the unpruned model, whereas the $83\%$-pruned checkpoint barely responds at all. Recovery
 should be reported across operating points; lacking a matched dense fine-tuned control and human
 ratings, our claims concern evaluation, not mechanism.
 \end{abstract}
@@ -74,11 +77,13 @@ train nothing, and measure the paired recovery gain in text--audio alignment acr
 and two prompt domains. Our findings are:
 \begin{itemize}\itemsep2pt \parskip0pt \topsep2pt
 \item \textbf{Duration.} The recovery gain is several times larger at the fine-tuning duration
-      ($10.24$\,s) than at $3.84$\,s. The interaction is pre-registered and replicated on a disjoint
-      prompt set at the stronger severity, seam-robust, and holds on a scale-free (win-rate)
-      statistic at both severities.
-\item \textbf{Domain.} At matched duration the gain is present in-domain (AudioCaps) and absent on
-      held-out music at both severities and at both durations.
+      ($10.24$\,s) than at $3.84$\,s. The interaction was pre-specified, replicates on a disjoint
+      prompt set at the stronger severity, survives a family-wise correction, and holds on scale-free
+      statistics. Against a matched dense control, the $83\%$-pruned checkpoint has lost most of the
+      dense model's response to clip duration; the fine-tuned checkpoint responds like the dense model.
+\item \textbf{Domain.} At matched duration the gain is present in-domain (AudioCaps) and absent or
+      negative on held-out music, at both severities and, at severity~2, at both durations. This is
+      not a scoring floor: the pruned checkpoint scores higher on music than in-domain at $10.24$\,s.
 \item \textbf{Where the gain lives.} A frame-level grounding model shows the native-duration gain
       spread uniformly over the clip, and a crop analysis shows the short-duration deficit arises from
       \emph{generating} short clips, not from scoring short excerpts: the first $3.84$\,s of a native
@@ -117,8 +122,8 @@ two released pruning severities of~\cite{singh2026pruning}: \emph{severity~1}, $
 $145.67$\,M parameters ($-65.0\%$), and \emph{severity~2}, $(1,2,1,1)$, $71.08$\,M ($-82.9\%$; the
 authors report $39\%$ fewer multiply--accumulates at this budget). At each severity we compare the
 \emph{pruned checkpoint} (P) with the \emph{fine-tuned checkpoint} (\PFT), the released result of
-$10^{6}$ steps of AudioCaps recovery fine-tuning of P~\cite{singh2026pruning} (EMA weights materialised,
-checksums verified). Since the released pruned checkpoints carry no usable EMA weights, P is the released
+$10^{6}$ steps of AudioCaps recovery fine-tuning of P~\cite{singh2026pruning} (EMA weights, checksums
+verified). Since the released pruned checkpoints carry no usable EMA weights, P is the released
 L1 channel selection applied to the dense EMA weights: at severity~1 this reproduces the released raw
 pruned weights bit-exactly ($690/690$ tensors); at severity~2 the released checkpoint differs in three
 decoder-seam tensors, so both conventions are evaluated (A$'$ primary, B$'$ sensitivity). ``Recovery''
@@ -127,12 +132,13 @@ names the fine-tuning stage, not an achieved restoration; we train no system.
 \subsection{Operating points and prompt batteries}
 Two durations: the \emph{native} point ($10.24$\,s, latent length $256$; the fine-tuning duration) and a
 \emph{short} point ($3.84$\,s, latent length $96$). Two domains: in-domain AudioCaps \textsc{test}
-captions~\cite{kim2019audiocaps} and held-out hip-hop music captions from
+captions~\cite{kim2019audiocaps} and held-out hip-hop/rap captions from
 MusicCaps~\cite{agostinelli2023musiclm}, a sub-domain with near-zero exposure in the recovery corpus.
-Severity~2 uses $192$ AudioCaps prompts (disjoint from all severity-1 and training prompts) and $64$
-music prompts ($3$ replicates at $3.84$\,s, plus $10.24$\,s at severity~2); severity~1 uses $96$ AudioCaps prompts for
-the pre-registered domain test, a matched $80$-prompt subset for the duration comparison, and $64$ music
-prompts at $3.84$\,s. Generation uses DDIM~\cite{song2021ddim}, $50$ steps, guidance $2.5$, $\eta=0$,
+Severity~2 uses $192$ AudioCaps prompts (disjoint from all severity-1 prompts) and $64$ music prompts
+($3$ replicates at $3.84$\,s, one at $10.24$\,s); severity~1 uses $96$ AudioCaps prompts for the
+pre-specified domain test, a matched $80$-prompt subset for the duration comparison (on which the dense
+model is also generated at both durations, giving a matched dense control), and $64$ music prompts at
+$3.84$\,s. Generation uses DDIM~\cite{song2021ddim}, $50$ steps, guidance $2.5$, $\eta=0$,
 \texttt{fp32}, single generation, EMA weights (off the published recipe, Sec.~5).
 
 \subsection{Paired protocol and scoring}
@@ -141,38 +147,41 @@ Within each operating point the compared systems receive identical generation no
 the latent shapes differ, so duration contrasts are prompt-paired but not noise-paired. The primary
 scorer is fused CLAP (\texttt{laion/\allowbreak clap-htsat-fused}, rev.\ \texttt{365dea6e})~\cite{wu2023clap},
 which repeat-pads $3.84$\,s audio to $10$\,s and centre-crops $10.24$\,s audio to $10$\,s; every
-(system, operating point) is scored with one fixed-order, fixed-seed call (part of the endpoint).
-The unit is the prompt (music replicates averaged first); intervals are $95\%$ prompt-level percentile
-bootstrap intervals ($B=10^{4}$).
+(system, operating point) is scored with one fixed-order, fixed-seed call, part of the endpoint
+(re-scoring the same clips in another batch shifts means by $\le0.002$). The unit is the prompt (music replicates averaged first); intervals are
+$95\%$ prompt-level percentile bootstrap intervals ($B=10^{4}$).
 
 \subsection{Quantities and analysis plan}
 Let $R$ be the mean per-prompt recovery gain, CLAP(\PFT) $-$ CLAP(P), at a given (domain, duration);
 $\Rn$, $\Rs$ and $\Rm$ denote AudioCaps-native, AudioCaps-short and music-short. The
 \emph{duration interaction} is
 \begin{equation}
-J \;=\; \Rn - \Rs ,
+J \;=\; \Rn - \Rs \;=\; s(\PFT) - s(\mathrm{P}),
 \end{equation}
-a paired per-prompt contrast with pre-specified gate $\mathrm{lo}_{95}(J)>0$; the \emph{domain
-contrast} at matched duration is $\Rs-\Rm$; the smallest effect size of interest is $0.025$
-(analysis plan and registration status: Table~\ref{tab:plan}).
+where $s(\cdot)$ is a system's \emph{duration response}, its mean per-prompt score change from $3.84$ to
+$10.24$\,s; $J$ is a paired per-prompt contrast with pre-specified gate $\mathrm{lo}_{95}(J)>0$. The
+\emph{domain contrast} at matched duration is $\Rs-\Rm$; the smallest effect size of interest is
+$0.025$. ``Pre-specified'' means that estimand, gate and prompt set were committed to the
+version-controlled repository before any score was seen (Table~\ref{tab:plan}).
 
 \begin{table}[t]
 \centering
-\caption{Analysis plan (``Reg.'': estimand, gate and prompts committed before any score was seen).}
+\caption{Analysis plan (``Pre.'': estimand, gate and prompts committed before any score was seen).}
 \label{tab:plan}
 \setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.02}
 \scriptsize
 \begin{tabular}{@{}lcl@{}}
 \toprule
-Analysis & Reg. & Role\\
+Analysis & Pre. & Role\\
 \midrule
-Sev.\,1 domain test ($3.84$\,s) & yes & pre-registered; \textbf{failed}\\
+Sev.\,1 domain test ($3.84$\,s) & yes & reversal hypothesis; \textbf{failed}\\
 Sev.\,1 duration $J$ & yes & follow-up; gate $\mathrm{lo}_{95}{>}0$\\
 Sev.\,2 $J,\Rn,\Rs,\Rm$, seam B$'$ & yes & \textbf{primary}, disjoint set\\
 Sev.\,2 music at $10.24$\,s & yes & design completion; no gate\\
 Human-CLAP, KL, PANNs, FAD & yes & secondary; no gate\\
 FineLAP frame-level profile & yes & post-result diagnostic\\
-Win-rate $J$; crop analysis & no & post-hoc sensitivity\\
+Dense duration control; crop; & no & post-hoc sensitivity\\
+\quad win-rate/rank $J$; Holm & & \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -184,21 +193,34 @@ Win-rate $J$; crop analysis & no & post-hoc sensitivity\\
 Fig.~\ref{fig:interaction} and Table~\ref{tab:core} give the primary result. At severity~2, on the
 disjoint $192$-prompt set with estimands frozen before scoring, the interaction is clearly resolved,
 $J=+0.159$~$\ci{+0.131}{+0.187}$: fine-tuning raises CLAP alignment from $0.055$ to $0.299$ at the native
-duration ($\Rn=+0.244$) but only from $0.015$ to $0.100$ at $3.84$\,s ($\Rs=+0.085$). As duration slopes,
-the pruned checkpoint gains just $+0.040$~$\ci{+0.029}{+0.052}$ from the longer clip, the fine-tuned one
-$+0.200$~$\ci{+0.173}{+0.226}$. The result is seam-robust (B$'$: $J=+0.161$). The gain is smaller at the
-short point, not absent ($\Rs$ resolved; $90\%$ CI $\ci{+0.069}{+0.102}$ outside $\pm0.025$).
+duration ($\Rn=+0.244$) but only from $0.015$ to $0.100$ at $3.84$\,s ($\Rs=+0.085$). The two duration
+responses tell the story: the pruned checkpoint gains just $s(\mathrm{P})=+0.040$~$\ci{+0.029}{+0.052}$
+from the longer clip, the fine-tuned one $s(\PFT)=+0.200$~$\ci{+0.173}{+0.226}$. The result is
+seam-robust (B$'$: $J=+0.161$). The gain is smaller at the short point, not absent ($\Rs$ resolved;
+$90\%$ CI $\ci{+0.069}{+0.102}$ outside $\pm0.025$).
 
 At the milder severity~1 the same pattern appears with smaller effects: $\Rs=+0.008$
 $\ci{-0.023}{+0.039}$, $\Rn=+0.052$~$\ci{+0.009}{+0.093}$, $J=+0.044$~$\ci{-0.001}{+0.087}$, whose
-interval narrowly includes zero on the raw cosine scale. Because every system scores higher at
-$10.24$\,s (dense: $0.204\!\to\!0.352$), a raw-scale difference-in-differences could reflect scale
-alone, so as a post-hoc sensitivity check we also report the interaction in the fraction $W$ of prompts
-on which \PFT{} beats P (Table~\ref{tab:core}). This scale-free interaction is resolved at both
-severities: $0.44\!\to\!0.64$ at severity~1 ($\Delta W=+0.20$~$\ci{+0.06}{+0.34}$), $0.72\!\to\!0.87$
-at severity~2 ($+0.15$~$\ci{+0.07}{+0.22}$); the second scorer agrees at severity~1
-($J_{\mathrm{HC}}=+0.075$~$\ci{+0.012}{+0.137}$). Severity-2 effects are larger on every axis, but the
-severities come from different experiments and prompt sets, so that comparison is descriptive.
+interval narrowly includes zero. Here the matched dense control anchors the scale. On the same $80$
+prompts, scored under the same convention, the dense model's duration response is
+$s(\mathrm{dense})=+0.150$~$\ci{+0.100}{+0.198}$ ($0.202\!\to\!0.352$), indistinguishable from the
+pruned checkpoint's $s(\mathrm{P})=+0.149$~$\ci{+0.119}{+0.178}$ (paired difference $-0.001$
+$\ci{-0.056}{+0.055}$), while the fine-tuned checkpoint responds more, $s(\PFT)=+0.193$~$\ci{+0.152}{+0.232}$,
+exceeding dense by $+0.043$ $\ci{-0.020}{+0.109}$. In relative terms, fine-tuning closes $8\%$
+$\ci{-30\%}{+36\%}$ of the pruned checkpoint's gap to dense at $3.84$\,s and $52\%$ $\ci{+11\%}{+103\%}$ at
+$10.24$\,s. At severity~2, $s(\mathrm{P})=+0.040$ is far below the dense response measured on the
+severity-1 prompts, while $s(\PFT)=+0.200$ is of dense magnitude (a cross-set, descriptive comparison).
+
+Because every system scores higher at $10.24$\,s, a raw-scale interaction could reflect scale alone, so
+we report it on scale-free statistics as well (post-hoc). The fraction $W$ of prompts on which \PFT{}
+beats P rises from $0.44$ to $0.64$ at severity~1 ($\Delta W=+0.20$~$\ci{+0.06}{+0.34}$) and from $0.72$
+to $0.87$ at severity~2 ($+0.15$~$\ci{+0.07}{+0.22}$); the median per-prompt interaction is
+$+0.051$~$\ci{+0.012}{+0.077}$ and $+0.172$~$\ci{+0.153}{+0.214}$ (Wilcoxon $p=0.02$ and $p<10^{-17}$);
+on pooled-rank scores $J$ is $+0.063$ $\ci{-0.015}{+0.143}$ and $+0.199$ $\ci{+0.153}{+0.244}$; the second
+scorer gives $J_{\mathrm{HC}}=+0.075$~$\ci{+0.012}{+0.137}$ at severity~1. A Holm correction over all
+$13$ contrasts in this paper leaves every severity-2 conclusion unchanged (bootstrap $p<10^{-4}$); at
+severity~1, $\Rn$ ($p=0.016$) and $J$ ($p=0.052$) do not survive it. The severity-1 duration effect is
+therefore directionally consistent on every scale but is established by the severity-2 replication.
 
 \begin{figure}[t]
 \centering
@@ -206,29 +228,38 @@ severities come from different experiments and prompt sets, so that comparison i
 \caption{The recovery gain grows with clip duration. Mean CLAP cosine of the pruned (P, dashed) and
 fine-tuned (\PFT, solid) checkpoints at the short and native points for (a)~severity~1 and
 (b)~severity~2; whiskers: $95\%$ CI of the paired gain $R$, drawn about the \PFT{} mean; $J$
-annotated. The dense model (grey, panel a; unpaired reference) also scores far higher at the native
-duration: the short point is off-native for the whole family.}
+annotated. Panel (a) includes the matched dense control (grey; same $80$ prompts, same scoring
+convention): its duration response equals the pruned checkpoint's and is below the fine-tuned one's.}
 \label{fig:interaction}
 \end{figure}
 
 \subsection{At matched duration the gain is domain-specific}
 Held-out music separates the domains at fixed duration. At severity~2 and $3.84$\,s the gain is
 resolved in-domain ($\Rs=+0.085$) and null on music ($\Rm=+0.009$ $\ci{-0.013}{+0.032}$; $W=0.48$), a
-matched-duration domain contrast of $+0.076$ $\ci{+0.047}{+0.105}$. At severity~1 the pre-registered
+matched-duration domain contrast of $+0.076$ $\ci{+0.047}{+0.105}$. At severity~1 the pre-specified
 domain test ($96$ prompts) found no in-domain gain at $3.84$\,s ($R_{\mathrm{AC}}=-0.002$ $\ci{-0.027}{+0.021}$)
 and a \emph{negative} music contrast ($\Rm=-0.094$ $\ci{-0.124}{-0.065}$), a domain contrast of
 $+0.092$ $\ci{+0.054}{+0.131}$. The music penalty is severity-specific; the absence of a music gain
-replicates. At the native duration the music contrast is likewise null ($+0.005$ \ci{-0.028}{+0.039}; $W=0.53$), so the large native gain is confined to the fine-tuning domain: the $10.24$\,s domain contrast is $+0.239$ \ci{+0.195}{+0.283}.
+replicates. At the native duration the music contrast is likewise null ($+0.005$ \ci{-0.028}{+0.039};
+$W=0.53$), so the large native gain is confined to the fine-tuning domain: the $10.24$\,s domain contrast
+is $+0.239$ \ci{+0.195}{+0.283}, and the music duration interaction is $-0.004$ \ci{-0.043}{+0.034}.
+Two artefacts are excluded. The music null is not a scoring floor: at $10.24$\,s the pruned checkpoint
+scores \emph{higher} on music ($0.089$) than in-domain ($0.055$), and music scores have full spread. Nor
+is it a caption-length effect: music captions are seven times longer than AudioCaps captions (median
+$56.5$ vs.\ $8$ words), but within AudioCaps the per-prompt native gain is uncorrelated with caption length
+(Spearman $\rho=+0.04$ $\ci{-0.12}{+0.18}$, severity~2); ``domain'' nevertheless bundles content and caption style.
 
 \begin{table}[t]
 \centering
 \caption{Recovery gain in CLAP alignment: mean cosine per checkpoint, paired gain
 $R=\mathrm{CLAP}(\PFT)-\mathrm{CLAP}(\mathrm{P})$ with $95\%$ CI, and fraction $W$ of prompts on which
-\PFT{} beats P. $\dagger$: CI excludes $0$; $\ddagger$: pre-registered gate passes. $J$ paired per
-prompt; domain contrasts two-sample. $n$: sev.\,1 AudioCaps $80$ ($96$ for the domain contrast), sev.\,2
-AudioCaps $192$, music $64$.}
+\PFT{} beats P. Duration-response rows give $s(\mathrm{P})$, $s(\PFT)$ and, in the $R$ column, $J$ (matched dense response at severity~1: $+0.150$). $\dagger$: CI excludes
+$0$; $\ddagger$: pre-specified gate passes. Under a Holm correction over all $13$ contrasts, every
+severity-2 $\dagger$ survives and at severity~1 only the music rows do. $J$ paired per prompt; domain
+contrasts two-sample. $n$: sev.\,1 AudioCaps $80$ ($96$ for the domain contrast), sev.\,2 AudioCaps
+$192$, music $64$.}
 \label{tab:core}
-\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.08}
+\setlength{\tabcolsep}{2.3pt}\renewcommand{\arraystretch}{1.08}
 \scriptsize
 \begin{tabular}{@{}lcclc@{}}
 \toprule
@@ -238,7 +269,7 @@ Setting & P & \PFT & $R$~[95\% CI] & $W$\\
 AudioCaps $3.84$\,s & $0.104$ & $0.111$ & $+0.008$~\ci{-0.023}{+0.039} & $0.44$\\
 AudioCaps $10.24$\,s & $0.253$ & $0.304$ & $+0.052^{\dagger}$~\ci{+0.009}{+0.093} & $0.64$\\
 music $3.84$\,s & $0.117$ & $0.023$ & $-0.094^{\dagger}$~\ci{-0.124}{-0.065} & $0.20$\\
-$J=\Rn-\Rs$ & & & $+0.044$~\ci{-0.001}{+0.087} & \\
+duration $s$; $J$ & $+0.149$ & $+0.193$ & $+0.044$~\ci{-0.001}{+0.087} & \\
 domain $3.84$\,s ($n{=}96$) & & & $+0.092^{\dagger}$~\ci{+0.054}{+0.131} & \\
 \midrule
 \multicolumn{5}{@{}l}{\itshape Severity 2, $(1,2,1,1)$}\\
@@ -246,7 +277,7 @@ AudioCaps $3.84$\,s & $0.015$ & $0.100$ & $+0.085^{\dagger}$~\ci{+0.066}{+0.105}
 AudioCaps $10.24$\,s & $0.055$ & $0.299$ & $+0.244^{\dagger}$~\ci{+0.215}{+0.273} & $0.87$\\
 music $3.84$\,s & $0.005$ & $0.014$ & $+0.009$~\ci{-0.013}{+0.032} & $0.48$\\
 music $10.24$\,s & $0.089$ & $0.094$ & $+0.005$~\ci{-0.028}{+0.039} & $0.53$\\
-$J=\Rn-\Rs$ & & & $+0.159^{\ddagger}$~\ci{+0.131}{+0.187} & \\
+duration $s$; $J$ & $+0.040$ & $+0.200$ & $+0.159^{\ddagger}$~\ci{+0.131}{+0.187} & \\
 domain $3.84$\,s & & & $+0.076^{\dagger}$~\ci{+0.047}{+0.105} & \\
 domain $10.24$\,s & & & $+0.239^{\dagger}$~\ci{+0.195}{+0.283} & \\
 \bottomrule
@@ -258,20 +289,22 @@ domain $10.24$\,s & & & $+0.239^{\dagger}$~\ci{+0.195}{+0.283} & \\
 Two post-result analyses locate the native-duration gain. First, as a prospectively frozen diagnostic,
 we score the native clips with FineLAP~\cite{li2026finelap}, a frame-level language--audio grounding
 model (EAT encoder, not CLAP-derived) that reports per $0.16$\,s frame how strongly the requested event
-is grounded. Fine-tuning raises grounding across the whole clip (severity~2: semantic mass
+is grounded ($110$ and $49$ eligible prompts at severities 2 and 1, selected outcome-blind).
+Fine-tuning raises grounding across the whole clip (severity~2: semantic mass
 $+0.27$~$\ci{+0.22}{+0.33}$, occupancy $+0.27$, quarter coverage $+0.38$, peak $+0.41$; CIs exclude $0$;
 both severities; seam-robust), and the gain in the first $3.84$\,s equals the gain in the remainder
 ($D_{\mathrm{early}}=+0.275$ vs.\ $D_{\mathrm{late}}=+0.273$; $T=-0.002$~$\ci{-0.024}{+0.020}$,
-Fig.~\ref{fig:where}a): the native gain is not confined to the extra seconds. Second, a post-hoc crop analysis separates \emph{generation length} from
-\emph{scoring window}: we score only the first $3.84$\,s of each $10.24$\,s generation with the same
-CLAP convention and compare with the separately generated $3.84$\,s clips of the same prompts
-(Fig.~\ref{fig:where}b). The crop carries a large part of the native gain. At severity~1, $R_{\mathrm{crop}}=+0.051$
-$\ci{+0.016}{+0.085}$ equals $\Rn$ ($\Rn-R_{\mathrm{crop}}=+0.001$ $\ci{-0.027}{+0.029}$) and exceeds
-$\Rs$ by $+0.043$ $\ci{+0.002}{+0.085}$; at severity~2, $R_{\mathrm{crop}}=+0.172$ $\ci{+0.150}{+0.194}$,
-with $R_{\mathrm{crop}}-\Rs=+0.087$ $\ci{+0.065}{+0.110}$ and $\Rn-R_{\mathrm{crop}}=+0.072$
-$\ci{+0.055}{+0.089}$ (seam-robust). The short-duration deficit is thus mostly a property of what the
-fine-tuned checkpoint \emph{generates} when asked for a short clip, not of scoring a short
-excerpt---consistent with a checkpoint specialised to its fine-tuning duration.
+Fig.~\ref{fig:where}a): the native gain is not confined to the extra seconds. Second, a post-hoc crop
+analysis separates \emph{generation length} from \emph{scoring window}: we score only the first
+$3.84$\,s of each $10.24$\,s generation with the same CLAP convention and compare with the separately
+generated $3.84$\,s clips of the same prompts (Fig.~\ref{fig:where}b). The crop carries a large part of
+the native gain. At severity~1, $R_{\mathrm{crop}}=+0.051$ $\ci{+0.016}{+0.085}$ equals $\Rn$
+($\Rn-R_{\mathrm{crop}}=+0.001$ $\ci{-0.027}{+0.029}$) and exceeds $\Rs$ by $+0.043$ $\ci{+0.002}{+0.085}$;
+at severity~2, $R_{\mathrm{crop}}=+0.172$ $\ci{+0.150}{+0.194}$, with $R_{\mathrm{crop}}-\Rs=+0.087$
+$\ci{+0.065}{+0.110}$ and $\Rn-R_{\mathrm{crop}}=+0.072$ $\ci{+0.055}{+0.089}$ (seam-robust). The
+short-duration deficit is thus mostly a property of what the fine-tuned checkpoint \emph{generates} when
+asked for a short clip, not of scoring a short excerpt---consistent with a checkpoint specialised to its
+fine-tuning duration.
 
 \begin{figure}[t]
 \centering
@@ -284,7 +317,7 @@ generation-length, not a scoring-window, effect.}
 \label{fig:where}
 \end{figure}
 
-\subsection{Corroboration and pre-registered negatives}
+\subsection{Corroboration and pre-specified negatives}
 CLAP is the sole primary endpoint; secondaries corroborate without gating. At the severity-2 native point
 Human-CLAP~\cite{takano2025humanclap}, a CLAP model fine-tuned on human ratings (automatic, not a
 listening test), gives $\Rn=+0.375$ $\ci{+0.340}{+0.408}$ and $J=+0.185$; two pre-specified event-level
@@ -292,46 +325,48 @@ metrics favour \PFT{} with paired CIs excluding zero---KL to real references $2.
 ($\Delta=+2.22$ $\ci{+1.93}{+2.53}$) and PANNs top-10 captured labels $1.46$ vs.\ $0.60$
 ($\Delta=+0.86$ $\ci{+0.70}{+1.02}$); FAD agrees ($6.92$ vs.\ $27.4$, descriptive).
 
-Three pre-registered hypotheses failed and are kept. (i)~The hypothesis that motivated the study---that
-recovery fine-tuning trades in-domain for out-of-domain alignment---requires an in-domain gain at
-$3.84$\,s and found none ($R_{\mathrm{AC}}\approx0$, Sec.~4.2), which reframed the work from mechanism
-to evaluation. (ii)~The severity-1 music penalty did not replicate (Human-CLAP alone shows a small
-negative music contrast at severity~2, $-0.037$~$\ci{-0.068}{-0.005}$; the sign is unestablished).
-(iii)~A ``late allocation'' account of the duration effect is rejected by FineLAP ($T\approx0$).
-Finally, \PFT{} is not restored to dense: at severity~1 and $10.24$\,s the dense model leads P by
-$+0.099$~$\ci{+0.058}{+0.140}$ and \PFT{} by $+0.048$~$\ci{-0.000}{+0.096}$---neither a resolved gap nor
-equivalence.
+Three pre-specified hypotheses failed and are kept. (i)~That recovery fine-tuning \emph{trades}
+in-domain for out-of-domain alignment: it requires an in-domain gain at $3.84$\,s, and severity~1 has
+none ($R_{\mathrm{AC}}\approx0$, Sec.~4.2); the loss on music is real, the trade is not.
+(ii)~The severity-1 music penalty did not replicate (Human-CLAP alone shows a small negative music
+contrast at severity~2, $-0.037$~$\ci{-0.068}{-0.005}$; the sign is unestablished). (iii)~A ``late
+allocation'' account of the duration effect is rejected by FineLAP ($T\approx0$). Finally, \PFT{} is not
+restored to dense: at severity~1 and $10.24$\,s the dense model leads P by $+0.099$~$\ci{+0.058}{+0.140}$
+and \PFT{} by $+0.048$~$\ci{-0.000}{+0.096}$---neither a resolved gap nor equivalence.
 
 \section{Discussion and limitations}
 Across severities, scorers and metrics, the recovery gain of the released fine-tuned AudioLDM-M
-checkpoints tracks the operating point of the fine-tuning itself: it
-is largest at the fine-tuning duration, confined to the fine-tuning domain, and heterogeneous across
-prompts (Table~\ref{tab:core}, column $W$). This is consistent with the recovery stage acting, at least
-in part, as further in-domain, native-duration specialisation---the reading also suggested by the
-fine-tuned pruned model surpassing the unpruned one in-domain in~\cite{singh2026pruning}. Post-pruning
-recovery is thus better described as multi-operating-point behaviour than as a single restored score.
-We recommend that recovery studies report (1)~the training-matched operating point \emph{and} one
-motivated off-native point (another duration or domain); (2)~absolute scores of both P and \PFT{} at
-each point; (3)~paired gains with prompt-level uncertainty under common random numbers; and (4)~an
-explicit interaction across points---an implication of one case study (one model family, two
-severities, two durations, two domains).
+checkpoints tracks the operating point of the fine-tuning itself: it is largest at the fine-tuning
+duration, confined to the fine-tuning domain, and heterogeneous across prompts (column $W$). The dense control sharpens the reading. At $65\%$ pruning the pruned checkpoint still
+responds to clip duration exactly like the dense model, and fine-tuning adds a modest, in-domain-only
+increment. At $83\%$ pruning the pruned checkpoint has lost most of that response, and fine-tuning
+restores a response of dense magnitude---again only in the fine-tuning domain. This is consistent with
+the recovery stage acting, at least in part, as further in-domain, native-duration specialisation. Post-pruning recovery is thus better described as multi-operating-point behaviour than
+as a single restored score. We recommend that recovery studies report (1)~the
+training-matched operating point \emph{and} one motivated off-native point (another duration or domain);
+(2)~absolute scores of P, \PFT{} and, where available, the dense model at each point; (3)~paired gains
+with prompt-level uncertainty under common random numbers; and (4)~an explicit interaction across
+points---an implication of one case study (one model family, two severities, two durations, two domains).
 
 \emph{Limitations.} Mechanistic attribution is blocked: the matched control---the dense model given the
 same AudioCaps fine-tune---was trained by the original authors but no longer exists, and the public dense
 text-fine-tuned release is not equivalent (different data and recipe), so the dependence cannot be
-attributed to pruning rather than to fine-tuning in general. Primary inference rests on CLAP-family
-scorers (FineLAP is the only non-CLAP model) and there is no human evaluation (a designed listening study
-was cancelled before launch). Sampler settings differ from the published recipe (DDIM $50$ vs.\ $200$,
-guidance $2.5$ vs.\ $3.5$, single vs.\ best-of-3), so external validity to it is untested; both systems
-are always evaluated identically. Only two durations were tested; the frame-level and crop analyses
-are post-result diagnostics.
+attributed to pruning rather than to fine-tuning in general. The dense duration control exists only on
+the severity-1 prompt set; its comparison with the severity-2 responses is cross-set. Primary inference
+rests on CLAP-family scorers (FineLAP is the only non-CLAP model) and there is no human evaluation.
+Sampler settings differ from the published recipe
+(DDIM $50$ vs.\ $200$, guidance $2.5$ vs.\ $3.5$, single vs.\ best-of-3); both systems are always
+evaluated identically. Only two durations were tested; cross-severity
+comparisons are descriptive (different prompt sets); the severity-1 duration effect does not survive
+family-wise correction; the frame-level, crop and dense-control analyses are post-result.
 
 \section{Conclusion}
 For the released pruned and fine-tuned AudioLDM-M checkpoints, recovery fine-tuning recovers much at
 its own operating point and much less away from it: the CLAP gain is several times larger at the
-fine-tuning duration than at $3.84$\,s, absent on held-out music, and uniform across the clip. A single
-in-domain, native-duration score overstates what the fine-tuned checkpoint delivers elsewhere. Audio
-examples are online.\footnote{\url{https://gbibbo.github.io/audioldm-modality-swap-pruning/}}
+fine-tuning duration than at $3.84$\,s and absent or negative on held-out music; at $83\%$ pruning it
+restores, in-domain only, a dense-like response to clip duration. A single in-domain, native-duration
+score overstates what the fine-tuned checkpoint delivers elsewhere. Audio examples:
+\url{https://gbibbo.github.io/audioldm-modality-swap-pruning/}.
 
 {\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}
 \begin{thebibliography}{99}
