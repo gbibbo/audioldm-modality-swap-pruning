@@ -27,6 +27,10 @@ cd icassp && mkdir -p build && ~/.local/bin/tectonic -X compile icassp_operating
 OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/integrate_dense192.py
 # 5) number provenance (must print all OK, no placeholders)
 OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_draft5_numbers.py
+# 6) A8 secondary metrics at BOTH durations (CPU ~20 min; frozen WAVs, no generation)
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/xsev_secondary_metrics_short.py
+# 7) A10 credit estimate for the reviewer's GPU asks (CPU, 0 cr, launches nothing)
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/a10_gpu_cost_estimate.py
 ```
 
 ## Draft 4 -> Draft 5: what changed and why
@@ -56,6 +60,41 @@ OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_dr
   s(P+FT) − s(dense) +0.053 [+0.017,+0.089]); rho_dense 44 % / 82 % in abstract, bullets, Sec. 4.1, Table 2
   and conclusion; dense − P+FT +0.055 [+0.021,+0.088] at 10.24 s in Sec. 4.4 (not restored); Fig. 1(b) dense
   line; cross-set caveat removed from Limitations.
+
+## Draft 5 -> Draft 5r: the external reviewer's action list A2-A9 (2026-09-03, CPU only, 0 cr)
+
+Implemented from `docs/review/2026-09-03_manuscript_draft5_icassp_reviewer_simulation.md` on Gabriel's
+instruction; A10 (every GPU run) was **costed, not launched** (`docs/compute_budget.md` §A10).
+
+* **A8 is the one new measurement.** `scripts/research/xsev_secondary_metrics_short.py` ->
+  `configs/research/xsev_secondary_metrics_short.json`. KL and PANNs top-10 capture, previously run at
+  the native point only, are now measured at **both** durations on the frozen severity-2 WAVs against
+  the real clip of the same prompt (full <=10 s / first 3.84 s, the files
+  `draft5_floor_ceiling.py --emit` already wrote). J_KL = +1.56 [+1.19,+1.92], J_PANN = +0.67
+  [+0.49,+0.86], both seam-robust; guard reproduces the frozen native means exactly (max |diff| 0.0).
+  New text in Sec. 4.4; the abstract's corroboration sentence is now true as written.
+* **A2/A3/A4/A5.** Abstract corroboration reworded; the Domain bullet states what was measured ("at
+  both severities at 3.84 s and at both durations at severity 2" - there is no severity-1 music cell at
+  10.24 s); the three analysis statuses are defined **once** in Sec. 3.4 (pre-specified / registered
+  after the primary result / post-hoc) and Table 2 and the Limitations point at that definition; a
+  one-clause co-author/checkpoint disclosure sits in Sec. 3.1.
+* **A6 figures.** Both are now included at `\columnwidth` and DRAWN at 3.35 in (one ICASSP column), so
+  the lettering renders at its stated point size instead of 0.74x/0.58x. `R_short` moved off the zero
+  line and the chance-floor ticks; Fig. 1 legend to one row; Fig. 2 "early/late" moved to the zero
+  line, clear of the `late-early T` annotation; y-labels shortened; legends given a translucent frame.
+* **A7 readability.** Secs. 4.1-4.2 lead with the claim; nine intervals that Tables 1-2 already carry
+  left the prose. `verify_draft5_numbers.py` retires the three prose checks and adds three table-form
+  ones, so the count stays 108/108 with the same artifacts behind every number.
+* **A9 references and policy.** ICASSP 2027 is **single-anonymous** (editorial policies: "Papers
+  undergo single-anonymous review"; paper kit: "ICASSP does not perform blind reviews, so be sure to
+  include the author list"), so the author block, e-mails and audio URL stay. Three references were
+  published since their preprint and were corrected: Tango -> ACM MM 2023 pp. 3590-3598 (title
+  "instruction guided"); Human-CLAP -> APSIPA ASC 2025 pp. 131-136; FineLAP -> ACL 2026
+  pp. 10393-10408.
+* **Page budget.** The full-column figures plus A2-A5/A9 cost ~20 lines, paid for by A7, by tightening
+  the float/caption skips in the preamble, by trimming caption and Discussion text that repeated
+  Table 2, and by two figure-height reductions. Result: **4 content pages + references page**, 0
+  overfull boxes, 108/108, zip compiles standalone.
 
 ## Number provenance (every number in the .tex)
 

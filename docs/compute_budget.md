@@ -4,6 +4,54 @@ Do not invent GPU-hour estimates. Every number below is either **MEASURED** on r
 hardware or **DERIVED** from measured values by the master-plan §7.3 formulas, and each is
 labelled. Anything still unmeasured says so.
 
+## A10 — CREDIT ESTIMATE for the reviewer's GPU asks (2026-09-03, NOT AUTHORISED, nothing launched)
+
+Gabriel asked for the credit cost of the reviewer's GPU requests **before** any new generation is
+approved (external-reviewer simulation, action A10). Estimator:
+`scripts/research/a10_gpu_cost_estimate.py` (CPU, 0 cr, read-only). It fits two models to the
+**settled** T4 jobs recorded in this file and nothing else:
+
+* cost per WAV at DDIM 50: `cr(L) = a + b·L`, latent length `L` (96 = 3.84 s, 256 = 10.24 s);
+  fitted on the three settled short jobs (mean 0.002193 cr/WAV) and the settled native job
+  (0.003634 cr/WAV) → **a = 0.001329, b = 9.00e-6**.
+* per-clip GPU time `t(steps,L) = c + d·steps·L`, calibrated on the two measured throughputs
+  (7.14 s/clip at DDIM 50 / L=96; 13.9 s/clip at DDIM 50 / L=256) → **c = 3.08 s, d = 8.45e-4
+  s/(step·latent)**. A different sampler budget enters as `t(steps,L)/t(50,L)`: DDIM 200 costs
+  **2.70×** at 3.84 s and **3.33×** at 10.24 s.
+* per-job overhead **F = 0.145 cr**, the residual of the model against the settled `xsev-dense-192-1`
+  job (provisioning + 2 checkpoint loads + device check). Model validation: predicted 1.119 cr vs
+  settled 1.2633 cr, i.e. the model is accurate to the per-job overhead it now carries explicitly.
+
+**DERIVED estimates** (point = model; cap = point × 1.2, the planning figure used for every previous
+launch in this project):
+
+| # | Run | WAVs | Point (cr) | Cap (cr) |
+|---|---|---|---|---|
+| E1 | Duration sweep, 2 extra points (5.12 s, 7.68 s), severity 2, P / P+FT / dense, 192 prompts | 1152 | **3.33** | 4.00 |
+| E1b | E1 without the matched dense control | 768 | 2.27 | 2.73 |
+| E1c | One point beyond the training length (15.36 s), 3 systems | 576 | 2.90 | 3.48 |
+| E2a | Published recipe (DDIM 200, guidance 3.5), 192 prompts, P / P+FT, both durations | 768 | **7.07** | 8.49 |
+| E2b | Published recipe on a 64-prompt subset, P / P+FT, both durations | 256 | **2.45** | 2.95 |
+| E2c | E2b plus best-of-3, as in the published recipe | 768 | 7.07 | 8.49 |
+| E4 | Held-out domain with AudioCaps-length captions, P / P+FT / dense, both durations | 1152 | 3.50 | 4.20 |
+| E4b | E4 without the dense control | 768 | 2.38 | 2.86 |
+
+**E3 — short-duration fine-tune: NOT ESTIMABLE from measured data.** No training throughput has ever
+been measured in this repository. Under the *assumptions* that a training step costs ~3× a forward
+pass and that batch 8 fits on a T4 (neither verified), a step at latent 96 is ~1.95 s → 5.1e-4 cr/step:
+20 k steps ≈ 10.8 h ≈ **10.2 cr**; 50 k steps ≈ 27 h ≈ **25.4 cr**; the released recovery's 10⁶ steps
+≈ 541 h ≈ **508 cr**, i.e. two orders of magnitude outside this project's scale. Evaluating the
+resulting checkpoint adds ≈ 1.26 cr. **A 200-step measured benchmark (≈ 0.1 cr) is mandatory before
+this number is used for anything.**
+
+**Bottom line for the submission decision.** The two generation-only asks that would move the paper —
+duration sweep and a published-recipe spot check on a subset — cost **≈ 5.8 cr point / ≈ 7.0 cr
+conservative** together (E1 + E2b). Adding the held-out domain brings it to ≈ 9.3 / 11.2 cr. The
+short-duration fine-tune is the expensive one and is what would turn the paper's description into a
+tested claim; it is not affordable at the current scale. Account reading 2026-09-03 (Lightning SDK,
+read-only): lifetime `total_spent` = **85.855**; the `balance` field still reports 5.0 and remains
+unreliable, so available credit must be confirmed with Gabriel before any launch.
+
 ## XSEV-DENSE-192-CONTROL — SETTLED (job `xsev-dense-192-1`, T4, 2026-09-03)
 
 384 dense WAVs (192 × 3.84 s + 192 × 10.24 s, DDIM 50) + 4 device-check clips: **settled `total_cost` = 1.2633 cr** (≈76 min wall incl. provisioning + 2 checkpoint loads; projection 1.1–1.3 cr → accurate; watchdog cap 1.5 never reached) → ≈0.0033 cr/WAV blended. Compute-discipline record in ledger XSEV-DENSE-192-CONTROL-GEN-LAUNCH (CPU alternative ≈18 h). Scoring/verdict/manuscript: CPU, 0 cr. Lifetime `total_spent` after this job: read from the SDK at the next check (the `balance` field remains unreliable).

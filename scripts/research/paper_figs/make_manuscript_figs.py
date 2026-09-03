@@ -282,8 +282,8 @@ def draw_finelap(ax, title=None):
     for (e, l, col) in [(e2, l2, C_POST), (e1, l1, C_PRUN)]:
         ax.plot([t[0], boundary_s], [e, e], color=col, lw=0.8, ls=":", alpha=0.9, zorder=2)
         ax.plot([boundary_s, t[-1]], [l, l], color=col, lw=0.8, ls=":", alpha=0.9, zorder=2)
-    ax.set_xlabel("time in generated clip (s)")
-    ax.set_ylabel(r"$\Delta$ FineLAP grounding" + "\n(post-FT $-$ pruned)")
+    ax.set_xlabel("time in clip (s)")
+    ax.set_ylabel(r"$\Delta$ grounding")  # A6: short; title and caption give the metric and contrast
     ax.xaxis.set_major_locator(plt.MultipleLocator(2.0))
     ax.yaxis.set_major_locator(plt.MultipleLocator(0.1))
     ax.grid(color=GRID, lw=0.5, zorder=0)

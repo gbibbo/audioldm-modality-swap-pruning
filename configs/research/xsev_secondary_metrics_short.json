@@ -1,0 +1,242 @@
+{
+ "artifact": "xsev_secondary_metrics_short",
+ "action": "A8 (docs/review/2026-09-03_manuscript_draft5_icassp_reviewer_simulation.md)",
+ "status": "POST-HOC / CORROBORATIVE \u2014 declared after the primary result; no gate, no primary role; cannot change any frozen CLAP verdict",
+ "compute": "CPU only, 0 cr; frozen WAVs, no generation",
+ "severity": 2,
+ "n": 192,
+ "systems": {
+  "P+FT": "recovered2",
+  "P (primary seam)": "pruned2_A",
+  "P (seam sensitivity)": "pruned2_B"
+ },
+ "reference_convention": {
+  "native": "real AudioCaps clip, 16 kHz band-limited, full (<=10 s): real_sev2_192_full_p*.wav",
+  "short": "same clip, first 3.84 s (61472 samples): real_sev2_192_crop_p*.wav",
+  "note": "identical reference on both sides of every paired contrast at a given duration"
+ },
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "DRAFT5-SHORT-SECONDARY|BOOTSTRAP|2026-09-03",
+  "seed_pcg64": 1898420789,
+  "unit": "prompt"
+ },
+ "caveat_capture_short": "PANNs top-10 capture at 3.84 s is scored against the AudioSet labels of the FULL reference clip; events absent from the first 3.84 s cannot be captured. This depresses both systems identically, so the paired contrast, not the absolute level, is the quantity read.",
+ "means": {
+  "KL": {
+   "recovered2@native": 2.214190183013367,
+   "recovered2@short": 3.24996324807095,
+   "pruned2_A@native": 4.434093872395654,
+   "pruned2_A@short": 3.9127828689912953,
+   "pruned2_B@native": 4.427763016273578,
+   "pruned2_B@short": 3.931531058624387
+  },
+  "PANN_top10_capture": {
+   "recovered2@native": 1.4635416666666667,
+   "recovered2@short": 0.8072916666666666,
+   "pruned2_A@native": 0.6041666666666666,
+   "pruned2_A@short": 0.6197916666666666,
+   "pruned2_B@native": 0.5989583333333334,
+   "pruned2_B@short": 0.65625
+  }
+ },
+ "contrasts_recovered_vs_prunedA": {
+  "R_KL@native": {
+   "point": 2.219903689382287,
+   "ci95": [
+    1.9205336498174197,
+    2.5201060392108046
+   ],
+   "frac_pos": 0.875
+  },
+  "R_cap@native": {
+   "point": 0.859375,
+   "ci95": [
+    0.6979166666666666,
+    1.0208333333333333
+   ],
+   "frac_pos": 0.5520833333333334
+  },
+  "R_KL@short": {
+   "point": 0.6628196209203452,
+   "ci95": [
+    0.4178366183322699,
+    0.9184274682775139
+   ],
+   "frac_pos": 0.6145833333333334
+  },
+  "R_cap@short": {
+   "point": 0.1875,
+   "ci95": [
+    0.0625,
+    0.3177083333333333
+   ],
+   "frac_pos": 0.21354166666666666
+  },
+  "J_KL": {
+   "point": 1.5570840684619423,
+   "ci95": [
+    1.1937150290468708,
+    1.917791556441807
+   ],
+   "frac_pos": 0.7447916666666666
+  },
+  "J_cap": {
+   "point": 0.671875,
+   "ci95": [
+    0.4895833333333333,
+    0.859375
+   ],
+   "frac_pos": 0.4739583333333333
+  }
+ },
+ "contrasts_recovered_vs_prunedB": {
+  "R_KL@native": {
+   "point": 2.2135728332602107,
+   "ci95": [
+    1.9186042591036918,
+    2.5185267829889195
+   ],
+   "frac_pos": 0.875
+  },
+  "R_cap@native": {
+   "point": 0.8645833333333334,
+   "ci95": [
+    0.703125,
+    1.03125
+   ],
+   "frac_pos": 0.5520833333333334
+  },
+  "R_KL@short": {
+   "point": 0.6815678105534365,
+   "ci95": [
+    0.4341412763344124,
+    0.939361298965135
+   ],
+   "frac_pos": 0.6302083333333334
+  },
+  "R_cap@short": {
+   "point": 0.15104166666666666,
+   "ci95": [
+    0.026041666666666668,
+    0.28125
+   ],
+   "frac_pos": 0.20833333333333334
+  },
+  "J_KL": {
+   "point": 1.5320050227067743,
+   "ci95": [
+    1.1607820185793873,
+    1.9043854239891516
+   ],
+   "frac_pos": 0.71875
+  },
+  "J_cap": {
+   "point": 0.7135416666666666,
+   "ci95": [
+    0.5260416666666666,
+    0.9010416666666666
+   ],
+   "frac_pos": 0.4739583333333333
+  }
+ },
+ "duration_response": {
+  "KL": {
+   "recovered2": {
+    "point": 1.0357730650575832,
+    "ci95": [
+     0.6864847402718928,
+     1.3910899939015509
+    ],
+    "frac_pos": 0.6875
+   },
+   "pruned2_A": {
+    "point": -0.521311003404359,
+    "ci95": [
+     -0.7272962481792395,
+     -0.31225726237365353
+    ],
+    "frac_pos": 0.4375
+   },
+   "pruned2_B": {
+    "point": -0.4962319576491912,
+    "ci95": [
+     -0.706215606862679,
+     -0.2892997565679252
+    ],
+    "frac_pos": 0.4375
+   }
+  },
+  "PANN_top10_capture": {
+   "recovered2": {
+    "point": 0.65625,
+    "ci95": [
+     0.4947916666666667,
+     0.8229166666666666
+    ],
+    "frac_pos": 0.46875
+   },
+   "pruned2_A": {
+    "point": -0.015625,
+    "ci95": [
+     -0.09895833333333333,
+     0.06770833333333333
+    ],
+    "frac_pos": 0.08333333333333333
+   },
+   "pruned2_B": {
+    "point": -0.057291666666666664,
+    "ci95": [
+     -0.13541666666666666,
+     0.020833333333333332
+    ],
+    "frac_pos": 0.0625
+   }
+  },
+  "_orientation": "+ = the system is better at 10.24 s than at 3.84 s (KL sign flipped so that + = lower KL)"
+ },
+ "FD_pann2048": {
+  "recovered2@native": 48.710866646244426,
+  "pruned2_A@native": 107.45014518055825,
+  "pruned2_B@native": 107.823072145756,
+  "recovered2@short": 54.21282506013462,
+  "pruned2_A@short": 69.1268767327065,
+  "pruned2_B@short": 69.52933456667571
+ },
+ "FD_note": "distributional, not paired; descriptive only; reference set differs by duration",
+ "guard_native_vs_frozen": {
+  "frozen_artifact": "configs/research/xsev_secondary_metrics.json",
+  "note": "the frozen artifact scored the native point against the ORIGINAL reference files; recomputed here with the same references, the per-system means must reproduce it to numerical precision",
+  "recovered2": {
+   "KL_frozen": 2.2253877470308603,
+   "KL_recomputed_origref": 2.2253877470308603,
+   "KL_absdiff": 0.0,
+   "cap_frozen": 1.4635416666666667,
+   "cap_recomputed_origref": 1.4635416666666667,
+   "cap_absdiff": 0.0,
+   "KL_bandlimited_ref": 2.214190183013367
+  },
+  "pruned2_A": {
+   "KL_frozen": 4.449781057114403,
+   "KL_recomputed_origref": 4.449781057114403,
+   "KL_absdiff": 0.0,
+   "cap_frozen": 0.6041666666666666,
+   "cap_recomputed_origref": 0.6041666666666666,
+   "cap_absdiff": 0.0,
+   "KL_bandlimited_ref": 4.434093872395654
+  },
+  "pruned2_B": {
+   "KL_frozen": 4.445278976733486,
+   "KL_recomputed_origref": 4.445278976733486,
+   "KL_absdiff": 0.0,
+   "cap_frozen": 0.5989583333333334,
+   "cap_recomputed_origref": 0.5989583333333334,
+   "cap_absdiff": 0.0,
+   "KL_bandlimited_ref": 4.427763016273578
+  },
+  "max_KL_absdiff": 0.0,
+  "max_cap_absdiff": 0.0,
+  "PASS": true
+ },
+ "artifact_sha256": "454fea2909663dc0296b83876e04c6a425a10b330c882b7aa01e315272b20991"
+}

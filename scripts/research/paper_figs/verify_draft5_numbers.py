@@ -40,7 +40,8 @@ DROP = {"sev2 slope P", "sev2 slope P+FT", "s(P) sev2", "s(P+FT) sev2", "s(dense
         "crop sev2 nat-crop",                                          # Draft 5 prints the point only
         "pruned music vs AC native",                                   # Draft 5 rewrites the sentence (floor)
         "caption dense s",                                             # +0.150 now stated in the prose only
-        "wilcoxon sev1", "wilcoxon sev2"}                              # p-values dropped from the prose
+        "wilcoxon sev1", "wilcoxon sev2",                              # p-values dropped from the prose
+        "sev2 J text", "gap closed short", "gap closed native"}        # A7: CIs moved from prose to Tables 1-2
 dropped = [c[0] for c in checks if c[0] in DROP]
 checks = [c for c in checks if c[0] not in DROP]
 # also drop any inherited check whose label mentions pooled-rank / equivalence forms (defensive)
@@ -107,7 +108,11 @@ checks += [
     ("rho_real1 native CI (T3)", tab_ci(s1["rho_real_native"])),
     ("rho_real1 short CI (T3)", tab_ci(s1["rho_real_short"])),
     ("floor shift max", "atmost$" + f"{max(shifts):.3f}" + "$"),
-    ("floor range", "from$" + f"{min(floors_ac):+.3f}" + "$to$" + f"{max(floors_ac):+.3f}" + "$acrosstheAudioCapscells"),
+    ("floor range", "$" + f"{min(floors_ac):+.3f}" + "$to$" + f"{max(floors_ac):+.3f}" + "$acrosstheAudioCapscells"),
+    # A7 replacements: the interval now lives in the table, the prose keeps the point estimate
+    ("sev2 J prose point (A7)", "resolved,$J=" + pt(J("configs/research/xsev_result.json")["PRIMARY_A"]["J"]) + "$(Fig"),
+    ("gap closed short table (A7)", tab_ci(ddc["gap_closed_fraction"]["short"])),
+    ("gap closed native table (A7)", tab_ci(ddc["gap_closed_fraction"]["native"])),
     ("J_c sev2", "J_c=" + pt_ci(s2["J_c"]).replace("$~\\ci","$$\\ci")),
     ("real2 short", "scores" + lvl("real_crop__sev2_192") + "at$3.84$\\,s"),
     ("real2 native", "and" + lvl("real_full__sev2_192") + "at$10.24$\\,s"),

@@ -162,15 +162,32 @@ incremental in finding, narrow in scope, and harder to read than it needs to be.
 | # | Action | Cost | Status |
 |---|---|---|---|
 | A1 | Fix D1 (literal ref) and D2 (Fig. 1 caption) | 0 | **done in this pass** |
-| A2 | Reword the abstract's corroboration sentence: the duration dependence is corroborated by Human-CLAP; event-level metrics and FineLAP corroborate the native gain | minutes | open |
-| A3 | Intro Domain bullet: "at both severities and durations" → "at both severities (3.84 s) and at both durations (severity 2)" or equivalent | minutes | open |
-| A4 | One consistent status label for the severity-2 dense control in Sec. 3.4 / Table 2 / Limitations | minutes | open |
-| A5 | Add a one-clause disclosure that two co-authors released the evaluated checkpoints | minutes | open |
-| A6 | Figures at full column width (`0.74`/`0.58` → `1.0`), R_short label moved; page budget must be rechecked | ~30 min | open |
-| A7 | Readability pass on Secs. 4.1-4.2: point estimates in prose, intervals in tables (already there), "so what" first | 1-2 h | open |
-| A8 | KL / PANNs at the 3.84 s point on the frozen sev-2 WAVs (real-reference first 3.84 s), CPU | hours, 0 cr | open; would answer weakness (4) with data |
-| A9 | Verify ICASSP 2027 anonymity policy and every reference's venue/pages | 30 min | open (already listed in PROGRESS) |
-| A10 | Duration sweep / published-recipe spot check / short-duration fine-tune | GPU | conflicts with the project's closure of new GPU generation; prepare rebuttal answers instead |
+| A2 | Reword the abstract's corroboration sentence | minutes | **done 2026-09-03**; A8 then made it stronger, not weaker: "reproduced at both durations by a second scorer and by two event-level metrics outside the CLAP family" |
+| A3 | Intro Domain bullet: "at both severities and durations" → what was actually measured | minutes | **done**: "at both severities at 3.84 s and at both durations at severity 2" |
+| A4 | One consistent status label for the severity-2 dense control in Sec. 3.4 / Table 2 / Limitations | minutes | **done**: three labels defined once in Sec. 3.4 (pre-specified / registered after the primary result / post-hoc); Table 2 and Limitations now point at it |
+| A5 | Add a one-clause disclosure that two co-authors released the evaluated checkpoints | minutes | **done** (Sec. 3.1, one clause) |
+| A6 | Figures at full column width, R_short label moved; page budget rechecked | ~30 min | **done**: both figures now `\columnwidth` and drawn at 3.35 in natural size, so their lettering renders at its stated point size instead of 0.74x/0.58x. R_short moved off the zero line and the floor ticks; Fig. 2 "early/late" moved off the T annotation; float/caption skips tightened. Still 4 content pages + references page |
+| A7 | Readability pass on Secs. 4.1-4.2 | 1-2 h | **done**: each paragraph now leads with its claim; nine intervals that Tables 1-2 already carry removed from the prose (the verifier now checks them in the table form) |
+| A8 | KL / PANNs at the 3.84 s point on the frozen sev-2 WAVs, CPU | hours, 0 cr | **done, 0 cr** — `scripts/research/xsev_secondary_metrics_short.py` → `configs/research/xsev_secondary_metrics_short.json`. Both event-level metrics reproduce the interaction: J_KL = +1.56 [+1.19, +1.92], J_PANN = +0.67 [+0.49, +0.86], seam-robust. Guard: the native point recomputed against the original references reproduces the frozen artifact exactly (max |diff| 0.0) |
+| A9 | Verify ICASSP 2027 anonymity policy and every reference's venue/pages | 30 min | **done**: ICASSP 2027 is **single-anonymous** ("ICASSP does not perform blind reviews, so be sure to include the author list"), so names, e-mails and the GitHub Pages URL stay. Three references were published since the preprint and were corrected: Tango → ACM MM 2023 pp. 3590-3598; Human-CLAP → APSIPA ASC 2025 pp. 131-136; FineLAP → ACL 2026 pp. 10393-10408. The rest verified as stated |
+| A10 | Duration sweep / published-recipe spot check / short-duration fine-tune | GPU | **costed, not launched** — `docs/compute_budget.md` §A10 and `scripts/research/a10_gpu_cost_estimate.py`. Duration sweep (2 extra points, 3 systems) ≈ 3.33 cr point / 4.00 cap; published-recipe spot check on a 64-prompt subset ≈ 2.45 / 2.95; both together ≈ 5.8 / 7.0. The short-duration fine-tune is not estimable from measured data (no training throughput has ever been measured here); under unverified assumptions 20 k steps ≈ 10 cr and the released 10^6 steps ≈ 508 cr. Gabriel's call |
 
 No frozen number, gate or verdict was touched. Verifier after the fixes: 108/108; PDF: 5 pages (4 content +
 references); Overleaf zip rebuilt and compiles standalone from a fresh extraction.
+
+## 6. Implementation pass (2026-09-03, 11:46 → , CPU only, 0 cr)
+
+Gabriel asked for A2-A9 to be implemented and A10 to be costed rather than run. All of A2-A9 are done
+and the status column above records exactly what changed. Notes:
+
+* **A8 is the one that changes the paper's standing.** The reviewer's weakness (4) was that only
+  CLAP-family scorers had been measured at both durations. They now are not: on the frozen severity-2
+  WAVs, the KL gain falls from +2.22 [+1.93, +2.53] at 10.24 s to +0.66 [+0.42, +0.92] at 3.84 s and
+  the PANNs top-10 capture gain from +0.86 [+0.70, +1.02] to +0.19 [+0.06, +0.32]; both interactions
+  exclude zero and hold under the B$'$ seam convention. The fine-tuned checkpoint also *improves* with
+  duration on both metrics while the pruned one gets *worse*, mirroring the CLAP duration responses.
+* **Page budget.** Full-column figures plus the A2-A5/A9 additions cost about 20 lines. They were paid
+  for by the A7 pass, by tightening float and caption skips, by trimming caption and Discussion text
+  that repeated Table 2, and by two figure-height reductions. No result, interval or negative finding
+  was dropped. The verifier still reports 108/108 and the compile has zero overfull boxes.
+* **Not done, by instruction:** every GPU run (A10). Nothing was launched and no credit was spent.

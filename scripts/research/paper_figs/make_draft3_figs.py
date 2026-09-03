@@ -33,9 +33,11 @@ def draw_finelap_fixed(ax, title=None):
     for t in list(ax.texts):
         if "early | late" in t.get_text():
             t.remove()
-    ax.text(3.84 - 0.12, 0.345, "early", fontsize=6.2, color="0.35", va="top", ha="right")
-    ax.text(3.84 + 0.12, 0.345, "late", fontsize=6.2, color="0.35", va="top", ha="left")
-    ax.legend(loc="lower right", handlelength=1.9)
+    # A6: keep the early/late labels near the zero line; at the top they ran into the
+    # "late-early T" annotation (which stays at the top right).
+    ax.text(3.84 - 0.12, 0.028, "early", fontsize=6.2, color="0.35", va="bottom", ha="right")
+    ax.text(3.84 + 0.12, 0.028, "late", fontsize=6.2, color="0.35", va="bottom", ha="left")
+    ax.legend(loc="lower right", handlelength=1.9, frameon=True, framealpha=0.88, edgecolor="none")
     if title:
         ax.set_title(title, fontsize=8.0)
 
@@ -56,23 +58,24 @@ def draw_crop(ax, title=None):
     ax.axhline(0.0, color="0.6", lw=0.7, zorder=1)
     ax.set_xticks(x)
     ax.set_xticklabels(["3.84 s clip\n(generated)", "first 3.84 s\nof 10.24 s clip", "10.24 s clip\n(generated)"])
-    ax.set_ylabel(r"recovery gain $R$ (CLAP, P+FT $-$ P)")
+    ax.set_ylabel("recovery gain $R$" + "\n" + r"(CLAP, P+FT $-$ P)")  # A6: 2 lines so it fits the shorter panel
     ax.set_xlim(-0.5, 2.5)
     ax.yaxis.set_major_locator(plt.MultipleLocator(0.1))
     ax.grid(color=M.GRID, lw=0.5, zorder=0)
     ax.set_axisbelow(True)
     for sp in ("top", "right"):
         ax.spines[sp].set_visible(False)
-    ax.legend(loc="upper left", handlelength=2.0)
+    ax.legend(loc="upper left", handlelength=2.0, frameon=True, framealpha=0.88, edgecolor="none")
     if title:
         ax.set_title(title, fontsize=8.0)
 
 
 def figure2():
-    fig, (a, b) = plt.subplots(2, 1, figsize=(3.4, 4.0), gridspec_kw=dict(hspace=0.66))
-    draw_finelap_fixed(a, title="(a) FineLAP grounding gain vs. time (10.24 s clip)")
+    # A6: natural size = one ICASSP column (3.375 in), included at \columnwidth
+    fig, (a, b) = plt.subplots(2, 1, figsize=(3.35, 2.44), gridspec_kw=dict(hspace=0.86))
+    draw_finelap_fixed(a, title="(a) FineLAP grounding gain vs. time in clip")
     draw_crop(b, title="(b) generation length vs. scoring window")
-    fig.subplots_adjust(left=0.19, right=0.985, top=0.935, bottom=0.145)
+    fig.subplots_adjust(left=0.185, right=0.99, top=0.930, bottom=0.140)  # A6: no clipping at column width
     fig.savefig(os.path.join(OUT, "fig2_where.pdf"))
     fig.savefig(os.path.join(OUT, "fig2_where.png"), dpi=200)
     plt.close(fig)

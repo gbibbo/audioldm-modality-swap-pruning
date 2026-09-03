@@ -37,7 +37,9 @@ def cell(name):
 
 
 def figure1():
-    fig, axes = plt.subplots(2, 1, figsize=(3.42, 2.85), sharex=True, sharey=True)
+    # A6: natural size = one ICASSP column (3.375 in) so the .tex can include it at \columnwidth
+    # and the lettering renders at its stated point size instead of being shrunk to 0.74x.
+    fig, axes = plt.subplots(2, 1, figsize=(3.35, 2.26), sharex=True, sharey=True)
     x = [0.0, 1.0]
     xlabels = ["3.84 s\n(short)", "10.24 s\n(native)"]
     # (system, duration) -> cell name in the Draft-5 result
@@ -98,11 +100,16 @@ def figure1():
             ax.annotate("chance floors", (1.0, fl_nat), xytext=(0, 3), textcoords="offset points", ha="center",
                         va="bottom", fontsize=5.8, color="0.4")
         # R annotations
-        _mid = 0.5 * (s["pruned_short"] + s["post_short"])
-        _below = (s["post_short"] - s["pruned_short"]) < 0.03
-        ax.annotate(r"$R_{\mathrm{short}}\,%+.3f$" % M.ci(s["R_short"])[0], (0.0, _mid),
-                    xytext=(9, -9 if _below else 4), textcoords="offset points", ha="left",
-                    va="top" if _below else "bottom", fontsize=6.6, color="0.15")
+        # A6: R_short goes below the lower short point when there is clear air above the chance
+        # floor, otherwise above the upper one. In Draft 5 it was placed between the two points and
+        # landed on the zero line and the floor ticks in panel (a).
+        if s["post_short"] - s["pruned_short"] >= 0.06:      # wide gap: label fits between the points
+            _anchor, _dy, _va = 0.5 * (s["pruned_short"] + s["post_short"]), 0, "center"
+        else:                                                # narrow gap: label goes below the pair
+            _anchor, _dy, _va = s["pruned_short"], -4, "top"
+        ax.annotate(r"$R_{\mathrm{short}}\,%+.3f$" % M.ci(s["R_short"])[0], (0.0, _anchor),
+                    xytext=(6, _dy), textcoords="offset points", ha="left",
+                    va=_va, fontsize=6.6, color="0.15")
         ax.annotate(r"$R_{\mathrm{nat}}\,%+.3f$" % M.ci(s["R_native"])[0],
                     (1.0, 0.5 * (s["pruned_native"] + s["post_native"])), xytext=(7, 0),
                     textcoords="offset points", ha="left", va="center", fontsize=6.6, color="0.15")
@@ -123,15 +130,15 @@ def figure1():
     axes[0].set_ylim(-0.03, max(0.40, ymax))
     axes[0].set_xlabel("")
     handles = [
-        Line2D([0], [0], color=M.C_POST, ls="-", marker="o", ms=5.5, mec="white", label="P+FT (fine-tuned)"),
-        Line2D([0], [0], color=M.C_PRUN, ls="--", marker="s", ms=5.5, mec="white", label="P (pruned)"),
-        Line2D([0], [0], color=M.C_DENSE, ls=":", marker="*", ms=8, mec="white", label="dense (matched)"),
+        Line2D([0], [0], color=M.C_POST, ls="-", marker="o", ms=5.5, mec="white", label="P+FT"),
+        Line2D([0], [0], color=M.C_PRUN, ls="--", marker="s", ms=5.5, mec="white", label="P"),
+        Line2D([0], [0], color=M.C_DENSE, ls=":", marker="*", ms=8, mec="white", label="dense"),
         Line2D([0], [0], color=C_REAL, ls="-.", marker="^", ms=5, mec="white", label="real audio"),
         Line2D([0], [0], color="0.5", ls="-", lw=1.6, alpha=0.6, label="chance floor"),
     ]
-    fig.legend(handles=handles, loc="lower center", ncol=3, handlelength=1.5, columnspacing=0.8,
-               handletextpad=0.5, borderaxespad=0.0, fontsize=6.0, frameon=False, bbox_to_anchor=(0.55, 0.0))
-    fig.subplots_adjust(left=0.14, right=0.97, top=0.885, bottom=0.215, hspace=0.62)
+    fig.legend(handles=handles, loc="lower center", ncol=5, handlelength=1.2, columnspacing=0.55,
+               handletextpad=0.35, borderaxespad=0.0, fontsize=5.9, frameon=False, bbox_to_anchor=(0.55, 0.0))
+    fig.subplots_adjust(left=0.135, right=0.975, top=0.855, bottom=0.205, hspace=0.72)
     fig.savefig(os.path.join(OUT, "fig1_interaction.pdf"))
     fig.savefig(os.path.join(OUT, "fig1_interaction.png"), dpi=200)
     plt.close(fig)
