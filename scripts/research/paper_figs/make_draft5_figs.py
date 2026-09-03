@@ -25,6 +25,8 @@ from matplotlib.lines import Line2D  # noqa: E402
 OUT = M.OUT
 FC = M.load("configs/research/draft5_floor_ceiling_result.json")
 cells = FC["cells"]
+_D192 = os.path.join(M.ROOT, "configs/research/xsev_dense_192_control_result.json")
+DENSE192 = M.load("configs/research/xsev_dense_192_control_result.json") if os.path.exists(_D192) else None
 C_REAL = "#4d4d4d"
 C_FLOOR = "#9a9a9a"
 
@@ -61,9 +63,14 @@ def figure1():
                 zorder=2, clip_on=False)
         ax.annotate("real audio", (0.0, r_sh), xytext=(-4, 4), textcoords="offset points", ha="right",
                     va="bottom", fontsize=6.3, color=C_REAL)
-        # dense (matched control, severity 1 only)
+        # dense (matched control): severity 1 from Draft 4; severity 2 from XSEV-DENSE-192-CONTROL when present
+        d_pair = None
         if sev == "sev1":
-            d_sh, d_na = cell(nm["dense"][0])[0], cell(nm["dense"][1])[0]
+            d_pair = (cell(nm["dense"][0])[0], cell(nm["dense"][1])[0])
+        elif DENSE192 is not None:
+            d_pair = (DENSE192["means"]["dense_short"], DENSE192["means"]["dense_native"])
+        if d_pair is not None:
+            d_sh, d_na = d_pair
             ax.plot(x, [d_sh, d_na], color=M.C_DENSE, ls=":", lw=1.0, marker="*", ms=8, mec="white", mew=0.4,
                     zorder=2, clip_on=False)
             ax.annotate("dense", (0.0, d_sh), xytext=(-4, -5), textcoords="offset points", ha="right",

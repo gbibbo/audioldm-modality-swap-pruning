@@ -120,6 +120,22 @@ checks += [
     ("music P levels", "0.117"), ("music P level sev2", "0.005"),
 ]
 
+# ---- XSEV-DENSE-192-CONTROL (paired dense at severity 2), only once the result exists
+_d192 = os.path.join(ROOT, "configs/research/xsev_dense_192_control_result.json")
+if os.path.exists(_d192):
+    D = J("configs/research/xsev_dense_192_control_result.json"); P_ = D["PRIMARY"]; m_ = D["means"]
+    checks += [
+        ("d192 s(dense) sev2", "s(\\mathrm{dense})=" + pt(P_["s_dense"]) + "$$" + ci(P_["s_dense"])),
+        ("d192 s(P)-s(dense)", pt(P_["s_pruned_minus_s_dense"]) + "$$" + ci(P_["s_pruned_minus_s_dense"])),
+        ("d192 s(P+FT)-s(dense)", pt(P_["s_postft_minus_s_dense"]) + "$$" + ci(P_["s_postft_minus_s_dense"])),
+        ("d192 rho_dense short CI", pct_ci(P_["rho_short"])), ("d192 rho_dense native CI", pct_ci(P_["rho_native"])),
+        ("d192 rho_dense native abstract", pct(P_["rho_native"]) + "versus" + pct(P_["rho_short"])),
+        ("d192 G native postft", pt(P_["G_native_postft"]) + "$$" + ci(P_["G_native_postft"])),
+        ("d192 G short postft", pt(P_["G_short_postft"]) + "$$" + ci(P_["G_short_postft"])),
+        ("d192 dense means", f"${m_['dense_short']:.3f}$&${m_['dense_native']:.3f}$"),
+        ("d192 dense means prose", f"{m_['dense_short']:.3f}\\!\\to\\!{m_['dense_native']:.3f}"),
+    ]
+
 bad = 0
 for label, s in checks:
     ok = norm(s) in tex
