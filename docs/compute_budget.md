@@ -4,6 +4,10 @@ Do not invent GPU-hour estimates. Every number below is either **MEASURED** on r
 hardware or **DERIVED** from measured values by the master-plan §7.3 formulas, and each is
 labelled. Anything still unmeasured says so.
 
+## DRAFT-5 ANALYSES — CPU ONLY (2026-09-02/03)
+
+Chance-floor + real-audio-ceiling anchors: 28 frozen scoring groups (3 296 clips) re-embedded under the frozen fused-CLAP convention plus 544 real AudioCaps clips (272 prompts x {full, first 3.84 s}) on the Studio CPU, ~35 min; bootstrap/verdict CPU. **0 GPU, 0 cr.** Dense-generator CPU probe (1 clip, DDIM 6, 3.84 s): 1.7 s/DDIM step -> the paired dense control on the 192 set (384 WAVs) would be ~18 h CPU or ~1.1-1.3 cr on a T4 (hard cap 1.5); **NOT launched** (protocol `docs/xsev_dense_192_control.md`). Account balance unchanged (API `balance` field still reports 5.0 and is unreliable; `total_spent` 81.47).
+
 ## DRAFT-4 ANALYSES — CPU ONLY (2026-09-02)
 
 Dense duration control: 80 existing WAVs re-scored with the frozen fused-CLAP scorer on the Studio CPU (~2 min); robustness/multiplicity/rank/caption-length analyses on committed raw scores. **0 GPU, 0 cr.** No generation. Account balance unchanged.

@@ -88,8 +88,9 @@ def main():
     args = ap.parse_args()
     if args.context == "dense_native" and args.system != "dense":
         raise SystemExit("dense_native context is for --system dense only")
-    if args.context != "dense_native" and args.system == "dense":
-        raise SystemExit("dense only generates the dense_native control")
+    if args.system == "dense" and args.context not in ("dense_native", "ac_short", "ac_native"):
+        # dense: the Arm-D native control (frozen) or the XSEV-DENSE-192-CONTROL cells (docs/xsev_dense_192_control.md)
+        raise SystemExit("dense generates only dense_native, ac_short or ac_native")
 
     manifest_path, reps, T, duration, _salt, ykey, ikey = CTX[args.context]
     prompts = json.load(open(manifest_path))["prompts"]

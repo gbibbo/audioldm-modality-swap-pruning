@@ -1,70 +1,57 @@
-# MANUSCRIPT_NOTES - ICASSP Draft 4
+# MANUSCRIPT_NOTES - ICASSP Draft 5
 
 **Everything lives in `icassp/`:** `icassp_operating_point.tex`, official style files
 `spconf.sty` + `IEEEbib.bst`, `figs/`, the built `icassp_operating_point.pdf`, this file,
 `README_OVERLEAF.md`, and the ready-to-upload `icassp_operating_point_overleaf.zip`
-(gitignored; regenerable). **4 content pages + references on page 5** at 9 pt (`\ninept`); ICASSP
-permits a 5th page containing only references (confirm against the ICASSP 2027 CFP — if the rule is
-4 pages total, cut Sec. 2 by ~8 lines or compact the bibliography). Draft 4 = rewrite of Draft 3 per
-`docs/review/2026-09-02_manuscript_draft3_review.md` (Gabriel's request 2026-09-02 21:38: find the
-scientific gaps, run the cheap improvements, rewrite to ICASSP standard). Gabriel compiles on Overleaf;
-the local `tectonic` build is only the page-limit check.
+(gitignored; regenerable). **4 content pages + references on page 5** at 9 pt (`\ninept`); the ICASSP
+2027 paper kit allows "4 pages of technical content" plus "one additional optional 5th page containing
+only references" (confirmed 2026-09-02). Draft 5 = rewrite of Draft 4 per
+`docs/review/2026-09-02_manuscript_draft4_review.md` (Gabriel's request 2026-09-02 22:18: find the
+scientific gaps, run the cheap improvements, rewrite to the level of the best ICASSP papers). Gabriel
+compiles on Overleaf; the local `tectonic` build is only the page-limit check.
 
 ## Build
 
 ```bash
-# figures (reads durable artifacts, writes icassp/figs/*.pdf)
-OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/make_draft3_figs.py
-# manuscript (pdfLaTeX on Overleaf; locally tectonic -- spconf.sty must sit beside the .tex)
+# 1) anchors (chance floor + real-audio ceiling; CPU ~35 min; needs the frozen WAVs on disk)
+OPENBLAS_CORETYPE=Haswell .venv-metrics/bin/python scripts/research/draft5_floor_ceiling.py --emit
+OPENBLAS_CORETYPE=Haswell .venv-metrics/bin/python scripts/research/draft5_floor_ceiling.py --score
+OPENBLAS_CORETYPE=Haswell .venv-metrics/bin/python scripts/research/draft5_floor_ceiling.py --verdict
+# 2) figures (reads durable artifacts, writes icassp/figs/*.pdf)
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/make_draft5_figs.py
+# 3) placeholders (only needed after editing a `@@` placeholder back into the .tex)
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/fill_draft5.py
+# 4) manuscript (pdfLaTeX on Overleaf; locally tectonic -- spconf.sty must sit beside the .tex)
 cd icassp && mkdir -p build && ~/.local/bin/tectonic -X compile icassp_operating_point.tex --outdir build --keep-logs
-# number provenance (must print 82/82)
-OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_draft4_numbers.py
+# 5) number provenance (must print all OK, no placeholders)
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_draft5_numbers.py
 ```
 
-## Draft 3 -> Draft 4: what changed and why
+## Draft 4 -> Draft 5: what changed and why
 
-* **Title:** "Recovery Fine-Tuning Recovers Where It Was Trained: Duration- and Domain-Dependent Gains
-  in Pruned Text-to-Audio Diffusion" (declarative; states the finding). Alternatives if Gabriel
-  prefers: the Draft-3 question title; "Post-Pruning Recovery in AudioLDM Restores Native-Duration
-  Alignment In-Domain Only".
-* **New concept: the duration response** $s(\cdot)$ = a system's mean per-prompt score change from
-  3.84 s to 10.24 s, so $J = s(\mathrm{P{+}FT}) - s(\mathrm{P})$ is an identity and the dense model gets
-  its own $s$. Table 2 has a "duration $s$; $J$" row per severity.
-* **New analyses (all CPU, 0 cr; labelled post-hoc; no frozen verdict changed):**
-  * **Matched dense duration control** (`scripts/research/draft4_dense_duration_control.py` ->
-    `configs/research/draft4_dense_duration_control_result.json`; seed ns
-    `DRAFT4-DENSE-DURATION-CONTROL|BOOTSTRAP|2026-09-02`): the 80 existing V1.1 dense r0 3.84 s WAVs
-    re-scored as ONE 80-item frozen-convention call (identical to how the Arm-D short groups were made),
-    paired with the frozen dense 10.24 s scores on the same 80 prompts. s(dense) +0.150 [+0.100,+0.198]
-    (0.202 -> 0.352); s(P) +0.149 [+0.119,+0.178]; s(P+FT) +0.193 [+0.152,+0.232]; s(P)-s(dense) -0.001
-    [-0.056,+0.055]; s(P+FT)-s(dense) +0.043 [-0.020,+0.109]; dense gap closed 8% [-30%,+36%] at 3.84 s
-    vs 52% [+11%,+103%] at 10.24 s. Consistency guards reproduce the frozen Arm-D and DENSE_CONTROL points
-    to 0.0. Batch-composition diagnostic: re-scoring the same clips in another batch shifts means by
-    <=0.002 (stated in Sec. 3.3).
-  * **Multiplicity** (`scripts/research/draft4_robustness.py` R1 ->
-    `configs/research/draft4_robustness_result.json`; ns `DRAFT4-ROBUSTNESS|BOOTSTRAP|2026-09-02`): Holm
-    over all 13 reported contrasts. Every severity-2 dagger survives (p < 1e-4); at severity 1 R_nat
-    (p = 0.016) and J (p = 0.052) do not; the music and domain contrasts do. Stated in Sec. 4.1, Table 2
-    caption, Limitations.
-  * **Rank-scale J** (R2): median per-prompt interaction +0.051 [+0.012,+0.077] / +0.172 [+0.153,+0.214];
-    Wilcoxon p = 0.020 / < 1e-17; pooled-rank J +0.063 [-0.015,+0.143] / +0.199 [+0.153,+0.244].
-  * **Caption-length check** (R3): music captions median 56.5 words vs AudioCaps 8; within AudioCaps the
-    native gain is uncorrelated with caption length (Spearman rho +0.04 [-0.12,+0.18], sev-2).
-  * **Floor rebuttal** (R3, descriptive): at 10.24 s the pruned checkpoint scores higher on music (0.089)
-    than in-domain (0.055).
-* **Wording / reporting fixes:** "pre-registered" -> "pre-specified" (defined once: committed to the
-  version-controlled repository before any score was seen); "absent on music" -> "absent or negative";
-  FineLAP n stated (110 / 49 eligible prompts); severity-2 music at 10.24 s = one replicate; the two
-  severity-1 short-duration numbers (n=80 subset vs n=96 pre-specified set) are bridged in the Table 2
-  caption; process narrative ("reframed the work") removed from Results; Discussion reads the dense
-  control (65 %: P responds like dense; 83 %: P lost the response, P+FT restores a dense-magnitude one,
-  in-domain only); Limitations add the cross-set caveat, the domain/caption-style bundling and the
-  severity-1 Holm failure.
-* **Figures:** Fig. 1(a) grey line now = the MATCHED dense control (0.202 -> 0.352, same 80 prompts,
-  same convention; was the unmatched n=96 anchor) with the three duration responses annotated;
-  R_short labels moved off the y-axis. Fig. 2 unchanged.
-* **Layout:** URL inline in the Conclusion (footnote removed); Table 2 `\tabcolsep` 2.3 pt; ~10 lines
-  trimmed (Sec. 3.4, 4.1, 4.4, 5, 6). Remaining overfull boxes < 2.5 pt.
+* **New anchors (post-hoc, 0 cr, no generation; `scripts/research/draft5_floor_ceiling.py` ->
+  `configs/research/draft5_floor_ceiling_result.json`, seed ns `DRAFT5-FLOOR-CEILING|BOOTSTRAP|2026-09-02`):**
+  * **Chance floor** per (system, operating point) cell: the mean cosine between each clip and the captions
+    of the other prompts in its battery, computed from the same embeddings as the frozen scores (frozen
+    convention re-run group by group; guard: the diagonal reproduces every frozen per-item cosine, max
+    |diff| 2.4e-7 over 28 groups / 3 296 clips; 11 frozen point estimates reproduced to 1e-9).
+  * **Real-audio ceiling**: the real AudioCaps clip of each prompt (16 kHz band-limited), scored at its
+    full length and as its first 3.84 s under the identical convention; s(real) = scorer + content-window
+    duration response with no generation.
+  * **Recovery ratio** rho = R/(ref - P) against real audio (paired, both severities, both durations) and
+    against dense (severity 1, from Draft 4); floor-corrected s, R, J; crop decomposition floor-corrected;
+    caption-token check (no truncation at generation: conditioner max_length=512; 47 % of music captions
+    exceed the 77-token CLAP pre-training length).
+* **Rewrite:** recovery ratio is the headline quantity (abstract, bullets, discussion, conclusion);
+  new Table 2 (floors P / P+FT, real audio, rho_real; rho_dense in its caption); the analysis-plan table folded into Sec. 3.4; Fig. 1 shows floor ticks and the
+  real-audio ceiling; CIs moved from prose to Tables 1-2 (prose keeps point estimates and the few
+  intervals that are the point); severity-1 stated as underpowered (MDE 0.065 at n=80) instead of
+  "narrowly misses"; music battery named precisely (hip-hop/rap captions); the two severities' music
+  results read as one statement via the floor; two speech-pruning refs + two TTA refs added (22 refs).
+* **Prepared, NOT launched:** paired dense control on the severity-2 192 set
+  (`docs/xsev_dense_192_control.md`, `scripts/research/run_xsev_dense_192_gen.sh`; generator guard relaxed
+  by one line). T4 ~1.2 cr (cap 1.5) or CPU ~18 h. Would turn the cross-set "dense magnitude" sentence and
+  the severity-2 rho_dense into paired estimates.
 
 ## Number provenance (every number in the .tex)
 
@@ -79,13 +66,17 @@ OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_dr
 | win-rates, dW, sev-2 duration responses, sev-2 domain gap | `configs/research/draft3_sensitivity_result.json` (post-hoc) |
 | R_crop and differences | `configs/research/native_crop_analysis_result.json` (post-hoc) |
 | music @10.24 s, J_music, D_nat | `configs/research/xsev_music_native_1_result.json` (frozen protocol `docs/xsev_music_native_1.md`) |
-| **dense 0.202->0.352, s(dense), s(P), s(P+FT) sev-1, differences, gap closed, batch <=0.002** | **`configs/research/draft4_dense_duration_control_result.json` (post-hoc control)** |
-| **Holm p-values, median/Wilcoxon/rank J, caption words, Spearman, pruned music 0.089 vs 0.055** | **`configs/research/draft4_robustness_result.json` (post-hoc sensitivity)** |
+| dense 0.202->0.352, s(dense), s(P), s(P+FT) sev-1, differences, gap closed 8 %/52 %, batch <=0.002 | `configs/research/draft4_dense_duration_control_result.json` (post-hoc control) |
+| Holm p-values, median/Wilcoxon J, caption words, Spearman, pruned music 0.089 vs 0.055 | `configs/research/draft4_robustness_result.json` (post-hoc sensitivity) |
+| **chance floors, real-audio levels, s(real), rho_real, J_c, floor-shift max, 47 % tokens** | **`configs/research/draft5_floor_ceiling_result.json` (post-hoc anchors)** |
+| MDE 0.065 at n=80 (sev-1 power) | `docs/op_duration_discriminator_1.md` (frozen protocol) |
 | parameter counts | Draft-2 CPU count (415.96 / 145.67 / 71.08 M), validated bit-exact |
 
 ## Known compile notes
 
 `tectonic` (XeTeX engine) prints harmless `TU/ptm` Times-shape substitution warnings; Overleaf
-pdfLaTeX uses real Times. `verify_draft4_numbers.py`: 82/82 numbers reproduced from artifacts (it
-re-uses the Draft-3 check list and adds the Draft-4 numbers). **Verify venue/pages of every reference
-before submission** (bibliographic details were written from memory of the records).
+pdfLaTeX uses real Times. `verify_draft5_numbers.py` re-uses the Draft-3/4 check lists (minus the strings
+Draft 5 no longer prints) and adds the Draft-5 anchors (97/97). **Verify venue/pages of every reference before
+submission** (bibliographic details were written from memory of the records; the four references added in
+Draft 5 — PARP (NeurIPS 2021), DPHuBERT (Interspeech 2023), Make-An-Audio (ICML 2023), Tango (arXiv
+2304.13731) — included).
