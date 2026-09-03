@@ -4,6 +4,10 @@ Do not invent GPU-hour estimates. Every number below is either **MEASURED** on r
 hardware or **DERIVED** from measured values by the master-plan §7.3 formulas, and each is
 labelled. Anything still unmeasured says so.
 
+## XSEV-DENSE-192-CONTROL — SETTLED (job `xsev-dense-192-1`, T4, 2026-09-03)
+
+384 dense WAVs (192 × 3.84 s + 192 × 10.24 s, DDIM 50) + 4 device-check clips: **settled `total_cost` = 1.2633 cr** (≈76 min wall incl. provisioning + 2 checkpoint loads; projection 1.1–1.3 cr → accurate; watchdog cap 1.5 never reached) → ≈0.0033 cr/WAV blended. Compute-discipline record in ledger XSEV-DENSE-192-CONTROL-GEN-LAUNCH (CPU alternative ≈18 h). Scoring/verdict/manuscript: CPU, 0 cr. Lifetime `total_spent` after this job: read from the SDK at the next check (the `balance` field remains unreliable).
+
 ## DRAFT-5 ANALYSES — CPU ONLY (2026-09-02/03)
 
 Chance-floor + real-audio-ceiling anchors: 28 frozen scoring groups (3 296 clips) re-embedded under the frozen fused-CLAP convention plus 544 real AudioCaps clips (272 prompts x {full, first 3.84 s}) on the Studio CPU, ~35 min; bootstrap/verdict CPU. **0 GPU, 0 cr.** Dense-generator CPU probe (1 clip, DDIM 6, 3.84 s): 1.7 s/DDIM step -> the paired dense control on the 192 set (384 WAVs) would be ~18 h CPU or ~1.1-1.3 cr on a T4 (hard cap 1.5); **NOT launched** (protocol `docs/xsev_dense_192_control.md`). Account balance unchanged (API `balance` field still reports 5.0 and is unreliable; `total_spent` 81.47).

@@ -37,7 +37,7 @@ def cell(name):
 
 
 def figure1():
-    fig, axes = plt.subplots(2, 1, figsize=(3.42, 3.05), sharex=True, sharey=True)
+    fig, axes = plt.subplots(2, 1, figsize=(3.42, 2.85), sharex=True, sharey=True)
     x = [0.0, 1.0]
     xlabels = ["3.84 s\n(short)", "10.24 s\n(native)"]
     # (system, duration) -> cell name in the Draft-5 result

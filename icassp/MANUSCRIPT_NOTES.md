@@ -23,6 +23,8 @@ OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/make_draf
 OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/fill_draft5.py
 # 4) manuscript (pdfLaTeX on Overleaf; locally tectonic -- spconf.sty must sit beside the .tex)
 cd icassp && mkdir -p build && ~/.local/bin/tectonic -X compile icassp_operating_point.tex --outdir build --keep-logs
+# 4b) dense-192 integration (idempotent; already applied in the committed .tex)
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/integrate_dense192.py
 # 5) number provenance (must print all OK, no placeholders)
 OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_draft5_numbers.py
 ```
@@ -48,10 +50,12 @@ OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_dr
   intervals that are the point); severity-1 stated as underpowered (MDE 0.065 at n=80) instead of
   "narrowly misses"; music battery named precisely (hip-hop/rap captions); the two severities' music
   results read as one statement via the floor; two speech-pruning refs + two TTA refs added (22 refs).
-* **Prepared, NOT launched:** paired dense control on the severity-2 192 set
-  (`docs/xsev_dense_192_control.md`, `scripts/research/run_xsev_dense_192_gen.sh`; generator guard relaxed
-  by one line). T4 ~1.2 cr (cap 1.5) or CPU ~18 h. Would turn the cross-set "dense magnitude" sentence and
-  the severity-2 rho_dense into paired estimates.
+* **XSEV-DENSE-192-CONTROL (run 2026-09-03, Gabriel GO; T4 job 1.2633 cr):** dense at both durations on the
+  severity-2 192 prompts, CRN-matched. Integrated by `scripts/research/paper_figs/integrate_dense192.py`
+  (idempotent; marker `%% dense192-integrated`): the cross-set sentence is now paired (s(dense) +0.147;
+  s(P+FT) − s(dense) +0.053 [+0.017,+0.089]); rho_dense 44 % / 82 % in abstract, bullets, Sec. 4.1, Table 2
+  and conclusion; dense − P+FT +0.055 [+0.021,+0.088] at 10.24 s in Sec. 4.4 (not restored); Fig. 1(b) dense
+  line; cross-set caveat removed from Limitations.
 
 ## Number provenance (every number in the .tex)
 
@@ -69,6 +73,7 @@ OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_dr
 | dense 0.202->0.352, s(dense), s(P), s(P+FT) sev-1, differences, gap closed 8 %/52 %, batch <=0.002 | `configs/research/draft4_dense_duration_control_result.json` (post-hoc control) |
 | Holm p-values, median/Wilcoxon J, caption words, Spearman, pruned music 0.089 vs 0.055 | `configs/research/draft4_robustness_result.json` (post-hoc sensitivity) |
 | **chance floors, real-audio levels, s(real), rho_real, J_c, floor-shift max, 47 % tokens** | **`configs/research/draft5_floor_ceiling_result.json` (post-hoc anchors)** |
+| **sev-2 dense 0.207->0.354, s(dense) +0.147, s(P)/s(P+FT) − s(dense), rho_dense 44 %/82 %, dense−P+FT gaps** | **`configs/research/xsev_dense_192_control_result.json` (XSEV-DENSE-192-CONTROL; prospective design completion, T4 job 1.2633 cr)** |
 | MDE 0.065 at n=80 (sev-1 power) | `docs/op_duration_discriminator_1.md` (frozen protocol) |
 | parameter counts | Draft-2 CPU count (415.96 / 145.67 / 71.08 M), validated bit-exact |
 

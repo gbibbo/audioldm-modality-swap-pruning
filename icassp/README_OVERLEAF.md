@@ -15,7 +15,7 @@ Length        : 4 pages of technical content + references on page 5. ICASSP 2027
 
 Figures (both embedded in the body):
   figs/fig1_interaction.pdf  - MAIN: P vs P+FT CLAP at short/native, both severities, 95% CI
-                               whiskers on the paired gain, matched dense control in (a), and the
+                               whiskers on the paired gain, matched dense controls in (a) and (b), and the
                                Draft-5 anchors: real-audio ceiling (triangles) and per-cell
                                shuffled-caption chance floor (short ticks); J annotated.
   figs/fig2_where.pdf        - two-panel: (a) FineLAP frame-level grounding gain vs. time (uniform,
@@ -23,7 +23,7 @@ Figures (both embedded in the body):
 Spares on disk (NOT embedded): figs/fig_summary.pdf, figs/fig2_forest.pdf, figs/fig3_finelap.pdf.
 
 Tables: Table 1 recovery gains (all CIs); Table 2 anchors and recovery ratios (chance floor P / P+FT,
-real audio, rho vs real audio; rho vs dense at severity 1 in the caption). The analysis-plan table of
+real audio, rho vs the matched dense model and vs real audio, both severities). The analysis-plan table of
 Draft 4 was folded into two sentences in Sec. 3.4.
 
 Authors : Gabriel Bibbo (Independent researcher, gabobibbo@gmail.com);

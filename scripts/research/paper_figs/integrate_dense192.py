@@ -22,7 +22,7 @@ def pct(c):
 
 
 def pct_ci(c):
-    return f"${100*c['point']:.0f}\\%$~\\ci{{{100*c['lo']:+.0f}\\%}}{{{100*c['hi']:+.0f}\\%}}"
+    return f"${100*c['point']:.0f}\\%$~$\\ci{{{100*c['lo']:+.0f}\\%}}{{{100*c['hi']:+.0f}\\%}}$"
 
 
 def pt(c):
@@ -65,7 +65,7 @@ dense controls, same noise as the pruned pair).""")
 rep("""$10.24$\\,s (Table~\\ref{tab:anchors}). At severity~2,
 $s(\\mathrm{P})=+0.040$ is far below the dense response on the severity-1 prompts while $s(\\PFT)=+0.200$ is
 of dense magnitude (cross-set, descriptive).""",
-    f"""$10.24$\\,s (Table~\\ref{{tab:anchors}}). The same control on the severity-2 prompts ({m['dense_short']:.3f}\\!\\to\\!{m['dense_native']:.3f}) gives
+    f"""$10.24$\\,s (Table~\\ref{{tab:anchors}}). The same control on the severity-2 prompts (${m['dense_short']:.3f}\\!\\to\\!{m['dense_native']:.3f}$) gives
 $s(\\mathrm{{dense}})={P['s_dense']['point']:+.3f}$ $\\ci{{{P['s_dense']['lo']:+.3f}}}{{{P['s_dense']['hi']:+.3f}}}$: the pruned checkpoint's response is
 {pt_ci(P['s_pruned_minus_s_dense'])} below it and the fine-tuned checkpoint's {pt_ci(P['s_postft_minus_s_dense'])} above
 it (paired); fine-tuning closes {pct_ci(rho_s)} of the gap to dense at $3.84$\\,s and {pct_ci(rho_n)}
@@ -75,10 +75,10 @@ rep("""\\begin{tabular}{@{}lccc@{}}
 \\toprule
 Setting & floor P\\,/\\,\\PFT & real & $\\rho_{\\mathrm{real}}$ [95\\% CI]\\\\
 \\midrule
-sev.\\,1 AudioCaps $3.84$\\,s & $-0.031\\,/\\,-0.033$ & $0.264$ & $5\\%$~\\ci{-16\\%}{+24\\%}\\\\
-sev.\\,1 AudioCaps $10.24$\\,s & $-0.012\\,/\\,-0.036$ & $0.442$ & $27\\%$~\\ci{+6\\%}{+46\\%}\\\\
-sev.\\,2 AudioCaps $3.84$\\,s & $-0.005\\,/\\,-0.015$ & $0.274$ & $33\\%$~\\ci{+26\\%}{+39\\%}\\\\
-sev.\\,2 AudioCaps $10.24$\\,s & $+0.020\\,/\\,-0.022$ & $0.440$ & $63\\%$~\\ci{+56\\%}{+71\\%}\\\\
+sev.\\,1 AudioCaps $3.84$\\,s & $-0.031\\,/\\,-0.033$ & $0.264$ & $5\\%$~$\\ci{-16\\%}{+24\\%}$\\\\
+sev.\\,1 AudioCaps $10.24$\\,s & $-0.012\\,/\\,-0.036$ & $0.442$ & $27\\%$~$\\ci{+6\\%}{+46\\%}$\\\\
+sev.\\,2 AudioCaps $3.84$\\,s & $-0.005\\,/\\,-0.015$ & $0.274$ & $33\\%$~$\\ci{+26\\%}{+39\\%}$\\\\
+sev.\\,2 AudioCaps $10.24$\\,s & $+0.020\\,/\\,-0.022$ & $0.440$ & $63\\%$~$\\ci{+56\\%}{+71\\%}$\\\\
 sev.\\,1 music $3.84$\\,s & $+0.055\\,/\\,+0.001$ & -- & --\\\\
 sev.\\,2 music $3.84$\\,s & $-0.013\\,/\\,-0.004$ & -- & --\\\\
 sev.\\,2 music $10.24$\\,s & $+0.070\\,/\\,+0.061$ & -- & --\\\\""",
@@ -86,18 +86,18 @@ sev.\\,2 music $10.24$\\,s & $+0.070\\,/\\,+0.061$ & -- & --\\\\""",
 \\toprule
 Setting & floor P\\,/\\,\\PFT & dense & real & $\\rho_{{\\mathrm{{dense}}}}$ [95\\% CI] & $\\rho_{{\\mathrm{{real}}}}$ [95\\% CI]\\\\
 \\midrule
-sev.\\,1 AC $3.84$\\,s & $-0.031\\,/\\,-0.033$ & ${DDC['means']['dense_short']:.3f}$ & $0.264$ & $8\\%$~\\ci{{-30\\%}}{{+36\\%}} & $5\\%$~\\ci{{-16\\%}}{{+24\\%}}\\\\
-sev.\\,1 AC $10.24$\\,s & $-0.012\\,/\\,-0.036$ & ${DDC['means']['dense_native']:.3f}$ & $0.442$ & $52\\%$~\\ci{{+11\\%}}{{+103\\%}} & $27\\%$~\\ci{{+6\\%}}{{+46\\%}}\\\\
-sev.\\,2 AC $3.84$\\,s & $-0.005\\,/\\,-0.015$ & ${m['dense_short']:.3f}$ & $0.274$ & {pct_ci(rho_s)} & $33\\%$~\\ci{{+26\\%}}{{+39\\%}}\\\\
-sev.\\,2 AC $10.24$\\,s & $+0.020\\,/\\,-0.022$ & ${m['dense_native']:.3f}$ & $0.440$ & {pct_ci(rho_n)} & $63\\%$~\\ci{{+56\\%}}{{+71\\%}}\\\\
+sev.\\,1 AC $3.84$\\,s & $-0.031\\,/\\,-0.033$ & ${DDC['means']['dense_short']:.3f}$ & $0.264$ & $8\\%$~$\\ci{{-30\\%}}{{+36\\%}}$ & $5\\%$~$\\ci{{-16\\%}}{{+24\\%}}$\\\\
+sev.\\,1 AC $10.24$\\,s & $-0.012\\,/\\,-0.036$ & ${DDC['means']['dense_native']:.3f}$ & $0.442$ & $52\\%$~$\\ci{{+11\\%}}{{+103\\%}}$ & $27\\%$~$\\ci{{+6\\%}}{{+46\\%}}$\\\\
+sev.\\,2 AC $3.84$\\,s & $-0.005\\,/\\,-0.015$ & ${m['dense_short']:.3f}$ & $0.274$ & {pct_ci(rho_s)} & $33\\%$~$\\ci{{+26\\%}}{{+39\\%}}$\\\\
+sev.\\,2 AC $10.24$\\,s & $+0.020\\,/\\,-0.022$ & ${m['dense_native']:.3f}$ & $0.440$ & {pct_ci(rho_n)} & $63\\%$~$\\ci{{+56\\%}}{{+71\\%}}$\\\\
 sev.\\,1 music $3.84$\\,s & $+0.055\\,/\\,+0.001$ & -- & -- & -- & --\\\\
 sev.\\,2 music $3.84$\\,s & $-0.013\\,/\\,-0.004$ & -- & -- & -- & --\\\\
 sev.\\,2 music $10.24$\\,s & $+0.070\\,/\\,+0.061$ & -- & -- & -- & --\\\\""")
 rep("""\\caption{Anchors and recovery ratios (post-hoc; prompts and scoring as in Table~\\ref{tab:core}):
 shuffled-caption chance floor of the P\\,/\\,\\PFT{} cells, mean CLAP of the real audio of the same prompts,
 and the fraction $\\rho_{\\mathrm{real}}$ of the pruned checkpoint's gap to real audio closed by fine-tuning
-($95\\%$ CI). Against the matched dense model (severity~1): $8\\%$~\\ci{-30\\%}{+36\\%} at $3.84$\\,s,
-$52\\%$~\\ci{+11\\%}{+103\\%} at $10.24$\\,s.}""",
+($95\\%$ CI). Against the matched dense model (severity~1): $8\\%$~$\\ci{-30\\%}{+36\\%}$ at $3.84$\\,s,
+$52\\%$~$\\ci{+11\\%}{+103\\%}$ at $10.24$\\,s.}""",
     """\\caption{Anchors and recovery ratios (prompts and scoring as in Table~\\ref{tab:core}; AC = AudioCaps):
 shuffled-caption chance floor of the P\\,/\\,\\PFT{} cells, mean CLAP of the matched dense model and of the
 real audio of the same prompts, and the fraction $\\rho$ of the pruned checkpoint's gap to dense and to
@@ -122,8 +122,11 @@ $3.84$\\,s),""",
 rep("""The dense control exists only on the
 severity-1 prompts (severity-2 ratios are taken against real audio). Primary inference rests on""",
     """Primary inference rests on""")
-rep("""the frame-level, crop, anchor and dense-control analyses are post-result.""",
-    """the frame-level, crop, anchor and severity-1 dense-control analyses are post-result.""")
+import re as _re
+_n = len(s)
+s = _re.sub(r"the\s+frame-level,\s+crop,\s+anchor\s+and\s+dense-control\s+analyses\s+are\s+post-result\.",
+            "the frame-level, crop, anchor and severity-1 dense-control analyses are post-result.", s)
+assert len(s) != _n, "limitations sentence not found"
 # ---- conclusion
 rep("""at the fine-tuning duration, $33\\%$ at $3.84$\\,s, none on held-out music; at $65\\%$: $52\\%$ vs.\\ $8\\%$ of
 the gap to dense).""",

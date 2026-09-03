@@ -1,6 +1,6 @@
 # XSEV-DENSE-192-CONTROL — paired dense control on the severity-2 prompt set (protocol, frozen before generation)
 
-**Status:** FROZEN DESIGN (2026-09-02); **Gabriel GO 2026-09-03 00:52 MVD** ("apruebo lanzar el job"); amended pre-launch (this revision) and launched as ONE T4 job (see ledger XSEV-DENSE-192-CONTROL-GEN-LAUNCH). No output had been inspected at the time of this amendment.
+**Status:** FROZEN DESIGN (2026-09-02); **Gabriel GO 2026-09-03 00:52 MVD** ("apruebo lanzar el job"); amended pre-launch (this revision) and launched as ONE T4 job (see ledger XSEV-DENSE-192-CONTROL-GEN-LAUNCH). No output had been inspected at the time of this amendment. **RESULT 2026-09-03 02:15 MVD:** see ledger XSEV-DENSE-192-CONTROL-RESULT and `configs/research/xsev_dense_192_control_result.json` (job settled 1.2633 cr).
 **Class:** prospective design completion (post-result of RECOVERY-CROSS-SEVERITY-REP-1); **no gate**; every
 outcome is reportable. It cannot change any frozen verdict (V1.1, Arm-D, xsev CASE C, music-native branch (a)).
 

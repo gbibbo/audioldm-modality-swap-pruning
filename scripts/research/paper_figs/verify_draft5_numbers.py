@@ -79,6 +79,10 @@ def pt_ci(c, nd=3):
     return f"${c['point']:+.{nd}f}$~\\ci{{{c['lo']:+.{nd}f}}}{{{c['hi']:+.{nd}f}}}"
 
 
+def tab_ci(c):   # compact Table-2 form: "$44\%$~$[36,\,53]$"
+    return f"${100*c['point']:.0f}\\%$~$[{100*c['lo']:.0f},\\,{100*c['hi']:.0f}]$"
+
+
 def lvl(name):
     return f"${cells[name]['matched_mean']:.3f}$"
 
@@ -98,10 +102,10 @@ checks += [
     ("rho_real2 native (abstract)", "closes" + pct(s2["rho_real_native"]) + "ofthepruned"),
     ("rho_real2 short (abstract)", "butonly" + pct(s2["rho_real_short"]) + "at$3.84$\\,s"),
     ("rho conclusion", pct(s2["rho_real_native"]) + "ofthepruned" ),
-    ("rho_real2 native CI (T3)", pct_ci(s2["rho_real_native"])),
-    ("rho_real2 short CI (T3)", pct_ci(s2["rho_real_short"])),
-    ("rho_real1 native CI (T3)", pct_ci(s1["rho_real_native"])),
-    ("rho_real1 short CI (T3)", pct_ci(s1["rho_real_short"])),
+    ("rho_real2 native CI (T3)", tab_ci(s2["rho_real_native"])),
+    ("rho_real2 short CI (T3)", tab_ci(s2["rho_real_short"])),
+    ("rho_real1 native CI (T3)", tab_ci(s1["rho_real_native"])),
+    ("rho_real1 short CI (T3)", tab_ci(s1["rho_real_short"])),
     ("floor shift max", "atmost$" + f"{max(shifts):.3f}" + "$"),
     ("floor range", "from$" + f"{min(floors_ac):+.3f}" + "$to$" + f"{max(floors_ac):+.3f}" + "$acrosstheAudioCapscells"),
     ("J_c sev2", "J_c=" + pt_ci(s2["J_c"]).replace("$~\\ci","$$\\ci")),
@@ -128,13 +132,15 @@ if os.path.exists(_d192):
         ("d192 s(dense) sev2", "s(\\mathrm{dense})=" + pt(P_["s_dense"]) + "$$" + ci(P_["s_dense"])),
         ("d192 s(P)-s(dense)", pt(P_["s_pruned_minus_s_dense"]) + "$$" + ci(P_["s_pruned_minus_s_dense"])),
         ("d192 s(P+FT)-s(dense)", pt(P_["s_postft_minus_s_dense"]) + "$$" + ci(P_["s_postft_minus_s_dense"])),
-        ("d192 rho_dense short CI", pct_ci(P_["rho_short"])), ("d192 rho_dense native CI", pct_ci(P_["rho_native"])),
+        ("d192 rho_dense short CI", tab_ci(P_["rho_short"])), ("d192 rho_dense native CI", tab_ci(P_["rho_native"])),
+        ("d192 rho_dense prose", "closes" + pct(P_["rho_short"]) + "ofthegaptodenseat$3.84$\\,sand" + pct(P_["rho_native"]) + "at$10.24$\\,s"),
         ("d192 rho_dense native abstract", pct(P_["rho_native"]) + "versus" + pct(P_["rho_short"])),
         ("d192 G native postft", pt(P_["G_native_postft"]) + "$$" + ci(P_["G_native_postft"])),
-        ("d192 G short postft", pt(P_["G_short_postft"]) + "$$" + ci(P_["G_short_postft"])),
-        ("d192 dense means", f"${m_['dense_short']:.3f}$&${m_['dense_native']:.3f}$"),
+        ("d192 G short postft", "(" + pt(P_["G_short_postft"]) + "at$3.84$\\,s)"),
+        ("d192 dense means prose 2", f"(${m_['dense_short']:.3f}\\!\\to\\!{m_['dense_native']:.3f}$)"),
         ("d192 dense means prose", f"{m_['dense_short']:.3f}\\!\\to\\!{m_['dense_native']:.3f}"),
     ]
+
 
 bad = 0
 for label, s in checks:

@@ -1,0 +1,258 @@
+{
+ "artifact": "xsev_dense_192_control_result",
+ "protocol_doc": "docs/xsev_dense_192_control.md",
+ "protocol_doc_sha256": "5ae9d8c2574b8c5bed4630472350a02966fe221ddd4dfb7bfe124b0e9a175f5e",
+ "class": "prospective design completion (frozen before generation; NO gate); paired dense control on the severity-2 192 prompts",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "XSEV-DENSE-192-CONTROL|BOOTSTRAP|2026-09-03",
+  "seed_pcg64": 130066793,
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "scorer": {
+  "model": "laion/clap-htsat-fused",
+  "hf_revision": "365dea6ef167def6676140ed93bbc43f84dabb28",
+  "lib_versions": {
+   "torch": "2.2.2+cpu",
+   "transformers": "4.30.2",
+   "librosa": "0.11.0"
+  },
+  "scoring_git_sha": "958c7caa992c9dbd0efc123a4985f0eaee2d8c49",
+  "sr": 48000,
+  "convention": {
+   "unit": "one 192-item scorer call per system (64 prompts x 3 replicates)",
+   "order": "(prompt_index, replicate_index)",
+   "rng": "np.random.seed(20260826) reset once before each 192-item system",
+   "quirk": "transformers 4.30.2 CLAP-fused has a batch-level stochastic is_longer selection for short-audio batches; frozen batch/order/seed makes it reproducible AND paired by position across systems",
+   "revision": "365dea6ef167def6676140ed93bbc43f84dabb28"
+  }
+ },
+ "generation_provenance": {
+  "ac_short": {
+   "gen_manifest_sha256": "952ba0e03ee4dfccca30bc214717f8564c55ad610372a357267660735e607d5c",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "0282a1e09812e509e931f01b63b0e10a367ab54f",
+   "checkpoint": "dense_ema",
+   "recipe": {
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 96,
+    "duration_s": 3.84,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema"
+   }
+  },
+  "ac_native": {
+   "gen_manifest_sha256": "15c28a4b93ba75e7a724ad7056048f2bdd5b5f8189ad094b6b65245c6a8986bf",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "0282a1e09812e509e931f01b63b0e10a367ab54f",
+   "checkpoint": "dense_ema",
+   "recipe": {
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 256,
+    "duration_s": 10.24,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema"
+   }
+  }
+ },
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/xsev_dense192_groups_in.json": "e6985e260fe5d9b2866bc812eacc4a6f9a30f442f4c90dda531e9cd786dace42",
+  "artifacts/icassp_gate0/_score_tmp/xsev_dense192_groups_out.json": "e8029325ed4626f9cbe77e018180d5ab727f7dd771118f81eae7a59967a04e08",
+  "artifacts/icassp_gate0/_score_tmp/xsev_sev2_groups_out.json": "6235857f87b5e9e2cb44cc3c7a3c42627ad234262eb631c2df20fdb737b8f7dc",
+  "artifacts/icassp_gate0/_score_tmp/draft5_floor_groups_out.json": "1cf0bba1b1e373043e1be2a092663993d8a659e4578a96d9da8b288d2d3d1dd8",
+  "configs/research/xsev_result.json": "02e3bd1165c5a9716f10b0ad42b5751a0d2e0c8ec278a7843b88f838d771c9db",
+  "configs/research/draft4_dense_duration_control_result.json": "2f8292ae3f75249250926c75a1f4fb33581ffb3c42dd0cf999f2156aaee67f8c"
+ },
+ "consistency_guards": {
+  "R_short": {
+   "here": 0.08488791843895645,
+   "frozen": 0.08488791843895645
+  },
+  "R_native": {
+   "here": 0.24428910286709046,
+   "frozen": 0.24428910286709046
+  },
+  "J": {
+   "here": 0.159401184428134,
+   "frozen": 0.159401184428134
+  }
+ },
+ "consistency_guards_max_abs_diff": 0.0,
+ "means": {
+  "dense_short": 0.20678750597774828,
+  "dense_native": 0.35384638224786613,
+  "pruned_short": 0.014637135759888528,
+  "pruned_native": 0.054875789831082024,
+  "postft_short": 0.09952505419884498,
+  "postft_native": 0.2991648926981725,
+  "dense_floor_short": -0.027574740507664803,
+  "dense_floor_native": -0.022567930439173267
+ },
+ "PRIMARY": {
+  "s_dense": {
+   "point": 0.14705887627011785,
+   "lo": 0.1165431337136397,
+   "hi": 0.17664038457296555,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "s_pruned": {
+   "point": 0.0402386540711935,
+   "lo": 0.028783233129797733,
+   "hi": 0.05207015043755139,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "s_postft": {
+   "point": 0.1996398384993275,
+   "lo": 0.17270600293353103,
+   "hi": 0.22633758012367858,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "s_pruned_minus_s_dense": {
+   "point": -0.10682022219892436,
+   "lo": -0.13711378231928392,
+   "hi": -0.07562042692770773,
+   "n": 192,
+   "boot_frac_le0": 1.0
+  },
+  "s_postft_minus_s_dense": {
+   "point": 0.05258096222920964,
+   "lo": 0.016614947484292014,
+   "hi": 0.08877322427033504,
+   "n": 192,
+   "boot_frac_le0": 0.0022
+  },
+  "rho_short": {
+   "point": 0.44177858383884805,
+   "lo": 0.3552539365505008,
+   "hi": 0.5288440614404267,
+   "n": 192
+  },
+  "rho_native": {
+   "point": 0.8171007753382509,
+   "lo": 0.71816091198818,
+   "hi": 0.9236822684323398,
+   "n": 192
+  },
+  "G_short_pruned": {
+   "point": 0.19215037021785975,
+   "lo": 0.16759044068785442,
+   "hi": 0.21711066959554348,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "G_native_pruned": {
+   "point": 0.2989705924167841,
+   "lo": 0.26809743476757525,
+   "hi": 0.3301445443402675,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "G_short_postft": {
+   "point": 0.1072624517789033,
+   "lo": 0.08525947943053325,
+   "hi": 0.12963436457527375,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "G_native_postft": {
+   "point": 0.05468148954969365,
+   "lo": 0.021369914830575,
+   "hi": 0.08814269107303209,
+   "n": 192,
+   "boot_frac_le0": 0.0006
+  },
+  "tost_native_postft_pm0.025": {
+   "equivalent": false,
+   "note": "restored-to-dense wording allowed only if the 95% CI of dense - P+FT lies within +-0.025"
+  }
+ },
+ "FLOOR_CORRECTED": {
+  "s_c_dense": {
+   "point": 0.14205206620162633,
+   "lo": 0.1110654477477695,
+   "hi": 0.17222659881670382,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "s_c_pruned": {
+   "point": 0.0151035344219963,
+   "lo": 0.004127482735039697,
+   "hi": 0.026548069805589117,
+   "n": 192,
+   "boot_frac_le0": 0.0036
+  },
+  "s_c_postft": {
+   "point": 0.2060734040474017,
+   "lo": 0.17859933499369163,
+   "hi": 0.23317784483166404,
+   "n": 192,
+   "boot_frac_le0": 0.0
+  },
+  "rho_c_short": {
+   "point": 0.4433208489071652,
+   "lo": 0.36273226926036356,
+   "hi": 0.5254333298101809,
+   "n": 192
+  },
+  "rho_c_native": {
+   "point": 0.8377914431785356,
+   "lo": 0.7496452638134826,
+   "hi": 0.9323810161516785,
+   "n": 192
+  },
+  "G_c_native_postft": {
+   "point": 0.05538568174343794,
+   "lo": 0.02195052763584542,
+   "hi": 0.08882346623212851,
+   "n": 192,
+   "boot_frac_le0": 0.0009
+  },
+  "dense_floor_short": {
+   "point": -0.027574740507664803,
+   "lo": -0.031206453364652966,
+   "hi": -0.024057181567635175,
+   "n": 192,
+   "boot_frac_le0": 1.0
+  },
+  "dense_floor_native": {
+   "point": -0.022567930439173267,
+   "lo": -0.027184990443873503,
+   "hi": -0.017760235372118415,
+   "n": 192,
+   "boot_frac_le0": 1.0
+  }
+ },
+ "crossset_vs_sev1_dense": {
+  "s_dense_sev1_80": 0.14975641263299622,
+  "dense_short_sev1": 0.20226746149710378,
+  "dense_native_sev1": 0.3520238741301,
+  "note": "descriptive; different prompt sets"
+ },
+ "device_check": {
+  "n": 4,
+  "abs_diff_per_clip": [
+   2.2724270820617676e-06,
+   2.0563602447509766e-06,
+   4.231929779052734e-06,
+   8.102506399154663e-07
+  ],
+  "max_abs_diff": 4.231929779052734e-06,
+  "note": "4 pruned2_A native clips regenerated in the dense job vs the frozen clips, both scored as 4-item calls; descriptive (expected < 0.01)"
+ }
+}
