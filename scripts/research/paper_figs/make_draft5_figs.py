@@ -87,8 +87,9 @@ def figure1():
                         solid_capstyle="butt")
         # floor label once per panel, to the right of the native tick (clear of the y-axis and the R labels)
         fl_nat = cell(nm["pruned"][1])[1]
-        ax.annotate("chance floors", (1.0, fl_nat), xytext=(0, 3), textcoords="offset points", ha="center",
-                    va="bottom", fontsize=5.8, color="0.4")
+        if sev == "sev1":   # label once (panel (b): P sits just above its floor; the legend carries the meaning)
+            ax.annotate("chance floors", (1.0, fl_nat), xytext=(0, 3), textcoords="offset points", ha="center",
+                        va="bottom", fontsize=5.8, color="0.4")
         # R annotations
         _mid = 0.5 * (s["pruned_short"] + s["post_short"])
         _below = (s["post_short"] - s["pruned_short"]) < 0.03
