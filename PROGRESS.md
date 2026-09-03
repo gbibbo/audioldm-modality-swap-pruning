@@ -81,6 +81,13 @@
 
 ## LOG
 
+### 2026-09-03 14:05 MVD | DRAFT5-OPSWEEP-1 + DRAFT5-PUBRECIPE-1 launched (two T4 jobs, caps 4.00 + 3.00 = Gabriel's 7-cr ceiling)
+* Gabriel's 7-cr pre-approval was conditional on the 85.855 `total_spent` reading not being credits. It IS credits (lifetime cumulative spend; settled deltas prove it), so the condition was reported false and the choice returned to him; he then selected the duration sweep plus the published-recipe spot check. That selection reopens DDIM200 — closed in four frozen records — for the E2b check only; recorded as an authorized plan change.
+* Protocol `docs/draft5_opsweep.md` frozen with sha256 sidecar `e83eb6bd…` before any generation, carrying the pre-specified shape rule (sweep) and lo95 gate (published recipe).
+* Generator extension proven behaviour-neutral on the frozen path: pre-patch vs patched produce byte-identical WAVs single-threaded (sha256 `4e40beb9…`). Unpinned, two runs of the SAME code differ (corr 0.784) — multi-threaded CPU generation is not reproducible, which reinforces the one-device rule.
+* Two defects caught before the GPU: a half-applied generator patch referencing undefined arguments, and an OOM kill from running two AudioLDM pipelines at once on the 15 GB Studio.
+* Launched from clean tree `fb5829b`; both jobs Pending at record time, both watchdogs armed.
+
 ### 2026-09-03 15:20 MVD | DRAFT-5 reviewer actions A2–A9 implemented; A10 costed, not launched (CPU, 0 GPU, 0 cr)
 * Gabriel: implement the external reviewer's suggestions, but estimate the credit cost of the GPU run before generating any new audio. A2–A9 all done; A10 costed only.
 * **A8 changed what the paper can claim.** KL and PANNs top-10 capture were rescored at 3.84 s as well as 10.24 s on the frozen severity-2 WAVs, each against the real clip of the same prompt (full / first 3.84 s). J_KL +1.557 [+1.194,+1.918]; J_PANN +0.672 [+0.490,+0.859]; both seam-robust; P+FT improves with duration on both metrics while P gets worse. Guard: the native point recomputed against the original references reproduces the frozen artifact exactly. The abstract's corroboration sentence was an overclaim in Draft 5 and is now correct: "reproduced at both durations by a second scorer and by two event-level metrics outside the CLAP family".
