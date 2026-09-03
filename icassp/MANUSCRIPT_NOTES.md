@@ -85,3 +85,16 @@ Draft 5 no longer prints) and adds the Draft-5 anchors (97/97). **Verify venue/p
 submission** (bibliographic details were written from memory of the records; the four references added in
 Draft 5 — PARP (NeurIPS 2021), DPHuBERT (Interspeech 2023), Make-An-Audio (ICML 2023), Tango (arXiv
 2304.13731) — included).
+
+## 2026-09-03 post-integration fixes (external-reviewer simulation, 0 cr)
+
+Review artifact: `docs/review/2026-09-03_manuscript_draft5_icassp_reviewer_simulation.md` (ICASSP-form
+scores, overall 3/5 borderline; strengths/weaknesses; review text; action list A1-A10). Two defects in the
+committed package fixed, no number changed: (D1) Sec. 4.1 printed a literal "eftab:anchors" (lost `\r`
+after a manual edit; now `(Table~\ref{tab:anchors})`); (D2) Fig. 1 caption said only panel (a) carries the
+dense control although both panels do since the dense-192 integration. Rebuilt PDF (5 pages: 4 content +
+references) and Overleaf zip (compiles standalone from a fresh extraction); `verify_draft5_numbers.py`
+108/108. Open editorial actions from the review (A2-A9: abstract corroboration wording, intro "both
+severities and durations", one status label for the severity-2 dense control, co-author disclosure,
+figure widths, readability pass, KL/PANNs at 3.84 s on the frozen WAVs, anonymity/reference check) are
+Gabriel's call.
