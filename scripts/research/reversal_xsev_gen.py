@@ -37,6 +37,12 @@ CTX = {
     # 64 prompts x replicate 0 only; integer seed = the frozen music replicate-0 seed (same convention
     # as ac_short/ac_native: same integer seed per ytid, x_T shape (1,8,256,16) differs from 3.84 s).
     "music_native": (MUSIC_MANIFEST, 1, 256, 10.24, GEN_SALT, "ytid", "prompt_index"),
+    # DRAFT5-OPSWEEP-1 (docs/draft5_opsweep.md): two intermediate durations so the duration
+    # "interaction" stops being a two-point slope. Same 192 AudioCaps prompts, replicate 0, same
+    # integer seed per ytid as ac_short/ac_native (x_T shape differs with the latent length) --
+    # identical convention to music_native.
+    "ac_d128": (AC_MANIFEST, 1, 128, 5.12, GEN_SALT, "ytid", "prompt_index"),
+    "ac_d192": (AC_MANIFEST, 1, 192, 7.68, GEN_SALT, "ytid", "prompt_index"),
 }
 
 
@@ -85,24 +91,41 @@ def main():
     ap.add_argument("--dry-run-cpu", action="store_true")
     ap.add_argument("--indices", default="", help="resume: comma-list of prompt_index (ikey) to (re)generate; "
                     "seeds/x_T/everything else unchanged. Writes an index-suffixed manifest. Empty = full set.")
+    # DRAFT5-OPSWEEP-1: sampler recipe. "frozen" reproduces every earlier run bit-for-bit and stays
+    # the default; "published" is Singh et al.'s reported recipe (DDIM 200, guidance 3.5), used only
+    # by the E2b spot check. A non-frozen recipe MUST carry --tag so its WAVs cannot collide with,
+    # or be mistaken for, the frozen ones.
+    ap.add_argument("--recipe", default="frozen", choices=["frozen", "published"])
+    ap.add_argument("--first-n", type=int, default=0,
+                    help="outcome-blind subset: the first N prompts in frozen manifest order (0 = all)")
+    ap.add_argument("--tag", default="", help="suffix for WAV and manifest names (keeps runs separate)")
     args = ap.parse_args()
+    if args.recipe != "frozen" and not args.tag:
+        raise SystemExit("PREFLIGHT FAIL: a non-frozen recipe requires --tag")
+    if args.first_n and args.indices:
+        raise SystemExit("PREFLIGHT FAIL: --first-n and --indices are mutually exclusive")
     if args.context == "dense_native" and args.system != "dense":
         raise SystemExit("dense_native context is for --system dense only")
-    if args.system == "dense" and args.context not in ("dense_native", "ac_short", "ac_native"):
-        # dense: the Arm-D native control (frozen) or the XSEV-DENSE-192-CONTROL cells (docs/xsev_dense_192_control.md)
-        raise SystemExit("dense generates only dense_native, ac_short or ac_native")
+    if args.system == "dense" and args.context not in ("dense_native", "ac_short", "ac_native", "ac_d128", "ac_d192"):
+        # dense: the Arm-D native control (frozen), the XSEV-DENSE-192-CONTROL cells
+        # (docs/xsev_dense_192_control.md) or the DRAFT5-OPSWEEP-1 sweep points (docs/draft5_opsweep.md)
+        raise SystemExit("dense generates only dense_native, ac_short, ac_native, ac_d128 or ac_d192")
 
     manifest_path, reps, T, duration, _salt, ykey, ikey = CTX[args.context]
     prompts = json.load(open(manifest_path))["prompts"]
-    ddim = 50
-    idx_suffix = ""
+    ddim, guidance = (50, 2.5) if args.recipe == "frozen" else (200, 3.5)
+    idx_suffix = args.tag
+    if args.first_n:
+        prompts = sorted(prompts, key=lambda q: q[ikey])[:args.first_n]
+        if len(prompts) != args.first_n:
+            raise SystemExit(f"PREFLIGHT FAIL: asked for the first {args.first_n} prompts, got {len(prompts)}")
     if args.indices:
         want = {int(x) for x in args.indices.split(",") if x.strip() != ""}
         prompts = [p for p in prompts if p[ikey] in want]
         got = {p[ikey] for p in prompts}
         if got != want:
             raise SystemExit(f"PREFLIGHT FAIL: requested indices {sorted(want)} but manifest has {sorted(got)}")
-        idx_suffix = f"_idx{min(want)}-{max(want)}"
+        idx_suffix = f"{args.tag}_idx{min(want)}-{max(want)}"
     if args.dry_run_cpu:
         prompts = prompts[:1]; reps = 1; ddim = 6
 
@@ -138,13 +161,13 @@ def main():
         pi = p[ikey]; ytid = p[ykey]; caption = p["caption"]
         for r in range(reps):
             x_T = make_x_T(args.context, ytid, r, C, T, F).to(dev)
-            w = G0.generate(model, caption, x_T, ddim, 2.5, 0.0)
+            w = G0.generate(model, caption, x_T, ddim, guidance, 0.0)
             w = np.asarray(w).squeeze().astype(np.float32)
-            path = os.path.join(args.out, f"{args.system}_{args.context}_p{pi}_r{r}.wav")
+            path = os.path.join(args.out, f"{args.system}_{args.context}{args.tag}_p{pi}_r{r}.wav")
             sf.write(path, w, 16000, subtype="PCM_16")
             rows.append({"ytid": ytid, "prompt_index": pi, "replicate_index": r,
                          "seed": gen_seed(args.context, ytid, r), "system": args.system, "context": args.context,
-                         "checkpoint": ck_sha, "ddim": ddim, "guidance": 2.5, "eta": 0.0, "latent_t": T,
+                         "checkpoint": ck_sha, "ddim": ddim, "guidance": guidance, "eta": 0.0, "latent_t": T,
                          "duration_s": duration, "n_samples": int(w.shape[-1]), "device": str(dev),
                          "wav": path, "wav_sha256": G0.sha_file(path)})
     exp = 1 if args.dry_run_cpu else len(prompts) * reps
@@ -152,8 +175,9 @@ def main():
         raise SystemExit(f"expected {exp} WAVs, wrote {len(rows)}")
     prov = {**G0._git_info(), **G0._env_info(dev), "checkpoint_convention": ck_sha}
     man = {"artifact": "reversal_xsev_gen", "system": args.system, "context": args.context,
-           "manifest": manifest_path, "recipe": {"ddim": ddim, "guidance": 2.5, "eta": 0.0, "latent_t": T,
-           "duration_s": duration, "reps": reps, "gen_salt": GEN_SALT, "weight_convention": "ema"},
+           "manifest": manifest_path, "recipe": {"name": args.recipe, "ddim": ddim, "guidance": guidance,
+           "eta": 0.0, "latent_t": T, "duration_s": duration, "reps": reps, "gen_salt": GEN_SALT,
+           "weight_convention": "ema", "first_n": args.first_n or None, "tag": args.tag or None},
            "provenance": prov, "n": len(rows), "rows": rows}
     outman = os.path.join(args.out, f"gen_manifest_{args.system}_{args.context}{idx_suffix}.json")
     json.dump(man, open(outman, "w"), indent=1)
