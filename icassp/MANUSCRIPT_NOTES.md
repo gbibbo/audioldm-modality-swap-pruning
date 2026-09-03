@@ -137,3 +137,25 @@ references) and Overleaf zip (compiles standalone from a fresh extraction); `ver
 severities and durations", one status label for the severity-2 dense control, co-author disclosure,
 figure widths, readability pass, KL/PANNs at 3.84 s on the frozen WAVs, anonymity/reference check) are
 Gabriel's call.
+
+## 2026-09-03 DRAFT5-OPSWEEP-1 + DRAFT5-PUBRECIPE-1 integrated (two T4 jobs, 4.558 cr; CPU integration 0 cr)
+
+Results: `configs/research/draft5_opsweep_result.json` (E1 duration sweep, pre-specified shape rule ->
+MONOTONE-INCREASING: R = +0.085 / +0.139 / +0.201 / +0.244 at 3.84 / 5.12 / 7.68 / 10.24 s, every step
+lo95 > 0; rho_dense 44 / 63 / 78 / 82 %) and `configs/research/draft5_pubrecipe_result.json` (E2b
+published-recipe check, gate lo95(J_pub) > 0 PASS: J_pub +0.184 [+0.126, +0.243]; J_frozen|64 +0.168).
+Integration script `scripts/research/paper_figs/integrate_opsweep.py` (idempotent marker
+`%% opsweep-integrated`): abstract, intro Duration bullet, Sec. 3.2 (sweep durations; 64-prompt published
+recipe check), Sec. 3.4 status labels, Sec. 4.1 sweep paragraph, Fig. 1(b) four durations for P / P+FT /
+dense / real / floors (`make_draft5_figs.py`, guards on the frozen end cells), Table 2 rows 5.12 s and
+7.68 s, Sec. 4.4 published-recipe sentence, Discussion, Limitations (recipe sentence rewritten; the sweep
+stops at the fine-tuning duration so it cannot separate "largest at the training duration" from "larger
+for longer clips"). Page budget: ~20 lines recovered by prose trims that drop no result (Background,
+Sec. 3.3/3.4 asides, severity-1 power paragraph loses the dW CIs and the severity-2 median J (W stays in
+Table 1; sev-1 8 % / 52 % ratios stay in Table 2), crop sentence, Table 1/2 and Fig. 2 captions,
+Discussion's redundant "one restored score" sentence) and by Fig. 1 / Fig. 2 heights 2.26 -> 2.08 in and
+2.44 -> 2.08 in, float separations 7/8 pt -> 5/6 pt. Fig. 1(b) prints no R at the two new points (no room
+at column width; values are in the text and Table 2). Result: 4 content pages + references page, 0 overfull
+boxes, `verify_draft5_numbers.py` 114/114 (10 sweep/recipe checks added; 4 checks for deliberately dropped
+prose numbers removed), Overleaf zip rebuilt and compiles standalone.
+

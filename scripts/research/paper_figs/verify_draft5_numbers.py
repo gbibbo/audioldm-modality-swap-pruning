@@ -41,7 +41,8 @@ DROP = {"sev2 slope P", "sev2 slope P+FT", "s(P) sev2", "s(P+FT) sev2", "s(dense
         "pruned music vs AC native",                                   # Draft 5 rewrites the sentence (floor)
         "caption dense s",                                             # +0.150 now stated in the prose only
         "wilcoxon sev1", "wilcoxon sev2",                              # p-values dropped from the prose
-        "sev2 J text", "gap closed short", "gap closed native"}        # A7: CIs moved from prose to Tables 1-2
+        "sev2 J text", "gap closed short", "gap closed native",        # A7: CIs moved from prose to Tables 1-2
+        "sev1 dW", "sev2 dW"}                                          # OPSWEEP page budget: dW CIs dropped (W stays in Table 1)
 dropped = [c[0] for c in checks if c[0] in DROP]
 checks = [c for c in checks if c[0] not in DROP]
 # also drop any inherited check whose label mentions pooled-rank / equivalence forms (defensive)
@@ -56,7 +57,6 @@ checks += [
     ("s(P) sev1 prose", "s(\\mathrm{P})=" + pt(ddc["slopes"]["pruned"])),
     ("s(P+FT) sev1 prose", "s(\\PFT)=" + pt(ddc["slopes"]["postft"])),
     ("median J sev1", pt(r2["sev1_armd80"]["median_j"]) + "$$" + ci(r2["sev1_armd80"]["median_j"])),
-    ("median J sev2 point", "medianinteractionis$" + pt(r2["sev2_xsev192"]["median_j"])),
     ("crop sev2 nat-crop point", "\\Rn-R_{\\mathrm{crop}}=" + pt(ns["ns"]["C2"]["R_native_minus_R_crop"]) + "$(seam-robust)"),
     ("4.1 0.055 to 0.299", "from$0.055$to$0.299$"),
     ("4.1 0.015 to 0.100", "from$0.015$to$0.100$"),
@@ -138,7 +138,6 @@ if os.path.exists(_d192):
         ("d192 s(P)-s(dense)", pt(P_["s_pruned_minus_s_dense"]) + "$$" + ci(P_["s_pruned_minus_s_dense"])),
         ("d192 s(P+FT)-s(dense)", pt(P_["s_postft_minus_s_dense"]) + "$$" + ci(P_["s_postft_minus_s_dense"])),
         ("d192 rho_dense short CI", tab_ci(P_["rho_short"])), ("d192 rho_dense native CI", tab_ci(P_["rho_native"])),
-        ("d192 rho_dense prose", "closes" + pct(P_["rho_short"]) + "ofthegaptodenseat$3.84$\\,sand" + pct(P_["rho_native"]) + "at$10.24$\\,s"),
         ("d192 rho_dense native abstract", pct(P_["rho_native"]) + "versus" + pct(P_["rho_short"])),
         ("d192 G native postft", pt(P_["G_native_postft"]) + "$$" + ci(P_["G_native_postft"])),
         ("d192 G short postft", "(" + pt(P_["G_short_postft"]) + "at$3.84$\\,s)"),
@@ -146,6 +145,26 @@ if os.path.exists(_d192):
         ("d192 dense means prose", f"{m_['dense_short']:.3f}\\!\\to\\!{m_['dense_native']:.3f}"),
     ]
 
+# ---- DRAFT5-OPSWEEP-1 (duration sweep) + DRAFT5-PUBRECIPE-1 (published-recipe check), once integrated
+_sw = os.path.join(ROOT, "configs/research/draft5_opsweep_result.json")
+_pr = os.path.join(ROOT, "configs/research/draft5_pubrecipe_result.json")
+if os.path.exists(_sw) and os.path.exists(_pr) and "%% opsweep-integrated" in raw_tex:
+    SW = J("configs/research/draft5_opsweep_result.json"); PR = J("configs/research/draft5_pubrecipe_result.json")
+    Rd, St, Bd = SW["R_by_duration"], SW["steps"], SW["secondary"]["by_duration"]
+    assert SW["SHAPE_VERDICT"] == "MONOTONE-INCREASING" and PR["GATE_lo95_J_pub_gt_0"]
+    def _fp(d):
+        f = Bd[d]["floors"]; return f"${f['P']:+.3f}/{f['PFT']:+.3f}$"
+    checks += [
+        ("sweep R four durations", "R=" + pt(Rd["3.84"]) + "$," + pt(Rd["5.12"]) + "$," + pt(Rd["7.68"]) + "$," + pt(Rd["10.24"]) + "$at$3.84$"),
+        ("sweep D1", pt(St["D1"]) + "$$" + ci(St["D1"])), ("sweep D2", pt(St["D2"]) + "$$" + ci(St["D2"])),
+        ("sweep D3", pt(St["D3"]) + "$$" + ci(St["D3"])),
+        ("sweep P flat", "flatto$5.12$\\,s(" + pt(SW["s_response"]["pruned2_A_3.84_to_5.12"]) + "$)"),
+        ("sweep rho_dense climb", "climbs" + pct(Bd["3.84"]["rho_dense"]) + "," + pct(Bd["5.12"]["rho_dense"]) + "," + pct(Bd["7.68"]["rho_dense"]) + "," + pct(Bd["10.24"]["rho_dense"])),
+        ("T2 sweep 5.12 row", "AC$5.12$\\,s&" + _fp("5.12") + "&$" + f"{Bd['5.12']['levels']['real']:.3f}" + "$&" + tab_ci(Bd["5.12"]["rho_dense"]) + "&" + tab_ci(Bd["5.12"]["rho_real"])),
+        ("T2 sweep 7.68 row", "AC$7.68$\\,s&" + _fp("7.68") + "&$" + f"{Bd['7.68']['levels']['real']:.3f}" + "$&" + tab_ci(Bd["7.68"]["rho_dense"]) + "&" + tab_ci(Bd["7.68"]["rho_real"])),
+        ("pub J", "J=" + pt(PR["J_pub"]) + "$$" + ci(PR["J_pub"])),
+        ("pub J_frozen|64", "samepromptsgives" + pt(PR["J_frozen_same64"]) + "$,difference" + pt(PR["J_pub_minus_J_frozen"]) + "$$" + ci(PR["J_pub_minus_J_frozen"])),
+    ]
 
 bad = 0
 for label, s in checks:

@@ -27,6 +27,13 @@ FC = M.load("configs/research/draft5_floor_ceiling_result.json")
 cells = FC["cells"]
 _D192 = os.path.join(M.ROOT, "configs/research/xsev_dense_192_control_result.json")
 DENSE192 = M.load("configs/research/xsev_dense_192_control_result.json") if os.path.exists(_D192) else None
+# DRAFT5-OPSWEEP-1: two more durations (5.12 s, 7.68 s) for P, P+FT, dense and the real ceiling at severity 2
+_SW = os.path.join(M.ROOT, "configs/research/draft5_opsweep_result.json")
+SWEEP = M.load("configs/research/draft5_opsweep_result.json") if os.path.exists(_SW) else None
+if SWEEP is not None and "secondary" not in SWEEP:
+    SWEEP = None          # the sweep is drawn only once its real-ceiling / floor secondaries exist
+DUR4 = [3.84, 5.12, 7.68, 10.24]
+XPOS = {d: (d - 3.84) / (10.24 - 3.84) for d in DUR4}   # 3.84 s -> 0, 10.24 s -> 1 (same axis as before)
 C_REAL = "#4d4d4d"
 C_FLOOR = "#9a9a9a"
 
@@ -39,7 +46,7 @@ def cell(name):
 def figure1():
     # A6: natural size = one ICASSP column (3.375 in) so the .tex can include it at \columnwidth
     # and the lettering renders at its stated point size instead of being shrunk to 0.74x.
-    fig, axes = plt.subplots(2, 1, figsize=(3.35, 2.26), sharex=True, sharey=True)
+    fig, axes = plt.subplots(2, 1, figsize=(3.35, 2.26), sharex=False, sharey=True)
     x = [0.0, 1.0]
     xlabels = ["3.84 s\n(short)", "10.24 s\n(native)"]
     # (system, duration) -> cell name in the Draft-5 result
@@ -61,8 +68,17 @@ def figure1():
             assert abs(cell(sh)[0] - s[f"{key}_short"]) < 1e-6 and abs(cell(na)[0] - s[f"{key}_native"]) < 1e-6, (sev, key)  # float32 re-embedding
         # real-audio ceiling
         r_sh, r_na = cell(nm["real"][0])[0], cell(nm["real"][1])[0]
-        ax.plot(x, [r_sh, r_na], color=C_REAL, ls="-.", lw=0.9, marker="^", ms=5.0, mec="white", mew=0.4,
-                zorder=2, clip_on=False)
+        sw = SWEEP["secondary"]["by_duration"] if (SWEEP is not None and sev == "sev2") else None
+        if sw is not None:   # guards: the sweep's frozen end cells must equal the Draft-5 cells
+            assert abs(sw["3.84"]["levels"]["real"] - r_sh) < 1e-6 and abs(sw["10.24"]["levels"]["real"] - r_na) < 1e-6
+            assert abs(sw["3.84"]["levels"]["P"] - s["pruned_short"]) < 1e-6 and abs(sw["10.24"]["levels"]["PFT"] - s["post_native"]) < 1e-6
+            xs4 = [XPOS[d] for d in DUR4]
+            lv = lambda k: [sw[str(d)]["levels"][k] for d in DUR4]
+            ax.plot(xs4, lv("real"), color=C_REAL, ls="-.", lw=0.9, marker="^", ms=5.0, mec="white", mew=0.4,
+                    zorder=2, clip_on=False)
+        else:
+            ax.plot(x, [r_sh, r_na], color=C_REAL, ls="-.", lw=0.9, marker="^", ms=5.0, mec="white", mew=0.4,
+                    zorder=2, clip_on=False)
         ax.annotate("real audio", (0.0, r_sh), xytext=(-4, 4), textcoords="offset points", ha="right",
                     va="bottom", fontsize=6.3, color=C_REAL)
         # dense (matched control): severity 1 from Draft 4; severity 2 from XSEV-DENSE-192-CONTROL when present
@@ -73,26 +89,45 @@ def figure1():
             d_pair = (DENSE192["means"]["dense_short"], DENSE192["means"]["dense_native"])
         if d_pair is not None:
             d_sh, d_na = d_pair
-            ax.plot(x, [d_sh, d_na], color=M.C_DENSE, ls=":", lw=1.0, marker="*", ms=8, mec="white", mew=0.4,
-                    zorder=2, clip_on=False)
+            if sw is not None:
+                assert abs(sw["3.84"]["levels"]["dense"] - d_sh) < 1e-6 and abs(sw["10.24"]["levels"]["dense"] - d_na) < 1e-6
+                ax.plot(xs4, lv("dense"), color=M.C_DENSE, ls=":", lw=1.0, marker="*", ms=8, mec="white", mew=0.4,
+                        zorder=2, clip_on=False)
+            else:
+                ax.plot(x, [d_sh, d_na], color=M.C_DENSE, ls=":", lw=1.0, marker="*", ms=8, mec="white", mew=0.4,
+                        zorder=2, clip_on=False)
             ax.annotate("dense", (0.0, d_sh), xytext=(-4, -5), textcoords="offset points", ha="right",
                         va="top", fontsize=6.4, color=M.C_DENSE)
         # P and P+FT with CI whiskers of the paired gain
-        ax.plot(x, [s["pruned_short"], s["pruned_native"]], color=M.C_PRUN, ls="--", lw=1.3, marker="s",
-                ms=5.5, mec="white", mew=0.6, zorder=3, clip_on=False)
-        ax.plot(x, [s["post_short"], s["post_native"]], color=M.C_POST, ls="-", lw=1.3, marker="o",
-                ms=5.5, mec="white", mew=0.6, zorder=4, clip_on=False)
-        for xpos, pv, qv, R in [(0.0, s["pruned_short"], s["post_short"], s["R_short"]),
-                                (1.0, s["pruned_native"], s["post_native"], s["R_native"])]:
+        if sw is not None:
+            ax.plot(xs4, lv("P"), color=M.C_PRUN, ls="--", lw=1.3, marker="s", ms=5.5, mec="white", mew=0.6,
+                    zorder=3, clip_on=False)
+            ax.plot(xs4, lv("PFT"), color=M.C_POST, ls="-", lw=1.3, marker="o", ms=5.5, mec="white", mew=0.6,
+                    zorder=4, clip_on=False)
+            pairs = [(XPOS[d], sw[str(d)]["levels"]["P"], sw[str(d)]["levels"]["PFT"],
+                      SWEEP["R_by_duration"][str(d)]) for d in DUR4]
+        else:
+            ax.plot(x, [s["pruned_short"], s["pruned_native"]], color=M.C_PRUN, ls="--", lw=1.3, marker="s",
+                    ms=5.5, mec="white", mew=0.6, zorder=3, clip_on=False)
+            ax.plot(x, [s["post_short"], s["post_native"]], color=M.C_POST, ls="-", lw=1.3, marker="o",
+                    ms=5.5, mec="white", mew=0.6, zorder=4, clip_on=False)
+            pairs = [(0.0, s["pruned_short"], s["post_short"], s["R_short"]),
+                     (1.0, s["pruned_native"], s["post_native"], s["R_native"])]
+        for xpos, pv, qv, R in pairs:
             p, lo, hi = M.ci(R)
             yerr = np.array([[qv - (pv + lo)], [(pv + hi) - qv]])
             ax.errorbar([xpos], [qv], yerr=yerr, fmt="none", ecolor=M.C_POST, elinewidth=1.0, capsize=2.6,
                         capthick=1.0, zorder=5, clip_on=False)
         # chance floors: one short tick per (system, duration), drawn at the cell's own floor
         for key, col in [("pruned", M.C_PRUN), ("post", M.C_POST)]:
-            for xpos, cname in zip(x, nm[key]):
-                fl = cell(cname)[1]
-                ax.plot([xpos - 0.09, xpos + 0.09], [fl, fl], color=col, lw=1.6, alpha=0.55, zorder=2,
+            if sw is not None:
+                fk = "P" if key == "pruned" else "PFT"
+                ticks = [(XPOS[d], sw[str(d)]["floors"][fk]) for d in DUR4]
+                assert abs(ticks[0][1] - cell(nm[key][0])[1]) < 1e-6 and abs(ticks[-1][1] - cell(nm[key][1])[1]) < 1e-6
+            else:
+                ticks = [(xpos, cell(cname)[1]) for xpos, cname in zip(x, nm[key])]
+            for xpos, fl in ticks:
+                ax.plot([xpos - 0.07, xpos + 0.07], [fl, fl], color=col, lw=1.6, alpha=0.55, zorder=2,
                         solid_capstyle="butt")
         # floor label once per panel, to the right of the native tick (clear of the y-axis and the R labels)
         fl_nat = cell(nm["pruned"][1])[1]
@@ -107,17 +142,24 @@ def figure1():
             _anchor, _dy, _va = 0.5 * (s["pruned_short"] + s["post_short"]), 0, "center"
         else:                                                # narrow gap: label goes below the pair
             _anchor, _dy, _va = s["pruned_short"], -4, "top"
+        _dx, _ha = 6, "left"
         ax.annotate(r"$R_{\mathrm{short}}\,%+.3f$" % M.ci(s["R_short"])[0], (0.0, _anchor),
-                    xytext=(6, _dy), textcoords="offset points", ha="left",
+                    xytext=(_dx, _dy), textcoords="offset points", ha=_ha,
                     va=_va, fontsize=6.6, color="0.15")
         ax.annotate(r"$R_{\mathrm{nat}}\,%+.3f$" % M.ci(s["R_native"])[0],
                     (1.0, 0.5 * (s["pruned_native"] + s["post_native"])), xytext=(7, 0),
                     textcoords="offset points", ha="left", va="center", fontsize=6.6, color="0.15")
         p, lo, hi = M.ci(s["J"])
         ax.set_title(title + "\n" + r"$J=%+.3f$  [$%+.3f,\,%+.3f$]" % (p, lo, hi), fontsize=7.8)
-        ax.set_xticks(x)
-        ax.set_xticklabels(xlabels)
+        if sw is not None:
+            ax.set_xticks([XPOS[d] for d in DUR4])
+            ax.set_xticklabels(["3.84 s\n(short)", "5.12", "7.68", "10.24 s\n(native)"])
+        else:
+            ax.set_xticks(x)
+            ax.set_xticklabels(xlabels)
         ax.set_xlim(-0.34, 1.34)
+        if sev == "sev1":            # sharex is off (panel (b) carries four ticks): hide (a)'s labels as before
+            ax.tick_params(labelbottom=False)
         ax.set_xlabel("")
         ax.yaxis.set_major_locator(plt.MultipleLocator(0.1))
         ax.grid(axis="y", color=M.GRID, lw=0.6, zorder=0)

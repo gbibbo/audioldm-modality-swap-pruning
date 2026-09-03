@@ -1,0 +1,649 @@
+{
+ "artifact": "draft5_sweep_result",
+ "experiment": "sweep",
+ "protocol_doc_sha256": "e83eb6bda0ddd10edfdd7f0f9102639c185a93ed204c8065d8f1125db38a56be",
+ "status": "PRE-SPECIFIED (docs/draft5_opsweep.md)",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "DRAFT5-OPSWEEP-1|BOOTSTRAP|2026-09-03",
+  "seed_pcg64": 1863059518,
+  "unit": "prompt",
+  "n": 192
+ },
+ "scorer": {
+  "model": "laion/clap-htsat-fused",
+  "hf_revision": "365dea6ef167def6676140ed93bbc43f84dabb28",
+  "lib_versions": {
+   "torch": "1.13.1+cu117",
+   "transformers": "4.30.2",
+   "librosa": "0.9.2"
+  },
+  "scoring_git_sha": "1d4b1c9533bcb9c1f336183441b6678db20c68a1",
+  "sr": 48000,
+  "convention": {
+   "unit": "one 192-item scorer call per system (64 prompts x 3 replicates)",
+   "order": "(prompt_index, replicate_index)",
+   "rng": "np.random.seed(20260826) reset once before each 192-item system",
+   "quirk": "transformers 4.30.2 CLAP-fused has a batch-level stochastic is_longer selection for short-audio batches; frozen batch/order/seed makes it reproducible AND paired by position across systems",
+   "revision": "365dea6ef167def6676140ed93bbc43f84dabb28"
+  }
+ },
+ "generation_provenance": {
+  "dense__ac_d128": {
+   "gen_manifest_sha256": "161233dcc3a90b3550575c0ca80a8c46d8ffb5917548ece4a4a32cd0e39cfff6",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "fb5829b4ce110460d08d5aaee0f5ff8eede940b1",
+   "checkpoint": "dense_ema",
+   "recipe": {
+    "name": "frozen",
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 128,
+    "duration_s": 5.12,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema",
+    "first_n": null,
+    "tag": null
+   }
+  },
+  "pruned2_A__ac_d128": {
+   "gen_manifest_sha256": "7145cb14399c4c900411ea170505861f0e4aa64356cb3955bd7e34312058403f",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "fb5829b4ce110460d08d5aaee0f5ff8eede940b1",
+   "checkpoint": "pruneA(dense_ema)[1,2,1,1]",
+   "recipe": {
+    "name": "frozen",
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 128,
+    "duration_s": 5.12,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema",
+    "first_n": null,
+    "tag": null
+   }
+  },
+  "recovered2__ac_d128": {
+   "gen_manifest_sha256": "0a2273ae2a8f5c532f9b1cccde3681c5e0f94fb48c8dd3bfed1d1a88760d26cd",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "fb5829b4ce110460d08d5aaee0f5ff8eede940b1",
+   "checkpoint": "recovered2_dp1_ema",
+   "recipe": {
+    "name": "frozen",
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 128,
+    "duration_s": 5.12,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema",
+    "first_n": null,
+    "tag": null
+   }
+  },
+  "dense__ac_d192": {
+   "gen_manifest_sha256": "9cfee34fa8b07b540668c009f0f822a2a5cb962344f6ec17d50e26105911a884",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "fb5829b4ce110460d08d5aaee0f5ff8eede940b1",
+   "checkpoint": "dense_ema",
+   "recipe": {
+    "name": "frozen",
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 192,
+    "duration_s": 7.68,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema",
+    "first_n": null,
+    "tag": null
+   }
+  },
+  "pruned2_A__ac_d192": {
+   "gen_manifest_sha256": "dacef63cfe208659929ca27c52adadb33c65d95d6f3c1341e183fe9937dc750e",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "fb5829b4ce110460d08d5aaee0f5ff8eede940b1",
+   "checkpoint": "pruneA(dense_ema)[1,2,1,1]",
+   "recipe": {
+    "name": "frozen",
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 192,
+    "duration_s": 7.68,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema",
+    "first_n": null,
+    "tag": null
+   }
+  },
+  "recovered2__ac_d192": {
+   "gen_manifest_sha256": "e5de6ee15b475060e8d3b8dd2a97de41b950266e7f9b0ccbc2a5b34b2006799b",
+   "n": 192,
+   "devices": [
+    "cuda"
+   ],
+   "git_sha": "fb5829b4ce110460d08d5aaee0f5ff8eede940b1",
+   "checkpoint": "recovered2_dp1_ema",
+   "recipe": {
+    "name": "frozen",
+    "ddim": 50,
+    "guidance": 2.5,
+    "eta": 0.0,
+    "latent_t": 192,
+    "duration_s": 7.68,
+    "reps": 1,
+    "gen_salt": "RECOVERY-CROSS-SEVERITY-REP-1|GENERATION|2026-08-30",
+    "weight_convention": "ema",
+    "first_n": null,
+    "tag": null
+   }
+  },
+  "device_check_sha_equal": [
+   false,
+   false,
+   false,
+   false
+  ]
+ },
+ "device_check": {
+  "max_abs_delta_clap": 7.972121238708496e-06,
+  "delta_clap_per_clip": [
+   -4.86522912979126e-06,
+   -7.972121238708496e-06,
+   -5.811452865600586e-07,
+   3.9637088775634766e-06
+  ],
+  "sha256_equal": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "PASS": false,
+  "pass_rule": "max |dCLAP| < 1e-9 (bit-identical expectation written in the frozen protocol section 4; kept as written, not moved after the result)",
+  "samples": {
+   "per_clip": [
+    {
+     "new": "/teamspace/jobs/draft5-opsweep-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/draft5_opsweep_gen/device_check/pruned2_A_ac_native_p0_r0.wav",
+     "frozen": "/teamspace/jobs/reversal-xsev-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_xsev_gen/pruned2_A_ac_native_p0_r0.wav",
+     "n": 163872,
+     "max_abs_lsb": 1,
+     "frac_samples_differ": 0.0002440929505955868,
+     "corr": 0.999999999975599
+    },
+    {
+     "new": "/teamspace/jobs/draft5-opsweep-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/draft5_opsweep_gen/device_check/pruned2_A_ac_native_p1_r0.wav",
+     "frozen": "/teamspace/jobs/reversal-xsev-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_xsev_gen/pruned2_A_ac_native_p1_r0.wav",
+     "n": 163872,
+     "max_abs_lsb": 1,
+     "frac_samples_differ": 0.0002685022456551455,
+     "corr": 0.9999999999668787
+    },
+    {
+     "new": "/teamspace/jobs/draft5-opsweep-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/draft5_opsweep_gen/device_check/pruned2_A_ac_native_p2_r0.wav",
+     "frozen": "/teamspace/jobs/reversal-xsev-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_xsev_gen/pruned2_A_ac_native_p2_r0.wav",
+     "n": 163872,
+     "max_abs_lsb": 1,
+     "frac_samples_differ": 0.00020137668424135912,
+     "corr": 0.9999999999632174
+    },
+    {
+     "new": "/teamspace/jobs/draft5-opsweep-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/draft5_opsweep_gen/device_check/pruned2_A_ac_native_p3_r0.wav",
+     "frozen": "/teamspace/jobs/reversal-xsev-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_xsev_gen/pruned2_A_ac_native_p3_r0.wav",
+     "n": 163872,
+     "max_abs_lsb": 1,
+     "frac_samples_differ": 8.543253270845538e-05,
+     "corr": 0.999999999950652
+    }
+   ],
+   "max_abs_lsb": 1,
+   "note": "int16 units; 1 LSB = 3.05e-5 full scale"
+  }
+ },
+ "R_by_duration": {
+  "3.84": {
+   "point": 0.08488791843895645,
+   "lo": 0.06568158969033297,
+   "hi": 0.10432376984305544,
+   "n": 192
+  },
+  "5.12": {
+   "point": 0.13934877404729681,
+   "lo": 0.11502201376288212,
+   "hi": 0.16369731550133415,
+   "n": 192
+  },
+  "7.68": {
+   "point": 0.20126854817499407,
+   "lo": 0.17533557859145124,
+   "hi": 0.2271393897937135,
+   "n": 192
+  },
+  "10.24": {
+   "point": 0.24428910286709046,
+   "lo": 0.21488259675643348,
+   "hi": 0.2728693576453224,
+   "n": 192
+  }
+ },
+ "levels": {
+  "pruned2_A@3.84": 0.014637135759888528,
+  "recovered2@3.84": 0.09952505419884498,
+  "pruned2_A@5.12": 0.014630468552544093,
+  "recovered2@5.12": 0.1539792425998409,
+  "pruned2_A@7.68": 0.029381114538409747,
+  "recovered2@7.68": 0.2306496627134038,
+  "pruned2_A@10.24": 0.054875789831082024,
+  "recovered2@10.24": 0.2991648926981725
+ },
+ "steps": {
+  "D1": {
+   "point": 0.05446085560834035,
+   "lo": 0.03211538160467171,
+   "hi": 0.07663703993466696,
+   "n": 192
+  },
+  "D2": {
+   "point": 0.06191977412769726,
+   "lo": 0.03699719240530612,
+   "hi": 0.08676462064310422,
+   "n": 192
+  },
+  "D3": {
+   "point": 0.04302055469209639,
+   "lo": 0.01351972277201033,
+   "hi": 0.07338513386821431,
+   "n": 192
+  }
+ },
+ "SHAPE_VERDICT": "MONOTONE-INCREASING",
+ "shape_rule": "docs/draft5_opsweep.md section 2, declared before scoring; SESOI 0.025",
+ "s_response": {
+  "pruned2_A_3.84_to_5.12": {
+   "point": -6.667207344435155e-06,
+   "lo": -0.009868718003175066,
+   "hi": 0.010074490563541372,
+   "n": 192
+  },
+  "pruned2_A_5.12_to_7.68": {
+   "point": 0.014750645985865654,
+   "lo": 0.005695542067284502,
+   "hi": 0.023569426502975447,
+   "n": 192
+  },
+  "pruned2_A_7.68_to_10.24": {
+   "point": 0.02549467529267228,
+   "lo": 0.016030131763182,
+   "hi": 0.03491631512345823,
+   "n": 192
+  },
+  "recovered2_3.84_to_5.12": {
+   "point": 0.05445418840099592,
+   "lo": 0.03309665891429176,
+   "hi": 0.07600862940635124,
+   "n": 192
+  },
+  "recovered2_5.12_to_7.68": {
+   "point": 0.07667042011356291,
+   "lo": 0.05216659885578944,
+   "hi": 0.10094718971728676,
+   "n": 192
+  },
+  "recovered2_7.68_to_10.24": {
+   "point": 0.06851522998476867,
+   "lo": 0.03904178501579736,
+   "hi": 0.098765921810021,
+   "n": 192
+  }
+ },
+ "secondary": {
+  "guards_vs_committed": {
+   "rho_real@3.84": {
+    "here": 0.32780922354781467,
+    "committed": 0.3278092065434027
+   },
+   "rho_dense@3.84": {
+    "here": 0.44177858383884805,
+    "committed": 0.44177858383884805
+   },
+   "rho_real@10.24": {
+    "here": 0.6335783699717114,
+    "committed": 0.6335783925595243
+   },
+   "rho_dense@10.24": {
+    "here": 0.8171007753382509,
+    "committed": 0.8171007753382509
+   }
+  },
+  "worst_guard": 2.258781295338963e-08,
+  "real_refs": {
+   "d128": {
+    "samples": 81952,
+    "n": 192,
+    "n_shorter_than_target": 0
+   },
+   "d192": {
+    "samples": 122912,
+    "n": 192,
+    "n_shorter_than_target": 1
+   }
+  },
+  "by_duration": {
+   "3.84": {
+    "levels": {
+     "P": 0.014637135759888528,
+     "PFT": 0.09952505419884498,
+     "dense": 0.20678750597774828,
+     "real": 0.2735923827179552
+    },
+    "floors": {
+     "P": -0.005226293310139833,
+     "PFT": -0.015430172697354768,
+     "dense": -0.027574740507664803,
+     "real": -0.041073168243817314
+    },
+    "R": {
+     "point": 0.08488791843895645,
+     "lo": 0.06568158969033297,
+     "hi": 0.10432376984305544,
+     "n": 192
+    },
+    "R_c": {
+     "point": 0.09509179782617139,
+     "lo": 0.07548577580718453,
+     "hi": 0.11504628881187196,
+     "n": 192
+    },
+    "dense_minus_P": {
+     "point": 0.19215037021785975,
+     "lo": 0.16776034978938695,
+     "hi": 0.21700941175937866,
+     "n": 192
+    },
+    "dense_minus_PFT": {
+     "point": 0.1072624517789033,
+     "lo": 0.08547113311979047,
+     "hi": 0.12994626122344927,
+     "n": 192
+    },
+    "real_minus_PFT": {
+     "point": 0.17406732851911025,
+     "lo": 0.15173262799653459,
+     "hi": 0.19622055299732893,
+     "n": 192
+    },
+    "rho_dense": {
+     "point": 0.44177858383884805,
+     "lo": 0.35544667936434293,
+     "hi": 0.528948735414235,
+     "n": 192
+    },
+    "rho_real": {
+     "point": 0.32780922354781467,
+     "lo": 0.26242531651935447,
+     "hi": 0.3930674188761941,
+     "n": 192
+    }
+   },
+   "5.12": {
+    "levels": {
+     "P": 0.014630468552544093,
+     "PFT": 0.1539792425998409,
+     "dense": 0.23668007848997755,
+     "real": 0.3071304896584479
+    },
+    "floors": {
+     "P": -0.004905809430018356,
+     "PFT": -0.025096305515717177,
+     "dense": -0.03619589382348446,
+     "real": -0.0480189720586471
+    },
+    "R": {
+     "point": 0.13934877404729681,
+     "lo": 0.11502201376288212,
+     "hi": 0.16369731550133415,
+     "n": 192
+    },
+    "R_c": {
+     "point": 0.15953927013299563,
+     "lo": 0.13520818510148727,
+     "hi": 0.18419823162558185,
+     "n": 192
+    },
+    "dense_minus_P": {
+     "point": 0.22204960993743347,
+     "lo": 0.19671502682473754,
+     "hi": 0.24704861466628547,
+     "n": 192
+    },
+    "dense_minus_PFT": {
+     "point": 0.08270083589013666,
+     "lo": 0.05372203352902337,
+     "hi": 0.11148764374956954,
+     "n": 192
+    },
+    "real_minus_PFT": {
+     "point": 0.15315124705860703,
+     "lo": 0.12861499556129274,
+     "hi": 0.17742491328378188,
+     "n": 192
+    },
+    "rho_dense": {
+     "point": 0.6275569413815267,
+     "lo": 0.5223654435971206,
+     "hi": 0.7406218138578877,
+     "n": 192
+    },
+    "rho_real": {
+     "point": 0.4764060307429639,
+     "lo": 0.4040640962413438,
+     "hi": 0.549692188368776,
+     "n": 192
+    }
+   },
+   "7.68": {
+    "levels": {
+     "P": 0.029381114538409747,
+     "PFT": 0.2306496627134038,
+     "dense": 0.28762135619278223,
+     "real": 0.33267880145770806
+    },
+    "floors": {
+     "P": 0.00285836557740519,
+     "PFT": -0.036560603181593855,
+     "dense": -0.036556580915354665,
+     "real": -0.045669679531177586
+    },
+    "R": {
+     "point": 0.20126854817499407,
+     "lo": 0.17533557859145124,
+     "hi": 0.2271393897937135,
+     "n": 192
+    },
+    "R_c": {
+     "point": 0.24068751693399312,
+     "lo": 0.21428876881602055,
+     "hi": 0.26709306302922947,
+     "n": 192
+    },
+    "dense_minus_P": {
+     "point": 0.2582402416543725,
+     "lo": 0.23237074213648157,
+     "hi": 0.28396909709420776,
+     "n": 192
+    },
+    "dense_minus_PFT": {
+     "point": 0.056971693479378395,
+     "lo": 0.028607657321238853,
+     "hi": 0.08627301154798867,
+     "n": 192
+    },
+    "real_minus_PFT": {
+     "point": 0.10202913874430426,
+     "lo": 0.07691859884701747,
+     "hi": 0.1268059874314834,
+     "n": 192
+    },
+    "rho_dense": {
+     "point": 0.7793849126131587,
+     "lo": 0.6804681350280647,
+     "hi": 0.8836248593966644,
+     "n": 192
+    },
+    "rho_real": {
+     "point": 0.6636006697556772,
+     "lo": 0.5892519714439194,
+     "hi": 0.7389675627451681,
+     "n": 192
+    }
+   },
+   "10.24": {
+    "levels": {
+     "P": 0.054875789831082024,
+     "PFT": 0.2991648926981725,
+     "dense": 0.35384638224786613,
+     "real": 0.4404462487436831
+    },
+    "floors": {
+     "P": 0.019908826339057367,
+     "PFT": -0.021863738245428976,
+     "dense": -0.022567930439173267,
+     "real": -0.02384293495492784
+    },
+    "R": {
+     "point": 0.24428910286709046,
+     "lo": 0.21488259675643348,
+     "hi": 0.2728693576453224,
+     "n": 192
+    },
+    "R_c": {
+     "point": 0.2860616674515768,
+     "lo": 0.2555740206927301,
+     "hi": 0.31577894818374264,
+     "n": 192
+    },
+    "dense_minus_P": {
+     "point": 0.2989705924167841,
+     "lo": 0.26889853341866304,
+     "hi": 0.32961630079007587,
+     "n": 192
+    },
+    "dense_minus_PFT": {
+     "point": 0.05468148954969365,
+     "lo": 0.020773523142634077,
+     "hi": 0.08785873746734675,
+     "n": 192
+    },
+    "real_minus_PFT": {
+     "point": 0.14128135604551062,
+     "lo": 0.11061983400189396,
+     "hi": 0.1720656212648464,
+     "n": 192
+    },
+    "rho_dense": {
+     "point": 0.8171007753382509,
+     "lo": 0.7187151508650539,
+     "hi": 0.9248730330314809,
+     "n": 192
+    },
+    "rho_real": {
+     "point": 0.6335783699717114,
+     "lo": 0.5629618485430474,
+     "hi": 0.7053512055804502,
+     "n": 192
+    }
+   }
+  },
+  "s_dense_steps": {
+   "3.84_to_5.12": {
+    "point": 0.029892572512229282,
+    "lo": 0.002232102111277831,
+    "hi": 0.056213253575939835,
+    "n": 192
+   },
+   "5.12_to_7.68": {
+    "point": 0.050941277702804655,
+    "lo": 0.023054020925216415,
+    "hi": 0.07966537345758601,
+    "n": 192
+   },
+   "7.68_to_10.24": {
+    "point": 0.06622502605508392,
+    "lo": 0.03677508193953448,
+    "hi": 0.09522135584641848,
+    "n": 192
+   }
+  },
+  "s_real_steps": {
+   "3.84_to_5.12": {
+    "point": 0.033538106940492675,
+    "lo": 0.02504112059699158,
+    "hi": 0.042304689961868765,
+    "n": 192
+   },
+   "5.12_to_7.68": {
+    "point": 0.025548311799260166,
+    "lo": 0.015772357258538247,
+    "hi": 0.03604165284159535,
+    "n": 192
+   },
+   "7.68_to_10.24": {
+    "point": 0.10776744728597502,
+    "lo": 0.09743277518815982,
+    "hi": 0.1190158796865338,
+    "n": 192
+   }
+  },
+  "s_dense_3.84_to_10.24": {
+   "point": 0.14705887627011785,
+   "lo": 0.11655688373927356,
+   "hi": 0.17608235204934314,
+   "n": 192
+  },
+  "R_c_steps": {
+   "D1": {
+    "point": 0.06444747230682424,
+    "lo": 0.041801491678727605,
+    "hi": 0.08680324916827734,
+    "n": 192
+   },
+   "D2": {
+    "point": 0.08114824680099748,
+    "lo": 0.055797328732349646,
+    "hi": 0.10703683830209247,
+    "n": 192
+   },
+   "D3": {
+    "point": 0.04537415051758368,
+    "lo": 0.015352295000487478,
+    "hi": 0.07648791698828365,
+    "n": 192
+   }
+  },
+  "note": "secondary, descriptive (protocol section 2): no gate. rho = ratio of means, paired prompt resampling. 3.84 / 10.24 s cells are the committed frozen / dense-192 / floor-ceiling scores."
+ },
+ "artifact_sha256": "718ea9591df769fd464f3cf276912e89b61135a64c4417d7665e9c03dd9a8f9f"
+}

@@ -52,6 +52,26 @@ tested claim; it is not affordable at the current scale. Account reading 2026-09
 read-only): lifetime `total_spent` = **85.855**; the `balance` field still reports 5.0 and remains
 unreliable, so available credit must be confirmed with Gabriel before any launch.
 
+## DRAFT5-OPSWEEP-1 + DRAFT5-PUBRECIPE-1 — SETTLED (jobs `draft5-opsweep-1`, `draft5-pubrecipe-1`, T4, 2026-09-03)
+
+Both jobs completed; neither watchdog fired. Settled `total_cost` read by the watchdogs at the terminal state:
+
+| Job | WAVs | Expected (§A10 model) | Hard cap | **Settled** | Wall (watchdog elapsed) |
+|---|---|---|---|---|---|
+| `draft5-opsweep-1` (E1: 3 systems × 192 prompts × {5.12 s, 7.68 s}, DDIM 50) | 1152 + 4 | 3.35 cr | 4.00 | **2.6454 cr** | 156.6 min |
+| `draft5-pubrecipe-1` (E2b: 2 systems × 64 prompts × {3.84 s, 10.24 s}, DDIM 200 / guidance 3.5) | 256 + 4 | 2.47 cr | 3.00 | **1.9127 cr** | 115.9 min |
+| **total** | **1416** | **5.82 cr** | **7.00** | **4.5581 cr** | — |
+
+The §A10 model over-estimated both jobs (E1 by 27 %, E2b by 23 %): per WAV, E1 settled at ≈0.0023 cr
+(mean latent 160, DDIM 50) against the model's 0.0029, and E2b at ≈0.0075 cr (DDIM 200) against 0.0096, i.e.
+the per-step cost grows less than linearly with `steps · latent` on the T4 — the model's `d` term is
+conservative at large sampler budgets. Keep the model as is (it errs on the safe side under a hard cap).
+Scoring (1416 new WAVs + 4 + 4 device-check clips + 384 real-reference truncations), bootstrap, verdicts
+and manuscript integration: Studio CPU, 0 cr (fused-CLAP ≈ 0.5–0.6 s/clip). Lifetime `total_spent` after
+these two jobs (Lightning SDK `billing_service_get_user_balance()`, read-only, 2026-09-03 20:05 UTC):
+**90.508** (Δ +4.653 vs the 85.855 reading before launch; the two settled job costs sum to 4.558, the
+0.095 residual is other metered usage in the interval). The `balance` field still reads 5.0 and remains unreliable.
+
 ## XSEV-DENSE-192-CONTROL — SETTLED (job `xsev-dense-192-1`, T4, 2026-09-03)
 
 384 dense WAVs (192 × 3.84 s + 192 × 10.24 s, DDIM 50) + 4 device-check clips: **settled `total_cost` = 1.2633 cr** (≈76 min wall incl. provisioning + 2 checkpoint loads; projection 1.1–1.3 cr → accurate; watchdog cap 1.5 never reached) → ≈0.0033 cr/WAV blended. Compute-discipline record in ledger XSEV-DENSE-192-CONTROL-GEN-LAUNCH (CPU alternative ≈18 h). Scoring/verdict/manuscript: CPU, 0 cr. Lifetime `total_spent` after this job: read from the SDK at the next check (the `balance` field remains unreliable).
