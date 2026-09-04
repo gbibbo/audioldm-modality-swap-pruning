@@ -34,12 +34,9 @@ def draw_finelap_fixed(ax, title=None):
         if "early | late" in t.get_text():
             t.remove()
         elif "T_" in t.get_text() or "late" in t.get_text():
-            # the "late-early T" annotation: re-place it top-LEFT so it clears the lower-right legend
-            # at the reduced panel height
-            txt, fs, col = t.get_text(), t.get_fontsize(), t.get_color()
+            # the "late-early T" annotation: removed at the reduced panel height (no free corner);
+            # T and its CI are printed in Sec. 4.3, the caption states the conclusion
             t.remove()
-            ax.text(0.02, 0.06, txt.replace("; ", "\n"), transform=ax.transAxes, fontsize=fs, color=col,
-                    ha="left", va="bottom", linespacing=1.0)   # bottom-left is the only free corner
     # A6: keep the early/late labels near the zero line; at the top they ran into the
     # "late-early T" annotation (which stays at the top right).
     ax.text(3.84 - 0.12, 0.028, "early", fontsize=6.2, color="0.35", va="bottom", ha="right")
