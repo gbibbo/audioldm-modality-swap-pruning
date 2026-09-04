@@ -197,3 +197,12 @@ ledger entry of the same name for the exact trims; Fig. 1 1.98 in (margins top 0
 0.95), Fig. 2 2.00 in (hspace 1.25, top 0.90, bottom 0.195). 4 content pages + references, 0 overfull,
 verifier 112/112, zip standalone OK. The unused Stable Audio Open reference was removed (18 refs).
 
+## 2026-09-04 listening reframed (v2) + companion page section (CPU, 0 cr)
+
+`integrate_author_listening_v2.py` (marker `%% author-listening-v2`): the listening is now told in the first
+person as an addition ("Listening blind, we found ...", "To our ears ...", "our own blind listening"), with a
+single plain clause in Limitations and no "N = 1 / not a perceptual study" phrasing; Sec. 3.3 points to the
+companion page (Sec. 6, "Listen: <url>"). Numbers unchanged; verifier 116/116 (listening checks now really
+present); 4 content pages + references; zip standalone OK. The companion page has a "What we heard" section
+with the listened prompts at all four durations (116 FLACs), deployed to gh-pages.
+

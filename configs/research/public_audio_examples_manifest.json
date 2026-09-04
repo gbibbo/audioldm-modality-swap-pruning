@@ -874,15 +874,1132 @@
         "section": "C",
         "ytid": "u6tgeRXOxnU"
       }
+    ],
+    "D": [
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d1_3p84s_pruned.flac",
+            "flac_sha256": "d4f182f773ae9443d16ddeaee39497894c40c65a8a7dabb909232aa1f00f4333",
+            "lossless_roundtrip": true,
+            "source_sha256": "1f5dc23a5bc8947b8ebd533754cf6d84a47452620cbdf2b38a015701cb39e857",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d1_3p84s_recovered.flac",
+            "flac_sha256": "8b5811db4d0dfdd3b83faba02f83674309bb93823d48ad1d04b06736764f8bd1",
+            "lossless_roundtrip": true,
+            "source_sha256": "41df7ab1978007b3ced937ae63ed8f6af4ce18e76c455b6e620ff93a6b8267f2",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d1_5p12s_pruned.flac",
+            "flac_sha256": "beaf7af7804f1541dae5cf9b7153ff23201df1a9abbda118ba4ac5f6e2f730de",
+            "lossless_roundtrip": true,
+            "source_sha256": "6fec3995a530ffd1982aec8c37bcf075c058416732a0339dd9bb7df5bfd2a843",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d1_5p12s_recovered.flac",
+            "flac_sha256": "57efc1c956317c8eedce74835129d3d8721dc179ea4d4ce534025200f13d4131",
+            "lossless_roundtrip": true,
+            "source_sha256": "ecccab6cacbca5ce19d3459d2c6917a9b41665f421fcd83eea26e2aeba5b78c7",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d1_7p68s_pruned.flac",
+            "flac_sha256": "6d3229e75c2e3834f452d7d3f7be20d662b008a4251d32be27d648a6fce57813",
+            "lossless_roundtrip": true,
+            "source_sha256": "ebdacd818f10966dcd1837a58c1b79d97f6b6abe5012273c2c6da3f22448dbf5",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d1_7p68s_recovered.flac",
+            "flac_sha256": "64fd548f48e6663ab05e2610b9cb4c1fa85c3439b436428512534a8e9a8e879b",
+            "lossless_roundtrip": true,
+            "source_sha256": "1691eb54d41f8d4ec94f414f20a1282ef85bebb752f51d56d1fcbd71cc7dac34",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d1_10p24s_pruned.flac",
+            "flac_sha256": "7ab10a01a5b3d50c51279e6e14fef90556853c698f61763042b7b037991eea2b",
+            "lossless_roundtrip": true,
+            "source_sha256": "10fdbe21b7c285297821ae120789912693616d5f11763357657d5f27e2b69c00",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d1_10p24s_recovered.flac",
+            "flac_sha256": "a7ebb96baf6c9c79638acb1ea65566fdb77096f281edd89f4d0dfa045cce8165",
+            "lossless_roundtrip": true,
+            "source_sha256": "2a6f1117eafbe1b617fcc305847609888ddf90c9b3b3e349b9e3704444ab418b",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "A power tool drilling followed by a large motor running as wood is being sawed",
+        "example_id": "d1",
+        "section": "D",
+        "ytid": "TWOgvDaDqlU"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d2_3p84s_pruned.flac",
+            "flac_sha256": "1d7f5f057feabfb541fb7484f07bda1128be376a7a04ab58708869685478f983",
+            "lossless_roundtrip": true,
+            "source_sha256": "cbff67072dd4086d651122946a536f433db5d0097e3d34b5c36ea47bcedd3559",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d2_3p84s_recovered.flac",
+            "flac_sha256": "e18e74adf9838dcae266914d7fa065c4c9b5a07221ca297cee31588969e27d31",
+            "lossless_roundtrip": true,
+            "source_sha256": "a272b1e0e672e747a24575213655d6d93961c8166373a04cca00dd7fc615dc9d",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d2_5p12s_pruned.flac",
+            "flac_sha256": "50aad5d0233a0191f7194e991b1ee71d8dcf3b076603b477db20afe0e96e4f36",
+            "lossless_roundtrip": true,
+            "source_sha256": "f6f12d9541450cb865ec58fe1cf4d6a6fd356052763c79d340db6da7a5636987",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d2_5p12s_recovered.flac",
+            "flac_sha256": "ec028a27d96d5d3952fb3982fa70de38700484c69f062e0f63d0fdb4d04caf27",
+            "lossless_roundtrip": true,
+            "source_sha256": "5ae6fda247bd404175a19cd254adc589f3f39bd14c66e26af9a9a7b0de4d350e",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d2_7p68s_pruned.flac",
+            "flac_sha256": "0a5a3c7d0ae468034f8333590bdfafb85495590c66fac2b6bc657571af4f1b8c",
+            "lossless_roundtrip": true,
+            "source_sha256": "c599df23b1ec1f44b5e56920b05709ab28697b0511ced87ff3820611da73b99b",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d2_7p68s_recovered.flac",
+            "flac_sha256": "a6e39ed2766baca4c173392495d8a24c96097eb1ecf09d4895f65b77a715a449",
+            "lossless_roundtrip": true,
+            "source_sha256": "610530d98b21210c7b3d6cdedabdbeb5e6ecd403fda44a7672ccccc9797ed361",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d2_10p24s_pruned.flac",
+            "flac_sha256": "686ce37d02e9f4f2585ee69edeb848dfcb71f74d106a280d1af41e8341975f3f",
+            "lossless_roundtrip": true,
+            "source_sha256": "fd981bd1449573d5d1fcce69f3a7f568b78f1604c7fbe5ed18d21d015af31620",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d2_10p24s_recovered.flac",
+            "flac_sha256": "7bce5b0577260fd064b38154ae29a62abc2e9cc9030b81f91a604de4a47f7254",
+            "lossless_roundtrip": true,
+            "source_sha256": "47809fff0721333c86f46772d66cc5c27145c95a03d23824196b899ac66733df",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p64_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "Birds chirping and tweeting",
+        "example_id": "d2",
+        "section": "D",
+        "ytid": "GIOApFAWDOc"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d3_3p84s_pruned.flac",
+            "flac_sha256": "a6d8b07f8fcf293ff83e9353d50c8c9369f0c6a6c1e44d30cdf8dbca16232abb",
+            "lossless_roundtrip": true,
+            "source_sha256": "157e5349bf5bfb7170f5889af2fc222bdbfa46545a3d409ce8ab173397c3c707",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d3_3p84s_recovered.flac",
+            "flac_sha256": "041fbc473cca9e0e0d8eddb35391a2306f32a0b8fe39f765bd22e790cb94bea2",
+            "lossless_roundtrip": true,
+            "source_sha256": "8ef9c0ce03890c88524671ac1c114a56884235173904ef1abd52bc91c35cd5d6",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d3_5p12s_pruned.flac",
+            "flac_sha256": "4b70aedb8552fc4c8fb09968b6d79836919e2a5bcb971cc9b2e2c7f86b69368a",
+            "lossless_roundtrip": true,
+            "source_sha256": "a190864d811b886767b1274a84e49e5933521ba27e7aef78adf8192991d66804",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d3_5p12s_recovered.flac",
+            "flac_sha256": "46ca2995c5539206204924c6cb967b7cfe7de01ebc92b9c03aa3e65b7eba35f4",
+            "lossless_roundtrip": true,
+            "source_sha256": "fbb874c830b8f4e2ef4ea66f6d3a9d13d26d272859e5687f6bd6a6f3e1b8ed75",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d3_7p68s_pruned.flac",
+            "flac_sha256": "be93b14f33c9de4a9274fb5bcab19c552f419a79d221d616f6e472304f404f63",
+            "lossless_roundtrip": true,
+            "source_sha256": "9b7df423d8f966e744aea18dfd84f1d01713c9f82fc463f810892a16b3526872",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d3_7p68s_recovered.flac",
+            "flac_sha256": "68fc77dc62c6c1a07019f0521f653d3d303a08839bf9356b703094becbb3ff20",
+            "lossless_roundtrip": true,
+            "source_sha256": "dce651239d30bdaab09d915d4223c731081bc87b42189cb75ff6dd93fb772edf",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d3_10p24s_pruned.flac",
+            "flac_sha256": "e81e4c0f9082d751b04b26a7331b558a208d3613af8a7a162d208b267f4e3f22",
+            "lossless_roundtrip": true,
+            "source_sha256": "4e23708e4854c09429df1e15f0d87487093c38e780f58cba7b70c52494cfd049",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d3_10p24s_recovered.flac",
+            "flac_sha256": "6b1deb4df075ffe8546dab8f279dd3a9475e25f61bdb495eff9f36a0d9f2c09d",
+            "lossless_roundtrip": true,
+            "source_sha256": "358270456c69c63f5d3be8cbe7d44593320c8381e6dc1600e9ca8e80e13fa486",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p103_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "Heavy machinery operating followed by wood crunching and cracking as wind blows into a microphone",
+        "example_id": "d3",
+        "section": "D",
+        "ytid": "Ls2vrr9TamU"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d4_3p84s_pruned.flac",
+            "flac_sha256": "1d972dad967064a6e93b831be33f52bc38d8b04fd6ef78717dff80fa8426af2b",
+            "lossless_roundtrip": true,
+            "source_sha256": "57fa3f747dee97f266b3a73ba13ac7042ba6ff8285ad75214d90bab52db35cb4",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d4_3p84s_recovered.flac",
+            "flac_sha256": "b2a8cff80e288b6c81c47c78e7de7cf643c73f152d954954ce4a06bc1ed154e5",
+            "lossless_roundtrip": true,
+            "source_sha256": "bf03009805fd25084a17031144d812a4bc505406600195ac4d2615808bef9c9f",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d4_5p12s_pruned.flac",
+            "flac_sha256": "92cf836eb4b40e96494bb807af43f4bd297094511a8c9b37e828c7d3d797169c",
+            "lossless_roundtrip": true,
+            "source_sha256": "abe9778b3bd0856edfa3e41020c1772b9f373c456903c8595c6f2391190f2914",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d4_5p12s_recovered.flac",
+            "flac_sha256": "00e958faa9477e9d4d2b5ddd4043e0ab263ffcc4757dd300793b6657e7ea7b1c",
+            "lossless_roundtrip": true,
+            "source_sha256": "4fff53a376a299887077acea1cca39cd13319d59a080e9dce685465de702f853",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d4_7p68s_pruned.flac",
+            "flac_sha256": "437e170210bc957db692b8fffd7c033c586656ea0e1f8abf97d4254b99df119a",
+            "lossless_roundtrip": true,
+            "source_sha256": "cb8bc3da1cb3bfbd999adb584584134b60f4ee518b14820dc37225040ff9a93b",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d4_7p68s_recovered.flac",
+            "flac_sha256": "a6ffbfbc3680e6ad4b55b5ceb6c5af7e75abf308a34bd9bc339cc89158422b9e",
+            "lossless_roundtrip": true,
+            "source_sha256": "54e117555f708aadeced8dce3cc5cefd262cfc9ee71afb92f21c8b674af7e7cc",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d4_10p24s_pruned.flac",
+            "flac_sha256": "ddca1a0a511c00b9d145521ec8a6231c2c33069f857fd285c4a9df03a9b83bc6",
+            "lossless_roundtrip": true,
+            "source_sha256": "684aa482f6ed8ee8a7a4f702cb9659a58d2155be9467d09d950fdcd16381c3ad",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d4_10p24s_recovered.flac",
+            "flac_sha256": "5ec23baf4585dd3d848a3850197053b66f907f13393e623dac4685a0eea8c34b",
+            "lossless_roundtrip": true,
+            "source_sha256": "1895d9e18f4c3e2d281cc66e59e6c2360629ca5970336aff17b6dbd6b7d7da28",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p109_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "Rockets igniting followed by an electronic beep then footsteps on concrete as idle vehicle engines run in the background",
+        "example_id": "d4",
+        "section": "D",
+        "ytid": "ItS07xtdi4s"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d5_3p84s_pruned.flac",
+            "flac_sha256": "e68d49625c203f8898d8446c2667c59a83c431050e5b9634740272962fc761b4",
+            "lossless_roundtrip": true,
+            "source_sha256": "4e69c3478d3d9345e09e68d65efdc8153914eb81c52f928ba8d4503b50004dd1",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d5_3p84s_recovered.flac",
+            "flac_sha256": "082b8bc30b4b21d38b71e7a4b35e4af871e1b8936ddede6eab5356262e45a7a2",
+            "lossless_roundtrip": true,
+            "source_sha256": "78a91e404accc8809340774f3b0e2ee612d135ce62ed186a28434f909b93da33",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d5_5p12s_pruned.flac",
+            "flac_sha256": "4e79d704e639886c696299f2ded6dfc7ddc7b8ff87845485c019acc6d51af412",
+            "lossless_roundtrip": true,
+            "source_sha256": "933d1f906c4e3a821fa24378c05f9ac18995446c46b236a735519e4277fb0d67",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d5_5p12s_recovered.flac",
+            "flac_sha256": "8ff9e63e2711ddd3aab45591545d73056a7a8b0db4dbe78c62943b8dee5ba3fb",
+            "lossless_roundtrip": true,
+            "source_sha256": "ca4d3c2a8ae9b9a8da202fd505f9022b7c94a94f937089d595c84d10f69a0181",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d5_7p68s_pruned.flac",
+            "flac_sha256": "1f0cb148dec65d061c6db7cb2e4e68645a84b07df58e005a4cd36f23e6227374",
+            "lossless_roundtrip": true,
+            "source_sha256": "87a2ce5a7508fc20482e31f05c5d02f40c939bf9d72cd31a3a2ffd51d5170773",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d5_7p68s_recovered.flac",
+            "flac_sha256": "ffe094c85b675a898b341f62d80ea736fd3fe82060cb7eaebab00135bbeed109",
+            "lossless_roundtrip": true,
+            "source_sha256": "5678b154e9dce0033abf0e9983dade13c3114dd8401b11d1a327f0754d97bcd3",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d5_10p24s_pruned.flac",
+            "flac_sha256": "78cc7026051fe67a8106c0d9ff01cb60ac6509c3f9da09a183645d94d01a50d5",
+            "lossless_roundtrip": true,
+            "source_sha256": "54a375855420935d476a7f3869eb1d513e75ec5aa02c5ad984013b203ea0b07d",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d5_10p24s_recovered.flac",
+            "flac_sha256": "43219e0310c9c2ec0d1188d2d3b19d2780d0dbdf4b2fadc18dae086d819cddfa",
+            "lossless_roundtrip": true,
+            "source_sha256": "bc031a1b702f3b9e486f4c1ef6b83cd73045d40c288bf70b96de59a541cf634e",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p114_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "Squealing and rustling with a man speaking",
+        "example_id": "d5",
+        "section": "D",
+        "ytid": "i6MQCm58zlY"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d6_3p84s_pruned.flac",
+            "flac_sha256": "57409c8a2f1343d93ea9977d2b20e01cc65f4b0c1fd874da18d9c2c1c3986f10",
+            "lossless_roundtrip": true,
+            "source_sha256": "8d8772fc1fce946f8dca3257a81d59f232ba23391d5c89c3d0fa640726198e7c",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d6_3p84s_recovered.flac",
+            "flac_sha256": "f532d3802a4597ed37195c9e2225e68306abff679980ebd19f9747da3f470b51",
+            "lossless_roundtrip": true,
+            "source_sha256": "47706205af87a180351081a8b908cb5b47dac1a970b15414b34645fa43186ad4",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d6_5p12s_pruned.flac",
+            "flac_sha256": "c2099cb46316c343eba6f8232bfbc484314849ba18117f93fa72b3e2647499ed",
+            "lossless_roundtrip": true,
+            "source_sha256": "9aaecd239e6e478b9200c6c65e45686eb3b69dc0557cf646d15570f4733ec834",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d6_5p12s_recovered.flac",
+            "flac_sha256": "4d3e3b717877319ca2f8897089c597f85a67a7fac131a11936a19c8c04bad11e",
+            "lossless_roundtrip": true,
+            "source_sha256": "23edb1508701922e4c88b85961e1c0e7d4a50147de402476a28a52c4ba346163",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d6_7p68s_pruned.flac",
+            "flac_sha256": "390358c5b2034f228a5b8e2435f12f411f67463cbef3f2a82316927045223482",
+            "lossless_roundtrip": true,
+            "source_sha256": "d39cc97902c91d7c47ed2e8374d360136656cf498730b132f5fecea7bc713b05",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d6_7p68s_recovered.flac",
+            "flac_sha256": "cb05d708fd376dc6e882c75a51d3866ede392c8ac73ac720d95a5db80209a376",
+            "lossless_roundtrip": true,
+            "source_sha256": "3884e7b80ea1e395e63fc0b2964d9f97b59351a97bd0300310bb8ff4f478d157",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d6_10p24s_pruned.flac",
+            "flac_sha256": "d8973b2b0d5221e9625cc65dee1526fa5106d7679b0533a38bf36d6b82694ba2",
+            "lossless_roundtrip": true,
+            "source_sha256": "5ef94c1eaae3ff7ba668874fd5f410f220368d4be606745599e191af4126192a",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d6_10p24s_recovered.flac",
+            "flac_sha256": "954eaf4c05166e340f75e9dece67bd02c18378e077d429b7fa19c0a7bc29304a",
+            "lossless_roundtrip": true,
+            "source_sha256": "de2845c2f4add8eac1de25c0106622db8e13afa857853f296b7ca3b82273fc14",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p119_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "A man briefly talks followed by a loud burst then laughter",
+        "example_id": "d6",
+        "section": "D",
+        "ytid": "SZ6CcXINiiE"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d7_3p84s_pruned.flac",
+            "flac_sha256": "8f72d3bd0c068034966d53f5eddd24547eaeb5bbed1d27d708b6460ff9ed0996",
+            "lossless_roundtrip": true,
+            "source_sha256": "3dc541c3437ec33c36a62e2907f58a9121e3c7d0fa5dbfa937c2fb227ac536c0",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d7_3p84s_recovered.flac",
+            "flac_sha256": "6e8b85f44067e88558e3bd004618839f3f61c0b5dc64497663b6193860c4558c",
+            "lossless_roundtrip": true,
+            "source_sha256": "e80e2cf8a8c915c9bb9ba23f1ddf0b3ea023f938c72f7d26fb4f52c8e100b35e",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d7_5p12s_pruned.flac",
+            "flac_sha256": "ab35c23f8778a276985aa94b48c737179fc12870cd87c6164a7bd257c4a7795e",
+            "lossless_roundtrip": true,
+            "source_sha256": "a46cf09febccd4cd2006aea637f531ed2d2e66e20ef2638b651f68fdf5942261",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d7_5p12s_recovered.flac",
+            "flac_sha256": "1e0e1432059a1a1e0a963311225e82276b9578baba12e896f6742386952d8ed5",
+            "lossless_roundtrip": true,
+            "source_sha256": "876bff57e676b8107b7353afb966f58bdc0970ee232c79ce8240971b22959c11",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d7_7p68s_pruned.flac",
+            "flac_sha256": "a8ebc4423481078ed79551d64cc6337f5a313dd14ebda0016d874a394a028c08",
+            "lossless_roundtrip": true,
+            "source_sha256": "eb364f2589963590ec988bd8dec9d7083a6c652d7648d176a8c9251c984f8f20",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d7_7p68s_recovered.flac",
+            "flac_sha256": "6c1dbdc0561a24af49e5912ecea939e67aa93da42c250e8dc9081886b55419fe",
+            "lossless_roundtrip": true,
+            "source_sha256": "aaa655c81d6c5f809c7c240c2d92ca2fbccdace6f879ef71e358c4f776625822",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d7_10p24s_pruned.flac",
+            "flac_sha256": "9e833b573466ffe0a123b8be86fe821848c244824579b2f1a07f4af5b3db7f74",
+            "lossless_roundtrip": true,
+            "source_sha256": "b3f95288938c8f0b380fc5cac822850ae3f9d324df16473e376797aa21d1fa63",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d7_10p24s_recovered.flac",
+            "flac_sha256": "d5b6b2c58a7e55f8b89cf62ad6a82d515335badfee81f029a7cf00df29513f67",
+            "lossless_roundtrip": true,
+            "source_sha256": "278524c4fca0bc958de4710863e71f50d1a0cb97f52720abe985193744a878c8",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p125_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "A man speaks and then whistles",
+        "example_id": "d7",
+        "section": "D",
+        "ytid": "FA11v4SmdBc"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d8_3p84s_pruned.flac",
+            "flac_sha256": "6fffe621bb66773a18d06130c46c06169c9b7d5e52ebb5dcc91f2387bfba7f74",
+            "lossless_roundtrip": true,
+            "source_sha256": "6dd2a06361794e868ae8bc698ddf932f262ef58b2065cc04a99cb15c23468458",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_short_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "3.84s",
+            "duration_s": 3.842,
+            "file": "audio/d8_3p84s_recovered.flac",
+            "flac_sha256": "4e198491352d9fccdcf5763f07903df463aac28ef15a99801bd806bfef672f9d",
+            "lossless_roundtrip": true,
+            "source_sha256": "ab9f47bf03f9052a3bd50f9b4b353e7e303a4078922638f253a97ca7621e3fa8",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_short_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d8_5p12s_pruned.flac",
+            "flac_sha256": "821ce3a3535104368fab1a0189eba1502b4b71f3c7a8d2ae029c186976dc3430",
+            "lossless_roundtrip": true,
+            "source_sha256": "392d2c57863bb6675e71591fb404498186b6a87bbfef57edb3c4784a161c1998",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d128_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "5.12s",
+            "duration_s": 5.122,
+            "file": "audio/d8_5p12s_recovered.flac",
+            "flac_sha256": "96a5ed6d5b0519130b78f5f4049340337cb3536ff857ca365dbaf86f2c62c5bd",
+            "lossless_roundtrip": true,
+            "source_sha256": "9483042ae62573f67e63db80d15f95fb0ed3a64550e84ea8c9b738b386c8a784",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d128_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d8_7p68s_pruned.flac",
+            "flac_sha256": "03e92e20e9dc19ed68cefd54b27eb2b96dc567bb0aa6ee0f390101deb3401522",
+            "lossless_roundtrip": true,
+            "source_sha256": "ac8a51b9a7dee05ad15dfa419466b6b162cdc4a0f4ffb3e74547577423d129c7",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_d192_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "7.68s",
+            "duration_s": 7.682,
+            "file": "audio/d8_7p68s_recovered.flac",
+            "flac_sha256": "d965c2f4f7eaad65e664cdc11e64f06e2564936ea08b9559fca418ec05249ad1",
+            "lossless_roundtrip": true,
+            "source_sha256": "afc50665f30d23695813d6863e76e49b4bec131d46a3e10492548338bd4680c3",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_d192_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d8_10p24s_pruned.flac",
+            "flac_sha256": "6694fc9a2b7fbadcf667e4b6e22c23336bc7eaa381677ac2c59d7e4e7d2a972e",
+            "lossless_roundtrip": true,
+            "source_sha256": "b856006e5178dd149678a6d7b3d1e31b982592b974e5ad02f0a1e8015098df79",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_ac_native_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/d8_10p24s_recovered.flac",
+            "flac_sha256": "7b89379f7b01d1faf1d4cea7e973dfa0e6c1a1cbd675010c4034baa140206f74",
+            "lossless_roundtrip": true,
+            "source_sha256": "3889f618d66ac201a2ffefb96c425cc4a36fd9de11033df79c760bbc77ecb674",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_ac_native_p182_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "A motorboat engine running as a man is talking followed by a plastic clank while wind blows into a microphone",
+        "example_id": "d8",
+        "section": "D",
+        "ytid": "dP5DbAzTl5M"
+      }
+    ],
+    "E": [
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e1_10p24s_pruned.flac",
+            "flac_sha256": "ed77045ac75443ca162a463989851eb0c1d12d2c351d0284909e2bab495f82a7",
+            "lossless_roundtrip": true,
+            "source_sha256": "c1880e352f8cc7b97a04a51dcbb0978eea30f7343498905a218808262bd9ca15",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p2_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e1_10p24s_recovered.flac",
+            "flac_sha256": "98fb9c57be91632f1ad3029050ae35a6e4cd95132c5143a426b5aee07e683534",
+            "lossless_roundtrip": true,
+            "source_sha256": "e1ac3717ac0e302fd540c0b54875c69ac3e83c10035775751fded78c64f73a63",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p2_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "A digital drum with a strong snare that sounds like a slap is playing along with an e-bass that is being slapped, playing a funky bassline. A e-guitar is strumming two funky chords along. A female voice is rapping with a lot of confidence in the attitude and then another female voice is singing accompanied by female backing voices. The file is of poorer audio-quality. This song may be playing in a disco.",
+        "example_id": "e1",
+        "section": "E",
+        "ytid": "5LX2Unga1p4"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e2_10p24s_pruned.flac",
+            "flac_sha256": "db1317ce514c3a1210723266b53bf28266f0e5439e448b4ccba474e5aff49f85",
+            "lossless_roundtrip": true,
+            "source_sha256": "94177712272f1cb709fb56588423a6a99b352afbe827aeffc0fa0831e5a3fc80",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p9_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e2_10p24s_recovered.flac",
+            "flac_sha256": "0ec39a36ff004ea4dbf8b667d38f92d46fc770bf5da02d1539cf53dcfe836e20",
+            "lossless_roundtrip": true,
+            "source_sha256": "7d8b367cc1e11cb394e46efa0f616f37d537e50b0345c2e950f782a488b5c6cd",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p9_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "A nostalgic feeling trip hop song with an off kilter, Dilla inspired drum beat, a jazz piano playing complex chords and a male rapper.",
+        "example_id": "e2",
+        "section": "E",
+        "ytid": "yRWndZvIAHc"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e3_10p24s_pruned.flac",
+            "flac_sha256": "014e3e23f783feb6440b9d230776cd6e82ca81308e5b2855a2dffa47c8a8b4d7",
+            "lossless_roundtrip": true,
+            "source_sha256": "3891ce1b6301c82400e1c2993a313a4f087c098223b0ea2ec3f483d2ec752a4f",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p16_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e3_10p24s_recovered.flac",
+            "flac_sha256": "306b8161a4f528a595d40536d681f51866096e2518050dcb938a22e0d9bc16d4",
+            "lossless_roundtrip": true,
+            "source_sha256": "1a9fe5d281147e0d3d32d6e8ff9e21c382701f212c6ac83fb1f3ec5dfd996fe0",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p16_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "This is an r&b/hip-hop music piece. There is a male vocal rapping and a female vocal singing in a rap-like manner. The beat consists of a piano playing the chords of the tune with an electronic drum backing. The atmosphere of the piece is playful and energetic. This piece could be used in the soundtrack of a high school drama movie/TV show. It could also be played at birthday parties or beach parties.",
+        "example_id": "e3",
+        "section": "E",
+        "ytid": "UcabTrKowlI"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e4_10p24s_pruned.flac",
+            "flac_sha256": "dc9cc7e1b4ad0ee1d8172e2235a61542d462d756672856636e07467f68499810",
+            "lossless_roundtrip": true,
+            "source_sha256": "caea318f514f0eada245a46571578d3b03ad924513b9862c34bab702b4495f82",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p18_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e4_10p24s_recovered.flac",
+            "flac_sha256": "9101bbcb6e371c58eda46a4159afbf3d2cb760623bc3fee80492d8dda7f8877d",
+            "lossless_roundtrip": true,
+            "source_sha256": "64e48d571952c6a123bb5e6d682ce2fcb3eb1d67f82525b04e2d8d3985688eac",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p18_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "This song has a typical reggaeton drumbeat that just sounds a little softer and not so much in the foreground. A synthetic bass is supporting the drums with a simple bassline. A processed guitar-like sound is panned to the left side of the speakers. Some gameboy coinlike sound is popping up here and there. A male voice is rapping while getting backing voices from another male voice. This song may be playing at a latin barber shop.",
+        "example_id": "e4",
+        "section": "E",
+        "ytid": "Pln4GLIMqKY"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e5_10p24s_pruned.flac",
+            "flac_sha256": "45a75c6fd5fe4c5625f42edcc786b2d58b5d4e0eca65d75a02234e5651b98866",
+            "lossless_roundtrip": true,
+            "source_sha256": "30ee2a33125806e472cfaae8b96fc190e771927c2f946493a601008879831ce8",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p36_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e5_10p24s_recovered.flac",
+            "flac_sha256": "7356e95db84f26631b1e7adb0d6dcf3625e2ab705207b9d2ddce23e6fbd36b5a",
+            "lossless_roundtrip": true,
+            "source_sha256": "07c53a7aa4201e8ae6e5804709d12c345141b39f6fd260ee6facd0d15411471c",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p36_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "The low quality recording features a hip hop song played on a speaker that features groovy piano melody, synth lead melody, strings power chords, punchy snare, shimmering shakers, claps and punchy kick hits. It sounds noisy and thin as it lacks bass frequencies.",
+        "example_id": "e5",
+        "section": "E",
+        "ytid": "wg_kYW4xvz4"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e6_10p24s_pruned.flac",
+            "flac_sha256": "201d2308cdf39af107b4b5d097d3ed1218fab87a81e5f080d9c91769b54fec90",
+            "lossless_roundtrip": true,
+            "source_sha256": "b6b86281c16354eda7cfdd824aea2bef5bf52e7f264504b226dd09743407d3eb",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p49_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e6_10p24s_recovered.flac",
+            "flac_sha256": "9fe3eae029b70300a05c9b28d90c19e57b9a4114f70f9d8596960d9cce2d1eab",
+            "lossless_roundtrip": true,
+            "source_sha256": "e073e990ecdbaa4834ce188fbe6b44f703e95666da0d85f8daa2d834c2cf4986",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p49_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "This is a comedic electronic remix. It is a commercial that was transformed into a hip-hop beat. The male voice narrating in the original video was put through an autotune effect to give the impression that he is rapping the words. There is a keyboard and a synth bass in the melodic background while an electronic drum beat provides the rhythmic background. The atmosphere in this piece is amusing. The tempo of the piece is slightly fast-paced.",
+        "example_id": "e6",
+        "section": "E",
+        "ytid": "iS8YQGp2_ng"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e7_10p24s_pruned.flac",
+            "flac_sha256": "84a27a3038a5c56088f6d43a29395c3acf3300a2d39d5210fc6ef962efe235b3",
+            "lossless_roundtrip": true,
+            "source_sha256": "bf2c9c3683f47110f482fbaf01468edec2f6fffe9dc9749db71f378b7e1a23cc",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e7_10p24s_recovered.flac",
+            "flac_sha256": "cd71bacbd94c3544dba334b6abb77792101e531429e06def2e4a138df2dd60a7",
+            "lossless_roundtrip": true,
+            "source_sha256": "5c0ab783aea17e5ed67ce6b88845a3ad406affc6327e36703b26c70733994062",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p52_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "The low quality recording features a hip hop song that consists of flat male vocals, alongside echoing whispering vocals, rapping over shimmering hi hats, punchy kick, boomy 808 bass, claps, quiet snare hits and arpeggiated synth melody. The song sounds energetic, especially because of the uptempo hi hat triplets.",
+        "example_id": "e7",
+        "section": "E",
+        "ytid": "b-Cr0EWwaTk"
+      },
+      {
+        "audio": [
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e8_10p24s_pruned.flac",
+            "flac_sha256": "bddf105ea110e8e542f7e472a3fdf07c2d7a981d205687e7c7f58f74c06358c9",
+            "lossless_roundtrip": true,
+            "source_sha256": "f66396931858f722a26e74a4affab693a353794973ef98521c812b1f55ad1058",
+            "source_system": "pruned2_A",
+            "source_wav_basename": "pruned2_A_music_native_p60_r0.wav",
+            "sr": 16000,
+            "system_label": "Pruned"
+          },
+          {
+            "duration_label": "10.24s",
+            "duration_s": 10.242,
+            "file": "audio/e8_10p24s_recovered.flac",
+            "flac_sha256": "4666d4ff4cb70411641a8e7c6cc01aa4237ffe3a38eba87c1c0efd86ed9584de",
+            "lossless_roundtrip": true,
+            "source_sha256": "4ea9fabb70d49941bb262c8d49e703f6fe787a04d03373cedab2cf489ca66775",
+            "source_system": "recovered2",
+            "source_wav_basename": "recovered2_music_native_p60_r0.wav",
+            "sr": 16000,
+            "system_label": "Recovered"
+          }
+        ],
+        "caption": "The low quality recording features a hip hop song that consists of a flat male vocal rapping over punchy kick and snare hits, shimmering hi hats, DJ scratching sound effects and groovy bass. It sounds energetic, upbeat and groovy.",
+        "example_id": "e8",
+        "section": "E",
+        "ytid": "A5fPSkTvjmY"
+      }
     ]
   },
-  "n_audio_files": 36,
+  "listened_selection": {
+    "rule": "seeded random draw made for the authors' blind listening; outcome-blind; shown at all four durations",
+    "seed_namespace": "AUTHOR-LISTENING-1|SELECTION|2026-09-04",
+    "source": "configs/research/author_listening_1_result.json"
+  },
+  "n_audio_files": 116,
   "namespace": "PUBLIC-AUDIO-EXAMPLES|2026-09-01",
   "omitted": {
     "dense_reference": "dense@10.24s coverage incomplete (73/80); omitted",
     "sev1_music": "audio not retained on disk (only scores); no new generation"
   },
   "selected": {
+    "listened_audiocaps": [
+      "TWOgvDaDqlU",
+      "GIOApFAWDOc",
+      "Ls2vrr9TamU",
+      "ItS07xtdi4s",
+      "i6MQCm58zlY",
+      "SZ6CcXINiiE",
+      "FA11v4SmdBc",
+      "dP5DbAzTl5M"
+    ],
+    "listened_music": [
+      "5LX2Unga1p4",
+      "yRWndZvIAHc",
+      "UcabTrKowlI",
+      "Pln4GLIMqKY",
+      "wg_kYW4xvz4",
+      "iS8YQGp2_ng",
+      "b-Cr0EWwaTk",
+      "A5fPSkTvjmY"
+    ],
     "sev1_audiocaps": [
       "g5l3Bz6lWnc",
       "a3GzZKxUTy8",
@@ -919,5 +2036,5 @@
     }
   },
   "selection_rule": "rank ytid by SHA256(namespace|section|ytid) ascending, take first N; NO outcome/score used",
-  "self_sha256": "723982bb84822f1e54a32e8cd4ca045d0541ae8ea4f0fcd14a8f48e61ce7c966"
+  "self_sha256": "fb4a284e86351b7fdfb91176e82d612e8059f6f71ca0518614ddac88a3b850f1"
 }

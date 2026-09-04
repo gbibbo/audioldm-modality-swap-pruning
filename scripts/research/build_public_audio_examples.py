@@ -34,6 +34,9 @@ REPO_URL = "https://github.com/gbibbo/audioldm-modality-swap-pruning"
 ARMD = "/teamspace/jobs/reversal-armd-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_armd_gen"
 V11  = "/teamspace/jobs/reversal-v11-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_v1_1_gen"
 XSEV = "/teamspace/jobs/reversal-xsev-gen-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/reversal_xsev_gen"
+SWEEP = "/teamspace/jobs/draft5-opsweep-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/draft5_opsweep_gen"
+MUSNAT = "/teamspace/jobs/xsev-music-native-1/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/xsev_music_native_gen"
+LISTEN = os.path.join(ROOT, "configs/research/author_listening_1_result.json")   # the prompts we listened to (seeded draw)
 
 
 def rows(p, key):
@@ -91,7 +94,7 @@ def main():
     x_rec_m = rows(os.path.join(XSEV, "gen_manifest_recovered2_music.json"), "prompt_index")
     x_pru_m = rows(os.path.join(XSEV, "gen_manifest_pruned2_A_music.json"), "prompt_index")
 
-    examples = {"A": [], "B": [], "C": []}
+    examples = {"A": [], "B": [], "C": [], "D": [], "E": []}
     files = []
 
     def emit(section, eid, ytid, caption, cells):
@@ -151,6 +154,37 @@ def main():
             ("3.84s", "Recovered", "recovered2", XSEV, x_rec_m[idx], 3.84),
         ])
 
+    # ---- Section D/E: the clips we listened to (AUTHOR-LISTENING-1 seeded draw), all four durations ----
+    L = json.load(open(LISTEN))["design"]
+    x_rec_128 = rows(os.path.join(SWEEP, "gen_manifest_recovered2_ac_d128.json"), "prompt_index")
+    x_pru_128 = rows(os.path.join(SWEEP, "gen_manifest_pruned2_A_ac_d128.json"), "prompt_index")
+    x_rec_192 = rows(os.path.join(SWEEP, "gen_manifest_recovered2_ac_d192.json"), "prompt_index")
+    x_pru_192 = rows(os.path.join(SWEEP, "gen_manifest_pruned2_A_ac_d192.json"), "prompt_index")
+    m_rec_n = rows(os.path.join(MUSNAT, "gen_manifest_recovered2_music_native.json"), "prompt_index")
+    m_pru_n = rows(os.path.join(MUSNAT, "gen_manifest_pruned2_A_music_native.json"), "prompt_index")
+    ac_by_idx = {p["prompt_index"]: p for p in xsev_ac}
+    mus_by_idx = {p["prompt_index"]: p for p in xsev_mus}
+    D_ids = []
+    for i, idx in enumerate(L["audiocaps_prompt_index"], 1):
+        p = ac_by_idx[idx]; D_ids.append(p["ytid"])
+        emit("D", f"d{i}", p["ytid"], p["caption"], [
+            ("3.84s", "Pruned", "pruned2_A", XSEV, x_pru_s[idx], 3.84),
+            ("3.84s", "Recovered", "recovered2", XSEV, x_rec_s[idx], 3.84),
+            ("5.12s", "Pruned", "pruned2_A", SWEEP, x_pru_128[idx], 5.12),
+            ("5.12s", "Recovered", "recovered2", SWEEP, x_rec_128[idx], 5.12),
+            ("7.68s", "Pruned", "pruned2_A", SWEEP, x_pru_192[idx], 7.68),
+            ("7.68s", "Recovered", "recovered2", SWEEP, x_rec_192[idx], 7.68),
+            ("10.24s", "Pruned", "pruned2_A", XSEV, x_pru_n[idx], 10.24),
+            ("10.24s", "Recovered", "recovered2", XSEV, x_rec_n[idx], 10.24),
+        ])
+    E_ids = []
+    for i, idx in enumerate(L["music_prompt_index"], 1):
+        p = mus_by_idx[idx]; E_ids.append(p["ytid"])
+        emit("E", f"e{i}", p["ytid"], p["caption"], [
+            ("10.24s", "Pruned", "pruned2_A", MUSNAT, m_pru_n[idx], 10.24),
+            ("10.24s", "Recovered", "recovered2", MUSNAT, m_rec_n[idx], 10.24),
+        ])
+
     # ---- provenance manifest ----
     man = {
         "artifact": "public_audio_examples_manifest", "namespace": NS,
@@ -168,7 +202,10 @@ def main():
                   for y in ids}
             for sec, ids in (("sev1_audiocaps", A_ids), ("sev2_audiocaps", B_ids), ("sev2_music", C_ids))
         },
-        "selected": {"sev1_audiocaps": A_ids, "sev2_audiocaps": B_ids, "sev2_music": C_ids},
+        "selected": {"sev1_audiocaps": A_ids, "sev2_audiocaps": B_ids, "sev2_music": C_ids,
+                     "listened_audiocaps": D_ids, "listened_music": E_ids},
+        "listened_selection": {"source": "configs/research/author_listening_1_result.json", "seed_namespace": L["selection_seed_namespace"],
+                               "rule": "seeded random draw made for the authors' blind listening; outcome-blind; shown at all four durations"},
         "omitted": {"sev1_music": "audio not retained on disk (only scores); no new generation",
                      "dense_reference": "dense@10.24s coverage incomplete (73/80); omitted"},
         "n_audio_files": len(files),
@@ -182,7 +219,7 @@ def main():
     write_page(examples)
     open(os.path.join(OUT, ".nojekyll"), "w").write("")
     open(os.path.join(OUT, "robots.txt"), "w").write("User-agent: *\nDisallow: /\n")
-    print(f"selected A={A_ids} B={B_ids} C={C_ids}")
+    print(f"selected A={A_ids} B={B_ids} C={C_ids} D={D_ids} E={E_ids}")
     print(f"audio files: {len(files)} | manifest self_sha256 {man['self_sha256'][:16]}")
     print("out:", OUT)
 
@@ -235,12 +272,46 @@ def _music_card(rec, n):
                 p=_player(P, "Pruned · 3.84 s (music)"), r=_player(R, "Post-fine-tuning · 3.84 s (music)"))
 
 
+def _sweep_card(rec, n):
+    cells = {(sy, du): _cell_file(rec, sy, du) for sy in ("Pruned", "Recovered") for du in ("3.84s", "5.12s", "7.68s", "10.24s")}
+    def row(sy, lab):
+        return "".join('<div class="mx-cell">%s</div>' % _player(cells[(sy, du)], "%s · %s" % (lab, du.replace("s", " s"))) for du in ("3.84s", "5.12s", "7.68s", "10.24s"))
+    return ('<article class="card" id="{sec}">'
+            '<div class="card-head"><span class="eyebrow">Listened {n:02d}</span>'
+            '<span class="badge">AudioCaps · severity 2</span></div>'
+            '<p class="prompt">{cap}</p>'
+            '<div class="matrix matrix4" role="group" aria-label="Audio comparison across four durations">'
+            '<div class="mx-corner" aria-hidden="true"></div>'
+            '<div class="mx-col">3.84 s</div><div class="mx-col">5.12 s</div><div class="mx-col">7.68 s</div><div class="mx-col">10.24 s</div>'
+            '<div class="mx-row"><span class="chip chip-pruned">Pruned</span></div>{p}'
+            '<div class="mx-row"><span class="chip chip-recovered">Post-fine-tuning</span></div>{r}'
+            '</div></article>').format(sec=rec["example_id"], n=n, cap=html.escape(rec["caption"]),
+                                       p=row("Pruned", "Pruned"), r=row("Recovered", "Post-fine-tuning"))
+
+
+def _music_native_card(rec, n):
+    P = _cell_file(rec, "Pruned", "10.24s"); R = _cell_file(rec, "Recovered", "10.24s")
+    return ('<article class="card card-music">'
+            '<div class="card-head"><span class="eyebrow">Listened {n:02d}</span>'
+            '<span class="badge badge-music">Music · 10.24 s</span></div>'
+            '<details class="cap"><summary class="prompt">{cap}</summary></details>'
+            '<div class="duo" role="group" aria-label="Audio comparison">'
+            '<div class="duo-cell"><span class="chip chip-pruned">Pruned · 10.24 s</span>{p}</div>'
+            '<div class="duo-cell"><span class="chip chip-recovered">Post-fine-tuning · 10.24 s</span>{r}</div>'
+            '</div></article>').format(n=n, cap=html.escape(rec["caption"]),
+                                       p=_player(P, "Pruned · 10.24 s (music)"), r=_player(R, "Post-fine-tuning · 10.24 s (music)"))
+
+
 def write_page(examples):
     A = "".join(_matrix_card(r, i) for i, r in enumerate(examples["A"], 1))
     B = "".join(_matrix_card(r, i) for i, r in enumerate(examples["B"], 1))
     C = "".join(_music_card(r, i) for i, r in enumerate(examples["C"], 1))
+    D = "".join(_sweep_card(r, i) for i, r in enumerate(examples["D"], 1))
+    E = "".join(_music_native_card(r, i) for i, r in enumerate(examples["E"], 1))
+    n_audio = sum(len(r["audio"]) for sec in examples.values() for r in sec)
     page = (PAGE_HTML.replace("__A__", A).replace("__B__", B)
-            .replace("__C__", C).replace("__REPO__", REPO_URL))
+            .replace("__C__", C).replace("__D__", D).replace("__E__", E)
+            .replace("__NAUDIO__", str(n_audio)).replace("__REPO__", REPO_URL))
     open(os.path.join(OUT, "index.html"), "w").write(page)
 
 
@@ -361,6 +432,10 @@ section.sec{padding:30px 0 6px;scroll-margin-top:64px}
 .player{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:8px 10px}
 .mx-cell:nth-child(5) .player,.mx-cell:nth-child(6) .player{border-left:3px solid var(--pruned)}
 .mx-cell:nth-child(8) .player,.mx-cell:nth-child(9) .player{border-left:3px solid var(--recovered)}
+.matrix4{grid-template-columns:minmax(96px,auto) 1fr 1fr 1fr 1fr}
+.matrix4 .mx-cell:nth-child(7) .player,.matrix4 .mx-cell:nth-child(8) .player,.matrix4 .mx-cell:nth-child(9) .player,.matrix4 .mx-cell:nth-child(10) .player{border-left:3px solid var(--pruned)}
+.matrix4 .mx-cell:nth-child(12) .player,.matrix4 .mx-cell:nth-child(13) .player,.matrix4 .mx-cell:nth-child(14) .player,.matrix4 .mx-cell:nth-child(15) .player{border-left:3px solid var(--recovered)}
+@media (max-width:820px){.matrix4{grid-template-columns:1fr 1fr}.matrix4 .mx-corner,.matrix4 .mx-col,.matrix4 .mx-row{display:none}.matrix4 .mx-cell .cell-tag{display:block;font-size:.76rem;font-weight:640;color:var(--muted);margin-bottom:5px}}
 .player.enhanced{display:flex}
 .pctl{display:flex;align-items:center;gap:10px;width:100%}
 .pp{flex:0 0 auto;width:38px;height:38px;border-radius:9px;border:1px solid var(--line2);background:var(--card);
@@ -418,7 +493,7 @@ footer.foot b{color:var(--ink2);font-weight:620}
   <span class="brand">AudioLDM · <b>Fine-tuning</b></span>
   <div class="nav-links">
     <a href="#sec1">Severity 1</a><a href="#sec2">Severity 2</a>
-    <a href="#sec3">Music</a><a href="#prov">Provenance</a>
+    <a href="#sec3">Music</a><a href="#listen">What we heard</a><a href="#prov">Provenance</a>
   </div>
 </div></nav>
 
@@ -428,8 +503,8 @@ footer.foot b{color:var(--ink2);font-weight:620}
   <h1>AudioLDM Post-Pruning Fine-Tuning</h1>
   <p class="lead">Representative audio comparisons across pruning severity and generation duration.</p>
   <div class="chips">
-    <span>AudioLDM</span><span>2 pruning severities</span><span>3.84 s / 10.24 s</span>
-    <span>AudioCaps + music context</span><span>36 audio clips</span>
+    <span>AudioLDM</span><span>2 pruning severities</span><span>3.84 – 10.24 s</span>
+    <span>AudioCaps + music context</span><span>__NAUDIO__ audio clips</span>
   </div>
   <div class="cta">
     <a class="btn primary" href="__REPO__" target="_blank" rel="noopener">View repository ↗</a>
@@ -467,6 +542,22 @@ footer.foot b{color:var(--ink2);font-weight:620}
   <p style="color:var(--ink2);font-size:.95rem;margin:.4em 0 0;max-width:76ch">These examples illustrate the
   separate music evaluation context. They are not matched to the AudioCaps prompts above.</p>
   __C__
+</section>
+
+<section class="sec" id="listen">
+  <div class="sec-head"><h2>What we heard</h2><span class="tier tier-2">Severity 2</span>
+    <span class="ctx">The prompts we listened to, at all four durations</span></div>
+  <p style="color:var(--ink2);font-size:.95rem;margin:.4em 0 0;max-width:76ch">We listened blind (opaque clip
+  ids, sealed key, seeded prompt draw) to eight AudioCaps and eight hip-hop prompts. At 10.24&nbsp;s the gain of
+  fine-tuning is plainly audible: the pruned checkpoint mostly produces noise, and we preferred the post-fine-tuning
+  output on 6 of 8 prompts. At 3.84&nbsp;s both checkpoints sound like noise to us. On the hip-hop captions we
+  preferred the post-fine-tuning output on 8 of 8 pairs and heard it as music on 5 of 8, although neither
+  checkpoint follows these long captions. The same clips are below, with the two sweep durations added, so you
+  can listen for yourself.</p>
+  __D__
+  <div class="sec-head" style="margin-top:22px"><h2 style="font-size:1.1rem">Hip-hop captions we listened to</h2>
+    <span class="ctx">10.24 s</span></div>
+  __E__
 </section>
 
 <section class="sec prov" id="prov">

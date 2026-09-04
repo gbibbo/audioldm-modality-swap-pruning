@@ -181,6 +181,16 @@ if os.path.exists(_sw) and os.path.exists(_pr) and "%% opsweep-integrated" in ra
         ("pub J_frozen|64", "samepromptsgives" + pt(PR["J_frozen_same64"]) + "$,difference" + pt(PR["J_pub_minus_J_frozen"]) + "$$" + ci(PR["J_pub_minus_J_frozen"])),
     ]
 
+# ---- AUTHOR-LISTENING-1 (v2 wording), once integrated
+if os.path.exists(os.path.join(ROOT, "configs/research/author_listening_1_result.json")) and "%% author-listening-v2" in raw_tex:
+    AL = J("configs/research/author_listening_1_result.json"); _B = AL["block_B_duration_pairs"]; _C = AL["block_C_music_pairs_10p24s"]
+    checks += [
+        ("listen native pref", f"preferredon{_B['10.24s']['prefers_PFT']}/{_B['n_pairs_per_duration']}prompts;Pmostlynoise"),
+        ("listen short pref", f"notat$3.84$\\,s({_B['3.84s']['prefers_PFT']}/{_B['n_pairs_per_duration']}:bothcheckpointssoundlikenoise)"),
+        ("listen music pref", f"on{_C['prefers_PFT']}/{_C['n_pairs']}musicpairsandhearditasmusicon{_C['sounds_like_music']['P+FT']['yes']}/{_C['n_pairs']}(Pon{_C['sounds_like_music']['P']['yes']}/{_C['n_pairs']})"),
+        ("listen music caption means", f"(${_C['follows_caption_1to5_mean']['P']:.1f}$and${_C['follows_caption_1to5_mean']['P+FT']:.1f}$of$5$)"),
+    ]
+
 bad = 0
 for label, s in checks:
     ok = norm(s) in tex

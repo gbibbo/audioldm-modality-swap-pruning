@@ -21,8 +21,8 @@ dependence was pre-specified, replicates on a disjoint prompt set, survives a fa
 correction, is not a scorer artefact, grows monotonically over four durations, holds at the
 published sampler recipe, and is reproduced at both durations by a second scorer and by two
 event-level metrics outside the CLAP family. Recovery should be reported across operating points;
-lacking a matched dense fine-tuned control and a listening panel (one author's blinded listening agrees
-at the native point, not at 3.84 s), our claims concern evaluation, not mechanism.
+our own blind listening agrees at the native point and hears both checkpoints as noise at 3.84 s;
+lacking a matched dense fine-tuned control, our claims concern evaluation, not mechanism.
 
 The evaluated checkpoints are the **object of study, not an adversary**: this is an
 evaluation-methodology study, nothing is trained here, and no claim of error or misconduct is made
@@ -30,8 +30,8 @@ anywhere in this repository. Two of the manuscript's authors released the evalua
 the operating points, batteries, estimands and gates were specified independently of that work.
 
 Manuscript (ICASSP 2027 format, Overleaf-ready): [`icassp/icassp_operating_point.tex`](icassp/icassp_operating_point.tex)
-· [PDF](icassp/icassp_operating_point.pdf) · audio examples:
-[gbibbo.github.io/audioldm-modality-swap-pruning](https://gbibbo.github.io/audioldm-modality-swap-pruning).
+· [PDF](icassp/icassp_operating_point.pdf) · **listen** to the examples and to the clips we listened
+to: [gbibbo.github.io/audioldm-modality-swap-pruning](https://gbibbo.github.io/audioldm-modality-swap-pruning).
 
 ---
 
@@ -88,13 +88,15 @@ against two anchors: a shuffled-caption **chance floor** and the **real audio** 
    first two steps resolved and the last (7.68 → 10.24 s) not — Human-CLAP is flat there (+0.004
    [−0.033, +0.041]) — so off the primary scorer most of the gain has accrued by 7.68 s
    (`configs/research/draft5_sweep_hc.json`, `draft5_sweep_secondary_metrics.json`, post-hoc).
-6. **One author's blinded listening (informal, N = 1, no gate).** Opaque clip ids, sealed key,
-   seeded prompt draw (8 AudioCaps + 8 hip-hop prompts, severity 2). At 10.24 s the 83 %-pruned
-   checkpoint is mostly heard as degenerate noise and P+FT is preferred on 6/8 pairs; at 3.84 s P+FT
-   is preferred on 0/8 (both heard as noise), so the short-duration gain CLAP resolves is below what
-   one ear picks up. On music P+FT is preferred 8/8 and heard as music 5/8 (P 1/8) although neither
-   follows the long captions: the scorer's music null is not a perceptual tie
-   (`configs/research/author_listening_1_result.json`, responses in `docs/review/`).
+6. **What we heard.** We listened blind (opaque clip ids, sealed key, seeded prompt draw) to 8
+   AudioCaps and 8 hip-hop prompts at severity 2. At 10.24 s the recovery gain is plainly audible:
+   the 83 %-pruned checkpoint mostly produces noise and we preferred P+FT on 6/8 prompts. At
+   3.84 s both checkpoints sound like noise (P+FT preferred on 0/8), so the short-duration gain that
+   CLAP resolves is one the ear does not. On music we preferred P+FT on 8/8 pairs and heard it as
+   music on 5/8 (P on 1/8) although neither follows the long captions: the scorer's music null is
+   no tie to the ear. The same clips, at all four durations, are on the
+   [companion page](https://gbibbo.github.io/audioldm-modality-swap-pruning/#listen)
+   (`configs/research/author_listening_1_result.json`; responses in `docs/review/`).
 7. **Pre-specified negatives, kept.** A "trade in-domain for out-of-domain alignment" account
    fails (severity 1 has no in-domain gain at 3.84 s); the severity-1 music penalty did not
    replicate at severity 2; a "late allocation" account of the duration effect is rejected by
@@ -103,8 +105,8 @@ against two anchors: a shuffled-caption **chance floor** and the **real audio** 
 **Limitations, as declared in the paper.** One model family, two severities, two domains.
 Mechanistic attribution is blocked: the matched control (the dense model given the same AudioCaps
 fine-tune) no longer exists, so the dependence cannot be attributed to pruning rather than to
-fine-tuning in general. Primary inference rests on CLAP-family scorers; the only listening is one author's, blinded but
-informal, and it disagrees with CLAP at 3.84 s. Best-of-3 selection of the published recipe was not reproduced. The duration sweep
+fine-tuning in general. Primary inference rests on CLAP-family scorers; our listening is informal and disagrees with CLAP at
+3.84 s. Best-of-3 selection of the published recipe was not reproduced. The duration sweep
 stops at the fine-tuning duration, so it cannot separate "largest at the training duration" from
 "larger for longer clips".
 
