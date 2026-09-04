@@ -38,7 +38,8 @@ def draw_finelap_fixed(ax, title=None):
             # at the reduced panel height
             txt, fs, col = t.get_text(), t.get_fontsize(), t.get_color()
             t.remove()
-            ax.text(0.02, 0.96, txt, transform=ax.transAxes, fontsize=fs, color=col, ha="left", va="top")
+            ax.text(0.02, 0.96, txt.replace("; ", "\n"), transform=ax.transAxes, fontsize=fs, color=col,
+                    ha="left", va="top", linespacing=1.0)
     # A6: keep the early/late labels near the zero line; at the top they ran into the
     # "late-early T" annotation (which stays at the top right).
     ax.text(3.84 - 0.12, 0.028, "early", fontsize=6.2, color="0.35", va="bottom", ha="right")
