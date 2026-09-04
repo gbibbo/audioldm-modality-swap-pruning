@@ -206,3 +206,52 @@ companion page (Sec. 6, "Listen: <url>"). Numbers unchanged; verifier 116/116 (l
 present); 4 content pages + references; zip standalone OK. The companion page has a "What we heard" section
 with the listened prompts at all four durations (116 FLACs), deployed to gh-pages.
 
+
+## 2026-09-04 Draft 6: presentation pass (CPU, 0 cr) - one wide figure, new domain panel, gentler opening
+
+Gabriel's request (2026-09-04 16:56): the figures were too cramped (annotations colliding with axes and
+legends), one more relevant graph, an abstract that presents the problem before its own machinery, and an
+introduction that builds up gradually. **No scientific result changed**; `verify_draft5_numbers.py` still
+reports **116/116** against the same frozen artifacts, and no number, claim, caveat or citation was removed.
+
+**Figures.** `scripts/research/paper_figs/make_draft6_figs.py` (reads the same durable JSONs and keeps the
+Draft-5 guards) writes **one** full-text-width figure, `figs/fig1_operating_points.pdf` (7.0 x 2.78 in,
+`figure*`), with five panels: (a) severity-1 duration, (b) severity-2 duration sweep, (c) **NEW** prompt
+domain, (d) FineLAP grounding vs. time, (e) generated vs. cropped. It replaces the two column-width stacked
+figures of Draft 5, whose panels were ~0.7 in tall. Panels (a)/(b) are now ~2.8 in wide x ~1.0 in tall (was
+~2.9 x 0.72 with the annotations on top of the axes); the shared legend sits between the rows; `R_short`,
+`R_nat`, "dense" and "real audio" moved into the free margins so nothing overlaps.
+
+**The new panel (c)** visualises Sec. 4.2, which had no figure: per (severity, duration) cell, the mean CLAP
+cosine of P and P+FT on in-domain AudioCaps and on held-out hip-hop captions, each against **its own chance
+floor** (ticks), with the 95 % CI of the paired gain R. Its levels/floors come from
+`draft5_floor_ceiling_result.json` (the source of Table 2) and its R/CI from the same results as Table 1; the
+above-chance values it draws reproduce the ones already in the prose (0.135/0.145, 0.061/0.022, 0.020/0.115,
+0.019/0.033, 0.035/0.321). A guard asserts the plotted R equals the frozen table values.
+
+**Abstract and introduction.** `integrate_draft6_layout.py` (marker `%% draft6-layout`): the abstract now
+opens by stating why TTA models are pruned and what recovery fine-tuning is, then what a pruning paper
+certifies, then the operating-point problem - before naming any of the paper's own machinery; the
+checkpoints are introduced as "the publicly released pruned and recovery-fine-tuned AudioLDM-M checkpoints
+of a recent pruning study" rather than "the released checkpoints". The introduction gains two build-up
+paragraphs (what structured pruning and recovery fine-tuning are, then what is reported of them and why an
+operating point matters) before the research question.
+
+**Page budget (the cost).** ICASSP gives 4 pages of technical content; Draft 5 filled all four to the last
+line, so the larger figure and the longer opening had to be paid for. `integrate_draft6_tighten.py`
+(`%% draft6-tighten`), `integrate_draft6_fit.py` (`%% draft6-fit`) and `integrate_draft6_fit_b.py`
+(`%% draft6-fit-b`) tighten wording only (plus table `\arraystretch` 1.05 -> 0.92, `\leftmargini`, float
+skips, and topic sentences that restated their own subsection title). The Conclusion became the final
+`\emph{Conclusion.}` paragraph of Sec. 5 (the companion-page cross-reference is now "Sec. 5"), and Sec. 2's
+first sentence no longer repeats the recipe the introduction now explains. Result: **4 content pages +
+references on page 5, 0 overfull boxes**, and a probe (filler text before the conclusion) shows about
+**2 spare lines** before it would spill - thin, so check the page count after any further edit.
+
+Provenance note: the three integrate scripts record the bulk of the pass, but the last round of fit trims
+(figure height, caption, Table 1/2 captions, `\arraystretch`, `\leftmargini`, float skips, the Conclusion
+merge into Sec. 5 and about ten wording trims) was applied directly to the committed `.tex`, which is the
+artifact of record; the scripts are marker-guarded and will not re-apply.
+
+Build: `make_draft6_figs.py` then the integrate scripts (idempotent, each guarded by its marker), then
+tectonic; zip = tex + spconf.sty + IEEEbib.bst + README_OVERLEAF.md + figs/fig1_operating_points.pdf, and it
+compiles standalone from a fresh extraction (5 pages, page 5 references only).
