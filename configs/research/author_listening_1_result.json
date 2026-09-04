@@ -1,0 +1,95 @@
+{
+ "artifact": "author_listening_1_result",
+ "class": "single-listener blinded informal check by the first author (Gabriel Bibb\u00f3); descriptive; N=1; NOT the frozen six-listener panel; no gate; cannot change any verdict",
+ "design": {
+  "selection_seed_namespace": "AUTHOR-LISTENING-1|SELECTION|2026-09-04",
+  "outcome_blind": true,
+  "audiocaps_prompt_index": [
+   52,
+   64,
+   103,
+   109,
+   114,
+   119,
+   125,
+   182
+  ],
+  "music_prompt_index": [
+   2,
+   9,
+   16,
+   18,
+   36,
+   49,
+   52,
+   60
+  ],
+  "blinding": "opaque clip ids; key sealed before listening",
+  "key_sha256": "166659d068e36c7fd880b86f462bef4bdc43842fe955a2b6d8ed8dc69e0b6ca3",
+  "responses_sha256_before_unblinding": "229e32e054c8df271cade41cef10c49ff7ebb343815fffdf6dafc09cf433b6c3",
+  "unblinded": "2026-09-04 16:12 MVD",
+  "loudness": "none applied",
+  "source_wavs": "frozen severity-2 clips (reversal-xsev-gen-1, xsev-music-native-1)"
+ },
+ "block_A_content_10p24s": {
+  "n_prompts": 8,
+  "recognisable_1to5_mean": {
+   "P": 2.0,
+   "P+FT": 3.88
+  },
+  "matches_caption_1to5_mean": {
+   "P": 1.38,
+   "P+FT": 3.38
+  },
+  "P_recognisable_le2": 6,
+  "PFT_recognisable_le2": 1,
+  "P_matches_ge4": 0,
+  "PFT_matches_ge4": 4,
+  "reading": "the 83 %-pruned checkpoint's near-floor CLAP is mostly DEGENERATE audio (changing noise with compression-like artefacts, 'galactic' textures), not plausible audio that misses the caption; P+FT is recognisable on 7/8 and matches on 4/8. Caveat from the listener: wind-in-microphone-like distortion is heard as 'realistic', which inflates 'recognisable' for noise-like outputs"
+ },
+ "block_B_duration_pairs": {
+  "n_pairs_per_duration": 8,
+  "3.84s": {
+   "prefers_PFT": 0,
+   "prefers_P": 6,
+   "equal": 2,
+   "confidence_mean_1to3": 1.62,
+   "confidence_3": 0,
+   "reading": "at 3.84 s the ear does NOT confirm the CLAP short-duration gain (R_short +0.085): both outputs mostly judged noise, weak preference for P"
+  },
+  "10.24s": {
+   "prefers_PFT": 6,
+   "prefers_P": 2,
+   "equal": 0,
+   "confidence_mean_1to3": 2.75,
+   "confidence_3": 6,
+   "reading": "at 10.24 s the recovery gain is audible: P+FT preferred 6/8 with full confidence in 6/8; the 2 exceptions are prompts where P+FT was near-silent or noise"
+  },
+  "reading": "the audible margin grows with duration (0/8 -> 6/8), consistent in direction with the CLAP interaction J; the ear places the short-duration gain lower than CLAP does"
+ },
+ "block_C_music_pairs_10p24s": {
+  "n_pairs": 8,
+  "prefers_PFT": 8,
+  "prefers_P": 0,
+  "sounds_like_music": {
+   "P": {
+    "yes": 1,
+    "partly": 2,
+    "no": 5
+   },
+   "P+FT": {
+    "yes": 5,
+    "partly": 3,
+    "no": 0
+   }
+  },
+  "follows_caption_1to5_mean": {
+   "P": 1.38,
+   "P+FT": 2.5
+  },
+  "reading": "CLAP's null on music (R_music ~ 0, both near chance) hides an audible difference: P+FT is clearly more MUSICAL (5/8 'music', 8/8 preferred) while neither follows the long MusicCaps captions (means 1.4 / 2.5). Musicality without caption alignment is invisible to a text-audio scorer"
+ },
+ "listener_free_text": "see artifacts/icassp_gate0/author_listening/mis_respuestas.md (gitignored) \u2014 concerns: distortion that resembles wind-in-mic reads as realistic; the music captions are too long/specific for 10 s clips and may make every system look bad",
+ "prompt_provenance_note": "AudioCaps-test prompts selected by seeded hash from the frozen 192-prompt manifest, no content filtering (xsev_select_audiocaps.py); music captions are MusicCaps hip-hop/rap, keyword-filtered only (xsev_select_music.py); the listening subset is a seeded random draw. Nothing was chosen for difficulty",
+ "artifact_sha256": "775aa4b1b19ccab97a22b94f8103860c54522d0c77810f3217e0f90d298b6593"
+}
