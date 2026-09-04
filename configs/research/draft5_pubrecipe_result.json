@@ -197,6 +197,16 @@
   "hi": 0.24252458626506265,
   "n": 64
  },
+ "W_pub": {
+  "3.84": 0.71875,
+  "10.24": 0.890625
+ },
+ "levels_pub": {
+  "pruned2_A@3.84": 0.014572228566976264,
+  "pruned2_A@10.24": 0.05817462541745044,
+  "recovered2@3.84": 0.10701693288865499,
+  "recovered2@10.24": 0.33496494439896196
+ },
  "J_frozen_same64": {
   "point": 0.16785362650989555,
   "lo": 0.11516676037572325,
@@ -212,5 +222,5 @@
  "J_pub_minus_J_frozen_note": "descriptive: the two recipes are prompt-paired but not noise-paired",
  "GATE_lo95_J_pub_gt_0": true,
  "gate_rule": "docs/draft5_opsweep.md section 3, declared before scoring",
- "artifact_sha256": "87f6ca64489ea9df099e620ba39ffb4b159d57b6cb8c02807acd550d3ad5e582"
+ "artifact_sha256": "ad6ba05ea4edeed66b46661ff3a2ca0162aac87170d454e0b211ad61ea0dbb8a"
 }

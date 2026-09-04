@@ -1,28 +1,37 @@
-# What Does Post-Pruning Recovery Restore in a Conditional Diffusion Model? A Controlled Paired Evaluation of AudioLDM
+# Recovery Fine-Tuning Recovers Where It Was Trained: Duration- and Domain-Dependent Gains in Pruned Text-to-Audio Diffusion
 
-Research code, pre-registrations, provenance and results for a study of **structured pruning and
-recovery fine-tuning** in text-to-audio latent diffusion, using
-[AudioLDM](https://arxiv.org/abs/2301.12503) as a controlled case study.
+Research code, pre-registrations, provenance and results for an evaluation study of **structured
+pruning followed by recovery fine-tuning** in text-to-audio latent diffusion, using the released
+pruned and fine-tuned [AudioLDM](https://arxiv.org/abs/2301.12503)-M checkpoints of
+[Singh et al.](https://arxiv.org/abs/2607.13330) as a controlled case study. The repository name
+records the hypothesis the project started from (modality-swap-aware pruning), which was rejected
+at its pre-registered gates (§4); the paper that came out of the project is the one described here.
 
 ## Abstract
 
-Structured pruning followed by recovery fine-tuning is a standard route to cheaper generative
-diffusion models, and *recovery* is conventionally summarised by the restoration of an aggregate
-benchmark value (typically FAD or KL on an in-domain test set) at a single sampler configuration.
-It is rarely established whether that restoration is domain-robust, evaluator-robust or
-inference-recipe-robust. This work introduces a controlled paired evaluation framework for
-post-pruning recovery — common generation noise across compared systems, prompt-clustered
-inference, pre-registered gates — and applies it to a published structurally-pruned AudioLDM
-checkpoint and its released recovery-fine-tuned counterpart. The framework resolves three
-dependencies of the recovery effect: **no statistically resolved recovered-over-pruned advantage
-across six evaluation axes at a controlled in-domain operating point**, a **large
-context-dependent recovered-versus-pruned interaction**, and a **temporal-scale-conditional
-advantage** realised at the model's native 10.24 s scale and absent at 3.84 s. Recovery is
-therefore multi-dimensional and context-dependent rather than a recipe-invariant scalar.
+Structured pruning of text-to-audio diffusion models is followed by recovery fine-tuning, whose
+benefit is usually certified by one score at one inference setting. Using the released pruned and
+fine-tuned AudioLDM-M checkpoints at two pruning severities (65 % and 83 % of U-Net parameters
+removed), we measure the paired recovery gain in text–audio alignment across clip duration and
+prompt domain, anchored by a shuffled-caption chance floor and the real audio of the same prompts.
+At 83 % pruning, fine-tuning closes 63 % of the pruned checkpoint's gap to real audio at its own
+10.24 s fine-tuning duration but only 33 % at 3.84 s, and nothing on held-out hip-hop captions;
+against the unpruned model, 82 % versus 44 % at 83 % and 52 % versus 8 % at 65 %. The duration
+dependence was pre-specified, replicates on a disjoint prompt set, survives a family-wise
+correction, is not a scorer artefact, grows monotonically over four durations, holds at the
+published sampler recipe, and is reproduced at both durations by a second scorer and by two
+event-level metrics outside the CLAP family. Recovery should be reported across operating points;
+lacking a matched dense fine-tuned control and human ratings, our claims concern evaluation, not
+mechanism.
 
-The studied recovery artifact is the **object of study, not an adversary**: this is an
-evaluation-methodology study, and no claim of error or misconduct is made anywhere in this
-repository.
+The evaluated checkpoints are the **object of study, not an adversary**: this is an
+evaluation-methodology study, nothing is trained here, and no claim of error or misconduct is made
+anywhere in this repository. Two of the manuscript's authors released the evaluated checkpoints;
+the operating points, batteries, estimands and gates were specified independently of that work.
+
+Manuscript (ICASSP 2027 format, Overleaf-ready): [`icassp/icassp_operating_point.tex`](icassp/icassp_operating_point.tex)
+· [PDF](icassp/icassp_operating_point.pdf) · audio examples:
+[gbibbo.github.io/audioldm-modality-swap-pruning](https://gbibbo.github.io/audioldm-modality-swap-pruning).
 
 ---
 
@@ -30,89 +39,89 @@ repository.
 
 ### Systems under study
 
-Three checkpoints of the same text-to-audio latent diffusion model, with verified provenance and
+Released checkpoints of the same text-to-audio latent diffusion model, verified provenance,
 **no retraining performed by us**:
 
 | System | Definition | U-Net parameters |
 |---|---|---|
-| **dense** | AudioLDM-M-Full (public release) | 415.955 M |
-| **pruned-only** | published L1 structured prune at the `(1,2,3,1)` budget; verified pure prune-and-merge, never fine-tuned | 145.674 M (**−65.0 %**) |
-| **recovered** | the same pruned budget, fine-tuned ≈1 M steps on AudioCaps (public release) | 145.674 M |
+| **dense** | AudioLDM-M-Full (public release; itself AudioCaps-fine-tuned by its authors) | 415.96 M |
+| **P, severity 1** | released L1 channel selection at the `(1,2,3,1)` budget applied to the dense EMA weights (bit-exact to the released raw weights); pure prune-and-merge, never fine-tuned | 145.67 M (−65.0 %) |
+| **P+FT, severity 1** | the same budget after the released 10⁶-step AudioCaps recovery fine-tune (EMA) | 145.67 M |
+| **P, severity 2** | `(1,2,1,1)` budget; the release differs from the dense-EMA selection in three decoder-seam tensors, so both conventions are evaluated (A′ primary, B′ sensitivity) | 71.08 M (−82.9 %) |
+| **P+FT, severity 2** | the released recovery fine-tune at `(1,2,1,1)` (EMA) | 71.08 M |
 
-A second, more aggressive severity `(1,2,1,1)` was subsequently evaluated as an independent
-replication.
+"Recovery" names the fine-tuning stage, not an achieved restoration.
 
-### Research questions
+### The question
 
-**RQ1 — Metric robustness.** At a single declared operating point, does the recovered checkpoint
-exceed the pruned-only checkpoint in-domain, and is the answer invariant across independent
-evaluation axes (text–audio alignment, event capture, divergence, distributional distance)?
+Does the gain of recovery fine-tuning over the pruned checkpoint depend on the operating point at
+which it is evaluated? Operating points: clip **duration** (3.84 s, and — at severity 2 — 5.12,
+7.68 and the native 10.24 s, the fine-tuning duration), prompt **domain** (in-domain AudioCaps
+versus held-out hip-hop/rap captions from MusicCaps), and the **sampler recipe** (the frozen DDIM-50
+/ guidance-2.5 setting versus the published DDIM-200 / guidance-3.5 one). Every score is read
+against two anchors: a shuffled-caption **chance floor** and the **real audio** of the same prompts.
 
-**RQ2 — Context robustness.** Is the recovered-versus-pruned ordering stable across evaluation
-context — in-domain AudioCaps versus a held-out music battery with near-zero exposure in the
-recovery corpus?
+### Findings
 
-**RQ3 — Inference-regime robustness.** Is the ordering conditional on the generation operating
-point, specifically on the temporal extent of the generated signal relative to the scale at which
-recovery was fine-tuned and evaluated?
+1. **Duration.** The recovery gain is several times larger at the fine-tuning duration than at
+   3.84 s, at both severities (severity 2: R = +0.085 → +0.244, interaction J = +0.159
+   [+0.131, +0.187], pre-specified gate passed on a disjoint 192-prompt set). A four-point sweep
+   shows the gain **growing monotonically** with duration — R = +0.085, +0.139, +0.201, +0.244 at
+   3.84, 5.12, 7.68, 10.24 s, every step resolved — while the pruned checkpoint stays flat to
+   5.12 s. It is not a scale or scorer effect: the chance floor moves by at most 0.025 between
+   durations and the interaction survives chance correction (J_c = +0.191 [+0.162, +0.220]).
+2. **Domain.** At matched duration the gain is present in-domain and absent or negative on the
+   held-out hip-hop captions — at both severities at 3.84 s and at both durations at severity 2 —
+   where alignment after fine-tuning sits 0.02–0.03 above the chance floor, against 0.32 in-domain.
+3. **Recovery ratios, not one restored score.** At 83 % pruning, fine-tuning closes 44 / 63 / 78 /
+   82 % of the gap to the unpruned model at 3.84 / 5.12 / 7.68 / 10.24 s and 33 / 48 / 66 / 63 % of
+   the gap to real audio; P+FT is not restored to dense at any duration (dense leads by +0.055
+   [+0.021, +0.088] at 10.24 s). At 65 %: 8 % versus 52 % of the gap to dense.
+4. **Where the gain lives.** A frame-level grounding model (FineLAP) shows the native-duration gain
+   spread uniformly over the clip, not back-loaded; a crop analysis shows the short-duration deficit
+   arises from *generating* short clips, not from scoring short excerpts.
+5. **Robustness.** The duration interaction holds at the published sampler recipe (DDIM 200 /
+   guidance 3.5, 64-prompt subset: J = +0.184 [+0.126, +0.243]); it is reproduced by Human-CLAP and
+   by two event-level metrics outside the CLAP family (KL to real references, PANNs top-10 capture)
+   at both durations; every severity-2 conclusion survives a Holm correction over 19 contrasts.
+6. **Pre-specified negatives, kept.** A "trade in-domain for out-of-domain alignment" account
+   fails (severity 1 has no in-domain gain at 3.84 s); the severity-1 music penalty did not
+   replicate at severity 2; a "late allocation" account of the duration effect is rejected by
+   FineLAP; and the two hypotheses the project started from were rejected at their own gates (§4).
 
-**RQ4 — Severity robustness.** Do the effects established under RQ1–RQ3 replicate at a stronger
-pruning severity, under independently drawn prompt manifests?
-
-### Summary of findings
-
-1. **In-domain non-advantage is metric-invariant (RQ1).** Across six evaluation axes — CLAP,
-   Human-CLAP, PANNs top-10 event capture, KL divergence on PANNs logits, FAD and FD — no axis
-   resolves a recovered-over-pruned advantage at the controlled 3.84 s operating point, including
-   the two metrics the source pruning work itself reports. The pattern is
-   `dense ≫ {pruned ≈ recovered}` throughout. A single-metric null admits a scorer-artifact
-   explanation; a simultaneous six-axis null does not.
-2. **Large context-dependent interaction (RQ2).** On the held-out music battery the recovered
-   checkpoint is substantially degraded relative to the pruned-only checkpoint it was initialised
-   from (ΔCLAP = −0.094, CI95 [−0.124, −0.065]) while approximately matching it in-domain, giving
-   an interaction I = +0.092 [+0.054, +0.131], corroborated by a second evaluator
-   (I_HC = +0.172 [+0.121, +0.224]).
-3. **The recovery advantage is temporal-scale-conditional (RQ3).** Varying only the generated
-   clip duration from 3.84 s to the native 10.24 s resolves a material recovered-over-pruned
-   advantage on CLAP, Human-CLAP, KL and PANNs event capture, with FAD 12.25 → 5.41. The
-   published recovery benefit is real but is realised at the operating point at which recovery
-   was fine-tuned and evaluated, and does not transfer off it.
-4. **Partial replication at a stronger severity (RQ4).** At `(1,2,1,1)`, context dependence
-   (K = +0.235 [+0.197, +0.272]) and the duration interaction (J = +0.159 [+0.131, +0.187]) both
-   replicate and are robust to the seam convention. The specific native-positive /
-   music-negative sign pattern does **not** replicate; the outcome is reported as partial
-   replication rather than promoted to a full one.
-5. **Two pre-registered hypotheses were rejected at their own gates** and are reported as
-   negative results: the modality-swap pruning hypothesis from which this repository takes its
-   name, and a differential legacy-adapter fragility phenomenon (§4).
+**Limitations, as declared in the paper.** One model family, two severities, two domains.
+Mechanistic attribution is blocked: the matched control (the dense model given the same AudioCaps
+fine-tune) no longer exists, so the dependence cannot be attributed to pruning rather than to
+fine-tuning in general. Primary inference rests on CLAP-family scorers; there is no human
+evaluation. Best-of-3 selection of the published recipe was not reproduced. The duration sweep
+stops at the fine-tuning duration, so it cannot separate "largest at the training duration" from
+"larger for longer clips".
 
 ---
 
-![Fig. 1](docs/figures/fig1_paired_contrasts.png)
+![Fig. 1](icassp/figs/fig1_interaction.png)
 
-**Fig. 1.** Paired contrast Δ = CLAP(recovered) − CLAP(pruned-only), computed per prompt and
-aggregated with a prompt-clustered percentile bootstrap (B = 10 000); error bars are 95 % CIs.
-The two checkpoints are identical across rows; only the evaluation context varies. Filled markers
-indicate intervals excluding zero. Sources:
-[`reversal_v1_1_result.json`](configs/research/reversal_v1_1_result.json),
-[`reversal_v1_r_music_clap.json`](configs/research/reversal_v1_r_music_clap.json),
-[`op_duration_discriminator_1_result.json`](configs/research/op_duration_discriminator_1_result.json),
-[`xsev_result.json`](configs/research/xsev_result.json).
+**Fig. 1.** The recovery gain grows with clip duration. Mean CLAP cosine of the pruned (P, dashed)
+and fine-tuned (P+FT, solid) checkpoints, (a) severity 1 at the short and native points, (b)
+severity 2 at four durations; whiskers: 95 % CI of the paired gain R. Anchors: real audio of the
+same prompts (triangles), each cell's chance floor (ticks) and the matched dense control (stars).
 
-![Fig. 2](docs/figures/fig2_duration_interaction.png)
+![Fig. 2](icassp/figs/fig2_where.png)
 
-**Fig. 2.** Duration × system interaction, in-domain AudioCaps, DDIM-50, CFG 2.5. The only
-manipulated factor is the temporal extent of the generated signal. The dense marker is the
-severity-1-lineage dense control at 10.24 s; no restoration-to-dense claim is made, the
-dense-minus-recovered gap being +0.048 [−0.000, +0.096]. Both figures are regenerated from frozen
-result artifacts by [`scripts/research/build_readme_figures.py`](scripts/research/build_readme_figures.py),
-which introduces no new statistic.
+**Fig. 2.** (a) FineLAP frame-level grounding gain (P+FT − P) versus time in the 10.24 s clip:
+uniform, not back-loaded. (b) Recovery gain R on the generated 3.84 s clip, the first 3.84 s of the
+10.24 s clip and the full clip: a generation-length, not a scoring-window, effect. Both figures are
+regenerated from committed result artifacts by
+[`scripts/research/paper_figs/make_draft5_figs.py`](scripts/research/paper_figs/make_draft5_figs.py).
 
-### Project status (2026-08-31)
+### Project status (2026-09-04)
 
-The GPU phase is closed. The ICASSP-2027 manuscript draft is frozen except for camera-ready
-prose. A blinded six-listener expert perceptual panel is designed, powered, loudness-normalised
-and platform-built; it is **prepared and frozen, not launched** (§5).
+The manuscript is complete in the ICASSP 2027 format (4 content pages + references) and every
+number it prints is reproduced from a committed artifact by
+[`verify_draft5_numbers.py`](scripts/research/paper_figs/verify_draft5_numbers.py). Paid GPU work
+is closed after the duration sweep and the published-recipe check (two T4 jobs, 4.558 credits).
+A blinded six-listener expert perceptual panel is designed, powered, loudness-normalised and
+platform-built but **not launched** (§5); it remains the one corroboration the paper lacks.
 
 ---
 
@@ -149,56 +158,77 @@ reported above. The design therefore specifies:
 <details open>
 <summary><b>2. Results</b></summary>
 
-**In-domain metric panel.** AudioCaps, 3.84 s, DDIM-50, CFG 2.5, EMA weights, fp32, n = 96
-prompts, paired.
+All numbers below are those printed in the manuscript and are reproduced from committed artifacts
+(`configs/research/*.json`) by `verify_draft5_numbers.py`. CLAP = fused CLAP cosine
+(`laion/clap-htsat-fused`, rev. 365dea6e); R = CLAP(P+FT) − CLAP(P), paired per prompt, 95 %
+prompt-level percentile-bootstrap intervals (B = 10⁴); W = fraction of prompts on which P+FT beats P.
+DDIM 50, guidance 2.5, η = 0, fp32, single generation, EMA weights, common generation noise per
+prompt across the compared systems.
 
-| Metric | Dir. | dense | pruned | recovered | Δ (rec − pruned) | 95 % CI / status |
-|---|---|---|---|---|---|---|
-| CLAP (primary) | ↑ | 0.204 | 0.100 | 0.098 | −0.0024 | [−0.027, +0.021] |
-| Human-CLAP | ↑ | 0.392 | 0.229 | 0.256 | +0.028 | [−0.012, +0.068] |
-| PANNs top-10 capture | ↑ | 0.446 | 0.339 | 0.362 | +0.023 | [−0.044, +0.088] |
-| KL (PANNs logits) | ↓ | 2.852 | 3.424 | 3.358 | −0.067 | [−0.396, +0.251] |
-| FAD (VGGish) | ↓ | 8.83 | 14.53 | 14.70 | +0.17 | descriptive (n = 96) |
-| FD (PANNs-2048) | ↓ | 71.1 | 78.4 | 80.8 | +2.4 | descriptive (n = 96) |
+**Table 1 — recovery gain in CLAP alignment.**
 
-Distributional metrics are treated as descriptive at these sample sizes; a variance analysis
-established that only CLAP carries usable per-prompt interaction power under the available budget.
+| Setting | P | P+FT | R [95 % CI] | W |
+|---|---|---|---|---|
+| *Severity 1, (1,2,3,1)* | | | | |
+| AudioCaps 3.84 s (n = 80) | 0.104 | 0.111 | +0.008 [−0.023, +0.039] | 0.44 |
+| AudioCaps 10.24 s (n = 80) | 0.253 | 0.304 | **+0.052** [+0.009, +0.093] | 0.64 |
+| music 3.84 s (n = 64) | 0.117 | 0.023 | **−0.094** [−0.124, −0.065] | 0.20 |
+| duration s(·); J | +0.149 | +0.193 | +0.044 [−0.001, +0.087] | |
+| domain 3.84 s (n = 96) | | | **+0.092** [+0.054, +0.131] | |
+| *Severity 2, (1,2,1,1)* | | | | |
+| AudioCaps 3.84 s (n = 192) | 0.015 | 0.100 | **+0.085** [+0.066, +0.105] | 0.72 |
+| AudioCaps 5.12 s (n = 192) | 0.015 | 0.154 | **+0.139** [+0.115, +0.164] | 0.79 |
+| AudioCaps 7.68 s (n = 192) | 0.029 | 0.231 | **+0.201** [+0.175, +0.227] | 0.89 |
+| AudioCaps 10.24 s (n = 192) | 0.055 | 0.299 | **+0.244** [+0.215, +0.273] | 0.87 |
+| music 3.84 s (n = 64) | 0.005 | 0.014 | +0.009 [−0.013, +0.032] | 0.48 |
+| music 10.24 s (n = 64) | 0.089 | 0.094 | +0.005 [−0.028, +0.039] | 0.53 |
+| duration s(·); J (3.84 → 10.24 s) | +0.040 | +0.200 | **+0.159** [+0.131, +0.187] (pre-specified gate passes) | |
+| domain 3.84 s | | | **+0.076** [+0.047, +0.105] | |
+| domain 10.24 s | | | **+0.239** [+0.195, +0.283] | |
 
-**Duration discriminator.** Prospectively specified follow-up at severity 1, n = 80 prompts; the
-only manipulated factor is temporal extent, and the 3.84 s control is rescored on the matched
-subset rather than carried over from the earlier run.
+Sweep steps at severity 2 (pre-specified shape rule → *monotone increasing*): D1 = +0.054
+[+0.032, +0.077], D2 = +0.062 [+0.037, +0.087], D3 = +0.043 [+0.013, +0.073]. Published sampler
+recipe (DDIM 200 / guidance 3.5, first 64 prompts, pre-specified gate lo95(J) > 0): J = +0.184
+[+0.126, +0.243]; the frozen recipe on the same prompts gives +0.168 (difference +0.016
+[−0.040, +0.072], descriptive). Every severity-2 conclusion survives a Holm correction over the
+19-contrast family (`configs/research/draft5_holm_extension.json`).
 
-| Axis | 3.84 s | 10.24 s (native) |
-|---|---|---|
-| CLAP | +0.008 [−0.023, +0.039] | **+0.052 [+0.009, +0.093]** |
-| Human-CLAP (interaction) | — | **J_HC = +0.075 [+0.012, +0.137]** |
-| KL (pruned − recovered) | +0.22 [−0.25, +0.70] | **+0.58 [+0.20, +1.00]** |
-| PANNs capture | +0.20 [−0.03, +0.44] | **+0.36 [+0.11, +0.63]** |
-| FAD ↓ (pruned → recovered) | 14.4 → 15.3 | **12.25 → 5.41** |
-| FD ↓ (pruned → recovered) | 79.4 → 80.7 | **71.4 → 60.2** |
+**Table 2 — anchors and recovery ratios.** Chance floor of the P / P+FT cells (shuffled captions
+from the same embeddings), mean CLAP of the real AudioCaps audio of the same prompts, and the
+fraction ρ of the pruned checkpoint's gap to dense and to real audio closed by fine-tuning.
 
-The primary interaction contrast is J = +0.044, CI95 [−0.001, +0.087]: positive, with the
-interval marginally including zero. The claim is stated accordingly — the *material advantage at
-10.24 s is statistically resolved*, the *primary interaction contrast is not resolved at
-α = 0.05* — rather than rounded upward. A residual recipe difference (DDIM 50 versus the
-published 200 steps) remains untested and is declared as a limitation.
+| Setting | floor P / P+FT | real | ρ_dense [%] | ρ_real [%] |
+|---|---|---|---|---|
+| sev. 1 AC 3.84 s | −0.031 / −0.033 | 0.264 | 8 [−30, 36] | 5 [−16, 24] |
+| sev. 1 AC 10.24 s | −0.012 / −0.036 | 0.442 | 52 [11, 103] | 27 [6, 46] |
+| sev. 2 AC 3.84 s | −0.005 / −0.015 | 0.274 | 44 [36, 53] | 33 [26, 39] |
+| sev. 2 AC 5.12 s | −0.005 / −0.025 | 0.307 | 63 [52, 74] | 48 [40, 55] |
+| sev. 2 AC 7.68 s | +0.003 / −0.037 | 0.333 | 78 [68, 88] | 66 [59, 74] |
+| sev. 2 AC 10.24 s | +0.020 / −0.022 | 0.440 | 82 [72, 92] | 63 [56, 71] |
+| sev. 1 music 3.84 s | +0.055 / +0.001 | – | – | – |
+| sev. 2 music 3.84 s | −0.013 / −0.004 | – | – | – |
+| sev. 2 music 10.24 s | +0.070 / +0.061 | – | – | – |
 
-**Cross-severity replication.** Budget `(1,2,1,1)`, independently drawn AudioCaps-192 and
-music-64 manifests: context dependence K = +0.235 [+0.197, +0.272] **PASS**, duration interaction
-J = +0.159 [+0.131, +0.187] **PASS**, both robust under the A′/B′ seam conventions. The
-conjunction `native-positive ∧ music-negative` **fails** (R_music = +0.009 [−0.013, +0.032]): at
-this severity there is no out-of-domain penalty. The outcome is recorded as partial replication,
-and the effect is described as *context dependence* rather than a domain or OOD interaction,
-since the K contrast bundles domain with duration.
+The matched dense control separates the systems' duration response from the scorer's: at
+severity 2 the dense model's response s(dense) = +0.147 [+0.117, +0.177] (0.207 → 0.354) sits
+between the pruned checkpoint's (−0.107 [−0.137, −0.076] below it) and the fine-tuned checkpoint's
+(+0.053 [+0.017, +0.089] above it). ρ_real dips at 10.24 s only because the real clip itself gains
++0.108 once it fills the scorer's 10 s window without repeat-padding.
 
-**Temporal localisation of the recovery gain.** A zero-GPU frame-level diagnostic built on
-[FineLAP](https://github.com/AndreasXi/FineLAP) tested whether the long-clip advantage arises from
-preferential *late* allocation of requested-event evidence. It does not: T₂ = −0.002
-[−0.024, +0.020] at severity 2, seam-robust, with severity 1 in the same direction. Recovery
-instead produces a temporally broad frame-level grounding gain — semantic mass +0.274, occupancy
-+0.268, quarter coverage +0.376, peak +0.407, all intervals excluding zero. This yields a clean
-negative on the proposed mechanism together with corroboration of the effect itself by a
-frame-level evaluator independent of the CLAP scorer used for the primary endpoints.
+**Corroboration outside the primary scorer (severity 2).** Human-CLAP: R_nat = +0.375
+[+0.340, +0.408], J = +0.185. Event-level metrics against the real references of the same prompts:
+KL 2.23 vs 4.45 (Δ = +2.22 [+1.93, +2.53]) and PANNs top-10 captured labels 1.46 vs 0.60
+(Δ = +0.86 [+0.70, +1.02]) at 10.24 s; rescored at 3.84 s both gains shrink (KL +0.66
+[+0.42, +0.92], PANNs +0.19 [+0.06, +0.32]), so the interaction holds outside the CLAP family
+(J_KL = +1.56 [+1.19, +1.92], J_PANN = +0.67 [+0.49, +0.86]). FAD agrees descriptively (6.92 vs
+27.4).
+
+**Where the gain lives.** FineLAP frame-level grounding: the P+FT − P gain is spread over the whole
+10.24 s clip (semantic mass +0.27 [+0.22, +0.33]; D_early = +0.275 vs D_late = +0.273,
+T = −0.002 [−0.024, +0.020]), rejecting a "late allocation" account. Crop analysis: scoring the
+first 3.84 s of each 10.24 s generation gives R_crop = +0.172 [+0.150, +0.194] at severity 2,
++0.087 above the separately generated 3.84 s clips — the short-duration deficit is a generation
+effect, not a scoring-window effect.
 
 </details>
 
@@ -327,8 +357,11 @@ before any human data collection**:
   CUDA / manifest SHA). Settled costs are recorded in
   [`docs/compute_budget.md`](docs/compute_budget.md) — e.g. the severity-2 replication at 3.688
   credits (≈208 min of T4 generation), the duration discriminator at 0.577, the adapter chain at
-  4.55 — including the runs that failed and the reason (a preempted job, a dirty-tree refusal, an
-  out-of-funds termination mid-generation).
+  4.55, the severity-2 dense control at 1.263, the duration sweep at 2.645 and the published-recipe
+  check at 1.913 — including the runs that failed and the reason (a preempted job, a dirty-tree
+  refusal, an out-of-funds termination mid-generation). Every generation job is followed by a
+  device-consistency check (four clips regenerated and compared with the frozen ones: reproducible
+  to within 1 int16 LSB across T4 jobs, ΔCLAP ~ 10⁻⁶).
 * **27 CPU test modules** behind a single command, covering the LoRA algebra, mask-induced
   slicing, channel-multiplier materialization, the conditioning paths, the random-mask null, the
   Gate-B statistic, the clustered bootstrap, the power simulations and the manifest validator.
@@ -345,8 +378,16 @@ Each claim above is backed by an executable command.
 # full research test suite (CPU, 27 modules, all passing)
 OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/run_research_tests.py --all
 
-# regenerate Fig. 1 and Fig. 2 from the frozen result artifacts
-OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/build_readme_figures.py
+# regenerate the manuscript figures from the committed result artifacts
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/make_draft5_figs.py
+
+# check that every number printed in the manuscript is reproduced from a committed artifact
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/verify_draft5_numbers.py
+
+# severity-2 primary verdict, dense control, sweep and published-recipe verdicts (CPU; WAVs on disk)
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/xsev_score_verdict.py
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/draft5_opsweep_verdict.py --exp sweep --verdict
+OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/draft5_opsweep_verdict.py --exp pubrecipe --verdict
 
 # bit-exact reconstruction of the released pruned checkpoint
 .venv/bin/python scripts/research/verify_l1_bitexact.py
@@ -389,8 +430,11 @@ Documents carrying the project state:
 * [`docs/experiment_ledger.md`](docs/experiment_ledger.md) — every experiment and gate, including
   the failed and stopped runs
 * [`docs/compute_budget.md`](docs/compute_budget.md) — measured throughput, VRAM, GPU-hours, cost
-* [`docs/paper/icassp2027_recovery_evaluation_draft.md`](docs/paper/icassp2027_recovery_evaluation_draft.md)
-  — manuscript draft
+* [`icassp/icassp_operating_point.tex`](icassp/icassp_operating_point.tex) — the manuscript
+  (`icassp/MANUSCRIPT_NOTES.md` records every editorial decision; `icassp/README_OVERLEAF.md` the
+  upload procedure)
+* [`docs/review/`](docs/review/) — hostile-review rounds and the external-reviewer simulation with
+  its action list
 * [`PROGRESS.md`](PROGRESS.md) — living state
 
 ## Frozen upstream references

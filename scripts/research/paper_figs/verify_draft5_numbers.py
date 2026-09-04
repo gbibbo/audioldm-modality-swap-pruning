@@ -42,7 +42,7 @@ DROP = {"sev2 slope P", "sev2 slope P+FT", "s(P) sev2", "s(P+FT) sev2", "s(dense
         "caption dense s",                                             # +0.150 now stated in the prose only
         "wilcoxon sev1", "wilcoxon sev2",                              # p-values dropped from the prose
         "sev2 J text", "gap closed short", "gap closed native",        # A7: CIs moved from prose to Tables 1-2
-        "sev1 dW", "sev2 dW"}                                          # OPSWEEP page budget: dW CIs dropped (W stays in Table 1)
+        "sev1 dW", "sev2 dW", "holm family size", "FineLAP n"}       # FineLAP n re-checked below in its compact form                    # Holm family is now 19 (draft5_holm_extension.json)                                          # OPSWEEP page budget: dW CIs dropped (W stays in Table 1)
 dropped = [c[0] for c in checks if c[0] in DROP]
 checks = [c for c in checks if c[0] not in DROP]
 # also drop any inherited check whose label mentions pooled-rank / equivalence forms (defensive)
@@ -163,6 +163,11 @@ if os.path.exists(_sw) and os.path.exists(_pr) and "%% opsweep-integrated" in ra
         ("T2 sweep 5.12 row", "AC$5.12$\\,s&" + _fp("5.12") + "&$" + f"{Bd['5.12']['levels']['real']:.3f}" + "$&" + tab_ci(Bd["5.12"]["rho_dense"]) + "&" + tab_ci(Bd["5.12"]["rho_real"])),
         ("T2 sweep 7.68 row", "AC$7.68$\\,s&" + _fp("7.68") + "&$" + f"{Bd['7.68']['levels']['real']:.3f}" + "$&" + tab_ci(Bd["7.68"]["rho_dense"]) + "&" + tab_ci(Bd["7.68"]["rho_real"])),
         ("pub J", "J=" + pt(PR["J_pub"]) + "$$" + ci(PR["J_pub"])),
+        ("T1 sweep 5.12 row", f"AudioCaps$5.12$\\,s&${Bd['5.12']['levels']['P']:.3f}$&${Bd['5.12']['levels']['PFT']:.3f}$&" + pt(Rd["5.12"]) + "^{\\dagger}$~" + ci(Rd["5.12"]) + f"&${SW['W_by_duration']['5.12']:.2f}$"),
+        ("T1 sweep 7.68 row", f"AudioCaps$7.68$\\,s&${Bd['7.68']['levels']['P']:.3f}$&${Bd['7.68']['levels']['PFT']:.3f}$&" + pt(Rd["7.68"]) + "^{\\dagger}$~" + ci(Rd["7.68"]) + f"&${SW['W_by_duration']['7.68']:.2f}$"),
+        ("holm family 19", "overall$" + str(J("configs/research/draft5_holm_extension.json")["family_size"]) + "$contrasts"),
+        ("rho_real dip", "gains" + pt(SW["secondary"]["s_real_steps"]["7.68_to_10.24"]) + "$once"),
+        ("FineLAP n compact", "($110$/$49$eligiblepromptsatseverities2/1,outcome-blind)"),
         ("pub J_frozen|64", "samepromptsgives" + pt(PR["J_frozen_same64"]) + "$,difference" + pt(PR["J_pub_minus_J_frozen"]) + "$$" + ci(PR["J_pub_minus_J_frozen"])),
     ]
 

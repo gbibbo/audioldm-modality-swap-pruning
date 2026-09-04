@@ -249,6 +249,12 @@
    "n": 192
   }
  },
+ "W_by_duration": {
+  "3.84": 0.7239583333333334,
+  "5.12": 0.7916666666666666,
+  "7.68": 0.890625,
+  "10.24": 0.8697916666666666
+ },
  "levels": {
   "pruned2_A@3.84": 0.014637135759888528,
   "recovered2@3.84": 0.09952505419884498,
@@ -645,5 +651,5 @@
   },
   "note": "secondary, descriptive (protocol section 2): no gate. rho = ratio of means, paired prompt resampling. 3.84 / 10.24 s cells are the committed frozen / dense-192 / floor-ceiling scores."
  },
- "artifact_sha256": "718ea9591df769fd464f3cf276912e89b61135a64c4417d7665e9c03dd9a8f9f"
+ "artifact_sha256": "3c4b8147db943f153e9896b66f2573783fe38a612fd156b74e42bc080834c1a5"
 }

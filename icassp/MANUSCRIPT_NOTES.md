@@ -153,9 +153,25 @@ stops at the fine-tuning duration so it cannot separate "largest at the training
 for longer clips"). Page budget: ~20 lines recovered by prose trims that drop no result (Background,
 Sec. 3.3/3.4 asides, severity-1 power paragraph loses the dW CIs and the severity-2 median J (W stays in
 Table 1; sev-1 8 % / 52 % ratios stay in Table 2), crop sentence, Table 1/2 and Fig. 2 captions,
-Discussion's redundant "one restored score" sentence) and by Fig. 1 / Fig. 2 heights 2.26 -> 2.08 in and
-2.44 -> 2.08 in, float separations 7/8 pt -> 5/6 pt. Fig. 1(b) prints no R at the two new points (no room
+Discussion's redundant "one restored score" sentence) and float separations 7/8 pt -> 5/6 pt.
+[CORRECTION 2026-09-04: this note originally also claimed "Fig. 1 / Fig. 2 heights 2.26 -> 2.08 in and
+2.44 -> 2.08 in"; that edit had silently failed (un-asserted replace) and commit 997cf70 still carried
+2.26 / 2.44 in — the 4-page fit at that commit came from the prose trims alone. The reduction was
+actually applied on 2026-09-04 (2.08 / 2.24 in, asserted), see the entry below.] Fig. 1(b) prints no R at the two new points (no room
 at column width; values are in the text and Table 2). Result: 4 content pages + references page, 0 overfull
 boxes, `verify_draft5_numbers.py` 114/114 (10 sweep/recipe checks added; 4 checks for deliberately dropped
 prose numbers removed), Overleaf zip rebuilt and compiles standalone.
+
+## 2026-09-04 post-sweep hardening (CPU, 0 cr)
+
+`integrate_opsweep_extras.py` (marker `%% opsweep-extras-integrated`): Table 1 rows at 5.12 / 7.68 s
+(P, P+FT, R with CI, W from `draft5_opsweep_result.json`), Holm family 13 -> 19 in Sec. 4.1
+(`draft5_holm_extension.json`; "last sweep step p = 0.003"), rho_real clause. Trims for the page budget
+(no number dropped that a table does not carry): intro paragraph 1, Sec. 3.4 pre-specified list, the
+real-ceiling sentence in 4.1, 4.4 (i), Table 1 caption, FineLAP n clause, conclusion opening. Figure
+heights now really 2.08 in (Fig. 1) / 2.24 in (Fig. 2) with Fig. 2 margins re-set (top 0.905, bottom
+0.185) so no label clips. 4 content pages + references, 0 overfull, verifier 117/117, zip standalone OK.
+Pending at this note: Human-CLAP and KL/PANNs on the sweep cells (a sentence in 4.4 if and only if they
+corroborate the monotone shape) and the author-listening paragraph (Limitations), once Gabriel's blinded
+answers are in and unblinded.
 

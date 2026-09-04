@@ -281,6 +281,7 @@ def verdict(exp):
              7.68: cos("recovered2__ac_d192") - cos("pruned2_A__ac_d192"),
              10.24: cos("recovered2__ac_native", True) - cos("pruned2_A__ac_native", True)}
         out["R_by_duration"] = {str(d): bt.ci(v) for d, v in R.items()}
+        out["W_by_duration"] = {str(d): float((v > 0).mean()) for d, v in R.items()}   # fraction of prompts P+FT > P
         out["levels"] = {f"{s}@{d}": float(np.mean(
             cos(f"{s}__{'ac_short' if d == 3.84 else 'ac_native' if d == 10.24 else 'ac_d128' if d == 5.12 else 'ac_d192'}",
                 frozen=d in (3.84, 10.24)))) for d in R for s in ("pruned2_A", "recovered2")}
@@ -312,6 +313,9 @@ def verdict(exp):
         Rn = cos("recovered2__ac_native_pub") - cos("pruned2_A__ac_native_pub")
         J = Rn - Rs
         out["R_pub_short"], out["R_pub_native"], out["J_pub"] = bt.ci(Rs), bt.ci(Rn), bt.ci(J)
+        out["W_pub"] = {"3.84": float((Rs > 0).mean()), "10.24": float((Rn > 0).mean())}
+        out["levels_pub"] = {f"{s_}@{d}": float(np.mean(cos(f"{s_}__{c}_pub")))
+                             for s_ in ("pruned2_A", "recovered2") for d, c in ((3.84, "ac_short"), (10.24, "ac_native"))}
         Jf = ((cos("recovered2__ac_native", True, lim) - cos("pruned2_A__ac_native", True, lim))
               - (cos("recovered2__ac_short", True, lim) - cos("pruned2_A__ac_short", True, lim)))
         out["J_frozen_same64"] = bt.ci(Jf)
