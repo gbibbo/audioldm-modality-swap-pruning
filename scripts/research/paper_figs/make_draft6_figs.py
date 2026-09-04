@@ -235,15 +235,15 @@ def figure_all():
     Draft-5 Fig. 2). Two column-width floats become one text-width float: every panel roughly doubles
     in area while the page budget grows by less than one column-inch.
     """
-    fig = plt.figure(figsize=(TEXTWIDTH, 2.78))
-    gs1 = fig.add_gridspec(1, 2, left=0.104, right=0.988, top=0.938, bottom=0.612, wspace=0.10)
-    gs2 = fig.add_gridspec(1, 3, left=0.104, right=0.988, top=0.418, bottom=0.150, wspace=0.34)
+    fig = plt.figure(figsize=(TEXTWIDTH, 3.05))
+    gs1 = fig.add_gridspec(1, 2, left=0.104, right=0.988, top=0.945, bottom=0.632, wspace=0.10)
+    gs2 = fig.add_gridspec(1, 3, left=0.104, right=0.988, top=0.448, bottom=0.132, wspace=0.34)
     a1 = fig.add_subplot(gs1[0, 0])
     a2 = fig.add_subplot(gs1[0, 1], sharey=a1)
     handles = draw_duration([a1, a2])
     a2.tick_params(labelleft=False)
     fig.legend(handles=handles, loc="center", ncol=5, handlelength=1.6, columnspacing=1.4,
-               handletextpad=0.4, fontsize=6.9, frameon=False, bbox_to_anchor=(0.53, 0.503))
+               handletextpad=0.4, fontsize=6.9, frameon=False, bbox_to_anchor=(0.53, 0.527))
 
     b1 = fig.add_subplot(gs2[0, 0])
     b2 = fig.add_subplot(gs2[0, 1])

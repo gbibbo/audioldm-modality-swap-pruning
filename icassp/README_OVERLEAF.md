@@ -37,6 +37,12 @@ Title options (Draft 6 keeps the first): (1) "Recovery Fine-Tuning Recovers Wher
 Duration- and Domain-Dependent Gains in Pruned Text-to-Audio Diffusion"; (2) "How Much Does Recovery
 Fine-Tuning Recover? Operating-Point-Dependent Gains in Pruned Text-to-Audio Diffusion".
 
+LOCAL PREVIEW CAVEAT: `icassp_operating_point.pdf` in the repo is built locally with tectonic plus
+Liberation Serif (metric-compatible with Times) because plain tectonic has no `TUptm.fd` and silently falls
+back to the wider Latin Modern, which adds about 0.6 of a column and makes the paper look over-length.
+Overleaf's pdfLaTeX build (NimbusRomNo9L = Times) is the authoritative one; use
+`scripts/research/paper_figs/pagecheck_times.py` for any local page-budget decision.
+
 To open in Overleaf: New Project -> Upload Project -> select this .zip (files are at the zip root).
 See MANUSCRIPT_NOTES.md for the Draft-5 -> Draft-6 change log, number provenance, and the list of
 references whose bibliographic details still need a final check.

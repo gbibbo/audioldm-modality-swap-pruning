@@ -237,8 +237,11 @@ of a recent pruning study" rather than "the released checkpoints". The introduct
 paragraphs (what structured pruning and recovery fine-tuning are, then what is reported of them and why an
 operating point matters) before the research question.
 
-**Page budget (the cost).** ICASSP gives 4 pages of technical content; Draft 5 filled all four to the last
-line, so the larger figure and the longer opening had to be paid for. `integrate_draft6_tighten.py`
+**Page budget — SUPERSEDED, see the correction section below.** The compression described in this paragraph
+was based on a WRONG local measurement (Latin Modern fallback) and was reverted the same day; the prose is
+back to its Draft-5 wording. Kept here for the record: ICASSP gives 4 pages of technical content; the local
+tectonic build of Draft 5 filled all four to the last line, so the larger figure and the longer opening
+looked as if they had to be paid for. `integrate_draft6_tighten.py`
 (`%% draft6-tighten`), `integrate_draft6_fit.py` (`%% draft6-fit`) and `integrate_draft6_fit_b.py`
 (`%% draft6-fit-b`) tighten wording only (plus table `\arraystretch` 1.05 -> 0.92, `\leftmargini`, float
 skips, and topic sentences that restated their own subsection title). The Conclusion became the final
@@ -255,3 +258,39 @@ artifact of record; the scripts are marker-guarded and will not re-apply.
 Build: `make_draft6_figs.py` then the integrate scripts (idempotent, each guarded by its marker), then
 tectonic; zip = tex + spconf.sty + IEEEbib.bst + README_OVERLEAF.md + figs/fig1_operating_points.pdf, and it
 compiles standalone from a fresh extraction (5 pages, page 5 references only).
+
+
+## 2026-09-04 CORRECTION: the local page-budget measurement was wrong (font fallback), compression reverted
+
+**What went wrong.** `spconf.sty` sets `\renewcommand{\rmdefault}{ptm}` (Times). Overleaf compiles with
+pdfLaTeX and gets **URW NimbusRomNo9L** (the Times clone) — confirmed in the font list of Gabriel's own
+Overleaf PDF of Draft 5. The local `tectonic` build runs XeTeX, finds no `TUptm.fd`
+("LaTeX Font Warning: Font shape `TU/ptm/m/n' undefined ... using `TU/lmr/m/n' instead") and silently falls
+back to **Latin Modern**, which is wider. Measured on the identical Draft-5 source: with Times the
+references heading starts in the page-4 **right column** (y = 475 pt in Gabriel's build), with Latin Modern
+it is pushed to the **top of page 5** — a difference of about **0.6 of a column**, i.e. the "casi media
+página libre" Gabriel saw and the local build did not. Judging the page budget from the plain tectonic
+build therefore over-compresses the manuscript, which is exactly what the first Draft-6 pass did.
+
+**Fix.** `scripts/research/paper_figs/pagecheck_times.py` compiles a *copy* of the manuscript with
+`fontspec` + **Liberation Serif** (metric-compatible with Times New Roman / Nimbus Roman) and prints where
+the body ends plus a fits/does-not-fit verdict. Validated against Gabriel's Overleaf PDF of Draft 5: the
+proxy places the references heading at y = 506 pt vs 475 pt there, i.e. it is optimistic by about 3 lines —
+keep at least that much margin. **Use this script, not the plain tectonic build, for the page budget.**
+
+**What was reverted.** The manuscript was rebuilt from the Draft-5 text with only the wanted Draft-6 changes
+applied (`integrate_draft6_layout.py`): the five-panel `figure*`, the abstract's problem-first opening, the
+introduction's two build-up paragraphs and the figure cross-references. The three compression passes
+(`integrate_draft6_{tighten,fit,fit_b}.py`) are **NOT applied** to the current `.tex`; they are kept in the
+repo only as the record of the discarded attempt. So every sentence, number, CI, caveat and citation of
+Draft 5 is back verbatim, the Conclusion is a section again (`\section{Conclusion}`, and Sec. 3.3 points at
+"Sec. 6" as before), and the figure went back up to **7.0 x 3.05 in**.
+
+**State now (Times metrics):** 4 content pages, references start in the page-4 right column and finish on
+page 5 (references only), 0 overfull boxes, `verify_draft5_numbers.py` **116/116**, zip compiles standalone.
+A filler probe puts the margin at about **6 proxy lines (~3 real lines)**. The only spacing changes kept
+from the compression attempt are `\arraystretch` 1.05 -> 1.0 and `\textfloatsep`/`\dbltextfloatsep` at 4 pt.
+
+**The committed `icassp/icassp_operating_point.pdf` is now the Times-metric preview** (Liberation Serif),
+because it reproduces the Overleaf layout; the plain tectonic build of the same source spills onto page 5
+for the font reason above. Overleaf's pdfLaTeX build remains the authoritative one.
