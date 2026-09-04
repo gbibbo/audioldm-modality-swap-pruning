@@ -180,7 +180,7 @@ def figure1():
     ]
     fig.legend(handles=handles, loc="lower center", ncol=5, handlelength=1.2, columnspacing=0.55,
                handletextpad=0.35, borderaxespad=0.0, fontsize=5.9, frameon=False, bbox_to_anchor=(0.55, 0.0))
-    fig.subplots_adjust(left=0.135, right=0.975, top=0.855, bottom=0.205, hspace=0.72)
+    fig.subplots_adjust(left=0.135, right=0.975, top=0.84, bottom=0.235, hspace=0.95)
     fig.savefig(os.path.join(OUT, "fig1_interaction.pdf"))
     fig.savefig(os.path.join(OUT, "fig1_interaction.png"), dpi=200)
     plt.close(fig)

@@ -42,7 +42,7 @@ DROP = {"sev2 slope P", "sev2 slope P+FT", "s(P) sev2", "s(P+FT) sev2", "s(dense
         "caption dense s",                                             # +0.150 now stated in the prose only
         "wilcoxon sev1", "wilcoxon sev2",                              # p-values dropped from the prose
         "sev2 J text", "gap closed short", "gap closed native",        # A7: CIs moved from prose to Tables 1-2
-        "sev1 dW", "sev2 dW", "holm family size", "FineLAP n"}       # FineLAP n re-checked below in its compact form                    # Holm family is now 19 (draft5_holm_extension.json)                                          # OPSWEEP page budget: dW CIs dropped (W stays in Table 1)
+        "sev1 dW", "sev2 dW", "holm family size", "FineLAP n", "FAD sev2", "FAD"}       # FineLAP n re-checked below in its compact form                    # Holm family is now 19 (draft5_holm_extension.json)                                          # OPSWEEP page budget: dW CIs dropped (W stays in Table 1)
 dropped = [c[0] for c in checks if c[0] in DROP]
 checks = [c for c in checks if c[0] not in DROP]
 # also drop any inherited check whose label mentions pooled-rank / equivalence forms (defensive)
@@ -168,6 +168,15 @@ if os.path.exists(_sw) and os.path.exists(_pr) and "%% opsweep-integrated" in ra
         ("holm family 19", "overall$" + str(J("configs/research/draft5_holm_extension.json")["family_size"]) + "$contrasts"),
         ("rho_real dip", "gains" + pt(SW["secondary"]["s_real_steps"]["7.68_to_10.24"]) + "$once"),
         ("FineLAP n compact", "($110$/$49$eligiblepromptsatseverities2/1,outcome-blind)"),
+    ]
+    HCs = J("configs/research/draft5_sweep_hc.json"); SMs = J("configs/research/draft5_sweep_secondary_metrics.json")
+    if "%% sweep-corroboration-integrated" in raw_tex:
+        _d = HCs["steps"]["D3"]; _k = SMs["recovery_gain_KL"]["D3"]; _p = SMs["recovery_gain_PANN_top10_capture"]["D3"]
+        checks += [
+            ("sweep HC D3", "flatthere(" + pt(_d) + "$$" + ci(_d) + ")"),
+            ("sweep KL D3", "KL$" + f"{_k['point']:+.2f}" + "$$\\ci{" + f"{_k['ci95'][0]:+.2f}" + "}{" + f"{_k['ci95'][1]:+.2f}" + "}"),
+            ("sweep PANN D3", "PANNs$" + f"{_p['point']:+.2f}" + "$$\\ci{" + f"{_p['ci95'][0]:+.2f}" + "}{" + f"{_p['ci95'][1]:+.2f}" + "}"),
+
         ("pub J_frozen|64", "samepromptsgives" + pt(PR["J_frozen_same64"]) + "$,difference" + pt(PR["J_pub_minus_J_frozen"]) + "$$" + ci(PR["J_pub_minus_J_frozen"])),
     ]
 

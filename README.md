@@ -83,7 +83,11 @@ against two anchors: a shuffled-caption **chance floor** and the **real audio** 
 5. **Robustness.** The duration interaction holds at the published sampler recipe (DDIM 200 /
    guidance 3.5, 64-prompt subset: J = +0.184 [+0.126, +0.243]); it is reproduced by Human-CLAP and
    by two event-level metrics outside the CLAP family (KL to real references, PANNs top-10 capture)
-   at both durations; every severity-2 conclusion survives a Holm correction over 19 contrasts.
+   at both durations; every severity-2 conclusion survives a Holm correction over 19 contrasts. On
+   the four-point sweep the three corroborating scorers also show R rising at every step, with the
+   first two steps resolved and the last (7.68 → 10.24 s) not — Human-CLAP is flat there (+0.004
+   [−0.033, +0.041]) — so off the primary scorer most of the gain has accrued by 7.68 s
+   (`configs/research/draft5_sweep_hc.json`, `draft5_sweep_secondary_metrics.json`, post-hoc).
 6. **Pre-specified negatives, kept.** A "trade in-domain for out-of-domain alignment" account
    fails (severity 1 has no in-domain gain at 3.84 s); the severity-1 music penalty did not
    replicate at severity 2; a "late allocation" account of the duration effect is rejected by

@@ -175,3 +175,15 @@ Pending at this note: Human-CLAP and KL/PANNs on the sweep cells (a sentence in 
 corroborate the monotone shape) and the author-listening paragraph (Limitations), once Gabriel's blinded
 answers are in and unblinded.
 
+## 2026-09-04 sweep corroboration off the primary scorer (CPU, 0 cr)
+
+`integrate_sweep_corroboration.py` (marker `%% sweep-corroboration-integrated`): one sentence in 4.4 —
+Human-CLAP, KL and PANNs capture all show R rising at every sweep step, first two resolved, last
+(7.68 -> 10.24 s) unresolved, Human-CLAP flat (+0.004 [-0.033, +0.041]). The 4.1 clause "not peaked or
+saturating below the fine-tuning duration" was removed (true for CLAP, not an honest cross-scorer
+summary); the CLAP verdict and the abstract's "grows monotonically over four durations" (primary
+scorer, pre-specified rule) stand. Paid for by dropping the FAD clause in 4.4 and "the sign is
+unestablished" in 4.4 (ii), tightening intro bullet 3 and one 4.2 clause, and Fig. 1 2.08 in / Fig. 2 2.08 in
+with re-set internal margins (1.98 / 2.12 clipped titles and was reverted); further page-4 trims (event-metric
+clause, crop sentence merged, Discussion recommendation, Limitations recipe sentence, Fig. 2 caption). 4 content pages + references, 0 overfull, verifier 119/119, zip standalone OK.
+

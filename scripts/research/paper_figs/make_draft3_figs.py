@@ -72,10 +72,10 @@ def draw_crop(ax, title=None):
 
 def figure2():
     # A6: natural size = one ICASSP column (3.375 in), included at \columnwidth
-    fig, (a, b) = plt.subplots(2, 1, figsize=(3.35, 2.24), gridspec_kw=dict(hspace=0.86))
+    fig, (a, b) = plt.subplots(2, 1, figsize=(3.35, 2.08), gridspec_kw=dict(hspace=1.05))
     draw_finelap_fixed(a, title="(a) FineLAP grounding gain vs. time in clip")
     draw_crop(b, title="(b) generation length vs. scoring window")
-    fig.subplots_adjust(left=0.185, right=0.99, top=0.905, bottom=0.185)  # A6: no clipping at column width
+    fig.subplots_adjust(left=0.185, right=0.99, top=0.90, bottom=0.195)  # A6: no clipping at column width
     fig.savefig(os.path.join(OUT, "fig2_where.pdf"))
     fig.savefig(os.path.join(OUT, "fig2_where.png"), dpi=200)
     plt.close(fig)
