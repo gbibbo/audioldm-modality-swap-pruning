@@ -112,20 +112,20 @@ stops at the fine-tuning duration, so it cannot separate "largest at the trainin
 
 ---
 
-![Fig. 1](icassp/figs/fig1_interaction.png)
+![Fig. 1](icassp/figs/fig1_operating_points.png)
 
-**Fig. 1.** The recovery gain grows with clip duration. Mean CLAP cosine of the pruned (P, dashed)
-and fine-tuned (P+FT, solid) checkpoints, (a) severity 1 at the short and native points, (b)
-severity 2 at four durations; whiskers: 95 % CI of the paired gain R. Anchors: real audio of the
-same prompts (triangles), each cell's chance floor (ticks) and the matched dense control (stars).
-
-![Fig. 2](icassp/figs/fig2_where.png)
-
-**Fig. 2.** (a) FineLAP frame-level grounding gain (P+FT − P) versus time in the 10.24 s clip:
-uniform, not back-loaded. (b) Recovery gain R on the generated 3.84 s clip, the first 3.84 s of the
-10.24 s clip and the full clip: a generation-length, not a scoring-window, effect. Both figures are
-regenerated from committed result artifacts by
-[`scripts/research/paper_figs/make_draft5_figs.py`](scripts/research/paper_figs/make_draft5_figs.py).
+**Fig. 1.** The recovery gain across the operating points we measure. **Duration:** mean CLAP cosine
+of the pruned (P) and fine-tuned (P+FT) checkpoints against generated clip duration at (a) severity 1
+and (b) severity 2, with the real audio of the same prompts, each cell's chance floor and the matched
+dense control; whiskers are the 95 % CI of the paired gain R. **Domain:** (c) the same two checkpoints
+on in-domain AudioCaps and on held-out hip-hop captions, per (severity, duration) cell, each against
+its own chance floor. **Where the gain sits:** (d) FineLAP frame-level grounding gain (P+FT − P)
+versus time in the 10.24 s clip — uniform, not back-loaded — and (e) R on the generated 3.84 s clip,
+on the first 3.84 s of the 10.24 s clip and on the full clip: a generation-length, not a
+scoring-window, effect. Regenerated from committed result artifacts by
+[`scripts/research/paper_figs/make_draft6_figs.py`](scripts/research/paper_figs/make_draft6_figs.py);
+the superseded Draft-5 figures are in
+[`icassp/figs/archive/`](icassp/figs/archive/).
 
 ### Project status (2026-09-04)
 

@@ -63,5 +63,11 @@ public_examples/
 # ICASSP manuscript build intermediates & raster previews (keep .tex, .sty, .bst, .pdf, vector figs)
 icassp/build/
 icassp/figs/*.png
+icassp/figs/archive/*.png
+# ...except the raster previews of the superseded Draft-5 pair, which stay as the visual record
+!icassp/figs/archive/fig1_interaction.png
+!icassp/figs/archive/fig2_where.png
+# ...and the raster of the figure the README embeds
+!icassp/figs/fig1_operating_points.png
 # Overleaf delivery bundle (derivable from the icassp/ sources; not versioned)
 icassp/icassp_operating_point_overleaf.zip

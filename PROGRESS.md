@@ -81,6 +81,10 @@
 
 ## LOG
 
+### 2026-09-04 23:1x MVD | Housekeeping: superseded figures and the discarded compression scripts moved to archive/ (CPU, 0 cr)
+* `icassp/figs/` now holds only `fig1_operating_points.pdf/.png` (the one figure the manuscript embeds); the Draft-5 pair and the never-embedded spares moved to `icassp/figs/archive/` with a README. `scripts/research/paper_figs/archive/` holds `integrate_draft6_{tighten,fit,fit_b}.py` (discarded compression, not applied). The public `README.md` now shows the new five-panel figure and points at `make_draft6_figs.py`; `.gitignore` updated. The three older figure builders stay in place because `make_draft6_figs.py` imports them.
+* Re-verified after the move: figure regenerates, 0 overfull, `pagecheck_times.py` verdict "fits 4 content pages", verifier 116/116, zip rebuilt (5 files).
+
 ### 2026-09-04 21:2x→22:3x MVD | CORRECTION: the local page-budget check used the wrong font; Draft-6 compression reverted (CPU, 0 cr)
 * Gabriel pushed back on "no había espacio" and uploaded his own Overleaf PDF. He was right. His build embeds **NimbusRomNo9L** (Times, from `spconf.sty`'s `ptm`) under pdfTeX; the local tectonic build embeds **LMRoman** because XeTeX finds no `TUptm.fd` and falls back to Latin Modern, which is wider. On the identical Draft-5 source the references heading sits in the page-4 right column (y=475 pt) in his build and at the top of page 5 in mine — about 0.6 of a column, i.e. the ~half page he saw.
 * His PDF is **Draft 5**, not the Draft 6 sent at 20:4x (old abstract, `6. CONCLUSION`, the two old figures). The template is the official one: `spconf.sty`, Times, `\ninept`, 4 content pages + references-only 5th page.

@@ -22,8 +22,9 @@ Figure (one, full text width, five panels; Draft 6 replaced the two column-width
                                (severity, duration) cell, against their own chance floors.
                                (d) FineLAP frame-level grounding gain vs. time (uniform, not
                                back-loaded). (e) generation length vs. scoring window.
-Spares on disk (NOT embedded): figs/fig1_interaction.pdf and figs/fig2_where.pdf (the Draft-5 pair),
-figs/fig_summary.pdf, figs/fig2_forest.pdf, figs/fig3_finelap.pdf.
+Superseded/spare figures live in figs/archive/ (the Draft-5 pair fig1_interaction + fig2_where, and the
+never-embedded fig_summary / fig2_forest / fig3_finelap); see figs/archive/README.md. Only
+figs/fig1_operating_points.pdf is in the zip.
 
 Tables: Table 1 recovery gains (all CIs); Table 2 anchors and recovery ratios (chance floor P / P+FT,
 real audio, rho vs the matched dense model and vs real audio, both severities). The analysis-plan table of

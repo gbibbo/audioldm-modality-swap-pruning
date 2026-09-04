@@ -294,3 +294,22 @@ from the compression attempt are `\arraystretch` 1.05 -> 1.0 and `\textfloatsep`
 **The committed `icassp/icassp_operating_point.pdf` is now the Times-metric preview** (Liberation Serif),
 because it reproduces the Overleaf layout; the plain tectonic build of the same source spills onto page 5
 for the font reason above. Overleaf's pdfLaTeX build remains the authoritative one.
+
+## 2026-09-04 housekeeping: superseded figures and the discarded scripts moved to archive/
+
+* `icassp/figs/archive/` — the Draft-5 pair (`fig1_interaction`, `fig2_where`) that
+  `fig1_operating_points.pdf` replaced, plus the never-embedded spares (`fig_summary`, `fig2_forest`,
+  `fig3_finelap`). See `icassp/figs/archive/README.md`. **`icassp/figs/` now holds exactly the one figure
+  the manuscript embeds.**
+* `scripts/research/paper_figs/archive/` — `integrate_draft6_{tighten,fit,fit_b}.py`, the discarded
+  compression attempt (not applied to the manuscript; see the CORRECTION section above).
+* The public `README.md` now shows `fig1_operating_points.png` with the five-panel caption and points at
+  `make_draft6_figs.py`; `.gitignore` keeps that raster and the two Draft-5 rasters tracked and ignores the
+  rest of `figs/archive/*.png`.
+* The figure builders `make_manuscript_figs.py`, `make_draft3_figs.py` and `make_draft5_figs.py` stay where
+  they are: `make_draft6_figs.py` imports all three for their frozen-artifact loaders, style and guards. If
+  one of them is run it rewrites its old outputs into `icassp/figs/` (not into `archive/`).
+
+**Where the current version is:** `icassp/icassp_operating_point.tex` (source),
+`icassp/icassp_operating_point_overleaf.zip` (ready to upload; gitignored, rebuilt from the sources),
+`icassp/icassp_operating_point.pdf` (local Times-metric preview).
