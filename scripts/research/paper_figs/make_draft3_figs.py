@@ -33,6 +33,12 @@ def draw_finelap_fixed(ax, title=None):
     for t in list(ax.texts):
         if "early | late" in t.get_text():
             t.remove()
+        elif "T_" in t.get_text() or "late" in t.get_text():
+            # the "late-early T" annotation: re-place it top-LEFT so it clears the lower-right legend
+            # at the reduced panel height
+            txt, fs, col = t.get_text(), t.get_fontsize(), t.get_color()
+            t.remove()
+            ax.text(0.02, 0.96, txt, transform=ax.transAxes, fontsize=fs, color=col, ha="left", va="top")
     # A6: keep the early/late labels near the zero line; at the top they ran into the
     # "late-early T" annotation (which stays at the top right).
     ax.text(3.84 - 0.12, 0.028, "early", fontsize=6.2, color="0.35", va="bottom", ha="right")
@@ -72,7 +78,7 @@ def draw_crop(ax, title=None):
 
 def figure2():
     # A6: natural size = one ICASSP column (3.375 in), included at \columnwidth
-    fig, (a, b) = plt.subplots(2, 1, figsize=(3.35, 2.08), gridspec_kw=dict(hspace=1.05))
+    fig, (a, b) = plt.subplots(2, 1, figsize=(3.35, 2.00), gridspec_kw=dict(hspace=1.25))
     draw_finelap_fixed(a, title="(a) FineLAP grounding gain vs. time in clip")
     draw_crop(b, title="(b) generation length vs. scoring window")
     fig.subplots_adjust(left=0.185, right=0.99, top=0.90, bottom=0.195)  # A6: no clipping at column width

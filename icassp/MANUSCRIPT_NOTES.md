@@ -187,3 +187,13 @@ unestablished" in 4.4 (ii), tightening intro bullet 3 and one 4.2 clause, and Fi
 with re-set internal margins (1.98 / 2.12 clipped titles and was reverted); further page-4 trims (event-metric
 clause, crop sentence merged, Discussion recommendation, Limitations recipe sentence, Fig. 2 caption). 4 content pages + references, 0 overfull, verifier 119/119, zip standalone OK.
 
+## 2026-09-04 author listening integrated (CPU, 0 cr)
+
+`integrate_author_listening.py` (marker `%% author-listening-integrated`). Every mention is labelled as one
+author's blinded informal listening (N = 1, no gate): abstract clause, Sec. 3.3 design sentence, Sec. 3.4
+post-hoc list, Sec. 4.1 (audible at 10.24 s 6/8, not at 3.84 s 0/8), Sec. 4.2 (music: preferred 8/8, heard as
+music 5/8 vs 1/8, neither follows the captions), Discussion aside, Limitations sentence. Page budget: see the
+ledger entry of the same name for the exact trims; Fig. 1 1.98 in (margins top 0.84 / bottom 0.235 / hspace
+0.95), Fig. 2 2.00 in (hspace 1.25, top 0.90, bottom 0.195). 4 content pages + references, 0 overfull,
+verifier 112/112, zip standalone OK. The unused Stable Audio Open reference was removed (18 refs).
+

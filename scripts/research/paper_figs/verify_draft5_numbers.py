@@ -42,7 +42,8 @@ DROP = {"sev2 slope P", "sev2 slope P+FT", "s(P) sev2", "s(P+FT) sev2", "s(dense
         "caption dense s",                                             # +0.150 now stated in the prose only
         "wilcoxon sev1", "wilcoxon sev2",                              # p-values dropped from the prose
         "sev2 J text", "gap closed short", "gap closed native",        # A7: CIs moved from prose to Tables 1-2
-        "sev1 dW", "sev2 dW", "holm family size", "FineLAP n", "FAD sev2", "FAD"}       # FineLAP n re-checked below in its compact form                    # Holm family is now 19 (draft5_holm_extension.json)                                          # OPSWEEP page budget: dW CIs dropped (W stays in Table 1)
+        "sev1 dW", "sev2 dW", "holm family size", "FineLAP n", "FAD sev2", "FAD",
+        "FineLAP D_early", "FineLAP D_late", "dense gaps", "sev1 win rates", "crop sev1 R_crop", "crop sev1 nat-crop", "J_music"}   # prose numbers dropped for the page budget (tables / T carry them)       # FineLAP n re-checked below in its compact form                    # Holm family is now 19 (draft5_holm_extension.json)                                          # OPSWEEP page budget: dW CIs dropped (W stays in Table 1)
 dropped = [c[0] for c in checks if c[0] in DROP]
 checks = [c for c in checks if c[0] not in DROP]
 # also drop any inherited check whose label mentions pooled-rank / equivalence forms (defensive)
@@ -57,7 +58,7 @@ checks += [
     ("s(P) sev1 prose", "s(\\mathrm{P})=" + pt(ddc["slopes"]["pruned"])),
     ("s(P+FT) sev1 prose", "s(\\PFT)=" + pt(ddc["slopes"]["postft"])),
     ("median J sev1", pt(r2["sev1_armd80"]["median_j"]) + "$$" + ci(r2["sev1_armd80"]["median_j"])),
-    ("crop sev2 nat-crop point", "\\Rn-R_{\\mathrm{crop}}=" + pt(ns["ns"]["C2"]["R_native_minus_R_crop"]) + "$(seam-robust)"),
+    ("crop sev2 nat-crop point", "\\Rn-R_{\\mathrm{crop}}=" + pt(ns["ns"]["C2"]["R_native_minus_R_crop"]) + "$:thedeficit"),
     ("4.1 0.055 to 0.299", "from$0.055$to$0.299$"),
     ("4.1 0.015 to 0.100", "from$0.015$to$0.100$"),
     ("table W sev2 short", f"&${S2['win_rate_short']:.2f}$\\\\"),

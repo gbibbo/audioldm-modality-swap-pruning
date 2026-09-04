@@ -46,7 +46,7 @@ def cell(name):
 def figure1():
     # A6: natural size = one ICASSP column (3.375 in) so the .tex can include it at \columnwidth
     # and the lettering renders at its stated point size instead of being shrunk to 0.74x.
-    fig, axes = plt.subplots(2, 1, figsize=(3.35, 2.08), sharex=False, sharey=True)
+    fig, axes = plt.subplots(2, 1, figsize=(3.35, 1.98), sharex=False, sharey=True)
     x = [0.0, 1.0]
     xlabels = ["3.84 s\n(short)", "10.24 s\n(native)"]
     # (system, duration) -> cell name in the Draft-5 result
