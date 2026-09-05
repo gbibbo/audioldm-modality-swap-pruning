@@ -53,6 +53,10 @@ JOBS = {
          + [(s, "ac_d384", AC192, "ytid", 96, 1, 96) for s in ("pruned2_A", "recovered2")],
     "c": [(s, c, AC192, "ytid", 96, 1, 96) for s in ("p1_pruned", "p1_recovered") for c in ("ac_short", "ac_native")],
     "shortft": [("shortft", c, AC192, "ytid", 192, 1, 0) for c in ("ac_short", "ac_native")],
+    # REVIEWER2-FOLLOWUP-EXT (docs/reviewer2_followup_ext.md): the 2x2 — pruned/dense x train@3.84/train@10.24, each on 192 prompts x 2 durations
+    "longft":    [("longft", c, AC192, "ytid", 192, 1, 0) for c in ("ac_short", "ac_native")],
+    "denseft_s": [("denseft", c, AC192, "ytid", 192, 1, 0) for c in ("ac_short", "ac_native")],
+    "denseft_n": [("denseft", c, AC192, "ytid", 192, 1, 0) for c in ("ac_short", "ac_native")],
 }
 
 
@@ -420,15 +424,62 @@ def verdict(exp):
         tr = f"artifacts/icassp_gate0/r2_shortft/trainer_report.json"
         if os.path.exists(tr):
             out["trainer_report"] = json.load(open(tr))["report"]
+    elif exp == "EXT2x2":
+        # REVIEWER2-FOLLOWUP-EXT: the 2x2 mechanism control. Systems: E3 shortft (P trained @3.84), longft (P trained
+        # @10.24), denseft_short (dense trained @3.84), denseft_native (dense trained @10.24), each on the frozen 192
+        # prompts x {3.84, 10.24} s with the frozen GEN_SALT (so CRN-paired with the frozen P and dense clips).
+        out["class"] = "pre-specified follow-up (docs/reviewer2_followup_ext.md); cannot change any frozen verdict"
+        out["protocol_doc"] = "docs/reviewer2_followup_ext.md"; out["protocol_doc_sha256"] = sha("docs/reviewer2_followup_ext.md")
+        LF = load_results(gout("longft")); DS = load_results(gout("denseft_s")); DN = load_results(gout("denseft_n"))
+        bt = Boot(NS + "|EXT2x2", 192)
+        # per-prompt cosines, prompt_index order (all 192)
+        S3, _, _ = per_prompt(SF["shortft__ac_short"]); S10, _, _ = per_prompt(SF["shortft__ac_native"])
+        L3, _, _ = per_prompt(LF["longft__ac_short"]); L10, _, _ = per_prompt(LF["longft__ac_native"])
+        Ds3, _, _ = per_prompt(DS["denseft__ac_short"]); Ds10, _, _ = per_prompt(DS["denseft__ac_native"])
+        Dn3, _, _ = per_prompt(DN["denseft__ac_short"]); Dn10, _, _ = per_prompt(DN["denseft__ac_native"])
+        P3 = frozen_pp("pruned2_A__ac_short"); P10 = frozen_pp("pruned2_A__ac_native")
+        E3 = frozen_pp("dense__ac_short"); E10 = frozen_pp("dense__ac_native")   # frozen dense baseline (XSEV-DENSE-192-CONTROL)
+        # pruned arm (item 1: longft = the symmetric control of E3 = shortft)
+        out["pruned"] = {
+            "R_sf": {"3.84": bt.ci(S3 - P3), "10.24": bt.ci(S10 - P10)}, "J_sf": bt.ci((S10 - P10) - (S3 - P3)),
+            "R_lf": {"3.84": bt.ci(L3 - P3), "10.24": bt.ci(L10 - P10)}, "J_lf": bt.ci((L10 - P10) - (L3 - P3)),
+            # ΔJ_pruned = J_lf - J_sf, paired (the P terms cancel): does training duration move the favourable eval duration?
+            "dJ": bt.ci((L10 - L3) - (S10 - S3)),
+            "levels": {"shortft_3.84": float(S3.mean()), "shortft_10.24": float(S10.mean()),
+                       "longft_3.84": float(L3.mean()), "longft_10.24": float(L10.mean()), "P_3.84": float(P3.mean()), "P_10.24": float(P10.mean())}}
+        # dense arm (item 2)
+        out["dense"] = {
+            "G_ds": {"3.84": bt.ci(Ds3 - E3), "10.24": bt.ci(Ds10 - E10)}, "J_ds": bt.ci((Ds10 - E10) - (Ds3 - E3)),
+            "G_dn": {"3.84": bt.ci(Dn3 - E3), "10.24": bt.ci(Dn10 - E10)}, "J_dn": bt.ci((Dn10 - E10) - (Dn3 - E3)),
+            "dJ": bt.ci((Dn10 - Dn3) - (Ds10 - Ds3)),
+            "levels": {"denseft_short_3.84": float(Ds3.mean()), "denseft_short_10.24": float(Ds10.mean()),
+                       "denseft_native_3.84": float(Dn3.mean()), "denseft_native_10.24": float(Dn10.mean()), "dense_3.84": float(E3.mean()), "dense_10.24": float(E10.mean())}}
+        # cross-arm: is the pruned interaction bigger than the dense interaction at matched (20k-step) budget?
+        out["pruned_minus_dense_dr"] = {"trained_short": bt.ci((S10 - S3) - (Ds10 - Ds3)), "trained_native": bt.ci((L10 - L3) - (Dn10 - Dn3))}
+        for arm in ("pruned", "dense"):
+            dj = out[arm]["dJ"]
+            out[arm]["reading_dJ"] = reading([("SPECIALISATION CONTRIBUTES (training@10.24 buys more interaction)", dj["lo"] > 0),
+                                              ("TRAINING-DURATION-INDEPENDENT (operating-point)", dj["lo"] <= 0 <= dj["hi"] and abs(dj["point"]) < SESOI),
+                                              ("REVERSED", dj["hi"] < 0)])
+        for tag, tr in (("longft", "artifacts/icassp_gate0/r2_longft/trainer_report.json"),
+                        ("denseft_s", "artifacts/icassp_gate0/r2_denseft_s/trainer_report.json"),
+                        ("denseft_n", "artifacts/icassp_gate0/r2_denseft_n/trainer_report.json")):
+            if os.path.exists(tr):
+                out.setdefault("trainer_reports", {})[tag] = json.load(open(tr))["report"]
     else:
         raise SystemExit(f"unknown experiment {exp}")
-    for job in ("a", "b", "c", "shortft"):
+    for job in ("a", "b", "c", "shortft", "longft", "denseft_s", "denseft_n"):
         if os.path.exists(gin(job)):
             out.setdefault("inputs", {})[gin(job)] = sha(gin(job)); out["inputs"][gout(job)] = sha(gout(job)) if os.path.exists(gout(job)) else None
     outp = f"configs/research/r2_{exp}_result.json"
     js = json.dumps(out, indent=1, sort_keys=True); out["artifact_sha256"] = hashlib.sha256(js.encode()).hexdigest()
     json.dump(out, open(outp, "w"), indent=1)
     print(json.dumps({k: out[k] for k in out if k in ("reading", "reading_10.24", "J_clo", "J_sf", "J_tf", "D4", "pooled176_J", "J_music_127")}, indent=1))
+    if exp == "EXT2x2":
+        print("PRUNED  J_sf", out["pruned"]["J_sf"]["point"], "J_lf", out["pruned"]["J_lf"]["point"],
+              "dJ", out["pruned"]["dJ"], "|", out["pruned"]["reading_dJ"])
+        print("DENSE   J_ds", out["dense"]["J_ds"]["point"], "J_dn", out["dense"]["J_dn"]["point"],
+              "dJ", out["dense"]["dJ"], "|", out["dense"]["reading_dJ"])
     print("wrote", outp)
 
 

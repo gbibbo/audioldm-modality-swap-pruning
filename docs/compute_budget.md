@@ -721,3 +721,26 @@ no further protected work).
 
 Studio hours for the CPU stages of item 1 ≈ 2–3 h ≈ 0.6–0.8 cr → **item 1 total ask ≈ 6–7 cr, hard cap 8 cr**;
 full 2×2 (items 1 + 2) ≈ 15–17 cr point, caps ≈ 20 cr, + ≈ 1.5 cr Studio. **Nothing authorized by this entry.**
+
+### 2026-09-05 (MVD 18:0x→18:3x) | REVIEWER2-FOLLOWUP-EXT authorized (20-cr ceiling) — the 2×2 fine-tuning control launched
+
+* **Gabriel (18:06 MVD):** "tenemos 20 créditos exactamente. Autorizo los experimentos completos. Corre todo, si es
+  posible en paralelo." → the full 2×2 (round-2 review items 1 + 2), ceiling **20 cr**, parallel. `total_spent` at
+  authorization = 114.95 cr.
+* **Measured basis reused:** E3 `r2-shortft` 0.327 s/step (pruned 70.5 M, latent 96, batch 2, 5.83 GB).
+* **Trainer fix found in CPU dry-run (0 cr):** the dense path built the pipeline twice (`build_model` + a second inside
+  `build_backbone("dense")`), which OOMs a 16 GB CPU and would OOM a 15 GB T4; fixed to materialize the dense EMA into
+  the already-built pipeline. Re-validated: dense-short dry-run PASS (415.95 M U-Net trainable, VAE frozen, loss finite).
+* **Launch table (T4 0.89 cr/h; self-gate `--cap-cr` stops training before the full run if the 200-step bench projects over it):**
+
+| Job | Cell | latent / batch×accum | Train cr (est.) | Eval cr | Self-gate | Watchdog cap / min |
+|---|---|---|---:|---:|---:|---:|
+| `r2-longft` | pruned @10.24 (item 1, E3's symmetric control) | 256 / 2×1 | 4.0–4.5 | 1.1 | 4.8 | **6.2 / 360** |
+| `r2-denseft-s` | dense @3.84 (item 2) | 96 / 2×1 | 1.6–1.8 | 1.1 | 3.2 | **4.2 / 240** |
+| `r2-denseft-n` | dense @10.24 (item 2, batch 1×accum 2 to fit a T4) | 256 / 1×2 | 4.7–5.3 | 1.1 | 5.6 | **7.2 / 420** |
+| **total** | | | **10.3–11.6** | **3.3** | | **17.6 caps** |
+
+Expected settled ≈ 14–16 cr gen/train + ≈ 1.5–2 cr Studio (watchdogs run on the Studio through the jobs) → within 20
+with a small reserve; watchdog caps 17.6 + Studio ≈ 2 = 19.6 hard ceiling. If a 200-step bench projects over its
+`--cap-cr`, that arm bench-stops at ≈ 0.15 cr and returns to Gabriel. Protocol `docs/reviewer2_followup_ext.md`
+(frozen + sha256 sidecar `24eb7c2e…` before launch). Settled costs recorded when the jobs finish.

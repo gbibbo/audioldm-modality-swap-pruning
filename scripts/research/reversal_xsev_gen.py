@@ -118,21 +118,31 @@ def build_backbone(system, config, dev):
         unet.load_state_dict(rel, strict=True)
         materialize_ema_into_unet(unet, rsd, strict=True)
         return unet, "recovered1_p1_ema"
-    if system == "shortft":                       # E3: this project's short-duration full fine-tune of pruned2_A (raw weights)
-        path = os.environ.get("SHORTFT_UNET")
+    if system in ("shortft", "longft"):           # E3 / REVIEWER2-FOLLOWUP-EXT: this project's full fine-tunes of pruned2_A (raw weights)
+        env = "SHORTFT_UNET" if system == "shortft" else "LONGFT_UNET"
+        path = os.environ.get(env)
         if not path or not os.path.exists(path):
-            raise SystemExit("PREFLIGHT FAIL: system shortft needs SHORTFT_UNET=<path to the saved U-Net state_dict>")
+            raise SystemExit(f"PREFLIGHT FAIL: system {system} needs {env}=<path to the saved U-Net state_dict>")
         ssd = G0._orig_load(path, map_location="cpu")
         unet = rm.build_pruned_unet(config, CM).float()
         unet.load_state_dict(ssd["unet"] if "unet" in ssd else ssd, strict=True)
-        return unet, f"shortft_raw:{G0.sha_file(path)[:16]}"
+        return unet, f"{system}_raw:{G0.sha_file(path)[:16]}"
+    if system == "denseft":                        # REVIEWER2-FOLLOWUP-EXT: this project's full fine-tune of the DENSE model (raw weights)
+        path = os.environ.get("DENSEFT_UNET")
+        if not path or not os.path.exists(path):
+            raise SystemExit("PREFLIGHT FAIL: system denseft needs DENSEFT_UNET=<path to the saved dense U-Net state_dict>")
+        from measure_tgen import build_model
+        model, _ = build_model(config, dev); model = model.float()
+        dsd = G0._orig_load(path, map_location="cpu")
+        model.model.diffusion_model.load_state_dict(dsd["unet"] if "unet" in dsd else dsd, strict=True)
+        return model.model.diffusion_model, f"denseft_raw:{G0.sha_file(path)[:16]}"
     raise SystemExit(f"unknown system {system}")
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--system", required=True, choices=["pruned2_A", "pruned2_B", "recovered2", "dense",
-                                                       "textft", "p1_pruned", "p1_recovered", "shortft"])
+                                                       "textft", "p1_pruned", "p1_recovered", "shortft", "longft", "denseft"])
     ap.add_argument("--context", required=True, choices=list(CTX))
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
     ap.add_argument("--out", default="artifacts/icassp_gate0/reversal_xsev_gen")
@@ -159,8 +169,8 @@ def main():
         # (docs/xsev_dense_192_control.md), the DRAFT5-OPSWEEP-1 sweep points (docs/draft5_opsweep.md)
         # or the REVIEWER2-FOLLOWUP anchors (docs/reviewer2_followup.md)
         raise SystemExit(f"dense generates only {DENSE_OK}")
-    if args.system in ("textft", "p1_pruned", "p1_recovered", "shortft") and args.context not in ("ac_short", "ac_native"):
-        raise SystemExit("textft / p1_* / shortft generate only ac_short and ac_native (docs/reviewer2_followup.md)")
+    if args.system in ("textft", "p1_pruned", "p1_recovered", "shortft", "longft", "denseft") and args.context not in ("ac_short", "ac_native"):
+        raise SystemExit("textft / p1_* / shortft / longft / denseft generate only ac_short and ac_native (docs/reviewer2_followup*.md)")
 
     manifest_path, reps, T, duration, _salt, ykey, ikey = CTX[args.context]
     prompts = json.load(open(manifest_path))["prompts"]
