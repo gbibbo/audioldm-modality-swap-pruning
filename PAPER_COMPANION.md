@@ -1,6 +1,6 @@
 # Paper companion
 
-This page is the repository companion to **Recovery Fine-Tuning Recovers Where It Was Trained: Duration- and Domain-Dependent Gains in Pruned Text-to-Audio Diffusion**.
+This page is the repository companion to **Recovery Gain Is Operating-Point Dependent in Pruned Text-to-Audio Diffusion**.
 
 The ICASSP manuscript is designed to be read without this repository. It contains the scientific question, the experimental design, the figure needed to see the main result, the effect sizes needed to support the claims, and the limitations needed to interpret them. This companion keeps the material that is useful for audit and reproduction but too detailed for the four technical pages.
 
@@ -19,10 +19,16 @@ Paper files
 | Sec. 3.2, Operating-point grid | Which durations and domains are compared? | Frozen prompt partitions, manifests and preregistrations live under [`configs/research/`](configs/research/) and [`docs/`](docs/). |
 | Sec. 3.3, Pairing, scoring and anchors | How is sampling variance controlled and how are scores interpreted? | Result artifacts preserve the scorer revision, generation recipe, prompt identity, pairing convention, bootstrap settings and chance-floor definitions. See [`configs/research/draft5_floor_ceiling_result.json`](configs/research/draft5_floor_ceiling_result.json). |
 | Sec. 3.4, Estimands and analysis status | What do R, J and the recovery ratio measure, and which analyses were specified prospectively? | The exact status of candidate claims is recorded in [`docs/claims_matrix.md`](docs/claims_matrix.md). The result artifacts retain protocol hashes and analysis status. |
-| Sec. 4.1, Duration | Does recovery change with requested duration? | Full values and intervals are in [`PAPER_EXPANDED_RESULTS.md`](PAPER_EXPANDED_RESULTS.md#section-41-duration). Primary severity-2 replication is in [`configs/research/xsev_result.json`](configs/research/xsev_result.json). The four-duration sweep is in [`configs/research/draft5_opsweep_result.json`](configs/research/draft5_opsweep_result.json). The published sampler check is in [`configs/research/draft5_pubrecipe_result.json`](configs/research/draft5_pubrecipe_result.json). |
-| Sec. 4.2, Domain | Does the same recovery transfer to held-out hip-hop prompts? | Full in-domain and music values, chance floors and author-listening observations are in [`PAPER_EXPANDED_RESULTS.md`](PAPER_EXPANDED_RESULTS.md#section-42-domain). The listening artifact is [`configs/research/author_listening_1_result.json`](configs/research/author_listening_1_result.json). |
+| Sec. 4.1, Duration | How strongly does recovery gain depend on requested duration, and is that dependence specialization to the recovery-training duration? | Full values are in [`PAPER_EXPANDED_RESULTS.md`](PAPER_EXPANDED_RESULTS.md). The original sweep is in [`configs/research/draft5_opsweep_result.json`](configs/research/draft5_opsweep_result.json). The 3.84-s fine-tuning intervention, 15.36-s extension, dense text-FT reference and higher-power severity-1 replication are in `configs/research/r2_{E3,E1c,B,E8}_result.json`. |
+| Sec. 4.2, Domain | How does recovery transfer across AudioCaps, Clotho and hip-hop prompts? | Full values are in [`PAPER_EXPANDED_RESULTS.md`](PAPER_EXPANDED_RESULTS.md). Clotho, hip-hop dense anchors and the expanded hip-hop battery are in `configs/research/r2_{E5,E6,E7}_result.json`. The author listening remains a descriptive sanity check in [`configs/research/author_listening_1_result.json`](configs/research/author_listening_1_result.json). |
 | Sec. 4.3, Generation length | Is the short-duration deficit caused by late content or by the short scoring window? | FineLAP and crop-analysis values are indexed in [`PAPER_EXPANDED_RESULTS.md`](PAPER_EXPANDED_RESULTS.md#section-43-where-the-duration-effect-arises). |
 | Sec. 5, Discussion and limitations | How far may the result be generalized? | Negative results and wording constraints are preserved in [`docs/claims_matrix.md`](docs/claims_matrix.md). The paper deliberately does not claim a pruning-specific mechanism because a dense model given the same recovery fine-tune is unavailable. |
+
+## Reviewer-follow-up layer
+
+The ICASSP reviewer raised causal, floor, domain-shift, duration-range, in-paper evidence and power concerns. We ran a pre-specified follow-up battery before changing the manuscript framing. The protocol is [`docs/reviewer2_followup.md`](docs/reviewer2_followup.md), the self-contained result report is [`docs/reviewer2_followup_results.md`](docs/reviewer2_followup_results.md), and [`docs/reviewer2_response_manuscript.md`](docs/reviewer2_response_manuscript.md) maps each concern to the evidence and manuscript change.
+
+These follow-ups changed the interpretation in two ways. Duration dependence remains strong, but the 3.84-s fine-tuning intervention argues against specialization to the training duration. Domain transfer is not binary: recovery transfers strongly to Clotho and only weakly to hip-hop.
 
 ## What moved out of the paper
 
