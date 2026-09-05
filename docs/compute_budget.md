@@ -678,3 +678,22 @@ available pool is not exposed by any accessible endpoint).
 
 Compute-discipline record: protocol §10 (CPU infeasible for 2 370 clips + 20 000 training steps; T4 by the device rule;
 caps enforced by `job_watchdog.py`). Studio hours during scoring ≈ 0.27 cr/h — idle guard active, stop the Studio between stages.
+
+### 2026-09-05 (MVD 14:3x) | REVIEWER2-FOLLOWUP settled costs
+
+| Job | Status | Settled cr | Notes |
+|---|---|---:|---|
+| `r2-gen-a` (E6+E7+B) | Completed | 2.399 | 830 WAVs |
+| `r2-gen-b` (E5+E1c) | Completed | 2.278 | 768 WAVs |
+| `r2-gen-c` (E8) | Stopped | 0.697 | watchdog cut at 180 min WALL (mostly Pending in queue); p1_recovered 34/192 — wasted |
+| `r2-gen-c2` (E8 redo) | in flight | ~0.5 | p1_recovered 192 WAVs; watchdog now counts RUN time only |
+| `r2-shortft` (E3) | Completed | 2.926 | 20 000 train steps + 384 eval WAVs |
+| **total** | | **~9.1** | of Gabriel's 15-cr ceiling |
+
+Lesson: the cost watchdog's `--max-minutes` counted queue (Pending) time, so a job that waited behind others for T4
+capacity spent its wall-clock budget in the queue and was cut mid-generation. Patched (`scripts/sa3/job_watchdog.py`):
+the minutes clock starts when the job first reaches Running. `total_spent` reading 2026-09-05 17:05 UTC = 114.29 cr
+(was 99.18 at last session; +15.1 = 8.2 cr of R2 jobs + ~6.9 cr of Studio uptime while the jobs ran overnight and the
+session was gone). The idle guard's hold from the prior session expired ~12:53 UTC; verify the daemon actually stopped
+the Studio after the watchdogs ended (it may have been kept alive by the watchdog processes until ~10:20 UTC, then had
+no further protected work).

@@ -1,0 +1,80 @@
+{
+ "artifact": "r2_B_result",
+ "protocol_doc": "docs/reviewer2_followup.md",
+ "protocol_doc_sha256": "ede6a0aae4c53a7c71cff36b854d4938651111f729924f0ff481eb9e46240111",
+ "class": "pre-specified follow-up (docs/reviewer2_followup.md); cannot change any frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "levels": {
+  "textft_3.84": 0.17482179357709052,
+  "textft_10.24": 0.4348207352062066,
+  "dense_3.84": 0.19683895729637393,
+  "dense_10.24": 0.34429146473606426,
+  "floors_textft": {
+   "3.84": -0.023807811752552272,
+   "10.24": -0.0269497878510568
+  }
+ },
+ "G_tf": {
+  "3.84": {
+   "point": -0.022017163719283417,
+   "lo": -0.060911589901176434,
+   "hi": 0.01731409647715433,
+   "n": 96
+  },
+  "10.24": {
+   "point": 0.09052927047014236,
+   "lo": 0.04184465284633916,
+   "hi": 0.14099381710984743,
+   "n": 96
+  }
+ },
+ "J_tf": {
+  "point": 0.11254643418942578,
+  "lo": 0.05058476277117734,
+  "hi": 0.1725508439230907,
+  "n": 96
+ },
+ "s_textft": {
+  "point": 0.25999894162911613,
+  "lo": 0.2166527925944441,
+  "hi": 0.3017173975325325,
+  "n": 96
+ },
+ "s_dense_first96": {
+  "point": 0.14745250743969032,
+  "lo": 0.10405987733004925,
+  "hi": 0.19085171755383878,
+  "n": 96
+ },
+ "textft_minus_P": {
+  "3.84": {
+   "point": 0.15846147796643587,
+   "lo": 0.12189295710729009,
+   "hi": 0.19574216577748302,
+   "n": 96
+  },
+  "10.24": {
+   "point": 0.3840805314539466,
+   "lo": 0.34625071995251344,
+   "hi": 0.42253002665699263,
+   "n": 96
+  }
+ },
+ "reading": "TEXT-FT GAINS MORE AT 10.24 s",
+ "role": "public dense text-FT REFERENCE; NOT Singh's deleted dense-FT, NOT recipe-matched, NOT a causal control",
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_in.json": "0acb5e6983d36fc827e590d5b25003af9a6862cded01af57a3e4bb7f64b5010c",
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_in.json": "6d974de655bc2c42ade2acf902e985b115a4c2c665bf904cd152e2347bcd6404",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_out.json": "84a360fd354e086195e37a1577eb07b19c095b4755745216fb0af0a86858b238",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_in.json": "716338676390d4bb815d51aca6a5b72dad3dc4408132ff9269bcf39a45949d4b",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_out.json": "87920d76da7e03a637fa64cde85f0daff42ca712f399c07987514b19c2dd76e8"
+ },
+ "artifact_sha256": "763eeb9413fe81dcee64f1931ce53efca51d87d78cf86feaca6b180e13ce0707"
+}

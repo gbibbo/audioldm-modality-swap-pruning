@@ -334,7 +334,7 @@ def verdict(exp):
             cells["kim193_real_3.84_domain_ceiling"] = {"real": float(K.mean()), "floor": float(fK.mean()), "above_chance": Boot(NS + "|E6|kim", len(K)).ci(K - fK),
                                                         "note": "real 4.0-s hip-hop excerpts with their own MusicCaps captions; NOT the battery prompts (domain-level ceiling)"}
         for k, c in cells.items():
-            if "A_dense" in c:
+            if isinstance(c, dict) and "A_dense" in c:
                 c["battery_discriminates_for_dense"] = c["A_dense"]["lo"] > SESOI
         out["cells"] = cells
     elif exp == "E7":

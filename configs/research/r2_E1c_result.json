@@ -1,0 +1,68 @@
+{
+ "artifact": "r2_E1c_result",
+ "protocol_doc": "docs/reviewer2_followup.md",
+ "protocol_doc_sha256": "ede6a0aae4c53a7c71cff36b854d4938651111f729924f0ff481eb9e46240111",
+ "class": "pre-specified follow-up (docs/reviewer2_followup.md); cannot change any frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "cells": {
+  "15.36": {
+   "P": 0.0559997534340558,
+   "PFT": 0.31963217093531665,
+   "floors": {
+    "P": 0.01776019567015889,
+    "PFT": -0.028456874553133577
+   },
+   "R": {
+    "point": 0.2636324175012608,
+    "lo": 0.21617703676602104,
+    "hi": 0.31027594481468745,
+    "n": 96
+   },
+   "R_c": {
+    "point": 0.3098494877245533,
+    "lo": 0.26247078074750524,
+    "hi": 0.35607309582277935,
+    "n": 96
+   },
+   "W": 0.8541666666666666
+  },
+  "10.24_first96": {
+   "P": 0.05074020375226004,
+   "PFT": 0.29315610765479505,
+   "R": {
+    "point": 0.242415903902535,
+    "lo": 0.19769817784448,
+    "hi": 0.2850100409365647,
+    "n": 96
+   }
+  }
+ },
+ "D4": {
+  "point": 0.021216513598725822,
+  "lo": -0.02297823371021271,
+  "hi": 0.0667847286024577,
+  "n": 96
+ },
+ "D4_c": {
+  "point": 0.01945881553115214,
+  "lo": -0.02460350899823614,
+  "hi": 0.06449688402978872,
+  "n": 96
+ },
+ "reading": "PLATEAU",
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_in.json": "0acb5e6983d36fc827e590d5b25003af9a6862cded01af57a3e4bb7f64b5010c",
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_in.json": "6d974de655bc2c42ade2acf902e985b115a4c2c665bf904cd152e2347bcd6404",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_out.json": "84a360fd354e086195e37a1577eb07b19c095b4755745216fb0af0a86858b238",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_in.json": "716338676390d4bb815d51aca6a5b72dad3dc4408132ff9269bcf39a45949d4b",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_out.json": "87920d76da7e03a637fa64cde85f0daff42ca712f399c07987514b19c2dd76e8"
+ },
+ "artifact_sha256": "73e6a923dd01e52ee4457ba50be5a328dfc495622cf00f2cbd7675498d7a02e6"
+}

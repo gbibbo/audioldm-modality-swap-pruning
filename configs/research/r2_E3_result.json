@@ -1,0 +1,87 @@
+{
+ "artifact": "r2_E3_result",
+ "protocol_doc": "docs/reviewer2_followup.md",
+ "protocol_doc_sha256": "ede6a0aae4c53a7c71cff36b854d4938651111f729924f0ff481eb9e46240111",
+ "class": "pre-specified follow-up (docs/reviewer2_followup.md); cannot change any frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "levels": {
+  "shortft_3.84": 0.02387051659267551,
+  "shortft_10.24": 0.1293838563215104,
+  "P_3.84": 0.014637135759888528,
+  "P_10.24": 0.054875789831082024,
+  "floors_shortft": {
+   "3.84": -0.031012272967321525,
+   "10.24": -0.0035598140580267077
+  }
+ },
+ "R_sf": {
+  "3.84": {
+   "point": 0.009233380832786983,
+   "lo": -0.0059968382941102995,
+   "hi": 0.02440779408437567,
+   "n": 192
+  },
+  "10.24": {
+   "point": 0.07450806649042836,
+   "lo": 0.05274102207155617,
+   "hi": 0.09627910070048529,
+   "n": 192
+  }
+ },
+ "J_sf": {
+  "point": 0.06527468565764138,
+  "lo": 0.04335127302286613,
+  "hi": 0.08728056718803903,
+  "n": 192
+ },
+ "released_R": {
+  "3.84": {
+   "point": 0.08488791843895645,
+   "lo": 0.06619947566384023,
+   "hi": 0.10426976567093031,
+   "n": 192
+  },
+  "10.24": {
+   "point": 0.24428910286709046,
+   "lo": 0.21455156635590053,
+   "hi": 0.2735218615364526,
+   "n": 192
+  }
+ },
+ "released_J": {
+  "point": 0.159401184428134,
+  "lo": 0.13068269565737867,
+  "hi": 0.18756560193699745,
+  "n": 192
+ },
+ "shortft_minus_released": {
+  "3.84": {
+   "point": -0.07565453760616947,
+   "lo": -0.09505705286780236,
+   "hi": -0.05750922679944779,
+   "n": 192
+  },
+  "10.24": {
+   "point": -0.1697810363766621,
+   "lo": -0.2031122560195096,
+   "hi": -0.13651035161353017,
+   "n": 192
+  }
+ },
+ "reading": "LONGER-IS-EASIER (still gains more at 10.24 s)",
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_in.json": "0acb5e6983d36fc827e590d5b25003af9a6862cded01af57a3e4bb7f64b5010c",
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_in.json": "6d974de655bc2c42ade2acf902e985b115a4c2c665bf904cd152e2347bcd6404",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_out.json": "84a360fd354e086195e37a1577eb07b19c095b4755745216fb0af0a86858b238",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_in.json": "716338676390d4bb815d51aca6a5b72dad3dc4408132ff9269bcf39a45949d4b",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_out.json": "87920d76da7e03a637fa64cde85f0daff42ca712f399c07987514b19c2dd76e8"
+ },
+ "artifact_sha256": "48b80e4fed6b18957d1147cce8a76ab08c9cacbc0d8e062abf2f86cbabfcef27"
+}

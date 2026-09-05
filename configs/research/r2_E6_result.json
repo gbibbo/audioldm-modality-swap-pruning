@@ -1,0 +1,131 @@
+{
+ "artifact": "r2_E6_result",
+ "protocol_doc": "docs/reviewer2_followup.md",
+ "protocol_doc_sha256": "ede6a0aae4c53a7c71cff36b854d4938651111f729924f0ff481eb9e46240111",
+ "class": "pre-specified follow-up (docs/reviewer2_followup.md); cannot change any frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "cells": {
+  "sev2_3.84": {
+   "dense": 0.24505287100813195,
+   "dense_floor": 0.14876376697611704,
+   "P": 0.004909242471815862,
+   "PFT": 0.014087596760267235,
+   "A_dense": {
+    "point": 0.09628910403201492,
+    "lo": 0.07401884113569394,
+    "hi": 0.11906952856794911,
+    "n": 64
+   },
+   "rho_dense": {
+    "point": 0.038220269862639156,
+    "lo": -0.05845069917928513,
+    "hi": 0.1271160595423363,
+    "n": 64
+   },
+   "dense_minus_PFT": {
+    "point": 0.23096527424786473,
+    "lo": 0.2063853659332987,
+    "hi": 0.25664935877072514,
+    "n": 64
+   },
+   "dense_minus_P": {
+    "point": 0.24014362853631607,
+    "lo": 0.21615313217535004,
+    "hi": 0.264469200142048,
+    "n": 64
+   },
+   "battery_discriminates_for_dense": true
+  },
+  "sev2_10.24": {
+   "dense": 0.33443207724485546,
+   "dense_floor": 0.22820453949680086,
+   "P": 0.08887428099114913,
+   "PFT": 0.09375088370870799,
+   "A_dense": {
+    "point": 0.1062275377480546,
+    "lo": 0.0792791343978024,
+    "hi": 0.13502916819270463,
+    "n": 64
+   },
+   "rho_dense": {
+    "point": 0.019859286864264032,
+    "lo": -0.12544057676849327,
+    "hi": 0.14892673791676,
+    "n": 64
+   },
+   "dense_minus_PFT": {
+    "point": 0.24068119353614748,
+    "lo": 0.19548369538933913,
+    "hi": 0.2831096686735691,
+    "n": 64
+   },
+   "dense_minus_P": {
+    "point": 0.24555779625370633,
+    "lo": 0.201371210733123,
+    "hi": 0.28788973317678024,
+    "n": 64
+   },
+   "battery_discriminates_for_dense": true
+  },
+  "guard_gate0_dense_vs_phenom_dense_off_max_absdiff": 0.013275196154912294,
+  "sev1_3.84": {
+   "dense": 0.19733344513224438,
+   "dense_floor": 0.11117776243255167,
+   "P": 0.11698468090617098,
+   "PFT": 0.022865729971575398,
+   "P_group": "p1_pruned_ema_reconstructed__off",
+   "PFT_group": "p1_recovered__off",
+   "A_dense": {
+    "point": 0.08615568269969269,
+    "lo": 0.06283323113369194,
+    "hi": 0.1093605765005956,
+    "n": 64
+   },
+   "rho_dense": {
+    "point": -1.1713801928524712,
+    "lo": -2.1209874825832604,
+    "hi": -0.6693386575287795,
+    "n": 64
+   },
+   "dense_minus_PFT": {
+    "point": 0.17446771516066897,
+    "lo": 0.1449930866503564,
+    "hi": 0.20434071790168673,
+    "n": 64
+   },
+   "dense_minus_P": {
+    "point": 0.0803487642260734,
+    "lo": 0.05361702824593523,
+    "hi": 0.10613342498763813,
+    "n": 64
+   },
+   "battery_discriminates_for_dense": true
+  },
+  "kim193_real_3.84_domain_ceiling": {
+   "real": 0.3439696776569662,
+   "floor": 0.26918451899392387,
+   "above_chance": {
+    "point": 0.07478515866304232,
+    "lo": 0.0611184467314839,
+    "hi": 0.08902326479953487,
+    "n": 193
+   },
+   "note": "real 4.0-s hip-hop excerpts with their own MusicCaps captions; NOT the battery prompts (domain-level ceiling)"
+  }
+ },
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_in.json": "0acb5e6983d36fc827e590d5b25003af9a6862cded01af57a3e4bb7f64b5010c",
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_in.json": "6d974de655bc2c42ade2acf902e985b115a4c2c665bf904cd152e2347bcd6404",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_out.json": "84a360fd354e086195e37a1577eb07b19c095b4755745216fb0af0a86858b238",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_in.json": "716338676390d4bb815d51aca6a5b72dad3dc4408132ff9269bcf39a45949d4b",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_out.json": "87920d76da7e03a637fa64cde85f0daff42ca712f399c07987514b19c2dd76e8"
+ },
+ "artifact_sha256": "dde9bab466fa531731b8cead8f14ccd9c12bc2a63ae258bb1d5616aabcb46f19"
+}
