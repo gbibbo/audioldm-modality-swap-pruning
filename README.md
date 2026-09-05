@@ -15,7 +15,6 @@ Domain transfer is also graded rather than binary. Recovery transfers strongly t
 ## Paper and reviewer follow-up
 
 - [ICASSP manuscript source](icassp/icassp_operating_point.tex)
-- [Compiled manuscript PDF](icassp/icassp_operating_point.pdf)
 - [Paper companion](PAPER_COMPANION.md), mapping each paper section to repository evidence
 - [Expanded results](PAPER_EXPANDED_RESULTS.md), with complete intervals and secondary analyses
 - [Reviewer follow-up protocol](docs/reviewer2_followup.md)
@@ -85,7 +84,7 @@ research_pruning/   pruning diagnostics and evaluation utilities
 scripts/research/   experiment, scoring, verification and figure entry points
 tests/research/     CPU research test suite
 configs/research/   frozen manifests, pre-registrations and result artifacts
-icassp/             ICASSP manuscript source and compiled PDF
+icassp/             ICASSP manuscript source
 docs/               protocols, claims matrix, ledgers, audits and reviewer follow-up
 listening_study/    blinded perceptual-study tooling; protected audio and keys excluded
 ```
