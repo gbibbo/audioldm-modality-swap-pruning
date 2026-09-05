@@ -11,6 +11,19 @@ else
   printf '%s\n' 'PROGRESS.md is missing. Restore or create it before substantial work.'
 fi
 
+printf '\n%s\n' '=== STUDIO IDLE GUARD ==='
+GPY=/home/zeus/miniconda3/envs/cloudspace/bin/python
+if [ -x "$GPY" ] && [ -f "$ROOT/scripts/ops/studio_idle_guard.py" ]; then
+  mkdir -p "$HOME/.cache/studio_idle_guard" && date +%s > "$HOME/.cache/studio_idle_guard/last_user_activity"
+  if ! kill -0 "$(cat "$HOME/.cache/studio_idle_guard/guard.pid" 2>/dev/null)" 2>/dev/null; then
+    (cd "$ROOT" && setsid nohup "$GPY" scripts/ops/studio_idle_guard.py --daemon >/dev/null 2>&1 &)
+    printf '%s\n' 'idle guard STARTED (stops the Studio after 45 min without user prompts, quiet CPU, no hold/protected process)'
+  else
+    printf '%s\n' "idle guard running (pid $(cat "$HOME/.cache/studio_idle_guard/guard.pid"))"
+  fi
+  printf '%s\n' 'The CPU Studio bills ~0.27 cr/h. Stop it when the session ends: scripts/ops/studio_idle_guard.py --stop-now'
+fi
+
 printf '\n%s\n' '=== TRACEABILITY FILES ==='
 for rel in docs/master_plan_v3.md docs/experiment_ledger.md docs/compute_budget.md docs/claims_matrix.md docs/pilot_protocol.md; do
   if [ -f "$ROOT/$rel" ]; then

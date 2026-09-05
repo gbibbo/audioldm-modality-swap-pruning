@@ -2,6 +2,8 @@
 set -uo pipefail
 
 ROOT="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+# Studio idle guard: every user prompt counts as activity (see scripts/ops/studio_idle_guard.py)
+mkdir -p "$HOME/.cache/studio_idle_guard" && date +%s > "$HOME/.cache/studio_idle_guard/last_user_activity" 2>/dev/null || true
 TZ_NAME="${PROJECT_TZ:-America/Montevideo}"
 NOW_TIME="$(TZ="$TZ_NAME" date '+%H:%M')"
 NOW_DATE="$(TZ="$TZ_NAME" date '+%Y-%m-%d')"

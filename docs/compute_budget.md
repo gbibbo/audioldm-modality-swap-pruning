@@ -665,3 +665,16 @@ be released first.
 Ranks 1–4 of the review's priority list (E6a + E6 + B + E5) ≈ 3.6 / 4.3 cr; all generation-only items ≈ 10 / 12 cr.
 **Nothing is authorised by this entry.** Funded balance must be confirmed by Gabriel before any launch (the
 available pool is not exposed by any accessible endpoint).
+
+### 2026-09-05 (MVD 02:1x) | REVIEWER2-FOLLOWUP — launch plan under Gabriel's 15-cr ceiling (protocol `docs/reviewer2_followup.md` §9)
+
+| Job | Content | WAVs | Point (cr) | Hard cap | max-min |
+|---|---|---:|---:|---:|---:|
+| `r2-gen-a` | E6 dense on hip-hop (256) + E7 extension (378) + B text-FT reference (192) + device check (4) | 830 | 2.47 | **3.00** | 300 |
+| `r2-gen-b` | E5 Clotho (576) + E1c 15.36 s (192) + device check (4) | 772 | 2.76 | **3.30** | 300 |
+| `r2-gen-c` | E8 severity 1 on 96 prompts (384) | 384 | 1.26 | **1.50** | 180 |
+| `r2-shortft` | E3: 200-step bench (self-gate 2.0 cr) + 20 000 steps (1.52) + 384 eval WAVs (1.12) | 384 | 2.8 | **3.40** | 420 |
+| **total** | | **2370** | **9.3** | **11.2** | |
+
+Compute-discipline record: protocol §10 (CPU infeasible for 2 370 clips + 20 000 training steps; T4 by the device rule;
+caps enforced by `job_watchdog.py`). Studio hours during scoring ≈ 0.27 cr/h — idle guard active, stop the Studio between stages.

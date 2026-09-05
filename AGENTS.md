@@ -81,6 +81,25 @@ Do not keep a GPU alive for CPU work. When a pipeline mixes GPU-required and CPU
 
 For this project: AudioLDM waveform generation is GPU-justified; CLAP/Human-CLAP scoring, bootstrap, verdict computation, SHA256/manifest validation, and checkpoint structural inspection run on CPU (the last unless memory/runtime makes it genuinely impractical).
 
+## Studio uptime discipline (added 2026-09-05)
+
+The CPU Studio itself bills about 0.27 cr/h (about 6.5 cr/day) from the same credit pool as the GPU jobs;
+Lightning's own auto-sleep does not fire while a VS Code or Claude Code session is attached. Rules:
+
+* `scripts/ops/studio_idle_guard.py` (cloudspace python) runs as a daemon, started by the SessionStart hook.
+  It stops the Studio after 45 min without a user prompt when the CPU is quiet and nothing is protected. Do
+  not disable it. Every UserPromptSubmit refreshes its activity timestamp.
+* Long CPU work that must survive the guard (scoring, downloads, verdicts) runs under
+  `scripts/ops/with_hold.sh <minutes> <command>` or matches the guard's protected-process patterns
+  (`job_watchdog.py`, `*_verdict.py`, `*_score*`, tests). Do not leave holds behind.
+* When Gabriel says the session is over, or when nothing else is planned, stop the Studio explicitly:
+  `/home/zeus/miniconda3/envs/cloudspace/bin/python scripts/ops/studio_idle_guard.py --stop-now`.
+* GPU jobs run on their own machines; the Studio only needs to stay up for the cost watchdog. Prefer
+  self-bounded jobs (fixed WAV counts, `os._exit` after the last write) so the watchdog is insurance, not the
+  only limit.
+* Every budget projection must add the Studio hours the CPU stages will keep the Studio alive. Record the
+  `total_spent` reading at the start and end of a session in `docs/compute_budget.md` when it moved.
+
 ## Repository architecture
 
 Follow the master plan unless the codebase requires a documented exception:

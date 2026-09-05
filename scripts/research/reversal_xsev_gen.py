@@ -27,6 +27,12 @@ AC_MANIFEST = "configs/research/xsev_audiocaps_manifest.json"
 MUSIC_MANIFEST = "configs/research/xsev_music_manifest.json"
 ARMD_SUBSET = "configs/research/op_duration_discriminator_1_subset.json"
 CM = [1, 2, 1, 1]
+# REVIEWER2-FOLLOWUP (docs/reviewer2_followup.md): new batteries / systems, frozen before generation.
+TEXTFT = "data/checkpoints/audioldm-m-text-ft.ckpt"          # public dense text-FT reference (TEXTFT-CHECKPOINT-AUDIT)
+REC_P1 = "data/checkpoints/l1_p1_finetuned_global_step_999999.ckpt"   # severity-1 recovered (1,2,3,1)
+R2_GEN_SALT = "REVIEWER2-FOLLOWUP|GENERATION|2026-09-05"
+CLOTHO_MANIFEST = "configs/research/r2_clotho_manifest.json"
+MUSIC_EXT_MANIFEST = "configs/research/r2_music_ext_manifest.json"
 # context -> (manifest, n_reps, latent_t, duration, gen_salt_for_seed, ytid_key, idx_key)
 CTX = {
     "ac_short":     (AC_MANIFEST, 1, 96,  3.84,  GEN_SALT, "ytid", "prompt_index"),
@@ -43,14 +49,27 @@ CTX = {
     # identical convention to music_native.
     "ac_d128": (AC_MANIFEST, 1, 128, 5.12, GEN_SALT, "ytid", "prompt_index"),
     "ac_d192": (AC_MANIFEST, 1, 192, 7.68, GEN_SALT, "ytid", "prompt_index"),
+    # REVIEWER2-FOLLOWUP: one point BEYOND the fine-tuning duration (15.36 s, latent 384), same seed
+    # convention as the sweep (same integer seed per ytid; x_T shape follows the latent length).
+    "ac_d384": (AC_MANIFEST, 1, 384, 15.36, GEN_SALT, "ytid", "prompt_index"),
+    # REVIEWER2-FOLLOWUP: Clotho evaluation-split battery (96 x r0) at both durations; new salt.
+    "clotho_short":  (CLOTHO_MANIFEST, 1, 96,  3.84,  R2_GEN_SALT, "clip_id", "prompt_index"),
+    "clotho_native": (CLOTHO_MANIFEST, 1, 256, 10.24, R2_GEN_SALT, "clip_id", "prompt_index"),
+    # REVIEWER2-FOLLOWUP: hip-hop battery extension (all 63 remaining eligible prompts x r0); new salt.
+    "music_ext":        (MUSIC_EXT_MANIFEST, 1, 96,  3.84,  R2_GEN_SALT, "ytid", "prompt_index"),
+    "music_ext_native": (MUSIC_EXT_MANIFEST, 1, 256, 10.24, R2_GEN_SALT, "ytid", "prompt_index"),
 }
+DENSE_OK = ("dense_native", "ac_short", "ac_native", "ac_d128", "ac_d192",
+            # REVIEWER2-FOLLOWUP: dense anchors on the hip-hop cells (E6/E7), Clotho (E5), beyond-native (E1c)
+            "music", "music_native", "music_ext", "music_ext_native", "clotho_short", "clotho_native", "ac_d384")
 
 
 def gen_seed(context, ytid, rep):
     if context == "dense_native":                 # reuse the frozen Arm-D r0 seed convention
         from research_pruning.eval.reversal import generation_seed as v1_seed
         return v1_seed(ytid, rep)
-    return derive_paired_seed(GEN_SALT, ytid, rep)
+    salt = CTX[context][4]                        # frozen contexts: GEN_SALT (unchanged); R2 contexts: R2_GEN_SALT
+    return derive_paired_seed(salt, ytid, rep)
 
 
 def make_x_T(context, ytid, rep, C, T, F):
@@ -79,12 +98,41 @@ def build_backbone(system, config, dev):
         unet.load_state_dict(rel, strict=True)
         materialize_ema_into_unet(unet, rsd, strict=True)
         return unet, "recovered2_dp1_ema"
+    # ---- REVIEWER2-FOLLOWUP systems (docs/reviewer2_followup.md)
+    if system == "textft":                        # public dense text-FT reference: dense architecture, its own EMA
+        from measure_tgen import build_model
+        model, _ = build_model(config, dev); model = model.float()
+        tsd = G0._orig_load(TEXTFT, map_location="cpu"); tsd = tsd.get("state_dict", tsd)
+        unet = model.model.diffusion_model
+        rel = {k[len("model.diffusion_model."):]: v for k, v in tsd.items() if k.startswith("model.diffusion_model.")}
+        unet.load_state_dict(rel, strict=True)
+        materialize_ema_into_unet(unet, tsd, strict=True)
+        return unet, "textft_ema"
+    if system == "p1_pruned":                     # severity-1 P: L1 selection on the dense EMA, [1,2,3,1] (gate0 convention)
+        unet = rm.materialize(ema_base, ranking, config, channel_mult=[1, 2, 3, 1]).float()
+        return unet, "prune(dense_ema)[1,2,3,1]"
+    if system == "p1_recovered":                  # severity-1 P+FT: public recovered (1,2,3,1), its own EMA
+        rsd = G0._orig_load(REC_P1, map_location="cpu"); rsd = rsd.get("state_dict", rsd)
+        unet = rm.build_pruned_unet(config, [1, 2, 3, 1]).float()
+        rel = {k[len("model.diffusion_model."):]: v for k, v in rsd.items() if k.startswith("model.diffusion_model.")}
+        unet.load_state_dict(rel, strict=True)
+        materialize_ema_into_unet(unet, rsd, strict=True)
+        return unet, "recovered1_p1_ema"
+    if system == "shortft":                       # E3: this project's short-duration full fine-tune of pruned2_A (raw weights)
+        path = os.environ.get("SHORTFT_UNET")
+        if not path or not os.path.exists(path):
+            raise SystemExit("PREFLIGHT FAIL: system shortft needs SHORTFT_UNET=<path to the saved U-Net state_dict>")
+        ssd = G0._orig_load(path, map_location="cpu")
+        unet = rm.build_pruned_unet(config, CM).float()
+        unet.load_state_dict(ssd["unet"] if "unet" in ssd else ssd, strict=True)
+        return unet, f"shortft_raw:{G0.sha_file(path)[:16]}"
     raise SystemExit(f"unknown system {system}")
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--system", required=True, choices=["pruned2_A", "pruned2_B", "recovered2", "dense"])
+    ap.add_argument("--system", required=True, choices=["pruned2_A", "pruned2_B", "recovered2", "dense",
+                                                       "textft", "p1_pruned", "p1_recovered", "shortft"])
     ap.add_argument("--context", required=True, choices=list(CTX))
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
     ap.add_argument("--out", default="artifacts/icassp_gate0/reversal_xsev_gen")
@@ -106,10 +154,13 @@ def main():
         raise SystemExit("PREFLIGHT FAIL: --first-n and --indices are mutually exclusive")
     if args.context == "dense_native" and args.system != "dense":
         raise SystemExit("dense_native context is for --system dense only")
-    if args.system == "dense" and args.context not in ("dense_native", "ac_short", "ac_native", "ac_d128", "ac_d192"):
+    if args.system == "dense" and args.context not in DENSE_OK:
         # dense: the Arm-D native control (frozen), the XSEV-DENSE-192-CONTROL cells
-        # (docs/xsev_dense_192_control.md) or the DRAFT5-OPSWEEP-1 sweep points (docs/draft5_opsweep.md)
-        raise SystemExit("dense generates only dense_native, ac_short, ac_native, ac_d128 or ac_d192")
+        # (docs/xsev_dense_192_control.md), the DRAFT5-OPSWEEP-1 sweep points (docs/draft5_opsweep.md)
+        # or the REVIEWER2-FOLLOWUP anchors (docs/reviewer2_followup.md)
+        raise SystemExit(f"dense generates only {DENSE_OK}")
+    if args.system in ("textft", "p1_pruned", "p1_recovered", "shortft") and args.context not in ("ac_short", "ac_native"):
+        raise SystemExit("textft / p1_* / shortft generate only ac_short and ac_native (docs/reviewer2_followup.md)")
 
     manifest_path, reps, T, duration, _salt, ykey, ikey = CTX[args.context]
     prompts = json.load(open(manifest_path))["prompts"]
@@ -176,7 +227,7 @@ def main():
     prov = {**G0._git_info(), **G0._env_info(dev), "checkpoint_convention": ck_sha}
     man = {"artifact": "reversal_xsev_gen", "system": args.system, "context": args.context,
            "manifest": manifest_path, "recipe": {"name": args.recipe, "ddim": ddim, "guidance": guidance,
-           "eta": 0.0, "latent_t": T, "duration_s": duration, "reps": reps, "gen_salt": GEN_SALT,
+           "eta": 0.0, "latent_t": T, "duration_s": duration, "reps": reps, "gen_salt": CTX[args.context][4],
            "weight_convention": "ema", "first_n": args.first_n or None, "tag": args.tag or None},
            "provenance": prov, "n": len(rows), "rows": rows}
     outman = os.path.join(args.out, f"gen_manifest_{args.system}_{args.context}{idx_suffix}.json")

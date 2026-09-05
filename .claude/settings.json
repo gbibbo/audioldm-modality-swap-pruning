@@ -46,6 +46,21 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": [
+              "-c",
+              "mkdir -p \"$HOME/.cache/studio_idle_guard\" && date +%s > \"$HOME/.cache/studio_idle_guard/last_agent_activity\""
+            ],
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }
