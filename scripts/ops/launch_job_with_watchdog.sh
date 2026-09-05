@@ -4,6 +4,9 @@
 # Refuses to launch from a dirty tree (the job snapshots the working tree; the SHA must describe it).
 set -euo pipefail
 NAME="$1"; MAXCOST="$2"; MAXMIN="$3"; shift 3; CMD="$*"
+# fail fast on mis-split arguments (2026-09-05: a zsh loop passed the whole spec as $1 -> 4 jobs launched with no command)
+if ! [[ "$MAXCOST" =~ ^[0-9]+([.][0-9]+)?$ && "$MAXMIN" =~ ^[0-9]+$ && "$NAME" =~ ^[a-z0-9-]+$ && -n "$CMD" ]]; then
+  echo "REFUSE: bad arguments name=[$NAME] cost=[$MAXCOST] min=[$MAXMIN] cmd=[$CMD]"; exit 2; fi
 cd "$(dirname "$0")/../.."
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then echo "REFUSE: dirty tree"; git status --short | head; exit 2; fi
 SHA="$(git rev-parse --short HEAD)"
