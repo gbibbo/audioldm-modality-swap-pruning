@@ -1,0 +1,39 @@
+\section{Experimental design}
+\subsection{Case study and causal scope}
+The dense reference is AudioLDM-M-Full~\cite{liu2023audioldm}, with $415.96$\,M U-Net parameters. We evaluate two released pruning severities from Singh et al.~\cite{singh2026pruning}. Severity~1 retains $145.67$\,M parameters, a $65.0\%$ reduction. Severity~2 retains $71.08$\,M, an $82.9\%$ reduction and $39\%$ fewer multiply-accumulates~\cite{singh2026pruning}.
+
+At each severity, P denotes the pruned checkpoint and \PFT{} the same pruned architecture after the released $10^{6}$-step AudioCaps recovery fine-tune. P and \PFT{} therefore differ by the recovery stage while sharing architecture. Their paired difference answers what that released fine-tuning stage adds within the pruned model. It does not identify the causal effect of pruning itself. The released pruned EMA reconstruction is bit-exact at severity~1. Severity~2 differs in three decoder-seam tensors, so the release-compatible A$'$ convention is primary and B$'$ is retained as a sensitivity analysis. Full checkpoint provenance is documented in the companion repository.
+
+\subsection{Operating-point grid}
+The primary duration contrast compares $3.84$\,s with $10.24$\,s, the duration used during AudioLDM training and recovery fine-tuning. Severity~2 also includes $5.12$ and $7.68$\,s, producing a four-point duration sweep. Duration is useful experimentally because it changes the requested generation length while leaving the prompt semantics intact. The endpoint contrast tests whether recovery transfers away from its native length, while the sweep shows whether any difference is gradual or confined to one endpoint.
+
+In-domain prompts come from AudioCaps \textsc{test}~\cite{kim2019audiocaps}. The held-out battery contains hip-hop and rap captions from MusicCaps~\cite{agostinelli2023musiclm}, a sub-domain with near-zero exposure in the recovery corpus. The domain axis asks a complementary question. Instead of changing how long the model generates, it changes what it is asked to generate. These captions are substantially longer, so the comparison intentionally tests a realistic shift but does not separate musical content from caption style. We therefore interpret it as held-out-domain evidence rather than as a controlled estimate of a uniquely musical effect.
+
+The primary severity~2 AudioCaps analysis uses $192$ prompts disjoint from severity~1. Music uses $64$ prompts. Severity~1 uses a matched $80$-prompt AudioCaps subset for duration and a $96$-prompt set for its pre-specified domain test. Primary generation uses DDIM~\cite{song2021ddim} with $50$ steps, guidance $2.5$ and $\eta=0$. A pre-specified severity~2 check repeats the duration test with the published DDIM $200$, guidance $3.5$ recipe.
+
+\subsection{Pairing, scoring and anchors}
+Within each operating point, P and \PFT{} receive identical initial noise $x_T$ for a given prompt. This common-random-number design removes sampling noise from the between-system comparison. Different durations require different latent shapes, so duration contrasts remain paired by prompt rather than by latent sample.
+
+The primary endpoint is fused CLAP cosine from \texttt{laion/\allowbreak clap-htsat-fused}, revision \texttt{365dea6e}~\cite{wu2023clap}. Each system and operating-point cell is scored in one fixed-order, fixed-seed call. The prompt is the unit of analysis and music replicates are averaged before inference. Uncertainty is estimated by a prompt-level percentile bootstrap with $B=10^{4}$.
+
+The shuffled-caption floor and real-audio reference answer different questions. The floor measures alignment expected when captions are mismatched within the same battery. The real-audio reference scores the actual AudioCaps recordings under the same convention. We also generate matched dense controls to show how the unpruned model itself responds to duration.
+
+This separation is important because the absolute \PFT{} score is not itself the recovery effect. It combines the state of P before fine-tuning, the gain added by fine-tuning and any operating-point dependence of the metric. Pairing P and \PFT{} first removes the common baseline. The anchors then show whether the remaining gain is large relative to a meaningful task gap. This is why the analysis emphasizes paired differences and recovery ratios rather than treating the final checkpoint score as evidence of restoration by itself.
+
+\subsection{Estimands and analysis status}
+For operating point $o$, recovery gain is
+\begin{equation}
+R(o)=\mathbb{E}_{i}\left[S(\PFT,i,o)-S(P,i,o)\right],
+\end{equation}
+where $S$ is the scorer and $i$ indexes prompts. The duration interaction is
+\begin{equation}
+J=R(10.24\,\mathrm{s})-R(3.84\,\mathrm{s}).
+\end{equation}
+Thus $J>0$ means that recovery itself is larger at the native duration, not merely that both systems obtain larger scores there. If longer clips raised P and \PFT{} by exactly the same amount, their absolute scores would change but $J$ would remain zero. The interaction therefore asks the question of interest directly. The recovery ratio
+\begin{equation}
+\rho_{\mathrm{ref}}=\frac{R}{S(\mathrm{ref})-S(P)}
+\end{equation}
+reports the fraction of P's gap to dense or real audio closed by fine-tuning.
+
+The severity~2 duration interaction, its seam sensitivity, the domain tests, secondary metrics and published-sampler check were prospectively specified before their corresponding scores. FineLAP and the duration sweep were registered after the primary result but before their own scoring. Crop, anchor decomposition, multiple-comparison correction and author listening are post-hoc. The repository preserves the frozen protocols and exact status of every analysis.
+
