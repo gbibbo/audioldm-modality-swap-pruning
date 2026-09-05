@@ -744,3 +744,11 @@ Expected settled ≈ 14–16 cr gen/train + ≈ 1.5–2 cr Studio (watchdogs run
 with a small reserve; watchdog caps 17.6 + Studio ≈ 2 = 19.6 hard ceiling. If a 200-step bench projects over its
 `--cap-cr`, that arm bench-stops at ≈ 0.15 cr and returns to Gabriel. Protocol `docs/reviewer2_followup_ext.md`
 (frozen + sha256 sidecar `24eb7c2e…` before launch). Settled costs recorded when the jobs finish.
+
+### 2026-09-05 (MVD 18:49) | 24 GB GPU pre-authorized for the dense-native arm (contingency; nothing launched)
+
+Gabriel pre-approved a 24 GB GPU "en caso de ser necesario" for `r2-denseft-n` (dense @10.24 s, ≈13 GB est. on a
+15 GB T4). Invoked only on a T4 memory failure; the 200-step self-gate confirms the fit at ≈0.15 cr first. Launcher
+now honors `MACHINE=L4`. Worst-case total (T4 OOM ≈0.3 + L4 rerun ≈7 + longft ≈5.4 + denseft-s ≈2.8 + Studio ≈2.5)
+≈ **18 cr < 20**. Recipe unchanged (batch 1×accum 2); L4 is faster, so the training projection should fall below the
+T4 estimate. Ledger REVIEWER2-FOLLOWUP-EXT 24-GB entry.
