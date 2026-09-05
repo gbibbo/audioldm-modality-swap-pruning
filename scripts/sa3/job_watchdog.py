@@ -30,6 +30,7 @@ def main():
     j = Job(name=a.name, teamspace=a.teamspace, org=a.org)
     term = ("completed", "failed", "stopped", "error", "crashed")
     t0 = time.time()
+    run_t0 = None          # set when the job first reaches Running: max_minutes counts RUN time, not queue time
     stopped_by_us = None
     while True:
         status = str(j.status)
@@ -38,15 +39,18 @@ def main():
             cost = float(j.total_cost or 0.0)
         except Exception:
             cost = float("nan")
+        if run_t0 is None and "running" in s:
+            run_t0 = time.time()
         elapsed_min = (time.time() - t0) / 60.0
-        print(f"[watchdog] {a.name} status={status} cost={cost:.4f} elapsed={elapsed_min:.1f}m", flush=True)
+        run_min = (time.time() - run_t0) / 60.0 if run_t0 is not None else 0.0
+        print(f"[watchdog] {a.name} status={status} cost={cost:.4f} elapsed={elapsed_min:.1f}m run={run_min:.1f}m", flush=True)
         if any(t in s for t in term):
             print(f"[watchdog] job reached terminal state {status}; final cost {cost:.4f}")
             break
         if cost >= a.max_cost:
             stopped_by_us = f"cost {cost:.4f} >= max_cost {a.max_cost}"
-        elif elapsed_min >= a.max_minutes:
-            stopped_by_us = f"elapsed {elapsed_min:.1f}m >= max_minutes {a.max_minutes}"
+        elif run_t0 is not None and run_min >= a.max_minutes:
+            stopped_by_us = f"run {run_min:.1f}m >= max_minutes {a.max_minutes} (queue time excluded)"
         if stopped_by_us:
             print(f"[watchdog] STOPPING {a.name}: {stopped_by_us}", flush=True)
             try:
