@@ -69,5 +69,7 @@ icassp/figs/archive/*.png
 !icassp/figs/archive/fig2_where.png
 # ...and the raster of the figure the README embeds
 !icassp/figs/fig1_operating_points.png
-# Overleaf delivery bundle (derivable from the icassp/ sources; not versioned)
+# Overleaf delivery bundles (derivable from the icassp/ sources; name carries draft+date+commit)
+icassp/icassp_operating_point_draft*.zip
+icassp/icassp_operating_point_draft*.pdf
 icassp/icassp_operating_point_overleaf.zip

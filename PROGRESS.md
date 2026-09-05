@@ -81,6 +81,9 @@
 
 ## LOG
 
+### 2026-09-05 00:3x MVD | Overleaf bundle now carries its version in the file name (CPU, 0 cr)
+* Gabriel: el zip debería decir qué versión es. `scripts/research/paper_figs/build_overleaf_zip.py` stamps the draft label (from the last `%% draft<N>-...` marker in the `.tex`), the build date and the short HEAD commit into the name — `icassp_operating_point_draft6_<date>_<sha>.zip` — writes the same stamp as `VERSION.txt` inside the bundle, copies the preview PDF to a stamped name, marks `-dirty` builds, and `--prune` removes older bundles. `.gitignore` updated for the new glob. This is the concrete fix for the confusion that made a Draft-5 PDF come back as if it were Draft 6.
+
 ### 2026-09-04 23:1x MVD | Housekeeping: superseded figures and the discarded compression scripts moved to archive/ (CPU, 0 cr)
 * `icassp/figs/` now holds only `fig1_operating_points.pdf/.png` (the one figure the manuscript embeds); the Draft-5 pair and the never-embedded spares moved to `icassp/figs/archive/` with a README. `scripts/research/paper_figs/archive/` holds `integrate_draft6_{tighten,fit,fit_b}.py` (discarded compression, not applied). The public `README.md` now shows the new five-panel figure and points at `make_draft6_figs.py`; `.gitignore` updated. The three older figure builders stay in place because `make_draft6_figs.py` imports them.
 * Re-verified after the move: figure regenerates, 0 overfull, `pagecheck_times.py` verdict "fits 4 content pages", verifier 116/116, zip rebuilt (5 files).

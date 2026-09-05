@@ -2,7 +2,7 @@
 
 **Everything lives in `icassp/`:** `icassp_operating_point.tex`, official style files
 `spconf.sty` + `IEEEbib.bst`, `figs/`, the built `icassp_operating_point.pdf`, this file,
-`README_OVERLEAF.md`, and the ready-to-upload `icassp_operating_point_overleaf.zip`
+`README_OVERLEAF.md`, and the ready-to-upload `icassp_operating_point_<draft>_<date>_<commit>.zip`
 (gitignored; regenerable). **4 content pages + references on page 5** at 9 pt (`\ninept`); the ICASSP
 2027 paper kit allows "4 pages of technical content" plus "one additional optional 5th page containing
 only references" (confirmed 2026-09-02). Draft 5 = rewrite of Draft 4 per
@@ -311,5 +311,13 @@ for the font reason above. Overleaf's pdfLaTeX build remains the authoritative o
   one of them is run it rewrites its old outputs into `icassp/figs/` (not into `archive/`).
 
 **Where the current version is:** `icassp/icassp_operating_point.tex` (source),
-`icassp/icassp_operating_point_overleaf.zip` (ready to upload; gitignored, rebuilt from the sources),
-`icassp/icassp_operating_point.pdf` (local Times-metric preview).
+`icassp/icassp_operating_point_<draft>_<date>_<commit>.zip` (ready to upload; gitignored, rebuilt by
+`scripts/research/paper_figs/build_overleaf_zip.py`), `icassp/icassp_operating_point.pdf` (local
+Times-metric preview, copied to a stamped name by the same script).
+
+**Bundle naming (2026-09-05).** The bundle used to be called `icassp_operating_point_overleaf.zip`, so two
+downloads of different drafts were indistinguishable once out of the repo -- which is exactly how a Draft-5
+PDF came back as if it were Draft 6. The builder now stamps the draft label (read from the last
+`%% draft<N>-...` marker in the `.tex`), the build date and the short HEAD commit into the file name, adds
+a `VERSION.txt` with the same stamp inside the zip, and writes a stamped copy of the preview PDF. A build
+from a dirty tree is marked `-dirty` and is not reproducible from a commit.

@@ -1,6 +1,10 @@
 ICASSP manuscript (Draft 6) - Overleaf upload (official ICASSP/ICIP LaTeX template)
 ===================================================================================
 
+Bundle name   : icassp_operating_point_<draft>_<date>_<short commit>.zip -- the version is in the file
+                name, and the same stamp is in VERSION.txt inside the bundle, so a downloaded copy is
+                always identifiable. Rebuild with
+                `scripts/research/paper_figs/build_overleaf_zip.py [--prune]`.
 Main document : icassp_operating_point.tex
 Compiler      : pdfLaTeX  (Overleaf menu -> Compiler -> pdfLaTeX)   [recommended; proper Times]
 Template      : OFFICIAL ICASSP/ICIP style, bundled here:
