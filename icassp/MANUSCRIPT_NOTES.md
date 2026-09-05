@@ -321,3 +321,38 @@ PDF came back as if it were Draft 6. The builder now stamps the draft label (rea
 `%% draft<N>-...` marker in the `.tex`), the build date and the short HEAD commit into the file name, adds
 a `VERSION.txt` with the same stamp inside the zip, and writes a stamped copy of the preview PDF. A build
 from a dirty tree is marked `-dirty` and is not reproducible from a commit.
+
+
+## 2026-09-05 Draft 12 installed as the current version; Draft 6 archived (CPU, 0 cr)
+
+Gabriel wrote Drafts 7–12 outside this repository and delivered Draft 12 as
+`icassp/icassp_operating_point_draft12_from_scratch.zip` (gitignored bundle: `.tex`, compiled PDF, `spconf.sty`,
+`IEEEbib.bst`, `figs/fig1_operating_points.pdf` — byte-identical to the committed figure — plus
+`PAPER_COMPANION.md`, `PAPER_EXPANDED_RESULTS.md`, `README_OVERLEAF.md`, `VERSION.txt`, `EDITORIAL_AUDIT.txt`,
+`TEMPLATE_VERIFICATION.txt`; the last three are kept as `.md` under `icassp/draft12_delivery_notes/` because `*.txt` is gitignored). Draft 12 = from-scratch prose rewrite on the Draft-11 information architecture
+(paper/repository split), Draft-10 abstract unchanged, no new experiment, no result changed.
+
+* **Installed:** `icassp/icassp_operating_point.tex` (marker `%% draft12-from-scratch`, so `build_overleaf_zip.py`
+  stamps `draft12`), `icassp/README_OVERLEAF.md`, `icassp/icassp_operating_point.pdf` (Gabriel's pdfTeX build of
+  the same source), the two companion files at the repository root (`PAPER_COMPANION.md`,
+  `PAPER_EXPANDED_RESULTS.md` — the manuscript cites `blob/main/PAPER_COMPANION.md`), and the three delivery
+  notes under `icassp/draft12_delivery_notes/`.
+* **Archived:** Draft 6 source + Overleaf notes (from `e89235d`) and its stamped bundle/preview moved to
+  `icassp/archive/` (README there; the binaries are gitignored and reproducible from `e89235d`).
+* **Checks on the installed source:** `pagecheck_times.py` → 5 pages, body ends on page 5 with 2 chars before the
+  references heading, verdict "fits 4 content pages (Times metrics)"; the reference list starts at the top of
+  page 5 (references-only page).
+* **Number provenance — new verifier.** `verify_draft5_numbers.py` is bound to the Draft-5/6 prose and finds only
+  7/94 of its patterns in Draft 12 (tables and intervals moved to the companion). New
+  `scripts/research/paper_figs/verify_draft12_numbers.py` checks the numbers where Draft 12 prints them: 23 in the
+  `.tex` (abstract/4.1/4.2/4.3/5 values, parameter counts, battery sizes, listening counts) and 64 in
+  `PAPER_EXPANDED_RESULTS.md` (complete CLAP table, sweep steps, anchors table, dense-192 control, published
+  recipe, Human-CLAP, KL/PANNs at both durations and on the sweep, domain contrasts, FineLAP, crop, negatives),
+  every expected string formatted from the artifact. **87/87 OK.** One provenance note surfaced by the verifier: the
+  companion's native-point KL gain `+2.22 [+1.93, +2.53]` is the frozen native artifact
+  (`xsev_secondary_metrics.json`, original references), while its 3.84-s value `+0.66 [+0.42, +0.92]` and the
+  interaction come from the A8 artifact (`xsev_secondary_metrics_short.json`, band-limited references, whose own
+  native recomputation is `[+1.92, +2.52]`) — both traceable, and the two artifacts agree to 0.005.
+* **Second external review** (received 2026-09-05): methodological items analysed and costed in
+  `docs/review/2026-09-05_reviewer2_methodological_response.md`; presentation items (W5 table in the body, W7
+  abstract wording / Fig. 1 density) deliberately deferred. No manuscript text changed in this pass.

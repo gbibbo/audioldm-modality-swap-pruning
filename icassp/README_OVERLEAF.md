@@ -1,53 +1,15 @@
-ICASSP manuscript (Draft 6) - Overleaf upload (official ICASSP/ICIP LaTeX template)
-===================================================================================
+# ICASSP 2027 Overleaf package
 
-Bundle name   : icassp_operating_point_<draft>_<date>_<short commit>.zip -- the version is in the file
-                name, and the same stamp is in VERSION.txt inside the bundle, so a downloaded copy is
-                always identifiable. Rebuild with
-                `scripts/research/paper_figs/build_overleaf_zip.py [--prune]`.
-Main document : icassp_operating_point.tex
-Compiler      : pdfLaTeX  (Overleaf menu -> Compiler -> pdfLaTeX)   [recommended; proper Times]
-Template      : OFFICIAL ICASSP/ICIP style, bundled here:
-                  spconf.sty   - ICASSP/ICIP LaTeX style (page geometry, Times, headings)
-                  IEEEbib.bst  - IEEE bibliography style (only needed if you switch to BibTeX;
-                                 the draft uses an inline \thebibliography, so no .bib is required)
-Font size     : 9 pt via \ninept (the template's sanctioned option).
-Length        : 4 pages of technical content + references on page 5. ICASSP 2027 paper kit: "4 pages
-                of technical content ... and one additional optional 5th page containing only references"
-                (confirmed 2026-09-02 on the ICASSP 2027 paper-kit page). Full-paper deadline per the
-                CFP: 16 September 2026.
+Main file is `icassp_operating_point.tex`.
 
-Figure (one, full text width, five panels; Draft 6 replaced the two column-width figures of Draft 5):
-  figs/fig1_operating_points.pdf - (a),(b) duration: P vs P+FT CLAP against generated clip duration at
-                               severity 1 and 2, with 95% CI whiskers on the paired gain, the matched
-                               dense control, the real-audio ceiling and the per-cell shuffled-caption
-                               chance floor; J annotated. (c) NEW in Draft 6, prompt domain: the same
-                               two checkpoints in-domain and on held-out hip-hop captions, per
-                               (severity, duration) cell, against their own chance floors.
-                               (d) FineLAP frame-level grounding gain vs. time (uniform, not
-                               back-loaded). (e) generation length vs. scoring window.
-Superseded/spare figures live in figs/archive/ (the Draft-5 pair fig1_interaction + fig2_where, and the
-never-embedded fig_summary / fig2_forest / fig3_finelap); see figs/archive/README.md. Only
-figs/fig1_operating_points.pdf is in the zip.
+This package uses the ICASSP 2027 LaTeX format based on `spconf.sty` and `IEEEbib.bst`. The manuscript uses `\documentclass{article}`, loads `spconf`, invokes `\ninept`, and retains the conference two-column geometry and empty page style.
 
-Tables: Table 1 recovery gains (all CIs); Table 2 anchors and recovery ratios (chance floor P / P+FT,
-real audio, rho vs the matched dense model and vs real audio, both severities). The analysis-plan table of
-Draft 4 was folded into two sentences in Sec. 3.4.
+Draft 12 retains the information architecture introduced in Draft 11 and rewrites the prose from scratch without changing the scientific result. The approved Draft 10 abstract is unchanged. Every paragraph from the Introduction through the Conclusion was regenerated from its scientific purpose rather than edited from Draft 11. The Introduction and Background explain what recovery means, how it differs from final checkpoint quality, and why operating-point coverage matters. The methodology introduces each estimand only after motivating the question it answers.
 
-Authors : Gabriel Bibbo (Independent researcher, gabobibbo@gmail.com);
-          Arshdeep Singh and Mark D. Plumbley (King's College London, UK,
-          {arshdeep.singh, mark.plumbley}@kcl.ac.uk).
+The two complete numerical tables from the previous draft are no longer printed in the four-page body. Figure 1 carries the main visual evidence and the prose retains the effect sizes required to establish each conclusion. Complete table values, sensitivity intervals, intermediate operating points and artifact links live in `PAPER_EXPANDED_RESULTS.md` in the companion GitHub repository. The manuscript points directly to `PAPER_COMPANION.md`, which maps every paper section to the corresponding repository evidence.
 
-Title options (Draft 6 keeps the first): (1) "Recovery Fine-Tuning Recovers Where It Was Trained:
-Duration- and Domain-Dependent Gains in Pruned Text-to-Audio Diffusion"; (2) "How Much Does Recovery
-Fine-Tuning Recover? Operating-Point-Dependent Gains in Pruned Text-to-Audio Diffusion".
+The compiled manuscript has four technical pages followed by a references-only fifth page. The approved Draft 10 abstract is unchanged.
 
-LOCAL PREVIEW CAVEAT: `icassp_operating_point.pdf` in the repo is built locally with tectonic plus
-Liberation Serif (metric-compatible with Times) because plain tectonic has no `TUptm.fd` and silently falls
-back to the wider Latin Modern, which adds about 0.6 of a column and makes the paper look over-length.
-Overleaf's pdfLaTeX build (NimbusRomNo9L = Times) is the authoritative one; use
-`scripts/research/paper_figs/pagecheck_times.py` for any local page-budget decision.
+Compile with pdfLaTeX. Two passes are recommended because references are defined inside the main file.
 
-To open in Overleaf: New Project -> Upload Project -> select this .zip (files are at the zip root).
-See MANUSCRIPT_NOTES.md for the Draft-5 -> Draft-6 change log, number provenance, and the list of
-references whose bibliographic details still need a final check.
+See `TEMPLATE_VERIFICATION.txt` and `EDITORIAL_AUDIT.txt` for the checks performed before packaging.

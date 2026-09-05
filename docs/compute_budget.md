@@ -628,3 +628,40 @@ CPU dry-runs at both latent lengths. No music generation is proposed because the
 fine-tuning set includes MusicCaps. Live funded balance is not reliably exposed; obtain a top-up and
 explicit launch GO before attempting a job. CPU scoring must run after GPU generation and the GPU must
 be released first.
+
+## 2026-09-05 (MVD 01:xx) | Account reading + idle-Studio cost + re-costed reviewer asks (read-only; nothing launched)
+
+* **Lifetime `total_spent` = 99.1827 cr** (Lightning SDK `billing_service_get_user_balance()`, 2026-09-05 ~04:00 UTC;
+  `balance` still the static 5.0). Previous reading 90.508 (2026-09-03 20:05 UTC). **Δ = +8.675 cr with NO new job**
+  in the interval (job list re-read: 48 jobs, newest `draft5-pubrecipe-1` / `draft5-opsweep-1`, settled 1.9737 /
+  2.6789 — i.e. +0.061 / +0.033 settlement uplift vs the values recorded above; the rest, ≈ 8.6 cr over ≈ 32 h,
+  is the **running CPU Studio itself, ≈ 0.27 cr/h ≈ 6.5 cr/day**). Sum of all settled job costs = 27.20 cr; the
+  remaining ≈ 72 cr of lifetime spend is Studio uptime. **Compute-discipline consequence: stop the Studio when no
+  CPU work is running; an idle day costs more than most of the experiments costed below.**
+* **Correction to §A10:** "no training throughput has ever been measured" was wrong — `gate0-smoke-1` (2026-08-26)
+  measured **0.30735 s/step** (T4, FP32, batch 2, latent 96, dense M-Full + LoRA, peak 5.4 GB). A LoRA step
+  back-propagates through the whole dense U-Net, so it is a conservative proxy for a full-parameter step on the
+  71 M-parameter severity-2 U-Net at the same latent length. The 200-step measured benchmark (≈ 0.15 cr incl.
+  provisioning) stays mandatory before any launch decision uses these numbers.
+* **DERIVED estimates for the second reviewer's methodological asks** (§A10 per-WAV model + 0.145 cr/job; training
+  at 0.30735 s/step × 0.89 cr/GPU-h; cap = point × 1.2; details and designs in
+  `docs/review/2026-09-05_reviewer2_methodological_response.md`):
+
+| # | Run | WAVs / steps | Point (cr) | Cap (cr) |
+|---|---|---|---|---|
+| E6 | dense on the sev-2 hip-hop battery, 64 × {3.84, 10.24} s | 128 | **0.52** | 0.62 |
+| E6a | rescore existing `gate0-gen-1` dense hip-hop WAVs (sev-1 battery) + Kim-193 real-clip ceiling | 0 (CPU) | 0 | 0 |
+| B | public dense text-FT reference, 192 sev-2 prompts × 2 durations (80 prompts: 0.61 / 0.73) | 384 | **1.26** | 1.52 |
+| E5 | Clotho-eval battery, 96 prompts × {P, P+FT, dense} × 2 durations (192 prompts = E4: 3.50 / 4.20) | 576 | **1.82** | 2.19 |
+| E7 | music battery +63 prompts, P / P+FT / dense × 2 durations (without dense 0.88 / 1.05) | 378 | **1.25** | 1.50 |
+| E1c | 15.36 s (latent 384), P / P+FT / dense × 192 (P/P+FT only 1.98 / 2.38) | 576 | **2.90** | 3.48 |
+| E8 | severity 1 on the 192 sev-2 prompts, P / P+FT × 2 durations | 768 | **2.38** | 2.86 |
+| E3-bench | 200-step full-FT benchmark of P (sev 2) at latent 96 | 200 steps | 0.15 | 0.20 |
+| E3 | short-duration FT of P (sev 2) at 3.84 s, 2×10⁴ steps (1.52) + eval on 192 × 2 durations (1.26) | 2×10⁴ | **3.0** | 3.6 |
+| E3′ | two arms (3.84 s and 10.24 s, 2×10⁴ steps each: 1.52 + 4.0) + eval of both (2.5) | 4×10⁴ | **8.2** | 9.8 |
+| — | dense partial FT at 10.24 s, 10⁵ steps (reviewer's option 1) | 10⁵ | ≈ 20–40 | not at project scale |
+| — | Singh's 10⁶-step recipe on the dense model (the matched control) | 10⁶ | ≈ 75–150 | out of scope |
+
+Ranks 1–4 of the review's priority list (E6a + E6 + B + E5) ≈ 3.6 / 4.3 cr; all generation-only items ≈ 10 / 12 cr.
+**Nothing is authorised by this entry.** Funded balance must be confirmed by Gabriel before any launch (the
+available pool is not exposed by any accessible endpoint).
