@@ -1,0 +1,79 @@
+\section{Discussion and limitations}
+The revised experiments sharpen what this study does and does not establish. The robust result is that the incremental gain from fine-tuning depends on the operating point. For the released severity~2 recovery, changing duration changes both the absolute gain and the fraction of the dense gap that is closed. Changing domain can leave the gain nearly intact, as on Clotho, or reduce it by almost an order of magnitude, as on hip-hop. A single post-recovery score cannot represent those behaviors.
+
+The new mechanism tests also rule out the interpretation suggested by the previous title. The duration effect does not track the duration used for recovery fine-tuning. A checkpoint adapted at $3.84$\,s still benefits more when evaluated at $10.24$\,s, and the gain stops increasing clearly beyond $10.24$\,s rather than peaking there. We therefore make no claim that recovery ``recovers where it was trained.'' The evidence is more consistent with duration being a property of how fine-tuning gains are expressed at inference, although the present experiments do not identify the underlying cause.
+
+This distinction is scientifically useful because the two claims lead to different expectations. A specialization account predicts that moving the training duration should move the favorable evaluation duration with it. The short-duration intervention provides exactly that test and the prediction fails. The plateau at $15.36$\,s removes a second version of the same story in which $10.24$\,s is a privileged peak. Finally, the dense text-fine-tuned reference shows that a similar length dependence can appear even without a pruning transition. None of these observations identifies a complete mechanism, but together they tell us which mechanism not to report. The phenomenon to reproduce is a duration-dependent fine-tuning gain, not preferential recovery at the training duration.
+
+The domain follow-up makes a parallel correction. The first hip-hop battery mixed a large content shift with much longer captions, so an unresolved gain could not support a general statement about out-of-domain recovery. Clotho supplies an intermediate test and shows that substantial transfer is possible outside AudioCaps. Dense hip-hop anchors then show that the much smaller gain there is not created by a CLAP floor. A useful replication should therefore vary more than one held-out domain and report where each domain sits relative to an informative dense or real-data reference. The result is a transfer profile rather than a binary in-domain versus out-of-domain label.
+
+The missing matched dense fine-tune remains the main causal limitation. Singh's dense checkpoint after the same $10^{6}$-step AudioCaps recovery no longer exists, so we cannot determine whether the duration dependence is specific to recovery after pruning. The public dense text-fine-tuned model is informative but not recipe-matched. The $3.84$\,s mechanism intervention uses only $20{,}000$ steps, so it establishes the direction of the interaction rather than matching the magnitude of the released million-step recovery.
+
+Other limits concern scope. The study covers one model family and two pruning severities. Clotho improves the domain analysis, but the domain grid is still small, and hip-hop combines a content shift with much longer caption style. The extended severity~1 and hip-hop batteries were follow-ups and show some between-subset heterogeneity. Human-CLAP, KL and PANNs corroborate duration but do not replace perceptual evaluation. The blinded author listening remains a descriptive sanity check and is not used as evidence for the statistical claims.
+
+The practical recommendation is therefore deliberately modest. When a compression method includes recovery, report P and \PFT{} under at least a few displaced operating points, pair stochastic generations where possible, and express the gain against interpretable references. This adds little conceptual complexity but prevents a local benchmark result from being mistaken for a property of the checkpoint as a whole.
+
+For replication, the most informative unit is the paired prompt rather than the aggregate benchmark score. A reproduction can first verify $R$ at the published operating point, then change one axis while keeping prompts and random seeds aligned wherever the model permits. At least one displaced point should be far enough away to challenge the recovery claim, and intermediate points are useful when the response may be gradual. A dense or real-data anchor is especially important when a null gain could otherwise be confused with a metric floor. If a mechanism is proposed, the cleanest next step is an intervention on that mechanism. Here, changing the fine-tuning duration was more informative than adding another correlational diagnostic because it generated a directional prediction that the data could falsify.
+
+This protocol is intentionally smaller than a general TTA benchmark. It is a way to qualify a recovery claim using the axes most likely to matter for the model under study. Full numerical tables, protocol hashes and executable provenance are retained in the companion repository~\cite{bibbo2026repo}.
+
+\section{Conclusion}
+Recovery fine-tuning gain is not constant across operating points in the AudioLDM-M checkpoints studied here. Duration dependence is large and reproducible, but a direct intervention contradicts training-duration specialization as its explanation. Recovery transfers strongly to Clotho and only weakly to hip-hop, whose dense anchors remain well above chance. These results support multi-operating-point evaluation as a more informative way to report recovery after compression.
+
+\clearpage
+{\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}
+\begin{thebibliography}{99}
+\bibitem{fang2023diffpruning} G.~Fang, X.~Ma, and X.~Wang, ``Structural pruning for diffusion
+models,'' in \emph{Proc.\ NeurIPS}, 2023.
+\bibitem{kim2024bksdm} B.-K.~Kim, H.-K.~Song, T.~Castells \emph{et al.}, ``BK-SDM: A lightweight, fast,
+and cheap version of Stable Diffusion,'' in \emph{Proc.\ ECCV}, 2024.
+\bibitem{fang2025tinyfusion} G.~Fang, K.~Li, X.~Ma, and X.~Wang, ``TinyFusion: Diffusion transformers
+learned shallow,'' in \emph{Proc.\ CVPR}, 2025.
+\bibitem{liu2023audioldm} H.~Liu, Z.~Chen, Y.~Yuan \emph{et al.}, ``AudioLDM: Text-to-audio generation with latent diffusion models,'' in
+\emph{Proc.\ ICML}, 2023.
+\bibitem{singh2026pruning} A.~Singh, Y.~Yuan, Y.~Chen, W.~Wang, and M.~D.~Plumbley, ``Efficient
+text-to-audio generation via pruning,'' arXiv:2607.13330, 2026.
+\bibitem{lai2021parp} C.-I.~J.~Lai, Y.~Zhang, A.~H.~Liu \emph{et al.}, ``PARP: Prune, adjust and
+re-prune for self-supervised speech recognition,'' in \emph{Proc.\ NeurIPS}, 2021.
+\bibitem{peng2023dphubert} Y.~Peng, Y.~Sudo, S.~Muhammad, and S.~Watanabe, ``DPHuBERT: Joint
+distillation and pruning of self-supervised speech models,'' in \emph{Proc.\ Interspeech}, 2023.
+\bibitem{wu2023clap} Y.~Wu, K.~Chen, T.~Zhang \emph{et al.},
+``Large-scale contrastive language-audio pretraining with feature fusion and keyword-to-caption
+augmentation,'' in \emph{Proc.\ ICASSP}, 2023.
+\bibitem{huang2023makeanaudio} R.~Huang, J.~Huang, D.~Yang \emph{et al.}, ``Make-An-Audio:
+Text-to-audio generation with prompt-enhanced diffusion models,'' in \emph{Proc.\ ICML}, 2023.
+\bibitem{ghosal2023tango} D.~Ghosal, N.~Majumder, A.~Mehrish, and S.~Poria, ``Text-to-audio generation
+using instruction guided latent diffusion model,'' in \emph{Proc.\ ACM Int.\ Conf.\ Multimedia (MM)},
+2023, pp.~3590--3598.
+\bibitem{kilgour2019fad} K.~Kilgour, M.~Zuluaga, D.~Roblek \emph{et al.}, ``Fr\'echet Audio
+Distance: A reference-free metric for evaluating music enhancement algorithms,'' in
+\emph{Proc.\ Interspeech}, 2019.
+\bibitem{gui2024fad} A.~Gui, H.~Gamper, S.~Braun \emph{et al.}, ``Adapting Fr\'echet Audio
+Distance for generative music evaluation,'' in \emph{Proc.\ ICASSP}, 2024.
+\bibitem{chung2025kad} Y.~Chung, P.~Eu, J.~Lee \emph{et al.}, ``KAD: No more FAD!
+An effective and efficient evaluation metric for audio generation,'' arXiv:2502.15602, 2025.
+\bibitem{kong2020panns} Q.~Kong, Y.~Cao, T.~Iqbal \emph{et al.}, ``PANNs:
+Large-scale pretrained audio neural networks for audio pattern recognition,'' \emph{IEEE/ACM
+Trans.\ Audio, Speech, Lang.\ Process.}, vol.~28, pp.~2880--2894, 2020.
+\bibitem{takano2025humanclap} T.~Takano, Y.~Okamoto, Y.~Kanamori \emph{et al.}, ``Human-CLAP:
+Human-perception-based contrastive language-audio pretraining,'' in \emph{Proc.\ APSIPA ASC}, 2025,
+pp.~131--136.
+\bibitem{li2026finelap} X.~Li, X.~Xu, Z.~Ma \emph{et al.}, ``FineLAP: Taming
+heterogeneous supervision for fine-grained language-audio pretraining,'' in \emph{Proc.\ ACL}, 2026,
+pp.~10393--10408.
+\bibitem{liu2024audioldm2} H.~Liu, Y.~Yuan, X.~Liu \emph{et al.}, ``AudioLDM 2: Learning holistic audio generation with self-supervised
+pretraining,'' \emph{IEEE/ACM Trans.\ Audio, Speech, Lang.\ Process.}, vol.~32, pp.~2871--2883, 2024.
+\bibitem{kumar2022finetuning} A.~Kumar, A.~Raghunathan, R.~Jones \emph{et al.}, ``Fine-tuning
+can distort pretrained features and underperform out-of-distribution,'' in \emph{Proc.\ ICLR}, 2022.
+\bibitem{kim2019audiocaps} C.~D.~Kim, B.~Kim, H.~Lee, and G.~Kim, ``AudioCaps: Generating captions
+for audios in the wild,'' in \emph{Proc.\ NAACL-HLT}, 2019.
+\bibitem{drossos2020clotho} K.~Drossos, S.~Lipping, and T.~Virtanen, ``Clotho: An audio captioning dataset,'' in \emph{Proc.\ ICASSP}, 2020.
+\bibitem{agostinelli2023musiclm} A.~Agostinelli, T.~I.~Denk, Z.~Borsos \emph{et al.}, ``MusicLM:
+Generating music from text,'' arXiv:2301.11325, 2023.
+\bibitem{song2021ddim} J.~Song, C.~Meng, and S.~Ermon, ``Denoising diffusion implicit models,'' in
+\emph{Proc.\ ICLR}, 2021.
+\bibitem{wang2026ttabench} H.~Wang, C.~Liu, J.~Chen \emph{et al.}, ``TTA-Bench: A comprehensive benchmark for evaluating text-to-audio models,'' in \emph{Proc.\ AAAI}, 2026, pp.~33512--33520.
+\bibitem{bibbo2026repo} G.~Bibb\'o, A.~Singh, and M.~D.~Plumbley, ``Companion repository for operating-point evaluation of recovery fine-tuning,'' 2026. [Online]. Available: \url{https://github.com/gbibbo/audioldm-modality-swap-pruning}
+\end{thebibliography}}
+
+\end{document}
