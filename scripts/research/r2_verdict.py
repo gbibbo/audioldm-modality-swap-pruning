@@ -65,7 +65,10 @@ def sha(p):
 
 
 def prompts(manifest, n=None):
-    ps = sorted(json.load(open(manifest))["prompts"], key=lambda p: p["prompt_index"])
+    ps = json.load(open(manifest))["prompts"]
+    if ps and "prompt_index" not in ps[0]:            # gate0 battery: list order IS the prompt index (p{i} in the WAV names)
+        ps = [{**p, "prompt_index": i} for i, p in enumerate(ps)]
+    ps = sorted(ps, key=lambda p: p["prompt_index"])
     return ps[:n] if n else ps
 
 
