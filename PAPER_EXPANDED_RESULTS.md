@@ -99,7 +99,7 @@ At severity 2, AudioCaps recovery is +0.085 at 3.84 s and +0.244 at 10.24 s. Mus
 
 Chance floors show that after fine-tuning, the music cells sit only 0.022, 0.018 and 0.033 CLAP units above chance for severity 1 at 3.84 s and severity 2 at 3.84 and 10.24 s. Severity-2 AudioCaps sits 0.115 above chance at 3.84 s and 0.321 above chance at 10.24 s.
 
-Severity 1 produced a negative music gain of -0.094 [-0.124, -0.065], but this penalty did not replicate at severity 2. The paper therefore claims absence of recovery on the held-out domain, not a general music penalty.
+Severity 1 produced a negative music gain of -0.094 [-0.124, -0.065], but this penalty did not replicate at severity 2. In the original frozen 64-prompt battery the severity-2 hip-hop gain was unresolved. Draft 13 does not interpret that result as absence of recovery because the higher-power reviewer follow-up below resolves a small positive gain.
 
 The held-out battery differs from AudioCaps in both content and caption style. Within AudioCaps, native recovery is uncorrelated with caption length, Spearman rho = +0.04 [-0.12, +0.18], and no AudioCaps caption is truncated by the conditioner. In the music battery, 47% of captions exceed CLAP's 77-token pre-training length. Content and caption style therefore remain inseparable in this domain test.
 
@@ -139,3 +139,38 @@ The severity-2 duration interaction, seam sensitivity, domain tests, secondary m
 ## Numerical provenance
 
 The values on this page come from committed result artifacts under [`configs/research/`](configs/research/). The existing verification and figure-building code is under [`scripts/research/paper_figs/`](scripts/research/paper_figs/). The purpose of this page is to expose the complete reporting layer while the manuscript keeps only the values required for scientific comprehension.
+
+---
+
+## Reviewer-2 follow-up experiments
+
+These experiments were pre-specified in `docs/reviewer2_followup.md` after the ICASSP review and before generation. They do not retroactively alter the frozen primary verdicts. They do change the interpretation used in Draft 13. Full machine-readable values live in `configs/research/r2_*_result.json`.
+
+### Duration mechanism and range
+
+| Experiment | Contrast | Estimate | 95% CI | Interpretation |
+|---|---|---:|---:|---|
+| E3, pruned checkpoint fine-tuned at 3.84 s | R at 3.84 s | +0.009 | [-0.006, +0.024] | unresolved at its own training duration |
+| E3 | R at 10.24 s | +0.075 | [+0.053, +0.096] | resolved positive |
+| E3 | J = R(10.24)-R(3.84) | +0.065 | [+0.043, +0.087] | contradicts training-duration specialization |
+| B, public dense text-FT reference | J | +0.113 | [+0.051, +0.173] | duration dependence is not pruning-specific |
+| E1c, beyond native duration | R at 15.36 s | +0.264 | [+0.216, +0.310] | recovery remains large |
+| E1c | R(15.36)-R(10.24) | +0.021 | [-0.023, +0.067] | plateau beyond 10.24 s |
+| E8, severity 1 pooled | J, n=176 | +0.112 | [+0.076, +0.149] | duration interaction resolves at the lower pruning severity |
+
+The E3 intervention is the direct test of the old title's specialization implication. A 3.84-s recovery fine-tune does not move the gain toward 3.84 s. Its gain remains larger when evaluated at 10.24 s. The public dense text-FT reference shows the same direction, so Draft 13 treats duration dependence as an operating-point property of fine-tuning gain rather than a pruning-specific mechanism.
+
+### Domain transfer and anchors
+
+| Battery | Duration | R | 95% CI | rho_dense | rho_real |
+|---|---:|---:|---:|---:|---:|
+| Clotho, n=96 | 3.84 s | +0.098 | [+0.072, +0.125] | 0.49 | 0.28 |
+| Clotho, n=96 | 10.24 s | +0.210 | [+0.176, +0.243] | 0.74 | 0.59 |
+| hip-hop, pooled n=127 | 3.84 s | +0.026 | [+0.008, +0.044] | -- | -- |
+| hip-hop, pooled n=127 | 10.24 s | +0.027 | [+0.004, +0.051] | -- | -- |
+
+For Clotho, the AudioCaps-minus-Clotho recovery contrast at 10.24 s is +0.032 [-0.023, +0.088], so a difference from AudioCaps is unresolved. Hip-hop is different. The dense checkpoint lies above its shuffled-caption floor at every tested cell, including +0.106 [+0.079, +0.135] at severity 2 and 10.24 s, which rules out a simple floor explanation. Yet recovery closes only about 2% to 4% of the dense gap in the original anchored hip-hop cells. With 127 prompts the recovery gain becomes statistically resolvable but remains roughly an order of magnitude smaller than AudioCaps.
+
+### Consequence for the paper framing
+
+The evidence supports `recovery gain is operating-point dependent`. It does not support `recovery is largest where it was trained`. The manuscript therefore reports duration dependence as a robust empirical property, explicitly rejects training-duration specialization as the explanation tested by E3, and describes domain transfer as graded rather than as an in-domain/out-of-domain binary.
