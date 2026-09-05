@@ -6,8 +6,7 @@ The ICASSP manuscript is designed to be read without this repository. It contain
 
 Paper files
 
-* [`icassp/icassp_operating_point.tex`](icassp/icassp_operating_point.tex)
-* [`icassp/icassp_operating_point.pdf`](icassp/icassp_operating_point.pdf)
+* [`icassp/icassp_operating_point.tex`](icassp/icassp_operating_point.tex), the canonical manuscript source on this branch
 * [`PAPER_EXPANDED_RESULTS.md`](PAPER_EXPANDED_RESULTS.md), which contains the complete numerical tables and corroborating analyses removed from the paper body
 
 ## How the paper maps to the repository
