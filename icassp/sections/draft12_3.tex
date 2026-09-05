@@ -1,0 +1,25 @@
+\section{Results}
+\label{sec:results}
+Figure~\ref{fig:ops} shows the paper-level results. The companion repository contains the complete tables and the secondary contrasts that are useful for audit but not needed to follow the main argument.
+
+\subsection{Recovery grows with requested duration}
+The severity~2 replication gives a clear duration effect. At $3.84$\,s, fine-tuning improves CLAP alignment by $\Rs=+0.085$ \ci{+0.066}{+0.105}. At $10.24$\,s, the gain is $\Rn=+0.244$ \ci{+0.215}{+0.273}. The pre-specified interaction is therefore $J=+0.159$ \ci{+0.131}{+0.187}. In other words, the same recovery stage adds almost three times as much alignment at the duration on which it was performed. The alternative severity~2 seam convention leads to the same conclusion.
+
+The intermediate durations show that the difference is not created by one anomalous endpoint. Recovery increases at every tested step from $3.84$ to $10.24$\,s under the primary scorer. The reference gaps tell a similar story in more intuitive units. At $3.84$\,s, recovery closes $33\%$ of P's gap to real audio and $44\%$ of its gap to the matched dense model. At $10.24$\,s, those fractions rise to $63\%$ and $82\%$. Exact intermediate values and intervals are reported in the companion repository~\cite{bibbo2026repo}.
+
+Several checks rule out simple measurement explanations. Dense generations and real audio also change with duration, but their changes do not reproduce the P-to-\PFT{} interaction. Correcting each cell for its shuffled-caption floor makes the interaction larger rather than smaller. The effect remains under the published sampler and is reproduced by Human-CLAP and by two event-level measures outside the CLAP family. A Holm correction across the registered severity~2 family leaves the duration conclusions unchanged. These checks are reported in full in the repository because they support the same conclusion rather than introducing separate claims~\cite{bibbo2026repo}.
+
+Severity~1 points in the same direction, although the evidence is weaker. Its raw interaction is $+0.044$ \ci{-0.001}{+0.087}, and the follow-up was powered only for a larger effect. We therefore treat severity~1 as supporting context and base the duration conclusion on the independently replicated severity~2 result.
+
+\subsection{Recovery does not transfer to the held-out prompt domain}
+Changing the prompt domain produces a different kind of failure to transfer. On AudioCaps, recovery is clearly positive at both tested durations. On the held-out hip-hop captions, the paired gain is unresolved at both durations. At $10.24$\,s, for example, the AudioCaps gain is $+0.244$, whereas the music gain is $+0.005$ \ci{-0.028}{+0.039}. The strong native-duration recovery is therefore not evidence of a general improvement that carries unchanged to a new prompt distribution.
+
+The chance floor shows how weak the held-out alignment remains after fine-tuning. Severity~2 \PFT{} sits only about $0.02$ to $0.03$ CLAP units above shuffled-caption chance on the music battery, compared with about $0.32$ above chance for AudioCaps at $10.24$\,s. Severity~1 produced a negative music gain, but that penalty did not replicate at severity~2. The reproducible claim is therefore narrower. Recovery is absent on this held-out domain, not systematically harmful to music prompts.
+
+A small blinded author listening check reinforces the need to keep metric interpretation precise. On AudioCaps at $10.24$\,s, \PFT{} was preferred in 6 of 8 pairs and P was mostly heard as noise. At $3.84$\,s, both systems were heard as noise. On the music prompts, \PFT{} often sounded more musical even though neither system followed the long captions well. CLAP is therefore used here as an alignment endpoint, not as a proxy for overall perceptual quality.
+
+\subsection{The short-duration deficit originates in generation}
+The duration result raises an obvious diagnostic question. Perhaps \PFT{} simply places useful events late in a $10.24$\,s clip, so a short request loses the part of the output that benefits most from recovery. FineLAP does not support this explanation. At severity~2 the grounding gain is spread across the native-length clip, and early and late gains are effectively equal, with $T=-0.002$ \ci{-0.024}{+0.020}.
+
+A separate crop analysis distinguishes generation length from scoring-window length. When CLAP scores only the first $3.84$\,s of a clip that was generated at $10.24$\,s, recovery remains $R_{\mathrm{crop}}=+0.172$ \ci{+0.150}{+0.194}. This is $+0.087$ \ci{+0.065}{+0.110} larger than the gain obtained when the model is asked to generate a $3.84$\,s clip directly. The short-duration deficit therefore comes primarily from generating at the short operating point, not from presenting CLAP with a shorter scoring window.
+
