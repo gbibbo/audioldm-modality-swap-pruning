@@ -1,0 +1,162 @@
+{
+ "artifact": "r2_posthoc_pooled_anchors",
+ "class": "POST-HOC descriptive pooling of existing scores (round-2 review items 5, 6); not pre-specified in docs/reviewer2_followup.md; changes no frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05|POSTHOC",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_c_groups_out.json": "9064a0f21b818004b161708cc4d49ebc5254f8744f11196d1aef0c5690e64e81",
+  "configs/research/op_duration_discriminator_1_result.json": "d878af127c3dd0476b7eba3e7952d70a28b1ad5721e365e0742dbe804c16f6ef",
+  "artifacts/icassp_gate0/_score_tmp/xsev_sev2_groups_out.json": "6235857f87b5e9e2cb44cc3c7a3c42627ad234262eb631c2df20fdb737b8f7dc",
+  "artifacts/icassp_gate0/_score_tmp/music_native_groups_out.json": "5acbc6e1d048586372b4de934cc4ace82e7a515ae3bc556d49a49ce83b0d4bf2"
+ },
+ "hiphop_127": {
+  "3.84": {
+   "n": 127,
+   "levels": {
+    "P": -0.010973990866743282,
+    "PFT": 0.014755310746168917,
+    "dense": 0.23257995766692666,
+    "dense_floor": 0.12304208793871721
+   },
+   "R_pooled": {
+    "point": 0.0257293016129122,
+    "lo": 0.007208368214693049,
+    "hi": 0.04352050212959287,
+    "n": 127
+   },
+   "A_dense_pooled": {
+    "point": 0.10953786972820943,
+    "lo": 0.09107163813844533,
+    "hi": 0.1280911837365317,
+    "n": 127
+   },
+   "rho_dense_pooled": {
+    "point": 0.10564107774814117,
+    "lo": 0.030739649711699957,
+    "hi": 0.1770934391040674,
+    "n": 127
+   },
+   "dense_minus_PFT_pooled": {
+    "point": 0.21782464692075773,
+    "lo": 0.19485441051366104,
+    "hi": 0.24133750992265512,
+    "n": 127
+   },
+   "rho_dense_frozen64": {
+    "point": 0.038220269862639156,
+    "lo": -0.058065704742738075,
+    "hi": 0.12665698541972703,
+    "n": 64
+   },
+   "rho_dense_ext63": {
+    "point": 0.1722258839203228,
+    "lo": 0.05674460241422432,
+    "hi": 0.28380765623036625,
+    "n": 63
+   },
+   "battery_discriminates_for_dense_pooled": true
+  },
+  "10.24": {
+   "n": 127,
+   "levels": {
+    "P": 0.07697938427358396,
+    "PFT": 0.10371757536305218,
+    "dense": 0.3016734312354462,
+    "dense_floor": 0.19384093072969377
+   },
+   "R_pooled": {
+    "point": 0.02673819108946821,
+    "lo": 0.003172614176456971,
+    "hi": 0.04990875092940038,
+    "n": 127
+   },
+   "A_dense_pooled": {
+    "point": 0.10783250050575245,
+    "lo": 0.08664293653408696,
+    "hi": 0.12978212756932506,
+    "n": 127
+   },
+   "rho_dense_pooled": {
+    "point": 0.11899821758075563,
+    "lo": 0.014685515050856926,
+    "hi": 0.21499989020262014,
+    "n": 127
+   },
+   "dense_minus_PFT_pooled": {
+    "point": 0.19795585587239406,
+    "lo": 0.1656581938994579,
+    "hi": 0.22881408611983498,
+    "n": 127
+   },
+   "rho_dense_frozen64": {
+    "point": 0.019859286864264032,
+    "lo": -0.1292598334450597,
+    "hi": 0.15021702017915153,
+    "n": 64
+   },
+   "rho_dense_ext63": {
+    "point": 0.24052579247413036,
+    "lo": 0.09230164153399918,
+    "hi": 0.39072544629838124,
+    "n": 63
+   },
+   "battery_discriminates_for_dense_pooled": true
+  }
+ },
+ "sev1_heterogeneity": {
+  "J_armd80": {
+   "point": 0.044222073093988,
+   "lo": -0.0002341449986852239,
+   "hi": 0.08837386610757673,
+   "n": 80
+  },
+  "J_new96": {
+   "point": 0.16870915304510467,
+   "lo": 0.114885950187454,
+   "hi": 0.22200695826268202,
+   "n": 96
+  },
+  "J_new96_minus_armd80": {
+   "point": 0.12448707995111667,
+   "lo": 0.05791911569216609,
+   "hi": 0.19370735836308692,
+   "n_a": 96,
+   "n_b": 80
+  },
+  "components": {
+   "armd80": {
+    "P_3.84": 0.1038504117517732,
+    "PFT_3.84": 0.11142862605629489,
+    "P_10.24": 0.2525792172411457,
+    "PFT_10.24": 0.30437950463965535,
+    "R_3.84": 0.00757821430452168,
+    "R_10.24": 0.051800287398509684
+   },
+   "new96": {
+    "P_3.84": 0.13642981774561727,
+    "PFT_3.84": 0.10467775190287891,
+    "P_10.24": 0.23230109278665623,
+    "PFT_10.24": 0.3692581799890225,
+    "R_3.84": -0.031752065842738375,
+    "R_10.24": 0.1369570872023663
+   }
+  },
+  "sd_J": {
+   "armd80": 0.2040165310687927,
+   "new96": 0.2647967038618163
+  },
+  "selection_provenance": {
+   "armd80": "80 of the 96 V1.1 AudioCaps-test ytids (V1.1: Convention-B seeded-hash draw over the eligible test set, docs/recovery_reversal_v1_1.md), chosen by sha256('OP-DURATION-DISCRIMINATOR-1|SUBSET|2026-08-30|YTID|'+ytid) ascending, first 80 (docs/op_duration_discriminator_1.md \u00a73; outcome-blind). 3.84-s clips = V1.1 replicate 0 (job reversal-v11-gen-1), 10.24-s clips = job reversal-armd-gen-1; both scored as 80-item seed-once calls.",
+   "new96": "first 96 prompt_index entries of the frozen severity-2 manifest configs/research/xsev_audiocaps_manifest.json (seeded-hash draw over AudioCaps test EXCLUDING the V1.1-96, train, music-64 and Kim-44 ids, 5-caption rows only; docs/reviewer2_followup.md \u00a71, \u00a75). Both durations replicate 0, jobs r2-gen-c (P) / r2-gen-c2 (P+FT), 96-item seed-once calls.",
+   "same_between_sets": "checkpoints (p1_pruned = L1 selection on the dense EMA at (1,2,3,1); p1_recovered = public recovered EMA), sampler (DDIM 50 / 2.5 / eta 0 / fp32 / single), scorer (fused CLAP rev 365dea6e, seed-once), T4 hardware class, CRN pairing within duration. Neither draw used any outcome.",
+   "differs_between_sets": "prompt pool (disjoint by construction), selection salt, the 5-caption-row eligibility rule of the 192 manifest, generation job/date, x_T seeds (V1.1 seeds vs frozen GEN_SALT)."
+  }
+ },
+ "artifact_sha256": "a92596de9b4e238cfc87f241c9b32e486c0c32f0e2495af52ae6fc9a0a5b0d1d"
+}

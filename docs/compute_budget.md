@@ -697,3 +697,27 @@ the minutes clock starts when the job first reaches Running. `total_spent` readi
 session was gone). The idle guard's hold from the prior session expired ~12:53 UTC; verify the daemon actually stopped
 the Studio after the watchdogs ended (it may have been kept alive by the watchdog processes until ~10:20 UTC, then had
 no further protected work).
+
+### 2026-09-05 (MVD 17:4x→) | Account reading + round-2 review costing (read-only; nothing launched)
+
+* **Lifetime `total_spent` = 114.95 cr** (SDK, ~20:45 UTC; `balance` still the static 5.0). Since the reading behind
+  Gabriel's 15-cr ceiling (99.18 cr, ~04:00 UTC): **+15.77 cr = 8.94 cr settled R2 jobs + ≈ 6.8 cr Studio uptime.**
+  The 15-cr ceiling is spent; any further GPU work needs a new authorization and Gabriel's confirmation that credit
+  exists (funded balance not exposed).
+* **Measured training facts now on record (job `r2-shortft`, T4 FP32, batch 2, latent 96, full-parameter FT of the
+  70.52 M severity-2 U-Net):** 0.351 s/step in the 200-step bench, 0.327 s/step over 20 000 steps, peak VRAM 5.83 GB;
+  training ≈ 1.8 h ≈ 1.6 cr; job total 2.926 cr incl. 384 eval WAVs.
+* **Round-2 review items costed** (`docs/review/2026-09-05_review_round2_methodological_response.md`; T4 0.89 cr/h,
+  §A10 per-WAV model, cap = point × 1.2):
+
+| Item | Run | Basis | Point (cr) | Cap (cr) |
+|---|---|---|---:|---:|
+| 1 | `r2-longft`: 200-step bench + 20 000 steps of P at 10.24 s (latent 256) + 384 eval WAVs | 0.75–0.90 s/step (≈ 2.3–2.7 × E3) → 3.7–4.5 + 1.12 + 0.15 | **5.0–5.8** | **7.0** (train self-gate 5.0) |
+| 2 | dense arm at 3.84 s, 20 000 steps + 384 eval | 0.36–0.40 s/step; ≈ 11 GB | 3.1–3.4 | 4.0 |
+| 2 | dense arm at 10.24 s, 20 000 steps + 384 eval | 0.9–1.1 s/step, batch 1 × 2 accumulation (≈ 14–15 GB) or 24-GB class | 5.9–7.0 (T4) / 7–9 (24 GB) | 8.5–11 |
+| 4 | other 96 prompts at 15.36 s (P, P+FT) | 192 × 0.00479 + 0.145 | 1.1 | 1.3 (not recommended: cannot resolve D4) |
+| 5, 6, 7(a,b) | CPU pooling / formulation | — | 0 | 0 |
+| 7(d) | KL/PANNs of dense vs real at both durations on the 192 prompts | CPU ≈ 30 min | 0 | 0 |
+
+Studio hours for the CPU stages of item 1 ≈ 2–3 h ≈ 0.6–0.8 cr → **item 1 total ask ≈ 6–7 cr, hard cap 8 cr**;
+full 2×2 (items 1 + 2) ≈ 15–17 cr point, caps ≈ 20 cr, + ≈ 1.5 cr Studio. **Nothing authorized by this entry.**

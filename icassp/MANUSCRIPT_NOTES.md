@@ -356,3 +356,21 @@ Gabriel wrote Drafts 7–12 outside this repository and delivered Draft 12 as
 * **Second external review** (received 2026-09-05): methodological items analysed and costed in
   `docs/review/2026-09-05_reviewer2_methodological_response.md`; presentation items (W5 table in the body, W7
   abstract wording / Fig. 1 density) deliberately deferred. No manuscript text changed in this pass.
+
+## 2026-09-05 Draft 13 installed as the current version; Draft 12 archived (CPU, 0 cr)
+
+* Gabriel delivered `icassp_operating_point_draft13_reviewer_followup.zip` (reframed after the reviewer-2 follow-ups:
+  title "Recovery Gain Is Operating-Point Dependent in Pruned Text-to-Audio Diffusion"; E3, E1c, B, E5, E6, E7, E8 and a
+  compact in-paper robustness table; evidence baseline `12546d5`). **Modular source:** `icassp_operating_point.tex` is a
+  wrapper that `\input`s `sections/draft13_{1,2,3,4}.tex` (preamble and marker `%% draft13-reviewer-followup` in
+  `draft13_1.tex`). Figure 1 is inline pgfplots; `figs/` is no longer embedded. Delivery notes:
+  `draft13_delivery_notes/VERSION.md`; response map `docs/reviewer2_response_manuscript.md`; companions
+  `PAPER_COMPANION.md` / `PAPER_EXPANDED_RESULTS.md` at the repo root (updated from the bundle).
+* Draft 12 → `archive/` (`icassp_operating_point_draft12_6b51775.tex`, `README_OVERLEAF_draft12_6b51775.md`,
+  `draft12_delivery_notes/`; zip + PDF preview gitignored on disk). Reproducible from `git show 6b51775:icassp/…`.
+* Checks: `pagecheck_times.py` (now handles `sections/`, regex anchor for the package line) → fits 4 content pages +
+  references-only page 5. `verify_draft13_numbers.py` → **38/40**: the primary interaction's upper bound is printed as
+  `+0.188` (Sec. 4.1, Table 1) but the frozen primary artifact `xsev_result.json` gives `+0.187` (the 0.188 is the
+  re-bootstrap `released_J` in `r2_E3_result.json`) → **camera-ready fix: 0.187**. Not edited here (Gabriel's version
+  kept as delivered). Also still printed: sev-2 U-Net 71.08 M (the built U-Net has 70.52 M; open item).
+* Round-2 review (Accept 4/5) methodological items: `docs/review/2026-09-05_review_round2_methodological_response.md`.

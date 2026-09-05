@@ -18,6 +18,7 @@ The manuscript itself is never modified.
 Run: OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/pagecheck_times.py
 """
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -31,7 +32,7 @@ TECTONIC = os.path.expanduser("~/.local/bin/tectonic")
 if not os.path.exists(TECTONIC):
     TECTONIC = shutil.which("tectonic") or TECTONIC
 PATCH = ("\\usepackage{fontspec}\n\\setmainfont{Liberation Serif}\n\\setmonofont{DejaVu Sans Mono}")
-ANCHOR = "\\usepackage{spconf,amsmath,amssymb,graphicx,booktabs,array,multirow,url,cite}"
+ANCHOR_RE = re.compile(r"\\usepackage\{spconf,[^}]*\}")   # the manuscript's package line (Draft 13 adds pgfplots)
 TEXT_BOTTOM_PT = 72.0   # spconf text block: 229 mm tall, 1 in top margin on US Letter
 
 
@@ -40,9 +41,22 @@ def main():
     for f in ("spconf.sty", "IEEEbib.bst"):
         shutil.copy(os.path.join(ICASSP, f), tmp)
     shutil.copytree(os.path.join(ICASSP, "figs"), os.path.join(tmp, "figs"))
+    # Draft 13+ is modular: the main file \input{}s icassp/sections/*.tex and the preamble lives in the first
+    # section file. Copy the sections, then patch whichever file carries the package line.
+    if os.path.isdir(os.path.join(ICASSP, "sections")):
+        shutil.copytree(os.path.join(ICASSP, "sections"), os.path.join(tmp, "sections"))
     tex = open(os.path.join(ICASSP, "icassp_operating_point.tex"), encoding="utf-8").read()
-    assert ANCHOR in tex, "package line not found; update ANCHOR"
-    open(os.path.join(tmp, "check.tex"), "w", encoding="utf-8").write(tex.replace(ANCHOR, ANCHOR + "\n" + PATCH, 1))
+    patched = False
+    if ANCHOR_RE.search(tex):
+        tex = ANCHOR_RE.sub(lambda m: m.group(0) + "\n" + PATCH, tex, count=1); patched = True
+    else:
+        for f in sorted(os.listdir(os.path.join(tmp, "sections"))) if os.path.isdir(os.path.join(tmp, "sections")) else []:
+            fp = os.path.join(tmp, "sections", f); sec = open(fp, encoding="utf-8").read()
+            if ANCHOR_RE.search(sec):
+                open(fp, "w", encoding="utf-8").write(ANCHOR_RE.sub(lambda m: m.group(0) + "\n" + PATCH, sec, count=1))
+                patched = True; break
+    assert patched, "package line not found in the main file or its sections; update ANCHOR_RE"
+    open(os.path.join(tmp, "check.tex"), "w", encoding="utf-8").write(tex)
     r = subprocess.run([TECTONIC, "-X", "compile", "check.tex", "--outdir", "."], cwd=tmp,
                        capture_output=True, text=True)
     if r.returncode:
