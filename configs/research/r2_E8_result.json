@@ -1,0 +1,75 @@
+{
+ "artifact": "r2_E8_result",
+ "protocol_doc": "docs/reviewer2_followup.md",
+ "protocol_doc_sha256": "ede6a0aae4c53a7c71cff36b854d4938651111f729924f0ff481eb9e46240111",
+ "class": "pre-specified follow-up (docs/reviewer2_followup.md); cannot change any frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "new96": {
+  "levels": {
+   "P_3.84": 0.13642981774561727,
+   "PFT_3.84": 0.10467775190287891,
+   "P_10.24": 0.23230109278665623,
+   "PFT_10.24": 0.3692581799890225
+  },
+  "R_short": {
+   "point": -0.031752065842738375,
+   "lo": -0.06478302654856331,
+   "hi": 0.0012573884707914348,
+   "n": 96
+  },
+  "R_native": {
+   "point": 0.1369570872023663,
+   "lo": 0.09622366797484573,
+   "hi": 0.17948154782564718,
+   "n": 96
+  },
+  "J": {
+   "point": 0.16870915304510467,
+   "lo": 0.11591426412693788,
+   "hi": 0.2212254245160996,
+   "n": 96
+  },
+  "R_c_short": {
+   "point": -0.031219377075710025,
+   "lo": -0.06402170592818948,
+   "hi": 0.0018036930555050566,
+   "n": 96
+  },
+  "R_c_native": {
+   "point": 0.15725518591811274,
+   "lo": 0.11603015979116833,
+   "hi": 0.20002326718669677,
+   "n": 96
+  },
+  "W_short": 0.3958333333333333,
+  "W_native": 0.7395833333333334
+ },
+ "armd80_J_frozen": {
+  "point": 0.044222073093988,
+  "n": 80
+ },
+ "pooled176_J": {
+  "point": 0.11212411670368799,
+  "lo": 0.07582433836730408,
+  "hi": 0.14902389518105005,
+  "n": 176
+ },
+ "reading": "RESOLVED POSITIVE",
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_in.json": "0acb5e6983d36fc827e590d5b25003af9a6862cded01af57a3e4bb7f64b5010c",
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_in.json": "6d974de655bc2c42ade2acf902e985b115a4c2c665bf904cd152e2347bcd6404",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_out.json": "84a360fd354e086195e37a1577eb07b19c095b4755745216fb0af0a86858b238",
+  "artifacts/icassp_gate0/_score_tmp/r2_c_groups_in.json": "73943f97b067b8f674a9aa6fc363e52911f2aabf32191da0d3cee26678863660",
+  "artifacts/icassp_gate0/_score_tmp/r2_c_groups_out.json": "9064a0f21b818004b161708cc4d49ebc5254f8744f11196d1aef0c5690e64e81",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_in.json": "716338676390d4bb815d51aca6a5b72dad3dc4408132ff9269bcf39a45949d4b",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_out.json": "87920d76da7e03a637fa64cde85f0daff42ca712f399c07987514b19c2dd76e8"
+ },
+ "artifact_sha256": "45569fbf4d92f48fdfb311f0c557393e291054c6d01c400f12ac854fcfc1d362"
+}

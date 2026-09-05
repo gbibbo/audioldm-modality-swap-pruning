@@ -686,9 +686,9 @@ caps enforced by `job_watchdog.py`). Studio hours during scoring ≈ 0.27 cr/h �
 | `r2-gen-a` (E6+E7+B) | Completed | 2.399 | 830 WAVs |
 | `r2-gen-b` (E5+E1c) | Completed | 2.278 | 768 WAVs |
 | `r2-gen-c` (E8) | Stopped | 0.697 | watchdog cut at 180 min WALL (mostly Pending in queue); p1_recovered 34/192 — wasted |
-| `r2-gen-c2` (E8 redo) | in flight | ~0.5 | p1_recovered 192 WAVs; watchdog now counts RUN time only |
+| `r2-gen-c2` (E8 redo) | Completed | 0.638 | p1_recovered 192 WAVs; watchdog now counts RUN time only |
 | `r2-shortft` (E3) | Completed | 2.926 | 20 000 train steps + 384 eval WAVs |
-| **total** | | **~9.1** | of Gabriel's 15-cr ceiling |
+| **total** | | **~9.2** | of Gabriel's 15-cr ceiling (all 7 follow-ups done) |
 
 Lesson: the cost watchdog's `--max-minutes` counted queue (Pending) time, so a job that waited behind others for T4
 capacity spent its wall-clock budget in the queue and was cut mid-generation. Patched (`scripts/sa3/job_watchdog.py`):
