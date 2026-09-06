@@ -27,7 +27,7 @@ SRC = {
  "longft":    ("longft",  {"ac_short":[gd("r2-longft","r2_longft")], "ac_native":[gd("r2-longft","r2_longft")]}),
  "denseft_n": ("denseft", {"ac_short":[gd("r2-denseft-n","r2_denseft_n")], "ac_native":[gd("r2-denseft-n","r2_denseft_n")]}),
  "denseft_s": ("denseft", {"ac_short":[gd("r2-denseft-s","r2_denseft_s")],
-                            "ac_native":[gd("r2-denseft-s-tail","r2_denseft_s_tail"), gd("r2-denseft-s","r2_denseft_s")]}),
+                            "ac_native":[gd("r2-denseft-s-tail2","r2_denseft_s_tail"), gd("r2-denseft-s-tail","r2_denseft_s_tail"), gd("r2-denseft-s","r2_denseft_s")]}),
 }
 
 
