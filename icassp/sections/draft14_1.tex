@@ -1,0 +1,77 @@
+%% ICASSP manuscript (Draft 14) on the official ICASSP 2027 template.
+%% Reader-first revision incorporating the second reviewer follow-up evidence.
+%% Figures are intentionally NOT generated in this draft. The boxes reserve the intended final
+%% footprint, and detailed figure-generation specifications appear as TeX comments in draft14_2.tex.
+%% draft14-second-review
+\documentclass{article}
+\usepackage{spconf,amsmath,amssymb,graphicx,booktabs,array,multirow,url,cite}
+
+\newcommand{\ci}[2]{[{#1},\,{#2}]}
+\newcommand{\PFT}{P{+}FT}
+\emergencystretch=2em
+\renewcommand{\topfraction}{0.94}
+\renewcommand{\bottomfraction}{0.88}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.78}
+\setcounter{topnumber}{4}
+\setcounter{totalnumber}{5}
+\setcounter{dbltopnumber}{3}
+\renewcommand{\dbltopfraction}{0.94}
+\renewcommand{\dblfloatpagefraction}{0.78}
+\setlength{\textfloatsep}{5pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{5pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{0pt}
+
+\begin{document}
+\ninept
+
+\title{Recovery Gain Is Operating-Point Dependent in Pruned Text-to-Audio Diffusion}
+
+\twoauthors
+  {Gabriel Bibb\'o}
+  {Independent researcher \\
+   \texttt{gabobibbo@gmail.com}}
+  {Arshdeep Singh, \, Mark D. Plumbley}
+  {King's College London, UK \\
+   \{\texttt{arshdeep.singh}, \texttt{mark.plumbley}\}\texttt{@kcl.ac.uk}}
+
+\maketitle
+
+\begin{abstract}
+Recovery fine-tuning is usually evaluated at one inference setting, even though the gain it adds may depend on how a compressed generator is used. We study this effect in released AudioLDM-M checkpoints at $65\%$ and $83\%$ pruning, using paired generations across duration and prompt domain. At $83\%$ pruning, CLAP recovery rises from $+0.085$ at $3.84$\,s to $+0.244$ at $10.24$\,s. A symmetric $20{,}000$-step intervention shows that changing the fine-tuning duration from $3.84$ to $10.24$\,s does not shift the gain toward the longer training duration, with $\Delta J=-0.035$ \ci{-0.064}{-0.004}. Beyond $10.24$\,s, recovery does not clearly increase. Recovery transfers strongly to held-out Clotho captions but remains an order of magnitude smaller on hip-hop, where dense anchors remain well above chance. These results establish recovery gain as operating-point dependent and motivate reporting paired recovery across displaced operating points rather than a single post-fine-tuning score.
+\end{abstract}
+
+\begin{keywords}
+text-to-audio generation, diffusion models, structured pruning, recovery fine-tuning, evaluation
+\end{keywords}
+
+\section{Introduction}
+Structured pruning can make diffusion models cheaper by removing complete channels or blocks from the denoising network. The price is an immediate loss in model capacity, so modern compression pipelines rarely stop at pruning. They add a recovery stage that fine-tunes the smaller network and then judge the final checkpoint against its dense counterpart. This pattern appears in image diffusion~\cite{fang2023diffpruning,kim2024bksdm,fang2025tinyfusion} and has recently been applied to AudioLDM~\cite{singh2026pruning}.
+
+The usual evaluation answers an important systems question. It tells us whether the compressed checkpoint is competitive under a particular benchmark recipe. It does not tell us how much of that result comes from recovery, or whether the same recovery persists when the generation conditions change. Those questions are different because the final score of a recovered model mixes the state of the pruned checkpoint with whatever fine-tuning adds under the tested conditions.
+
+We therefore treat recovery as a paired effect. For a pruned checkpoint P and its fine-tuned counterpart \PFT{}, the recovery gain is the change from P to \PFT{} under the same prompt, noise and inference setting. We call that setting the inference \emph{operating point}. Requested duration is one axis, prompt domain is another, and sampler configuration provides a third. This framing turns a statement such as ``the model recovered'' into a question that can be tested across the conditions in which the model may actually be used.
+
+The distinction is increasingly relevant as text-to-audio evaluation moves beyond single aggregate scores. CLAP remains a standard automatic proxy for prompt alignment~\cite{wu2023clap,huang2023makeanaudio,ghosal2023tango}, while recent benchmarks place more emphasis on robustness and generalization~\cite{wang2026ttabench}. Compression studies have not yet adopted this perspective systematically. Recovery is still commonly summarized by the post-fine-tuning score at one benchmark operating point.
+
+We study the released pruned and recovered AudioLDM-M-Full checkpoints of Singh et al.~\cite{singh2026pruning}. The released $10^{6}$-step recovery exhibits a large duration interaction and selective transfer across prompt domains. We then intervene on the most natural explanation. Two new checkpoints are fine-tuned from the same pruned model for the same $20{,}000$ steps, one at $3.84$\,s and one at $10.24$\,s. If the favorable evaluation duration were determined by the duration used during adaptation, the $10.24$\,s-trained checkpoint should show the stronger long-minus-short recovery interaction. It does not.
+
+The resulting contribution is an evaluation result with a falsifiable boundary. Recovery gain varies strongly with the operating point, yet its duration dependence does not follow the fine-tuning duration at the matched $20{,}000$-step budget. Across domain, recovery remains strong on Clotho but much smaller on hip-hop even though the latter battery discriminates the dense model from chance. Together these results motivate evaluating the recovery increment itself, rather than assuming that one post-recovery benchmark score describes the checkpoint more broadly. Expanded results and executable provenance are retained in the companion repository~\cite{bibbo2026repo}.
+
+\section{Background and motivation}
+\subsection{Recovery is part of the compression pipeline}
+Diffusion compression methods increasingly optimize for the model that exists \emph{after} adaptation. Diff-Pruning combines structured removal with retraining~\cite{fang2023diffpruning}. BK-SDM removes residual and attention blocks and transfers behavior through distillation~\cite{kim2024bksdm}. TinyFusion explicitly selects architectures according to their expected performance after fine-tuning~\cite{fang2025tinyfusion}. In each case, the useful compressed system is defined jointly by what pruning removes and what later adaptation restores.
+
+Singh et al.~\cite{singh2026pruning} apply this pattern to AudioLDM by pruning U-Net channels and fine-tuning the reduced model on AudioCaps for $10^{6}$ steps. Their released checkpoints recover strongly on the reported in-domain metrics. Our question begins after that result. Once recovery becomes part of the method, how stable is the \emph{gain produced by recovery} when inference moves away from the setting at which the checkpoint is usually evaluated?
+
+Fine-tuning gives a reason to expect variation. Adaptation can change pretrained representations differently across distributions~\cite{kumar2022finetuning}, and text-to-audio systems are already sensitive to prompt and generation conditions. A post-recovery score therefore contains two kinds of information that should not be conflated. It describes the final checkpoint at one operating point, and it implicitly contains the increment added by fine-tuning at that same point. Only the second quantity can tell us whether recovery generalizes across operating conditions.
+
+\subsection{Making recovery interpretable}
+No single automatic metric is sufficient for every aspect of generated audio. CLAP measures text-audio alignment~\cite{wu2023clap}. FAD measures distributional distance and is sensitive to sample size and embedding choice~\cite{kilgour2019fad,gui2024fad,chung2025kad}. Human-CLAP~\cite{takano2025humanclap}, PANNs~\cite{kong2020panns} and FineLAP~\cite{li2026finelap} provide complementary views of semantic alignment, event content and temporal grounding.
+
+The important distinction is not between these metrics but between the quantities computed from them. The final score $S(\PFT)$ describes the checkpoint delivered to a user. The paired difference $S(\PFT)-S(P)$ describes what fine-tuning added at that operating point. A recovery ratio then asks how much of the gap from P to an interpretable reference was closed. We use the dense model, shuffled-caption chance and real audio as anchors so that a resolved numerical change can also be judged for scale.
+
