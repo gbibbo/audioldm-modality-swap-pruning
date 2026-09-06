@@ -805,3 +805,11 @@ eval measurements (denseft-s eval share ≈ 1.47 cr / 362 WAVs = 0.0041 cr/WAV; 
 incl. queue + CPU scoring ≈ 0.6–0.8 → **≈ 2.3–3.0 cr expected, worst ≈ 3.4 < 4.** Item 3 (≈ 3.4 cr, cap 4.0) does NOT fit together
 with 1b and is optional (answered at 0 cr by the split-half). Recommendation: 1b alone, cap 2.6, launch promptly (the Studio bills
 0.27 cr/h from the same pool while it waits) and stop the Studio between the job and the CPU scoring. Awaiting Gabriel's GO.
+
+### 2026-09-06 (MVD 18:07 / 21:07 UTC) | REVIEW3-DENSERAW launched — ONE T4 job, cap 2.6 cr / 180 min (Gabriel GO 18:00, 4-cr pool)
+
+`r3-denseraw` launched from `c186572` (protocol `docs/review3_denseraw.md`, sidecar committed before launch). Expected job 1.7–2.15 cr
+(388 dense WAVs at 0.0041–0.0052 cr/WAV + 0.145), hard cap 2.6 cr / 180 running-minutes (watchdog) with in-job per-stage timeouts
+3300/6600/600 s as the primary bound. Studio ≈ 2–3 h × 0.27 ≈ 0.6–0.8 cr (the idle guard protects the watchdog process, so the
+Studio stays up until the job settles + 45 min unless Gabriel stops it). Total ≈ 2.3–3.0 cr, worst ≈ 3.4 < 4. `total_spent` at
+launch 135.5623 cr. Settled cost to be recorded in the RESULT entry.
