@@ -1,0 +1,49 @@
+\section{Results}
+\subsection{Recovery changes with requested duration}
+The released severity~2 recovery shows a large duration interaction. CLAP gain rises from $R=+0.085$ \ci{+0.066}{+0.105} at $3.84$\,s to $+0.244$ \ci{+0.215}{+0.273} at $10.24$\,s, giving $J=+0.159$ \ci{+0.131}{+0.188}. The intermediate points in Table~\ref{tab:evidence} show that this is a gradual response rather than a difference created only by the two endpoints. The scale also changes materially. Recovery closes $44\%$ of the gap from P to dense at $3.84$\,s and $82\%$ at $10.24$\,s.
+
+The same pattern appears outside the primary scorer. Human-CLAP, KL to matched real references and PANNs top-10 capture all show a larger recovery at longer durations. The published DDIM $200$, guidance $3.5$ recipe reproduces the endpoint interaction with $J=+0.184$ \ci{+0.126}{+0.243}, and the registered severity~2 conclusions survive Holm correction. The final step of the secondary-metric sweep is not resolved, so these measures support duration dependence without requiring every scorer to keep increasing through $10.24$\,s.
+
+Extending generation beyond the native duration does not reveal a sharp peak. On the matched $96$-prompt subset, recovery changes by $+0.021$ \ci{-0.023}{+0.067} from $10.24$ to $15.36$\,s. The interval is too wide to establish a plateau, but it provides no clear evidence of another increase comparable with the earlier sweep steps.
+
+\subsection{Training duration does not determine the favorable evaluation duration}
+The matched $20{,}000$-step intervention supplies the direct test. The checkpoint trained at $3.84$\,s gains $+0.009$ \ci{-0.006}{+0.024} when evaluated at $3.84$\,s and $+0.075$ \ci{+0.053}{+0.097} at $10.24$\,s, giving $J_{3.84}=+0.065$ \ci{+0.044}{+0.087}. The checkpoint trained at $10.24$\,s also gains more at the longer evaluation duration, but its interaction is smaller, $J_{10.24}=+0.031$ \ci{+0.010}{+0.052}. Their paired difference is $\Delta J=-0.035$ \ci{-0.064}{-0.004}.
+
+This comparison is the quantity that training-duration specialization predicts directly. Moving the training duration from $3.84$ to $10.24$\,s should increase the long-minus-short interaction, which would give $\Delta J>0$. The observed value is resolved in the opposite direction. At this matched $20{,}000$-step budget, the duration effect therefore does not follow the duration used for fine-tuning.
+
+The reduced dense $2\times2$ does not provide the missing causal control for pruning. Both $20{,}000$-step dense fine-tunes strongly reduce CLAP relative to the EMA dense baseline, with gains around $-0.2$. The training loss remains stable, which is consistent with the anticipated raw-weight-versus-EMA mismatch and limited AudioCaps headroom rather than optimizer divergence. Its only clean duration statement is negative. The dense specialization contrast is $\Delta J_{\rm dense}=-0.005$ \ci{-0.034}{+0.024}, showing no resolved dependence on training duration at this short budget. The unavailable dense checkpoint after the released $10^{6}$-step recovery remains the relevant missing control.
+
+\begin{table*}[t]
+\centering
+\caption{Recovery across duration and domain. All intervals are $95\%$ prompt-bootstrap intervals. Positive KL recovery means that \PFT{} reduces KL to the matched real reference relative to P. Human-CLAP, KL and PANNs sweep rescoring are corroborative analyses.}
+\label{tab:evidence}
+\setlength{\tabcolsep}{4.0pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Duration & CLAP $R$ & Human-CLAP $R$ & KL recovery & PANNs capture $R$ \\
+\midrule
+$3.84$ s & $.085$ $[.066,.105]$ & $.189$ $[.162,.217]$ & $.66$ $[.43,.92]$ & $.19$ $[.06,.32]$ \\
+$5.12$ s & $.139$ $[.115,.164]$ & $.278$ $[.243,.314]$ & $1.16$ $[.91,1.41]$ & $.38$ $[.23,.53]$ \\
+$7.68$ s & $.201$ $[.175,.227]$ & $.371$ $[.336,.405]$ & $1.95$ $[1.68,2.23]$ & $.76$ $[.61,.91]$ \\
+$10.24$ s & $.244$ $[.215,.273]$ & $.375$ $[.340,.409]$ & $2.22$ $[1.92,2.52]$ & $.86$ $[.70,1.02]$ \\
+$J$ & $.159$ $[.131,.188]$ & $.185$ $[.151,.220]$ & $1.56$ $[1.20,1.92]$ & $.67$ $[.49,.85]$ \\
+\midrule
+Domain & $n$ & $R(3.84\,\mathrm{s})$ & $R(10.24\,\mathrm{s})$ & $\rho_{\rm dense}(10.24\,\mathrm{s})$ \\
+\midrule
+AudioCaps & 192 & $.085$ $[.066,.105]$ & $.244$ $[.215,.273]$ & $.82$ \\
+Clotho & 96 & $.098$ $[.072,.125]$ & $.210$ $[.176,.243]$ & $.74$ \\
+Hip-hop & 127 & $.026$ $[.007,.044]$ & $.027$ $[.003,.050]$ & $.119$ $[.015,.215]$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Recovery transfers selectively across domains}
+Clotho shows that leaving AudioCaps does not by itself remove recovery. At $10.24$\,s, Clotho gives $R=+0.210$ \ci{+0.176}{+0.243} and closes $74\%$ of the dense gap. On the matched $96$-prompt comparison, AudioCaps exceeds Clotho recovery by only $+0.032$ \ci{-0.023}{+0.088}, so the difference is unresolved.
+
+Hip-hop presents a substantially weaker transfer case. With all $127$ prompts, recovery is $+0.026$ \ci{+0.007}{+0.044} at $3.84$\,s and $+0.027$ \ci{+0.003}{+0.050} at $10.24$\,s. Dense alignment remains well above shuffled-caption chance at both durations, by about $+0.11$, so the small recovery cannot be dismissed as a floor-limited battery. At full coverage, recovery closes about $11\%$ of the dense gap at $3.84$\,s and $12\%$ at $10.24$\,s. The domain result is therefore a transfer profile rather than a binary in-domain versus out-of-domain effect.
+
+\subsection{Cross-severity and short-generation diagnostics}
+Severity~1 confirms that prompt selection matters to the estimated interaction. The original outcome-blind $80$-prompt draw gives $J=+0.044$ \ci{-0.000}{+0.088}, while a disjoint $96$-prompt draw with a different hash salt and a five-caption-row selection rule gives $+0.169$ \ci{+0.115}{+0.222}. Their unpaired difference is $+0.124$ \ci{+0.058}{+0.194}. The pooled $n=176$ estimate, $+0.112$ \ci{+0.076}{+0.149}, is therefore useful as evidence that the interaction can resolve at severity~1, but not as evidence that its magnitude is stable across prompt samples.
+
+The short-duration effect is not explained by a collapsed dense baseline under CLAP. The dense model's floor-corrected response from $3.84$ to $10.24$\,s is $+0.142$ \ci{+0.111}{+0.172}, close to the real-audio crop response of $+0.150$ \ci{+0.133}{+0.166}. A separate crop analysis nevertheless shows that recovery itself depends on how the audio is generated. Scoring the first $3.84$\,s of a $10.24$\,s generation gives $R_{\rm crop}=+0.172$ \ci{+0.150}{+0.194}, which is $+0.087$ \ci{+0.065}{+0.110} above recovery from a separately generated $3.84$\,s clip.
+
