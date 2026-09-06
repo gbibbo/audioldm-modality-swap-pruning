@@ -431,39 +431,59 @@ def verdict(exp):
         out["class"] = "pre-specified follow-up (docs/reviewer2_followup_ext.md); cannot change any frozen verdict"
         out["protocol_doc"] = "docs/reviewer2_followup_ext.md"; out["protocol_doc_sha256"] = sha("docs/reviewer2_followup_ext.md")
         LF = load_results(gout("longft")); DS = load_results(gout("denseft_s")); DN = load_results(gout("denseft_n"))
-        bt = Boot(NS + "|EXT2x2", 192)
-        # per-prompt cosines, prompt_index order (all 192)
-        S3, _, _ = per_prompt(SF["shortft__ac_short"]); S10, _, _ = per_prompt(SF["shortft__ac_native"])
-        L3, _, _ = per_prompt(LF["longft__ac_short"]); L10, _, _ = per_prompt(LF["longft__ac_native"])
-        Ds3, _, _ = per_prompt(DS["denseft__ac_short"]); Ds10, _, _ = per_prompt(DS["denseft__ac_native"])
-        Dn3, _, _ = per_prompt(DN["denseft__ac_short"]); Dn10, _, _ = per_prompt(DN["denseft__ac_native"])
-        P3 = frozen_pp("pruned2_A__ac_short"); P10 = frozen_pp("pruned2_A__ac_native")
-        E3 = frozen_pp("dense__ac_short"); E10 = frozen_pp("dense__ac_native")   # frozen dense baseline (XSEV-DENSE-192-CONTROL)
-        # pruned arm (item 1: longft = the symmetric control of E3 = shortft)
+        # per-prompt cosine maps {prompt_index: cosine}; cells may have different prompt sets (OUT_OF_FUNDS cut the
+        # denseft-s ac_native tail at 170/192), so every contrast is computed on the INTERSECTION of its inputs.
+        ALLPI192 = [p["prompt_index"] for p in prompts(AC192)]                  # sorted prompt_index of the frozen 192
+        def pmap(res):                                                          # new cells carry prompt_index
+            c, _f, order = per_prompt(res); return dict(zip(order, [float(x) for x in c]))
+        def fpmap(name):                                                        # frozen cells were scored in sorted-prompt_index order, no field
+            arr = frozen_pp(name); return dict(zip(ALLPI192, [float(x) for x in arr]))
+        S3, S10 = pmap(SF["shortft__ac_short"]), pmap(SF["shortft__ac_native"])
+        L3, L10 = pmap(LF["longft__ac_short"]), pmap(LF["longft__ac_native"])
+        Ds3, Ds10 = pmap(DS["denseft__ac_short"]), pmap(DS["denseft__ac_native"])
+        Dn3, Dn10 = pmap(DN["denseft__ac_short"]), pmap(DN["denseft__ac_native"])
+        P3, P10 = fpmap("pruned2_A__ac_short"), fpmap("pruned2_A__ac_native")
+        E3, E10 = fpmap("dense__ac_short"), fpmap("dense__ac_native")   # frozen dense baseline (XSEV-DENSE-192-CONTROL)
+
+        def ci(expr, *maps):
+            """expr(list-of-aligned-arrays) -> bootstrap CI on the common prompt_index set of the given maps."""
+            keys = sorted(set(maps[0]).intersection(*[set(m) for m in maps[1:]]))
+            arrs = [np.array([m[k] for k in keys]) for m in maps]
+            return Boot(NS + f"|EXT2x2|n{len(keys)}", len(keys)).ci(expr(*arrs))
+        def mean(m):
+            return float(np.mean(list(m.values())))
+
+        # pruned arm (item 1: longft = the symmetric control of E3 = shortft); all cells are 192
         out["pruned"] = {
-            "R_sf": {"3.84": bt.ci(S3 - P3), "10.24": bt.ci(S10 - P10)}, "J_sf": bt.ci((S10 - P10) - (S3 - P3)),
-            "R_lf": {"3.84": bt.ci(L3 - P3), "10.24": bt.ci(L10 - P10)}, "J_lf": bt.ci((L10 - P10) - (L3 - P3)),
-            # ΔJ_pruned = J_lf - J_sf, paired (the P terms cancel): does training duration move the favourable eval duration?
-            "dJ": bt.ci((L10 - L3) - (S10 - S3)),
-            "levels": {"shortft_3.84": float(S3.mean()), "shortft_10.24": float(S10.mean()),
-                       "longft_3.84": float(L3.mean()), "longft_10.24": float(L10.mean()), "P_3.84": float(P3.mean()), "P_10.24": float(P10.mean())}}
-        # dense arm (item 2)
+            "R_sf": {"3.84": ci(lambda s, p: s - p, S3, P3), "10.24": ci(lambda s, p: s - p, S10, P10)},
+            "J_sf": ci(lambda s10, p10, s3, p3: (s10 - p10) - (s3 - p3), S10, P10, S3, P3),
+            "R_lf": {"3.84": ci(lambda l, p: l - p, L3, P3), "10.24": ci(lambda l, p: l - p, L10, P10)},
+            "J_lf": ci(lambda l10, p10, l3, p3: (l10 - p10) - (l3 - p3), L10, P10, L3, P3),
+            # ΔJ_pruned = J_lf - J_sf, paired (P cancels): does the training duration move the favourable eval duration?
+            "dJ": ci(lambda l10, l3, s10, s3: (l10 - l3) - (s10 - s3), L10, L3, S10, S3),
+            "levels": {"shortft_3.84": mean(S3), "shortft_10.24": mean(S10), "longft_3.84": mean(L3), "longft_10.24": mean(L10),
+                       "P_3.84": mean(P3), "P_10.24": mean(P10)}}
+        # dense arm (item 2); denseft_short ac_native is 170/192 (OUT_OF_FUNDS), so J_ds/dJ_dense are on the common set
         out["dense"] = {
-            "G_ds": {"3.84": bt.ci(Ds3 - E3), "10.24": bt.ci(Ds10 - E10)}, "J_ds": bt.ci((Ds10 - E10) - (Ds3 - E3)),
-            "G_dn": {"3.84": bt.ci(Dn3 - E3), "10.24": bt.ci(Dn10 - E10)}, "J_dn": bt.ci((Dn10 - E10) - (Dn3 - E3)),
-            "dJ": bt.ci((Dn10 - Dn3) - (Ds10 - Ds3)),
-            "levels": {"denseft_short_3.84": float(Ds3.mean()), "denseft_short_10.24": float(Ds10.mean()),
-                       "denseft_native_3.84": float(Dn3.mean()), "denseft_native_10.24": float(Dn10.mean()), "dense_3.84": float(E3.mean()), "dense_10.24": float(E10.mean())}}
+            "G_ds": {"3.84": ci(lambda d, e: d - e, Ds3, E3), "10.24": ci(lambda d, e: d - e, Ds10, E10)},
+            "J_ds": ci(lambda d10, e10, d3, e3: (d10 - e10) - (d3 - e3), Ds10, E10, Ds3, E3),
+            "G_dn": {"3.84": ci(lambda d, e: d - e, Dn3, E3), "10.24": ci(lambda d, e: d - e, Dn10, E10)},
+            "J_dn": ci(lambda d10, e10, d3, e3: (d10 - e10) - (d3 - e3), Dn10, E10, Dn3, E3),
+            "dJ": ci(lambda dn10, dn3, ds10, ds3: (dn10 - dn3) - (ds10 - ds3), Dn10, Dn3, Ds10, Ds3),
+            "levels": {"denseft_short_3.84": mean(Ds3), "denseft_short_10.24": mean(Ds10), "denseft_native_3.84": mean(Dn3),
+                       "denseft_native_10.24": mean(Dn10), "dense_3.84": mean(E3), "dense_10.24": mean(E10)}}
         # cross-arm: is the pruned interaction bigger than the dense interaction at matched (20k-step) budget?
-        out["pruned_minus_dense_dr"] = {"trained_short": bt.ci((S10 - S3) - (Ds10 - Ds3)), "trained_native": bt.ci((L10 - L3) - (Dn10 - Dn3))}
+        out["pruned_minus_dense_dr"] = {"trained_short": ci(lambda s10, s3, d10, d3: (s10 - s3) - (d10 - d3), S10, S3, Ds10, Ds3),
+                                        "trained_native": ci(lambda l10, l3, d10, d3: (l10 - l3) - (d10 - d3), L10, L3, Dn10, Dn3)}
+        out["n_denseft_short_native"] = len(Ds10)
         for arm in ("pruned", "dense"):
             dj = out[arm]["dJ"]
             out[arm]["reading_dJ"] = reading([("SPECIALISATION CONTRIBUTES (training@10.24 buys more interaction)", dj["lo"] > 0),
                                               ("TRAINING-DURATION-INDEPENDENT (operating-point)", dj["lo"] <= 0 <= dj["hi"] and abs(dj["point"]) < SESOI),
                                               ("REVERSED", dj["hi"] < 0)])
-        for tag, tr in (("longft", "artifacts/icassp_gate0/r2_longft/trainer_report.json"),
-                        ("denseft_s", "artifacts/icassp_gate0/r2_denseft_s/trainer_report.json"),
-                        ("denseft_n", "artifacts/icassp_gate0/r2_denseft_n/trainer_report.json")):
+        for tag, tr in (("longft", "/teamspace/jobs/r2-longft/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/r2_longft/trainer_report.json"),
+                        ("denseft_s", "/teamspace/jobs/r2-denseft-s/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/r2_denseft_s/trainer_report.json"),
+                        ("denseft_n", "/teamspace/jobs/r2-denseft-n/artifacts/audioldm-modality-swap-pruning/artifacts/icassp_gate0/r2_denseft_n/trainer_report.json")):
             if os.path.exists(tr):
                 out.setdefault("trainer_reports", {})[tag] = json.load(open(tr))["report"]
     else:

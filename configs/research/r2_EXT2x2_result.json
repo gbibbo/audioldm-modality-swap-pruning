@@ -1,0 +1,273 @@
+{
+ "artifact": "r2_EXT2x2_result",
+ "protocol_doc": "docs/reviewer2_followup_ext.md",
+ "protocol_doc_sha256": "24eb7c2e3b0009a9835995f5f8e4ffa98dc4e035568965f5b247e09ac91322d8",
+ "class": "pre-specified follow-up (docs/reviewer2_followup_ext.md); cannot change any frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "pruned": {
+  "R_sf": {
+   "3.84": {
+    "point": 0.009233380832786983,
+    "lo": -0.005650169830672287,
+    "hi": 0.024266328048664337,
+    "n": 192
+   },
+   "10.24": {
+    "point": 0.07450806649042836,
+    "lo": 0.05254604138984481,
+    "hi": 0.09682749730915627,
+    "n": 192
+   }
+  },
+  "J_sf": {
+   "point": 0.06527468565764138,
+   "lo": 0.043518191275446344,
+   "hi": 0.08721924742452149,
+   "n": 192
+  },
+  "R_lf": {
+   "3.84": {
+    "point": 0.01710211352716821,
+    "lo": 0.0010077678508726724,
+    "hi": 0.03341503124465817,
+    "n": 192
+   },
+   "10.24": {
+    "point": 0.04778374905193535,
+    "lo": 0.024918061216643157,
+    "hi": 0.07026921444842932,
+    "n": 192
+   }
+  },
+  "J_lf": {
+   "point": 0.03068163552476714,
+   "lo": 0.00968188763172293,
+   "hi": 0.05202253221589974,
+   "n": 192
+  },
+  "dJ": {
+   "point": -0.034593050132874247,
+   "lo": -0.06429752183339588,
+   "hi": -0.004169910358693126,
+   "n": 192
+  },
+  "levels": {
+   "shortft_3.84": 0.02387051659267551,
+   "shortft_10.24": 0.1293838563215104,
+   "longft_3.84": 0.03173924928705674,
+   "longft_10.24": 0.10265953888301738,
+   "P_3.84": 0.014637135759888528,
+   "P_10.24": 0.054875789831082024
+  },
+  "reading_dJ": "REVERSED"
+ },
+ "dense": {
+  "G_ds": {
+   "3.84": {
+    "point": -0.18190201657125726,
+    "lo": -0.2065890926306262,
+    "hi": -0.1569260285558509,
+    "n": 192
+   },
+   "10.24": {
+    "point": -0.23465901740059694,
+    "lo": -0.27100066368084624,
+    "hi": -0.19855018212069647,
+    "n": 170
+   }
+  },
+  "J_ds": {
+   "point": -0.05125964014133548,
+   "lo": -0.08999260283041033,
+   "hi": -0.012922737353878553,
+   "n": 170
+  },
+  "G_dn": {
+   "3.84": {
+    "point": -0.16618444314129496,
+    "lo": -0.19046829568851537,
+    "hi": -0.14114757565239416,
+    "n": 192
+   },
+   "10.24": {
+    "point": -0.2231322818164093,
+    "lo": -0.25492107739240355,
+    "hi": -0.19081558776075933,
+    "n": 192
+   }
+  },
+  "J_dn": {
+   "point": -0.056947838675114326,
+   "lo": -0.09139679569094976,
+   "hi": -0.023004768608613353,
+   "n": 192
+  },
+  "dJ": {
+   "point": -0.005005570301128661,
+   "lo": -0.03432034898042569,
+   "hi": 0.02447285177665487,
+   "n": 170
+  },
+  "levels": {
+   "denseft_short_3.84": 0.024885489406491008,
+   "denseft_short_10.24": 0.1210123234674992,
+   "denseft_native_3.84": 0.04060306283645332,
+   "denseft_native_10.24": 0.13071410043145684,
+   "dense_3.84": 0.20678750597774828,
+   "dense_10.24": 0.35384638224786613
+  },
+  "reading_dJ": "TRAINING-DURATION-INDEPENDENT (operating-point)"
+ },
+ "pruned_minus_dense_dr": {
+  "trained_short": {
+   "point": 0.010760513517786474,
+   "lo": -0.00797972936032559,
+   "hi": 0.028755728160373528,
+   "n": 170
+  },
+  "trained_native": {
+   "point": -0.019190747999042895,
+   "lo": -0.04404243469161884,
+   "hi": 0.005237640010485235,
+   "n": 192
+  }
+ },
+ "n_denseft_short_native": 170,
+ "trainer_reports": {
+  "longft": {
+   "start_checkpoint": "pruneA(dense_ema)[1,2,1,1]",
+   "backbone": "pruned2_A",
+   "n_unet_params": 70523336,
+   "n_pipeline_params": 597775118,
+   "trainable_only_unet": true,
+   "lr": 0.0001,
+   "batch": 2,
+   "accum": 1,
+   "effective_batch": 2,
+   "uncond_p": 0.1,
+   "duration": 10.24,
+   "latent_t": 256,
+   "n_steps_planned": 20000,
+   "cap_cr": 4.8,
+   "seed": 20260905,
+   "commit": {
+    "sha": "5849339a67bb4fab61e7251de0cd34ac58ffbf1b",
+    "dirty": false
+   },
+   "device": "cuda",
+   "n_data": 49502,
+   "mid_checkpoint": {
+    "path": "artifacts/icassp_gate0/r2_longft/longft_unet_step7500.pt",
+    "sha256": "914c0edbe69f501857817d07b6c33d3cc01fb07b985b5dcc4e679443d925fdf8",
+    "step": 7500
+   },
+   "ran_steps": 20000,
+   "sec_per_step": 0.64597475500785,
+   "last_losses": [
+    0.42966926097869873,
+    0.6003884673118591,
+    0.05436895042657852,
+    0.2593710422515869,
+    0.595185399055481
+   ],
+   "saved_unet": {
+    "path": "artifacts/icassp_gate0/r2_longft/longft_unet.pt",
+    "sha256": "b4b1bddf81116cc4b78277671d78285d4ff14494efe98805de3564a649c5fec4"
+   }
+  },
+  "denseft_s": {
+   "start_checkpoint": "dense_ema",
+   "backbone": "dense",
+   "n_unet_params": 415954568,
+   "n_pipeline_params": 943206350,
+   "trainable_only_unet": true,
+   "lr": 0.0001,
+   "batch": 2,
+   "accum": 1,
+   "effective_batch": 2,
+   "uncond_p": 0.1,
+   "duration": 3.84,
+   "latent_t": 96,
+   "n_steps_planned": 20000,
+   "cap_cr": 3.2,
+   "seed": 20260905,
+   "commit": {
+    "sha": "5849339a67bb4fab61e7251de0cd34ac58ffbf1b",
+    "dirty": false
+   },
+   "device": "cuda",
+   "n_data": 49502,
+   "ran_steps": 20000,
+   "sec_per_step": 0.5137623433249,
+   "last_losses": [
+    0.45723816752433777,
+    0.6330556869506836,
+    0.06346184015274048,
+    0.2837297022342682,
+    0.6247890591621399
+   ],
+   "saved_unet": {
+    "path": "artifacts/icassp_gate0/r2_denseft_s/denseft_short_unet.pt",
+    "sha256": "379d5d6da1eac71ef450f8e5669f744bf8c39bc9b303de76784da02a03173502"
+   }
+  },
+  "denseft_n": {
+   "start_checkpoint": "dense_ema",
+   "backbone": "dense",
+   "n_unet_params": 415954568,
+   "n_pipeline_params": 943206350,
+   "trainable_only_unet": true,
+   "lr": 0.0001,
+   "batch": 1,
+   "accum": 2,
+   "effective_batch": 2,
+   "uncond_p": 0.1,
+   "duration": 10.24,
+   "latent_t": 256,
+   "n_steps_planned": 20000,
+   "cap_cr": 5.6,
+   "seed": 20260905,
+   "commit": {
+    "sha": "5849339a67bb4fab61e7251de0cd34ac58ffbf1b",
+    "dirty": false
+   },
+   "device": "cuda",
+   "n_data": 49502,
+   "mid_checkpoint": {
+    "path": "artifacts/icassp_gate0/r2_denseft_n/denseft_native_unet_step7500.pt",
+    "sha256": "410730a4db4b5bec80542e23fe2e491e9b2c3e8d6a395f0aa8aa6f20464ef61b",
+    "step": 7500
+   },
+   "ran_steps": 20000,
+   "sec_per_step": 1.04313879072865,
+   "last_losses": [
+    0.002203692216426134,
+    0.003804947016760707,
+    0.025161486119031906,
+    0.15187427401542664,
+    0.2604036331176758
+   ],
+   "saved_unet": {
+    "path": "artifacts/icassp_gate0/r2_denseft_n/denseft_native_unet.pt",
+    "sha256": "deff115f5d16d57c568ae2ca8b8ac42d5bcab7518eb649f56d36471a37a6ccda"
+   }
+  }
+ },
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_in.json": "0acb5e6983d36fc827e590d5b25003af9a6862cded01af57a3e4bb7f64b5010c",
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_in.json": "6d974de655bc2c42ade2acf902e985b115a4c2c665bf904cd152e2347bcd6404",
+  "artifacts/icassp_gate0/_score_tmp/r2_b_groups_out.json": "84a360fd354e086195e37a1577eb07b19c095b4755745216fb0af0a86858b238",
+  "artifacts/icassp_gate0/_score_tmp/r2_c_groups_in.json": "73943f97b067b8f674a9aa6fc363e52911f2aabf32191da0d3cee26678863660",
+  "artifacts/icassp_gate0/_score_tmp/r2_c_groups_out.json": "9064a0f21b818004b161708cc4d49ebc5254f8744f11196d1aef0c5690e64e81",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_in.json": "716338676390d4bb815d51aca6a5b72dad3dc4408132ff9269bcf39a45949d4b",
+  "artifacts/icassp_gate0/_score_tmp/r2_shortft_groups_out.json": "87920d76da7e03a637fa64cde85f0daff42ca712f399c07987514b19c2dd76e8"
+ },
+ "artifact_sha256": "294394b6c65c301013201afb95c654a55e4129d63ab2ce8ab1a0a24dfaec4998"
+}

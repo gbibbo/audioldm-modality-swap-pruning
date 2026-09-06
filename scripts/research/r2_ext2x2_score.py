@@ -44,8 +44,11 @@ def collect(prefix, ctx, dirs):
                 picked[pi] = w
     miss = [pi for pi in ALLPI if pi not in picked]
     if miss:
-        raise SystemExit(f"{prefix}/{ctx}: missing {len(miss)} prompts {miss[:8]}{'...' if len(miss)>8 else ''}")
-    return [{"caption": CAP[pi], "wav": picked[pi], "prompt_index": pi, "ytid": YT[pi]} for pi in ALLPI]
+        if len(picked) < 150:
+            raise SystemExit(f"{prefix}/{ctx}: only {len(picked)} prompts, too few")
+        print(f"  NOTE {prefix}/{ctx}: {len(picked)}/192 prompts (missing {len(miss)}: OUT_OF_FUNDS cut the tail); scoring the available set")
+    order = [pi for pi in ALLPI if pi in picked]
+    return [{"caption": CAP[pi], "wav": picked[pi], "prompt_index": pi, "ytid": YT[pi]} for pi in order]
 
 
 def ck_sha(out):

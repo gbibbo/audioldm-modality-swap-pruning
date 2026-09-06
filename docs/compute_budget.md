@@ -752,3 +752,11 @@ Gabriel pre-approved a 24 GB GPU "en caso de ser necesario" for `r2-denseft-n` (
 now honors `MACHINE=L4`. Worst-case total (T4 OOM ≈0.3 + L4 rerun ≈7 + longft ≈5.4 + denseft-s ≈2.8 + Studio ≈2.5)
 ≈ **18 cr < 20**. Recipe unchanged (batch 1×accum 2); L4 is faster, so the training projection should fall below the
 T4 estimate. Ledger REVIEWER2-FOLLOWUP-EXT 24-GB entry.
+
+### 2026-09-06 (MVD 13:5x) | REVIEWER2-FOLLOWUP-EXT settled + OUT_OF_FUNDS
+
+`total_spent` 135.56 cr (was 114.95 at authorization) = **20.6 cr for the 2×2 campaign** (Gabriel's 20-cr pool + Studio,
+exhausted). Settled: r2-longft 4.73, r2-denseft-s 4.16, r2-denseft-n 7.31, r2-denseft-s-tail 0.15 (OUT_OF_FUNDS mid-gen),
+r2-denseft-s-tail2 0.00 (Failed, no funds) = 16.35 cr GPU; the balance ≈ 4.3 cr is Studio uptime over ~19 h. denseft-n
+fit the T4 (11.1 GB) so the pre-approved 24 GB L4 was never used. **No further GPU without a top-up.** denseft-s ac_native
+is n=170 (22 WAVs uncompleted; ≈0.3 cr to finish on a top-up; result already resolved at 170).
