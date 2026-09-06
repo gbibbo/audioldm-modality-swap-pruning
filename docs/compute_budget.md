@@ -760,3 +760,20 @@ exhausted). Settled: r2-longft 4.73, r2-denseft-s 4.16, r2-denseft-n 7.31, r2-de
 r2-denseft-s-tail2 0.00 (Failed, no funds) = 16.35 cr GPU; the balance ≈ 4.3 cr is Studio uptime over ~19 h. denseft-n
 fit the T4 (11.1 GB) so the pre-approved 24 GB L4 was never used. **No further GPU without a top-up.** denseft-s ac_native
 is n=170 (22 WAVs uncompleted; ≈0.3 cr to finish on a top-up; result already resolved at 170).
+
+### 2026-09-06 (MVD 14:4x) | LESSON — why the 2×2 estimate under-ran (fix the method)
+
+Estimated ~18-19 cr, real 20.6 → OUT_OF_FUNDS. Two systematic errors to carry forward:
+
+1. **Dense generation costs MORE per WAV than pruned.** The per-WAV model in §A10 was fit on pruned/dense-EMA
+   inference; a full dense U-Net (416 M, channel_mult [1,2,3,5]) at latent 256 is ~2-3× the pruned per-WAV cost, so
+   denseft-s overran its cap (4.16 vs ~3.0 est) and denseft-n hit 7.31. **Rule:** for a dense-architecture job use a
+   dense per-WAV rate (measure it on the first dense job; here ≈ eval share 4.16−2.63train ≈ 1.5 cr / 362 WAVs ≈
+   0.0041 cr/WAV at mixed 96/256, vs 0.0022 pruned).
+2. **Studio uptime = FULL wall-clock, including queue/Pending, not the sum of run-times.** The platform runs only 2
+   T4 jobs at once, so denseft-n queued for hours then ran ~6 h; the campaign spanned ~19 h launch→OUT_OF_FUNDS and
+   the Studio billed ~0.27 cr/h the whole time ≈ 4.3 cr (vs ~2 est). **Rule:** Studio budget = (longest critical path
+   incl. queue serialization) × 0.27, not (Σ run-times) × 0.27; when jobs serialize, add their durations.
+
+Neither error is recoverable now (funds spent). Both are recorded so the next estimate holds. denseft-n proved the
+24 GB L4 was unnecessary (11.1 GB), so the L4 premium was correctly avoided.

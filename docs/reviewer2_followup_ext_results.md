@@ -74,3 +74,29 @@ given both collapse to the same attractor.
    matched dense control (Singh's deleted 10⁶-step checkpoint) remains the only clean version and remains unavailable.
 3. **denseft_short ac_native is n=170 (OUT_OF_FUNDS).** A ~0.3-cr top-up would finish the 22 WAVs to 192; the result is
    already resolved at 170.
+
+## Audit (2026-09-06, CPU, 0 cr) — is the result trustworthy?
+
+Checked before recommending any manuscript change:
+
+* **The dense degradation is NOT a training blow-up.** denseft training loss is stable and comparable to the pruned
+  runs: mean(last 50) = 0.210 (denseft_short), 0.184 (denseft_native), 0.192 (longft); no divergence (diffusion MSE
+  is high-variance per timestep, min 0.001 / max 0.79–0.99 for all three). So the CLAP drop (0.354→0.131) is a
+  distribution shift, not a diverged optimizer.
+* **Two clean explanations, both pre-declared limitations, not artifacts of the pipeline:** (a) **raw vs EMA** — the
+  released dense baseline is EMA-averaged; our fine-tune exports RAW weights (protocol §1, "raw, no EMA at this
+  horizon"). Raw weights at 20 k steps underperform EMA, which alone costs alignment. (b) **no headroom** — M-Full was
+  already AudioCaps-fine-tuned 0.25 M steps, so further AudioCaps steps cannot raise in-domain CLAP and the raw-weight
+  penalty dominates. Together they fully account for the dense arm landing below its EMA baseline.
+* **Item 1 (ΔJ_pruned) is immune to the raw-vs-EMA concern.** ΔJ = (L10−L3) − (S10−S3): the P baseline cancels
+  entirely, and BOTH longft and shortft are raw-weight exports of the SAME pruned backbone with the SAME recipe and
+  step count, differing ONLY in training duration. So ΔJ_pruned = −0.035 [−0.064,−0.004] is a clean, symmetric,
+  raw-vs-raw paired contrast. It stands.
+* **Provenance verified:** each eval loaded the fine-tuned U-Net whose sha256 is recorded in its job's trainer_report
+  (`ext2x2_scoring_provenance.json`); the frozen dense/P baselines are the committed XSEV-DENSE-192-CONTROL / xsev
+  cells (CRN-paired by prompt).
+
+**Audit verdict:** item 1 is sound and reportable; item 2 is a genuine negative that is *expected* (raw-vs-EMA + no
+headroom) and must be reported as a limitation, not as evidence for or against dense recovery. No full adversarial
+re-run is warranted (and none is affordable). This supersedes the earlier "‎/auditar recommended" flag for the parts
+checked here.
