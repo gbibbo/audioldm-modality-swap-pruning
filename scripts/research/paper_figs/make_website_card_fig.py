@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 """Build the single-panel project-card figure for gbibbo.github.io (CPU, 0 cr).
 
+Narrative card: ONE series, the paired recovery gain R = CLAP(P+FT) - CLAP(P) of the
+83%-pruned checkpoint, over the requested-duration sweep. Absolute levels, the dense
+and real anchors, the chance floors and the rho_dense percentages are deliberately
+NOT drawn: they belong to the paper, and they cost the card reader too much work.
+
 Every number is READ from the frozen result artifacts, never typed by hand:
-  configs/research/draft5_opsweep_result.json  (severity-2 duration sweep, n=192)
+  configs/research/draft5_opsweep_result.json   (severity-2 duration sweep, n=192)
+  configs/research/r2_posthoc_pooled_anchors.json  (hip-hop battery, n=127)
 
 The card image is displayed by the site at aspect-ratio 16/10, object-fit: contain,
 in a box of clamp(300px, 38%, 370px) width, so the figure is authored at 16:10 with
@@ -18,39 +24,39 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-from matplotlib.patches import Patch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 SRC = os.path.join(ROOT, "configs", "research", "draft5_opsweep_result.json")
+SRC_HH = os.path.join(ROOT, "configs", "research", "r2_posthoc_pooled_anchors.json")
 OUT_DIR = os.path.join(ROOT, "docs", "figs")
 OUT = os.path.join(OUT_DIR, "audioldm_recovery_operating_point.png")
 OUT_SVG = os.path.join(OUT_DIR, "audioldm_recovery_operating_point.svg")
+OUT_B = os.path.join(OUT_DIR, "audioldm_recovery_operating_point_domain.png")
+OUT_B_SVG = os.path.join(OUT_DIR, "audioldm_recovery_operating_point_domain.svg")
 
 # ---------------------------------------------------------------- data (frozen)
 sweep = json.load(open(SRC, encoding="utf-8"))
-by_dur = sweep["secondary"]["by_duration"]
+Rd = sweep["R_by_duration"]
 DURS = ["3.84", "5.12", "7.68", "10.24"]
 x = [float(d) for d in DURS]
-dense = [by_dur[d]["levels"]["dense"] for d in DURS]
-pft = [by_dur[d]["levels"]["PFT"] for d in DURS]
-prn = [by_dur[d]["levels"]["P"] for d in DURS]
-R = [by_dur[d]["R"]["point"] for d in DURS]
-rho = [by_dur[d]["rho_dense"]["point"] for d in DURS]
-n = by_dur["10.24"]["R"]["n"]
+R = [Rd[d]["point"] for d in DURS]
+Rlo = [Rd[d]["lo"] for d in DURS]
+Rhi = [Rd[d]["hi"] for d in DURS]
+n = Rd["10.24"]["n"]
+FT_DURATION = 10.24  # the released recovery was fine-tuned at the native duration
+
+hh = json.load(open(SRC_HH, encoding="utf-8"))["hiphop_127"]
+hh_R = [hh["3.84"]["R_pooled"]["point"], hh["10.24"]["R_pooled"]["point"]]
+hh_n = hh["10.24"]["R_pooled"]["n"]
+HH_X = [3.84, 10.24]  # the hip-hop battery has only the two endpoint durations
 
 # ------------------------------------------------------------------- palette
-# Two categorical hues (validated: all checks PASS, all-pairs, light surface)
-# plus a neutral for the dense reference series, which is also dashed + labelled,
-# so identity is never carried by colour alone.
 SURFACE = "#fcfcfb"
 INK = "#0b0b0b"
 INK_2 = "#52514e"
 GRID = "#e3e2dd"
-BLUE = "#2a78d6"   # slot 1 - pruned + recovery
-ORANGE = "#eb6834"  # slot 2 - pruned, no recovery
-NEUTRAL = "#8a8880"  # reference series (dense)
+BLUE = "#2a78d6"  # categorical slot 1 - the single series
 
 plt.rcParams.update({
     "font.family": "DejaVu Sans",
@@ -65,76 +71,75 @@ plt.rcParams.update({
     "savefig.facecolor": SURFACE,
 })
 
-fig, ax = plt.subplots(figsize=(7.8, 4.875))  # 16:10
-fig.subplots_adjust(left=0.125, right=0.985, top=0.975, bottom=0.15)
 
-# recovery gain: the band between the pruned model and the same model after recovery
-ax.fill_between(x, prn, pft, color=BLUE, alpha=0.14, linewidth=0, zorder=1)
 
-ax.plot(x, dense, color=NEUTRAL, lw=2.3, ls=(0, (5, 2.6)), marker="o", ms=9,
-        mfc=SURFACE, mew=2.2, mec=NEUTRAL, zorder=3)
-ax.plot(x, pft, color=BLUE, lw=2.5, marker="s", ms=9, mfc=BLUE, mec=SURFACE,
-        mew=2.2, zorder=4)
-ax.plot(x, prn, color=ORANGE, lw=2.5, marker="^", ms=10, mfc=ORANGE, mec=SURFACE,
-        mew=2.2, zorder=4)
+def build(out_png, out_svg, with_hiphop=False):
+    """Render the card. with_hiphop adds the flat out-of-domain music series."""
+    fig, ax = plt.subplots(figsize=(7.8, 4.875))  # 16:10
+    fig.subplots_adjust(left=0.125, right=0.965, top=0.975, bottom=0.15)
 
-# selective direct labels: the two endpoints of the sweep only
-for i, ha, dx in ((0, "left", 0.16), (3, "right", -0.16)):
-    ax.annotate("", xy=(x[i], pft[i]), xytext=(x[i], prn[i]),
-                arrowprops=dict(arrowstyle="<->", color=INK, lw=1.7,
-                                shrinkA=2.5, shrinkB=2.5), zorder=5)
-    ax.text(x[i] + dx, (pft[i] + prn[i]) / 2,
-            f"+{R[i]:.3f}\n{100 * rho[i]:.0f}% of dense gap",
-            ha=ha, va="center", fontsize=14.5, color=INK, linespacing=1.32,
-            zorder=6,
-            bbox=dict(boxstyle="round,pad=0.24", fc=SURFACE, ec="none", alpha=0.82))
+    # fine-tuning duration guide, recessive and behind the series
+    ax.axvline(FT_DURATION, color=INK_2, lw=1.1, ls=(0, (1.5, 2.5)), alpha=0.6,
+               zorder=2)
+    # in the domain variant the flat hip-hop series occupies the bottom strip,
+    # so the guide label moves above the confidence band instead
+    guide_y = 0.312 if with_hiphop else 0.018
+    guide_va = "top" if with_hiphop else "bottom"
+    ax.text(FT_DURATION - 0.12, guide_y, "fine-tuning duration", ha="right",
+            va=guide_va, fontsize=12.5, color=INK_2, zorder=6)
 
-handles = [
-    Line2D([], [], color=NEUTRAL, lw=2.3, ls=(0, (5, 2.6)), marker="o", ms=9,
-           mfc=SURFACE, mew=2.2, mec=NEUTRAL, label="Dense AudioLDM-M (416 M)"),
-    Line2D([], [], color=BLUE, lw=2.5, ls="-", marker="s", ms=9, mfc=BLUE,
-           mec=SURFACE, mew=2.2, label="Pruned + recovery (71 M)"),
-    Line2D([], [], color=ORANGE, lw=2.5, ls="-", marker="^", ms=10, mfc=ORANGE,
-           mec=SURFACE, mew=2.2, label="Pruned, no recovery (71 M)"),
-    Patch(facecolor=BLUE, alpha=0.14, label="Gain added by recovery"),
-]
-leg = ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.005, 1.005),
-                fontsize=13.5, frameon=True, framealpha=0.94, edgecolor=GRID,
-                facecolor=SURFACE, borderpad=0.55, labelspacing=0.45,
-                handlelength=2.3, handletextpad=0.7)
-leg.get_frame().set_linewidth(0.8)
-for t in leg.get_texts():
-    t.set_color(INK)
+    # 95% prompt-bootstrap interval: present but visually secondary
+    ax.fill_between(x, Rlo, Rhi, color=BLUE, alpha=0.18, linewidth=0, zorder=3)
+    ax.plot(x, R, color=BLUE, lw=3.0, marker="s", ms=10, mfc=BLUE, mec=SURFACE,
+            mew=2.2, zorder=5)
 
-ax.set_xlabel("Requested audio duration (s)", labelpad=7)
-ax.set_ylabel("CLAP score (text–audio alignment)", labelpad=8)
-ax.set_xticks(x)
-ax.set_xticklabels(DURS)
-ax.set_xlim(3.45, 10.72)
-ax.set_ylim(0.0, 0.475)
-ax.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4])
-ax.yaxis.grid(True, color=GRID, lw=0.9, zorder=0)
-ax.set_axisbelow(True)
-for s in ("top", "right"):
-    ax.spines[s].set_visible(False)
-for s in ("left", "bottom"):
-    ax.spines[s].set_linewidth(0.9)
+    # selective direct labels: the two endpoints only
+    ax.text(x[0] + 0.14, R[0] - 0.004, f"+{R[0]:.3f}", ha="left", va="top",
+            fontsize=15, color=INK, zorder=6)
+    ax.text(x[-1] + 0.14, R[-1], f"+{R[-1]:.3f}", ha="left", va="center",
+            fontsize=15, color=INK, zorder=6)
 
-ax.text(0.995, 0.975,
-        f"AudioLDM-M, 83% structured pruning\n{n} paired prompts, same noise",
-        transform=ax.transAxes, ha="right", va="top", fontsize=12, color=INK_2,
-        linespacing=1.35)
+    # headline, inside the plot, in the empty upper-left corner
+    ax.text(0.012, 0.985, "Recovery depends on the operating point",
+            transform=ax.transAxes, ha="left", va="top", fontsize=18.5, color=INK)
+    ax.text(0.012, 0.895,
+            f"AudioLDM-M, 83% structured pruning · {n} paired AudioCaps prompts",
+            transform=ax.transAxes, ha="left", va="top", fontsize=12.5, color=INK_2)
+
+    ax.set_xlabel("Requested audio duration (s)", labelpad=7)
+    ax.set_ylabel("Gain from recovery fine-tuning (CLAP)", labelpad=8)
+    ax.set_xticks(x)
+    ax.set_xticklabels(DURS)
+    ax.set_xlim(3.42, 11.05)
+    ax.set_ylim(0.0, 0.380)
+    ax.set_yticks([0.0, 0.1, 0.2, 0.3])
+    ax.yaxis.grid(True, color=GRID, lw=0.9, zorder=0)
+    ax.set_axisbelow(True)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    for s in ("left", "bottom"):
+        ax.spines[s].set_linewidth(0.9)
+
+    if with_hiphop:
+        ax.plot(HH_X, hh_R, color=INK_2, lw=2.2, ls=(0, (5, 2.4)), marker="o",
+                ms=8, mfc=SURFACE, mec=INK_2, mew=2.0, zorder=4)
+        ax.text(HH_X[0] + 0.16, hh_R[0] + 0.012,
+                f"hip-hop prompts (n = {hh_n})", ha="left", va="bottom",
+                fontsize=12.5, color=INK_2, zorder=6)
+
+    fig.savefig(out_png, dpi=160)
+    matplotlib.rcParams["svg.fonttype"] = "path"  # no font dependency in the browser
+    fig.savefig(out_svg)
+    plt.close(fig)
+    return hashlib.sha256(open(out_png, "rb").read()).hexdigest()
+
 
 os.makedirs(OUT_DIR, exist_ok=True)
-fig.savefig(OUT, dpi=160)
-matplotlib.rcParams["svg.fonttype"] = "path"  # no font dependency in the browser
-fig.savefig(OUT_SVG)
-plt.close(fig)
-
-digest = hashlib.sha256(open(OUT, "rb").read()).hexdigest()
+digest = build(OUT, OUT_SVG, with_hiphop=False)
+digest_b = build(OUT_B, OUT_B_SVG, with_hiphop=True)
 print(f"wrote {os.path.relpath(OUT, ROOT)}  sha256={digest[:16]}")
-print(f"wrote {os.path.relpath(OUT_SVG, ROOT)}  "
-      f"sha256={hashlib.sha256(open(OUT_SVG, 'rb').read()).hexdigest()[:16]}")
+print(f"wrote {os.path.relpath(OUT_B, ROOT)}  sha256={digest_b[:16]}  (domain variant)")
 print(f"  source artifact sha256={sweep['artifact_sha256'][:16]}")
-for d, gp, gr in zip(DURS, R, rho):
-    print(f"  {d:>5} s  R={gp:+.3f}  rho_dense={100 * gr:.0f}%")
+for d, pt, lo, hi in zip(DURS, R, Rlo, Rhi):
+    print(f"  {d:>5} s  R={pt:+.3f} [{lo:+.3f},{hi:+.3f}]")
+print(f"  hip-hop (n={hh_n}): {hh_R[0]:+.3f} at 3.84 s, {hh_R[1]:+.3f} at 10.24 s")
