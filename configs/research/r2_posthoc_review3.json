@@ -1,0 +1,181 @@
+{
+ "artifact": "r2_posthoc_review3",
+ "class": "POST-HOC descriptive re-analysis of existing per-prompt scores (third review, items 3 and 4); not pre-specified in any frozen protocol; changes no frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEWER2-FOLLOWUP|BOOTSTRAP|2026-09-05|POSTHOC3",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/xsev_sev2_groups_out.json": "6235857f87b5e9e2cb44cc3c7a3c42627ad234262eb631c2df20fdb737b8f7dc",
+  "artifacts/icassp_gate0/_score_tmp/music_native_groups_out.json": "5acbc6e1d048586372b4de934cc4ace82e7a515ae3bc556d49a49ce83b0d4bf2",
+  "artifacts/icassp_gate0/_score_tmp/r2_a_groups_out.json": "cea14d8a269413297a14168ac27141ece61c8a44150c723ef59836db92836245",
+  "artifacts/icassp_gate0/_score_tmp/r2_c_groups_out.json": "9064a0f21b818004b161708cc4d49ebc5254f8744f11196d1aef0c5690e64e81",
+  "configs/research/xsev_audiocaps_manifest.json": "2b97b417d00d0609b040824d43b0c07bf0ff65b6fb333a2c8390b5c8ced71a37",
+  "configs/research/r2_E7_result.json": "a75f0484e27138d5266177296b5124805305808fa6a7572abf541fa05815c2c1",
+  "configs/research/r2_posthoc_pooled_anchors.json": "1d9bb63ac5157f6974148acb42487b05e17eb8e789ca7c9a290377111cd38f2b"
+ },
+ "sev2_split_half": {
+  "design": "prompt_index 0-95 vs 96-191 of the frozen severity-2 192 manifest (one outcome-blind seeded-hash draw; prompt_index = ascending sha256(selection_salt|YTID|ytid), so the halves are exchangeable sub-samples). Same checkpoints (pruned2_A, recovered2), same jobs, same x_T seeds, same scorer calls as the primary result.",
+  "J_all192_recomputed": {
+   "point": 0.159401184428134,
+   "lo": 0.1317747725449105,
+   "hi": 0.18745227573939094,
+   "n": 192
+  },
+  "first96": {
+   "n": 96,
+   "R_3.84": {
+    "point": 0.08352486043198344,
+    "lo": 0.05767844230843669,
+    "hi": 0.11040506249773899,
+    "n": 96
+   },
+   "R_10.24": {
+    "point": 0.242415903902535,
+    "lo": 0.19731131616572384,
+    "hi": 0.2850033640854235,
+    "n": 96
+   },
+   "J": {
+    "point": 0.15889104347055158,
+    "lo": 0.11639217472038582,
+    "hi": 0.2001905364122649,
+    "n": 96
+   },
+   "levels": {
+    "P_3.84": 0.016360315610654652,
+    "PFT_3.84": 0.0998851760426381,
+    "P_10.24": 0.05074020375226004,
+    "PFT_10.24": 0.29315610765479505
+   },
+   "sd_J": 0.2109377763289845
+  },
+  "last96": {
+   "n": 96,
+   "R_3.84": {
+    "point": 0.08625097644592945,
+    "lo": 0.0583151447174411,
+    "hi": 0.11461874569043477,
+    "n": 96
+   },
+   "R_10.24": {
+    "point": 0.2461623018316459,
+    "lo": 0.20686327857668704,
+    "hi": 0.2853569885005224,
+    "n": 96
+   },
+   "J": {
+    "point": 0.15991132538571642,
+    "lo": 0.12200523763191692,
+    "hi": 0.1980452487701162,
+    "n": 96
+   },
+   "levels": {
+    "P_3.84": 0.012913955909122402,
+    "PFT_3.84": 0.09916493235505186,
+    "P_10.24": 0.05901137590990402,
+    "PFT_10.24": 0.3051736777415499
+   },
+   "sd_J": 0.18924155542704624
+  },
+  "J_last96_minus_first96": {
+   "point": 0.0010202819151648446,
+   "lo": -0.05607507117650432,
+   "hi": 0.057384408029853735,
+   "n_a": 96,
+   "n_b": 96
+  },
+  "abs_half_difference_vs_sev1_between_set_difference": {
+   "sev2_halves_abs_diff": 0.0010202819151648446,
+   "sev1_new96_minus_armd80_point": 0.12448707995111667
+  }
+ },
+ "same_prompts_sev1_vs_sev2_first96": {
+  "design": "prompt_index 0-95: severity-1 (p1_pruned -> p1_recovered, E8 jobs r2-gen-c/c2) vs severity-2 (pruned2_A -> recovered2, frozen xsev jobs) on the SAME 96 prompts; paired by prompt (x_T seeds differ between the two generation campaigns).",
+  "J_sev1_new96": {
+   "point": 0.16870915304510467,
+   "lo": 0.11625420945510996,
+   "hi": 0.22106047103225135,
+   "n": 96
+  },
+  "J_sev2_first96": {
+   "point": 0.15889104347055158,
+   "lo": 0.11643111966695868,
+   "hi": 0.20035192213836123,
+   "n": 96
+  },
+  "J_sev1_minus_sev2_paired": {
+   "point": 0.009818109574553091,
+   "lo": -0.04872436823813283,
+   "hi": 0.06657886853208765,
+   "n": 96
+  },
+  "pearson_r_perprompt_J": 0.2764352344879413,
+  "spearman_rho_perprompt_J": 0.32483722192078135
+ },
+ "audiocaps_vs_hiphop_J": {
+  "J_audiocaps_192": {
+   "point": 0.159401184428134,
+   "lo": 0.13125276620291212,
+   "hi": 0.1880213297958107,
+   "n": 192
+  },
+  "J_hiphop_127_recomputed": {
+   "point": 0.0010088894765560082,
+   "lo": -0.026465352838052302,
+   "hi": 0.028039026931887645,
+   "n": 127
+  },
+  "J_hiphop_127_prespecified_E7": {
+   "point": 0.0010088894765560082,
+   "lo": -0.025883758937685783,
+   "hi": 0.028382099695776257,
+   "n": 127
+  },
+  "J_audiocaps_minus_hiphop": {
+   "point": 0.158392294951578,
+   "lo": 0.11967653174695042,
+   "hi": 0.19699830686895292,
+   "n_a": 192,
+   "n_b": 127
+  },
+  "rho_dense_hiphop_pooled_3.84_10.24": "see configs/research/r2_posthoc_pooled_anchors.json hiphop_127.*.rho_dense_pooled"
+ },
+ "audiocaps_vs_clotho_J": {
+  "groups_seen": [
+   "dense__clotho_native",
+   "dense__clotho_short",
+   "device_check__frozen",
+   "device_check__new",
+   "pruned2_A__ac_d384",
+   "pruned2_A__clotho_native",
+   "pruned2_A__clotho_short",
+   "recovered2__ac_d384",
+   "recovered2__clotho_native",
+   "recovered2__clotho_short"
+  ],
+  "J_clotho_96": {
+   "point": 0.11236484859546181,
+   "lo": 0.07918866370794907,
+   "hi": 0.1463162373066249,
+   "n": 96
+  },
+  "J_audiocaps_first96": {
+   "point": 0.15889104347055158,
+   "lo": 0.1173929672241987,
+   "hi": 0.20050055881680842,
+   "n": 96
+  },
+  "J_audiocaps192_minus_clotho": {
+   "point": 0.047036335832672194,
+   "lo": 0.003098225754123017,
+   "hi": 0.08972626913140022,
+   "n_a": 192,
+   "n_b": 96
+  }
+ },
+ "artifact_sha256": "44884d5694dcf664dafb2249269fc83c78d32ebb6660b701050c09386ce3a0ec"
+}

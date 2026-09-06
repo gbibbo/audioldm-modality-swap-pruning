@@ -777,3 +777,20 @@ Estimated ~18-19 cr, real 20.6 → OUT_OF_FUNDS. Two systematic errors to carry 
 
 Neither error is recoverable now (funds spent). Both are recorded so the next estimate holds. denseft-n proved the
 24 GB L4 was unnecessary (11.1 GB), so the L4 premium was correctly avoided.
+
+### 2026-09-06 (MVD 20:1x) | Third review — derived cost estimates (nothing authorised, nothing launched)
+
+`total_spent` **135.5623 cr** (SDK, 2026-09-06 ≈ 22:45 UTC; unchanged since the OUT_OF_FUNDS reading). Gabriel's 20-cr pool is
+exhausted; every GPU item below needs a top-up + explicit GO. Rates: T4 0.89 cr/h; **dense** per-WAV ≈ 0.0041 cr (measured on
+`r2-denseft-s`, mixed 96/256); pruned per-WAV §A10 0.001329 + 9.0e-6·L; job overhead 0.145 cr; Studio 0.27 cr/h over the FULL
+wall-clock incl. queue (lesson 2026-09-06 14:4x). Designs in `docs/review/2026-09-06_review_round3_methodological_response.md`.
+
+| Item | Job | GPU work | Point (cr) | Cap (cr) | Studio (cr) | Total ask |
+|---|---|---|---:|---:|---:|---:|
+| 1b raw dense baseline (`--system dense_raw`, 192 × {3.84, 10.24}) | `r3-denseraw` (T4) | 384 dense WAVs: 384 × 0.0041 + 0.145 | 1.7 | 2.1 | ≈ 0.55 (2 h) | **≈ 2.3, cap ≈ 2.7** |
+| 3 second disjoint severity-2 draw (P, P+FT × 2 durations) | `r3-draw2` (T4) | 768 pruned WAVs: 192×2×(0.00219+0.00363) + 0.145 | 2.4 | 2.9 | ≈ 1.0 (3–4 h) | **≈ 3.4, cap ≈ 4.0** |
+| both | | | 4.1 | 5.0 | ≈ 1.3 (shared wall-clock) | **≈ 5.5, cap ≈ 6.3** |
+
+Priority: 1b (decisive for the dense 2×2 paragraphs) ≫ 3 (the 0-cr split-half already answers the question). CPU items done
+this session: `r2_posthoc_review3.py`, `verify_draft14_numbers.py`, `pagecheck_times.py`, the `dense_raw` dry-run — 0 cr GPU;
+Studio uptime for the session ≈ 4 h ≈ 1.1 cr (will appear in the next `total_spent` reading).

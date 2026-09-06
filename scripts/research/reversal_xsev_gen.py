@@ -136,13 +136,23 @@ def build_backbone(system, config, dev):
         dsd = G0._orig_load(path, map_location="cpu")
         model.model.diffusion_model.load_state_dict(dsd["unet"] if "unet" in dsd else dsd, strict=True)
         return model.model.diffusion_model, f"denseft_raw:{G0.sha_file(path)[:16]}"
+    if system == "dense_raw":                      # THIRD-REVIEW item 1 (docs/review/2026-09-06_review_round3_methodological_response.md):
+        # the released dense checkpoint's RAW model.diffusion_model.* weights (the trajectory weights, NOT the EMA shadow
+        # every frozen "dense" clip used). Baseline for the raw-weight denseft_{short,native} exports: separates the
+        # raw-vs-EMA offset at step 0 from genuine fine-tuning degradation. Same x_T seeds as every other system.
+        # bare dense-architecture U-Net (channel_mult [1,2,3,5]) instead of a second full pipeline: main() has already
+        # built one, and two dense pipelines do not fit the 15 GB CPU Studio (the trainer's double-build OOM, 2026-09-05).
+        unet = rm.build_pruned_unet(config, [1, 2, 3, 5]).float()
+        rel = {k[len("model.diffusion_model."):]: v for k, v in dsd.items() if k.startswith("model.diffusion_model.")}
+        unet.load_state_dict(rel, strict=True)                       # strict: proves the raw tensors ARE the dense arch
+        return unet, f"dense_raw:{G0.sha_file(DENSE)[:16]}"
     raise SystemExit(f"unknown system {system}")
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--system", required=True, choices=["pruned2_A", "pruned2_B", "recovered2", "dense",
-                                                       "textft", "p1_pruned", "p1_recovered", "shortft", "longft", "denseft"])
+                                                       "textft", "p1_pruned", "p1_recovered", "shortft", "longft", "denseft", "dense_raw"])
     ap.add_argument("--context", required=True, choices=list(CTX))
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
     ap.add_argument("--out", default="artifacts/icassp_gate0/reversal_xsev_gen")
@@ -169,8 +179,8 @@ def main():
         # (docs/xsev_dense_192_control.md), the DRAFT5-OPSWEEP-1 sweep points (docs/draft5_opsweep.md)
         # or the REVIEWER2-FOLLOWUP anchors (docs/reviewer2_followup.md)
         raise SystemExit(f"dense generates only {DENSE_OK}")
-    if args.system in ("textft", "p1_pruned", "p1_recovered", "shortft", "longft", "denseft") and args.context not in ("ac_short", "ac_native"):
-        raise SystemExit("textft / p1_* / shortft / longft / denseft generate only ac_short and ac_native (docs/reviewer2_followup*.md)")
+    if args.system in ("textft", "p1_pruned", "p1_recovered", "shortft", "longft", "denseft", "dense_raw") and args.context not in ("ac_short", "ac_native"):
+        raise SystemExit("textft / p1_* / shortft / longft / denseft / dense_raw generate only ac_short and ac_native (docs/reviewer2_followup*.md, review round 3)")
 
     manifest_path, reps, T, duration, _salt, ykey, ikey = CTX[args.context]
     prompts = json.load(open(manifest_path))["prompts"]
@@ -238,7 +248,7 @@ def main():
     man = {"artifact": "reversal_xsev_gen", "system": args.system, "context": args.context,
            "manifest": manifest_path, "recipe": {"name": args.recipe, "ddim": ddim, "guidance": guidance,
            "eta": 0.0, "latent_t": T, "duration_s": duration, "reps": reps, "gen_salt": CTX[args.context][4],
-           "weight_convention": "ema", "first_n": args.first_n or None, "tag": args.tag or None},
+           "weight_convention": ("raw" if args.system in ("shortft", "longft", "denseft", "dense_raw") else "ema"), "first_n": args.first_n or None, "tag": args.tag or None},
            "provenance": prov, "n": len(rows), "rows": rows}
     outman = os.path.join(args.out, f"gen_manifest_{args.system}_{args.context}{idx_suffix}.json")
     json.dump(man, open(outman, "w"), indent=1)

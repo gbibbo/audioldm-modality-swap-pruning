@@ -2,10 +2,14 @@
 
 Main file is `icassp_operating_point.tex`.
 
-This package uses the ICASSP 2027 LaTeX format based on `spconf.sty` and `IEEEbib.bst`. The manuscript uses `\documentclass{article}`, loads `spconf`, invokes `\ninept`, and retains the official two-column geometry and empty page style.
+This is Draft 14. It uses the ICASSP `spconf.sty` layout, 9 pt body text, two columns and a references-only fifth page.
 
-Draft 13 incorporates the ICASSP reviewer follow-up experiments. The central claim is now that recovery gain is operating-point dependent. The manuscript explicitly does not attribute the duration interaction to pruning or to specialization at the recovery-training duration. It adds the 3.84-s fine-tuning intervention, the 15.36-s duration point, Clotho transfer, dense hip-hop anchors, increased-power severity-1 and hip-hop analyses, and an in-paper compact robustness table.
+## Figure placeholders
 
-The paper remains self-contained. `PAPER_COMPANION.md` maps paper sections to repository evidence, `PAPER_EXPANDED_RESULTS.md` contains the denser numerical layer, and `docs/reviewer2_response_manuscript.md` records how each reviewer concern was addressed.
+The manuscript intentionally does not include generated graphs in this version. Figure 1 reserves the intended final space with two empty boxes. Detailed TeX comments immediately above the figure in `sections/draft14_2.tex` specify the required plots, data relationships, uncertainty and annotations.
 
-The compiled manuscript is five pages. Pages 1 to 4 contain technical content; page 5 contains references only.
+The final plotting step should replace each box with the generated vector figure while preserving the same approximate panel footprint of 0.49 textwidth by 4.80 cm. Do not delete the specification comments until the final artwork has been independently checked against the committed result artifacts.
+
+## Compile
+
+Upload `icassp_operating_point.tex`, `spconf.sty`, `IEEEbib.bst` and the `sections/` directory to Overleaf. The current placeholder draft requires no external figure file.
