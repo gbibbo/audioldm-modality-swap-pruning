@@ -780,7 +780,7 @@ Neither error is recoverable now (funds spent). Both are recorded so the next es
 
 ### 2026-09-06 (MVD 20:1x) | Third review — derived cost estimates (nothing authorised, nothing launched)
 
-`total_spent` **135.5623 cr** (SDK, 2026-09-06 ≈ 22:45 UTC; unchanged since the OUT_OF_FUNDS reading). Gabriel's 20-cr pool is
+`total_spent` **135.5623 cr** (SDK, 2026-09-06 ≈ 19:45 UTC (16:45 MVD); unchanged since the OUT_OF_FUNDS reading). Gabriel's 20-cr pool is
 exhausted; every GPU item below needs a top-up + explicit GO. Rates: T4 0.89 cr/h; **dense** per-WAV ≈ 0.0041 cr (measured on
 `r2-denseft-s`, mixed 96/256); pruned per-WAV §A10 0.001329 + 9.0e-6·L; job overhead 0.145 cr; Studio 0.27 cr/h over the FULL
 wall-clock incl. queue (lesson 2026-09-06 14:4x). Designs in `docs/review/2026-09-06_review_round3_methodological_response.md`.
@@ -794,3 +794,14 @@ wall-clock incl. queue (lesson 2026-09-06 14:4x). Designs in `docs/review/2026-0
 Priority: 1b (decisive for the dense 2×2 paragraphs) ≫ 3 (the 0-cr split-half already answers the question). CPU items done
 this session: `r2_posthoc_review3.py`, `verify_draft14_numbers.py`, `pagecheck_times.py`, the `dense_raw` dry-run — 0 cr GPU;
 Studio uptime for the session ≈ 4 h ≈ 1.1 cr (will appear in the next `total_spent` reading).
+
+### 2026-09-06 (MVD 17:52) | Gabriel: "tenemos 4 créditos cargados" — what fits (nothing launched)
+
+`total_spent` still **135.5623 cr** (SDK, 20:53 UTC; the counter has not moved in ~1 h of Studio uptime, so Studio billing lags —
+the 4-cr pool must be reckoned as 4 minus the Studio hours since the top-up, not read from the SDK). Of the third review's items only
+**1b** (raw dense baseline, `r3-denseraw`) and **3** (second disjoint severity-2 draw) need GPU. Re-costing 1b with BOTH dense
+eval measurements (denseft-s eval share ≈ 1.47 cr / 362 WAVs = 0.0041 cr/WAV; denseft-n eval share ≈ 2.0 cr / 384 WAVs = 0.0052 cr/WAV):
+384 WAVs → **1.6–2.0 cr** + 0.145 overhead → job point **1.7–2.15**, hard cap **2.6** (covers the worse rate ×1.2); Studio ≈ 2–3 h
+incl. queue + CPU scoring ≈ 0.6–0.8 → **≈ 2.3–3.0 cr expected, worst ≈ 3.4 < 4.** Item 3 (≈ 3.4 cr, cap 4.0) does NOT fit together
+with 1b and is optional (answered at 0 cr by the split-half). Recommendation: 1b alone, cap 2.6, launch promptly (the Studio bills
+0.27 cr/h from the same pool while it waits) and stop the Studio between the job and the CPU scoring. Awaiting Gabriel's GO.

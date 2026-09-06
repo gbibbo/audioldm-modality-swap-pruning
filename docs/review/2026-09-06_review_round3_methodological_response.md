@@ -16,7 +16,7 @@ sensitivity at severity 2), **4** (hip-hop has no duration interaction) and the 
 
 ## 0. Budget fact that conditions every "correctable" verdict
 
-* Lightning `total_spent` = **135.5623 cr** (SDK `billing_service_get_user_balance()`, 2026-09-06 ≈ 22:45 UTC; `balance`
+* Lightning `total_spent` = **135.5623 cr** (SDK `billing_service_get_user_balance()`, 2026-09-06 ≈ 19:45 UTC (16:45 MVD); `balance`
   still the static 5.0). Unchanged since the OUT_OF_FUNDS reading of 13:5x MVD (`docs/compute_budget.md`): Gabriel's 20-cr
   pool for the 2×2 campaign is spent (114.95 → 135.56 = 20.6 cr) and Lightning refused the last two tail jobs with
   `USER_STOP_WORKLOAD_REASON_OUT_OF_FUNDS`.
