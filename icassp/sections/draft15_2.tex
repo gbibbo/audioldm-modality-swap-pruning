@@ -1,0 +1,107 @@
+\section{Experimental design}
+\subsection{Systems and operating points}
+The dense reference is AudioLDM-M-Full~\cite{liu2023audioldm}, with $415.96$\,M U-Net parameters. We study the two released pruning severities from Singh et al.~\cite{singh2026pruning}. Severity~1 retains $145.67$\,M parameters after $65.0\%$ pruning, while severity~2 retains $71.08$\,M after $82.9\%$ pruning. At each severity, P denotes the checkpoint before recovery and \PFT{} the released checkpoint after $10^{6}$ AudioCaps fine-tuning steps. Their paired difference measures what the released recovery stage adds within the pruned architecture. It does not by itself identify an effect caused specifically by pruning.
+
+The primary duration comparison uses $3.84$ and $10.24$\,s. Severity~2 adds $5.12$ and $7.68$\,s, producing a four-point sweep. AudioCaps \textsc{test} supplies the in-domain prompts~\cite{kim2019audiocaps}. Clotho provides a held-out sound-event domain with a different caption distribution~\cite{drossos2020clotho}. A second held-out battery uses hip-hop and rap captions from MusicCaps~\cite{agostinelli2023musiclm}. The main severity~2 AudioCaps analysis uses $192$ prompts, Clotho uses $96$, and the extended hip-hop battery uses $127$.
+
+Generation uses DDIM~\cite{song2021ddim} with $50$ steps, guidance $2.5$ and $\eta=0$. A pre-specified robustness check repeats the severity~2 endpoint comparison with the published DDIM $200$, guidance $3.5$ recipe.
+
+\subsection{Interventions and weight conventions}
+The mechanism and boundary checks were frozen before their own generation and scoring. They test explanations of the primary finding but are not part of its original confirmatory family.
+
+The central intervention is symmetric. Starting from the same severity~2 P checkpoint, we run two full-U-Net fine-tunes for $20{,}000$ steps with the same optimizer and data recipe. One uses random $3.84$\,s AudioCaps crops and the other uses $10.24$\,s examples. Both checkpoints are evaluated at both durations on the same $192$ prompts with common generation noise. Let $J_{3.84}$ and $J_{10.24}$ denote their long-minus-short recovery interactions. Training-duration specialization predicts
+\begin{equation}
+\Delta J = J_{10.24}-J_{3.84}>0,
+\end{equation}
+because moving the training duration to $10.24$\,s should move recovery toward that evaluation duration.
+
+A reduced dense $2\times2$ repeats the same two $20{,}000$-step fine-tunes from AudioLDM-M-Full. The experimental fine-tunes are raw exports, so we also generate the raw weights of the released dense checkpoint on the same prompts. Raw and EMA dense baselines differ by at most about $0.02$ CLAP at either duration, allowing the dense fine-tunes to be interpreted without attributing a large change to the weight convention. This short-budget dense experiment is diagnostic rather than a substitute for the unavailable dense checkpoint after the released $10^{6}$-step recovery.
+
+The severity~2 P used for the symmetric intervention is derived from dense EMA weights, whereas both $20{,}000$-step fine-tuned checkpoints are raw exports. This convention mismatch cancels exactly in $\Delta J$. On the dense model at step zero, its duration-dependent offset is $-0.019$ \ci{-0.050}{+0.013}, so we treat the individual $J$ values with this caveat and base the specialization test on their paired difference.
+
+Further checks extend the released recovery to $15.36$\,s on $96$ matched prompts, enlarge severity~1 with a disjoint $96$-prompt sample, split the severity~2 AudioCaps draw into two outcome-blind halves, and complete dense hip-hop anchors for all $127$ prompts. These analyses probe response shape, prompt-sample stability and metric-floor interpretations.
+
+\subsection{Pairing, endpoints and estimands}
+Within each operating point, compared checkpoints receive identical diffusion noise $x_T$ for a given prompt. The prompt is the statistical unit, and $95\%$ intervals use a prompt-level percentile bootstrap with $B=10^{4}$ resamples. This common-random-number design makes $R$ a paired effect rather than a difference between independently sampled generation sets.
+
+The primary endpoint is fused CLAP cosine from \texttt{laion/\allowbreak clap-htsat-fused}, revision \texttt{365dea6e}~\cite{wu2023clap}. Human-CLAP provides a second alignment scorer. KL is measured against matched real references, with positive recovery meaning that \PFT{} reduces KL relative to P. For PANNs, \emph{top-10 capture} is the number of ground-truth AudioSet labels from the reference clip that appear among the generated clip's ten highest-scoring PANNs classes. PANNs capture recovery is the paired increase in that count from P to \PFT{}.
+
+For operating point $o$, recovery gain is
+\begin{equation}
+R(o)=\mathbb{E}_{i}\left[S(\PFT,i,o)-S(P,i,o)\right].
+\end{equation}
+The duration interaction is $J=R(10.24\,\mathrm{s})-R(3.84\,\mathrm{s})$. We also report
+\begin{equation}
+\rho_{\mathrm{ref}}=\frac{R}{S(\mathrm{ref})-S(P)},
+\end{equation}
+which expresses the gain as a fraction of the available gap to a dense or real-audio reference. Because $\rho$ is a ratio of estimated quantities, its interval can be wide when recovery is small or the reference gap is noisy.
+
+% ========================== FIGURE 1 SPECIFICATION ==========================
+% IMPORTANT: The following figure is intentionally a layout placeholder. Do not
+% replace the reserved boxes with a synthetic graph. Generate the final figure
+% from the committed per-prompt result artifacts.
+%
+% Intended final figure footprint:
+%   - one figure* spanning both columns
+%   - two side-by-side panels
+%   - each plot area exactly about 0.49\textwidth wide and 4.80 cm high
+%   - caption below, matching the current placeholder footprint
+%
+% PANEL (a), operating-point response of the released recovery
+%   Scientific purpose:
+%     Show the main duration dependence and the uncertainty beyond 10.24 s.
+%   X axis:
+%     requested duration in seconds: 3.84, 5.12, 7.68, 10.24, 15.36.
+%   Y axis:
+%     paired CLAP recovery gain R = CLAP(P+FT)-CLAP(P).
+%   Main series:
+%     severity-2 released 10^6-step recovery at 3.84/5.12/7.68/10.24,
+%     n=192, point estimate with 95% prompt-bootstrap CI.
+%   Matched extension:
+%     plot the n=96 matched-subset point at 10.24 s separately (open marker)
+%     and connect THAT point, not the n=192 point, to the 15.36 s n=96 result
+%     with a dashed segment. This visually respects the paired D4 comparison.
+%   Annotation:
+%     D4 = R(15.36)-R(10.24 matched) = +0.021 [-0.023,+0.067].
+%     Use wording "no clear increase" or only the CI. Do not label plateau.
+%   Optional reference cue:
+%     a light vertical guide at 10.24 s may mark the native duration, but it
+%     must not imply that 10.24 s is a maximum.
+%
+% PANEL (b), symmetric training-duration intervention
+%   Scientific purpose:
+%     Make the specialization prediction and its falsification visually obvious.
+%   X axis:
+%     evaluation duration: 3.84 and 10.24 s.
+%   Y axis:
+%     20k-step fine-tuning gain over the SAME severity-2 P baseline.
+%   Series 1:
+%     shortft, trained at 3.84 s, R at both evaluation durations with 95% CIs.
+%   Series 2:
+%     longft, trained at 10.24 s, R at both evaluation durations with 95% CIs.
+%   Annotate or bracket the two slopes:
+%     J_short = +0.065 [+0.044,+0.087]
+%     J_long  = +0.031 [+0.010,+0.052]
+%     Delta J = J_long-J_short = -0.035 [-0.064,-0.004].
+%   Visual logic:
+%     specialization predicts the long-trained line should have a larger
+%     long-minus-short slope. The observed ordering is the opposite.
+%   Do NOT add the dense 2x2 or public dense text-FT reference to this panel.
+%     They answer different questions and would obscure the matched comparison.
+%   Styling:
+%     simple point-lines with vertical 95% CI whiskers, no decorative shading,
+%     direct labels or a small legend, readable at two-column ICASSP print size.
+% ===========================================================================
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\fbox{\rule{0pt}{4.80cm}\rule{0.965\linewidth}{0pt}}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\fbox{\rule{0pt}{4.80cm}\rule{0.965\linewidth}{0pt}}
+\end{minipage}
+\caption{Duration dependence and the symmetric training-duration test. Left, the released severity~2 recovery is evaluated across duration, with the $15.36$\,s extension compared on its matched $96$-prompt subset. Right, two $20{,}000$-step fine-tunes from the same pruned checkpoint differ only in training duration and are evaluated at both $3.84$ and $10.24$\,s.}
+\label{fig:duration}
+\end{figure*}

@@ -1,79 +1,81 @@
-# Expanded results for the ICASSP paper
+# Expanded results for Draft 16
 
-This document contains numerical detail kept outside the four technical pages. It is an audit layer, not a substitute for the manuscript. All intervals are 95% prompt-level percentile-bootstrap intervals unless noted otherwise.
+This file retains numerical detail that is useful for audit but too dense for the four technical pages. Intervals are 95% prompt-level percentile-bootstrap intervals unless stated otherwise.
 
-Notation follows the paper. P is the pruned checkpoint, P+FT the recovered checkpoint, R(d) the paired recovery gain at requested duration d, J = R(10.24 s) - R(3.84 s), and Delta J = J(train@10.24) - J(train@3.84).
+## Released severity-2 duration response
 
-## Released recovery across duration
+| Duration | CLAP recovery R |
+|---|---:|
+| 3.84 s | +0.085 [+0.066,+0.105] |
+| 5.12 s | +0.139 [+0.115,+0.164] |
+| 7.68 s | +0.201 [+0.175,+0.227] |
+| 10.24 s | +0.244 [+0.215,+0.273] |
 
-| Duration | CLAP R | Human-CLAP R | KL recovery | PANNs top-10 capture R |
-|---|---:|---:|---:|---:|
-| 3.84 s | +0.085 [0.066,0.105] | +0.189 [0.162,0.217] | +0.66 [0.43,0.92] | +0.19 [0.06,0.32] |
-| 5.12 s | +0.139 [0.115,0.164] | +0.278 [0.243,0.314] | +1.16 [0.91,1.41] | +0.38 [0.23,0.53] |
-| 7.68 s | +0.201 [0.175,0.227] | +0.371 [0.336,0.405] | +1.95 [1.68,2.23] | +0.76 [0.61,0.91] |
-| 10.24 s | +0.244 [0.215,0.273] | +0.375 [0.340,0.409] | +2.22 [1.92,2.52] | +0.86 [0.70,1.02] |
-| J | +0.159 [0.131,0.188] | +0.185 [0.151,0.220] | +1.56 [1.20,1.92] | +0.67 [0.49,0.85] |
+Primary endpoint interaction: **J = +0.159 [+0.131,+0.187]**.
 
-The published DDIM-200, guidance-3.5 recipe gives J = +0.184 [0.126,0.243]. The severity-2 registered family survives Holm correction.
+Matched n=96 extension: R(15.36)-R(10.24) = +0.021 [-0.023,+0.067]. The supported reading is no clear increase beyond 10.24 s, not a demonstrated plateau.
 
-### Extension beyond 10.24 s
+## Symmetric 20k training-duration intervention
 
-On the matched first 96 AudioCaps prompts, R(10.24 s) = +0.242 [0.198,0.285] and R(15.36 s) = +0.264 [0.216,0.310]. The matched step is +0.021 [-0.023,+0.067]. This does not establish a plateau and is reported in the paper only as no clear increase beyond 10.24 s.
-
-## Symmetric 20k-step training-duration intervention
-
-Both checkpoints start from the same severity-2 P baseline and use the same 20,000-step full-U-Net recipe apart from training duration.
+Both intervention arms fine-tune the full U-Net with AdamW for 20,000 optimizer updates, using a constant learning rate of $10^{-4}$, betas $(0.9,0.999)$, weight decay 0.01, no scheduler and effective batch size 2. No lower-learning-rate dense run was performed, so an overly aggressive update for an already converged dense model remains an untested explanation for the dense degradation.
 
 | Training duration | R(3.84 s) | R(10.24 s) | J |
 |---|---:|---:|---:|
-| 3.84 s | +0.009 [-0.006,+0.024] | +0.075 [0.053,0.097] | +0.065 [0.044,0.087] |
-| 10.24 s | +0.017 [0.001,0.033] | +0.048 [0.025,0.070] | +0.031 [0.010,0.052] |
+| 3.84 s | +0.009 [-0.006,+0.024] | +0.075 [+0.053,+0.097] | +0.065 [+0.044,+0.087] |
+| 10.24 s | +0.017 [+0.001,+0.033] | +0.048 [+0.025,+0.070] | +0.031 [+0.010,+0.052] |
 
-Delta J = J(train@10.24) - J(train@3.84) = **-0.035 [-0.064,-0.004]**.
+Directional specialization contrast: **Delta J = -0.035 [-0.064,-0.004]**.
 
-Training-duration specialization predicts Delta J > 0. The observed contrast is resolved in the opposite direction at this matched 20k-step budget.
+The P baseline is EMA-derived and the two experimental fine-tunes are raw exports. This convention cancels exactly in Delta J. The dense step-zero raw-vs-EMA offset has duration interaction -0.019 [-0.050,+0.013], providing a scale for the convention caveat on individual J values.
 
-## Dense diagnostic 2x2
+## Dense raw baseline and short-budget dense 2x2
 
-The dense AudioLDM-M-Full baseline was fine-tuned for 20,000 steps at each duration.
+Dense raw vs EMA:
 
-| Dense fine-tune | G(3.84 s) | G(10.24 s) | J |
-|---|---:|---:|---:|
-| train@3.84 s | -0.182 [-0.207,-0.157] | -0.235 [-0.271,-0.199] | -0.051 [-0.090,-0.013] |
-| train@10.24 s | -0.166 [-0.190,-0.141] | -0.223 [-0.255,-0.191] | -0.057 [-0.091,-0.023] |
-
-Delta J_dense = -0.005 [-0.034,+0.024]. The full-parameter short fine-tunes degrade the EMA dense baseline. This diagnostic therefore cannot replace the unavailable dense checkpoint after the released million-step recovery. A raw-weight baseline generated from the released dense checkpoint on the same prompts scores within +-0.02 CLAP of its EMA weights (O = +0.001 [-0.017,+0.020] at 3.84 s, -0.017 [-0.044,+0.010] at 10.24 s; `configs/research/r3_denseraw_result.json`), so the drop is not a weight-convention artifact: the 20,000-step recipe itself degrades a dense model that had already converged on AudioCaps. Against the raw baseline the fine-tunes lose -0.183 [-0.206,-0.160] / -0.220 [-0.258,-0.181] (train@3.84 s) and -0.168 [-0.190,-0.144] / -0.206 [-0.235,-0.177] (train@10.24 s). The training loss is stable, so this is not optimizer divergence.
-
-## Domain transfer
-
-| Domain | n | R(3.84 s) | R(10.24 s) | rho_dense at 10.24 s |
-|---|---:|---:|---:|---:|
-| AudioCaps | 192 | +0.085 [0.066,0.105] | +0.244 [0.215,0.273] | 0.82 |
-| Clotho | 96 | +0.098 [0.072,0.125] | +0.210 [0.176,0.243] | 0.74 |
-| Hip-hop | 127 | +0.026 [0.007,0.044] | +0.027 [0.003,0.050] | 0.119 [0.015,0.215] |
-
-For hip-hop at n=127, dense above shuffled-caption chance is +0.110 [0.091,0.128] at 3.84 s and +0.108 [0.087,0.130] at 10.24 s. The pooled rho_dense values are 0.106 [0.031,0.177] and 0.119 [0.015,0.215], respectively.
-
-## Severity-1 prompt-set heterogeneity
-
-| Prompt set | J |
+| Duration | O = raw - EMA |
 |---|---:|
-| original Arm-D 80 | +0.044 [-0.000,0.088] |
-| new disjoint 96 | +0.169 [0.115,0.222] |
-| pooled 176 | +0.112 [0.076,0.149] |
+| 3.84 s | +0.001 [-0.017,+0.020] |
+| 10.24 s | -0.017 [-0.044,+0.010] |
 
-The unpaired new-minus-original difference is +0.124 [0.058,0.194]. Both samples were selected without outcome access, but they use different source pools, hash salts and selection rules. The pooled result is therefore evidence that the duration interaction resolves at severity 1, not evidence that its magnitude is sample-invariant.
+The raw-vs-EMA convention cannot explain the approximately 0.2 degradation after the 20k dense fine-tunes.
 
-## Short-generation diagnostics
+Against the raw dense start:
 
-The dense model's floor-corrected duration response is +0.142 [0.111,0.172], close to the real-audio crop response +0.150 [0.133,0.166]. This does not support a strong claim that the dense base model is broken at 3.84 s under CLAP.
+| Dense arm | G'(3.84 s) | G'(10.24 s) | J' |
+|---|---:|---:|---:|
+| train@3.84 | -0.183 [-0.206,-0.160] | -0.220 [-0.258,-0.181] | -0.034 [-0.071,+0.002] |
+| train@10.24 | -0.168 [-0.190,-0.144] | -0.206 [-0.235,-0.177] | -0.038 [-0.069,-0.008] |
 
-The crop analysis remains informative for recovery itself. R_crop = +0.172 [0.150,0.194] when scoring the first 3.84 s of a 10.24 s generation, which exceeds recovery from a separately generated 3.84 s clip by +0.087 [0.065,0.110].
+Dense training-duration contrast: Delta J_dense = -0.005 [-0.033,+0.025]. The experiment is a negative diagnostic and does not replace the unavailable matched dense 10^6-step recovery checkpoint.
 
-## Provenance
+## Public dense text-fine-tuned reference
 
-Second-round protocol: `docs/reviewer2_followup_ext.md`.
+G(3.84) = -0.022 [-0.061,+0.017], G(10.24) = +0.091 [+0.042,+0.141], J = +0.113 [+0.051,+0.173]. This checkpoint is not recipe-matched and is used as contextual evidence only.
 
-Main new artifacts: `configs/research/r2_EXT2x2_result.json` and `configs/research/r2_posthoc_pooled_anchors.json`.
+## Domain and duration
 
-Consolidated evidence report: `docs/reviewer2_scientific_report.md`.
+| Domain | R(3.84 s) | R(10.24 s) | J |
+|---|---:|---:|---:|
+| AudioCaps | +0.085 [+0.066,+0.105] | +0.244 [+0.215,+0.273] | +0.159 [+0.131,+0.187] |
+| Clotho | +0.098 [+0.072,+0.125] | +0.210 [+0.176,+0.243] | +0.112 [+0.079,+0.146] |
+| Hip-hop | +0.026 [+0.007,+0.044] | +0.027 [+0.003,+0.050] | +0.001 [-0.026,+0.028] |
+
+AudioCaps minus hip-hop J = +0.158 [+0.120,+0.197]. AudioCaps minus Clotho J = +0.047 [+0.003,+0.090].
+
+At n=127, the dense hip-hop anchor remains about +0.11 above shuffled-caption chance. Native rho_dense = 0.119 [0.015,0.215]. Its interval is wide because rho is a jointly bootstrapped ratio with a small numerator and an estimated denominator.
+
+## Prompt-sample stability
+
+Severity 1:
+
+- original n=80: J = +0.044 [-0.000,+0.088]
+- disjoint n=96: J = +0.169 [+0.115,+0.222]
+- between-set difference = +0.124 [+0.058,+0.194]
+
+Severity 2 split-half of the outcome-blind n=192 draw:
+
+- first n=96: J = +0.159 [+0.116,+0.200]
+- second n=96: J = +0.160 [+0.122,+0.198]
+- difference = +0.001 [-0.056,+0.057]
+
+The published sampler and secondary scorer checks reuse the same AudioCaps prompts and are robustness checks, not independent prompt replications. Clotho supplies an independent prompt set.
