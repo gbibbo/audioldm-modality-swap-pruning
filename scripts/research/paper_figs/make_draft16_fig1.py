@@ -6,8 +6,8 @@ synthesised, interpolated or smoothed. The panels are written as two separate ve
 manuscript reserves the footprint with two side-by-side `minipage`s, so each file drops straight into
 its own box and the `figure*` footprint (0.49\\textwidth x 4.80 cm per panel) is preserved exactly.
 
-  figs/fig1a_duration.pdf      -- panel (a), operating-point response of the released recovery
-  figs/fig1b_intervention.pdf  -- panel (b), symmetric training-duration intervention
+  fig1a_duration.pdf      -- panel (a), operating-point response of the released recovery
+  fig1b_intervention.pdf  -- panel (b), symmetric training-duration intervention
 
 Sources (all committed, all read-only here):
   configs/research/draft5_opsweep_result.json  -- R by duration, severity 2 released recovery, n=192
@@ -31,8 +31,11 @@ import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-OUT = os.path.join(ROOT, "icassp", "figs")
-os.makedirs(OUT, exist_ok=True)
+# The manuscript is a single flat .tex, so the figure PDFs live beside it and the include
+# path has no directory component. PNG previews stay under icassp/figs/ (gitignored).
+OUT = os.path.join(ROOT, "icassp")
+PREVIEW = os.path.join(ROOT, "icassp", "figs")
+os.makedirs(PREVIEW, exist_ok=True)
 
 
 def load(rel):
@@ -158,7 +161,7 @@ def panel_a():
         borderpad=0.0, labelspacing=0.22)
 
     fig.savefig(os.path.join(OUT, "fig1a_duration.pdf"))
-    fig.savefig(os.path.join(OUT, "fig1a_duration.png"), dpi=400)
+    fig.savefig(os.path.join(PREVIEW, "fig1a_duration.png"), dpi=400)
     plt.close(fig)
 
 
@@ -224,7 +227,7 @@ def panel_b():
         borderpad=0.0, labelspacing=0.22)
 
     fig.savefig(os.path.join(OUT, "fig1b_intervention.pdf"))
-    fig.savefig(os.path.join(OUT, "fig1b_intervention.png"), dpi=400)
+    fig.savefig(os.path.join(PREVIEW, "fig1b_intervention.png"), dpi=400)
     plt.close(fig)
 
 

@@ -76,3 +76,4 @@ icassp/icassp_operating_point_overleaf.zip
 # superseded delivery bundles / previews moved to icassp/archive/ (derivable from the recorded commit)
 icassp/archive/*.zip
 icassp/archive/*.pdf
+icassp/fig1*.png

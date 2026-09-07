@@ -18,7 +18,7 @@ The manuscript is self-contained. The repository keeps the numerical and provena
 
 ## Figure 1
 
-The figure is generated from the frozen artifacts by `scripts/research/paper_figs/make_draft16_fig1.py` (CPU, 0 cr); the plotting specification it implements is kept as TeX comments in `icassp/sections/draft16_2.tex`. Panel (a) shows the released severity-2 duration sweep with the 15.36 s point connected only to its matched n=96 10.24 s subset. Panel (b) shows the symmetric 20k intervention and the directional specialization contrast.
+The figure is generated from the frozen artifacts by `scripts/research/paper_figs/make_draft16_fig1.py` (CPU, 0 cr); the plotting specification it implements is kept as TeX comments above the figure in `icassp/icassp_operating_point.tex` (and in the archived `icassp/archive/draft16_sections/draft16_2.tex`). Panel (a) shows the released severity-2 duration sweep with the 15.36 s point connected only to its matched n=96 10.24 s subset. Panel (b) shows the symmetric 20k intervention and the directional specialization contrast.
 
 ## Numerical audit
 

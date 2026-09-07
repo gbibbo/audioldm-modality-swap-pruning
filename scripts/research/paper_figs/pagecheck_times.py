@@ -41,6 +41,11 @@ def main():
     for f in ("spconf.sty", "IEEEbib.bst"):
         shutil.copy(os.path.join(ICASSP, f), tmp)
     shutil.copytree(os.path.join(ICASSP, "figs"), os.path.join(tmp, "figs"))
+    # Draft 16 is a single flat .tex whose \includegraphics paths have no directory
+    # component, so the figure PDFs sitting beside the manuscript must be copied too.
+    for f in os.listdir(ICASSP):
+        if f.endswith(".pdf") and f.startswith("fig"):
+            shutil.copy(os.path.join(ICASSP, f), tmp)
     # Draft 13+ is modular: the main file \input{}s icassp/sections/*.tex and the preamble lives in the first
     # section file. Copy the sections, then patch whichever file carries the package line.
     if os.path.isdir(os.path.join(ICASSP, "sections")):

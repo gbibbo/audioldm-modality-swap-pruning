@@ -1,13 +1,25 @@
 #!/usr/bin/env python3
-"""Rebuild the Draft-16 Overleaf delivery bundle from the repository sources (CPU, 0 cr).
+"""Build the Draft-16 Overleaf bundle: FOUR files, no subdirectories (CPU, 0 cr).
 
-The bundle keeps exactly the member layout Gabriel delivered in
-`icassp_operating_point_draft16_camera_ready.zip`; this script only re-assembles it from the tracked
-sources so that the zip can never drift from the repository, and adds the two generated Figure-1
-panels. It also refreshes the preview PDF using the same Times-metric proxy as `pagecheck_times.py`
-(fontspec + Liberation Serif, metric-compatible with the Nimbus Roman that Overleaf's pdfLaTeX
-actually uses) -- a local `tectonic` build without that patch silently falls back to the wider Latin
-Modern and misrepresents the page budget.
+WHY FLAT. The first Draft-16 bundle shipped `icassp_operating_point.tex` plus `sections/draft16_*.tex`.
+Overleaf chooses the main file by looking for `\\documentclass`, found it in `sections/draft16_1.tex`,
+compiled that section alone and aborted with `(job aborted, no legal \\end found)` -- the matching
+`\\end{document}` was in `draft16_4.tex`. A single .tex removes the ambiguity by construction, so the
+manuscript is now one flat file and the repository layout mirrors the bundle exactly.
+
+    icassp_operating_point.tex   the whole manuscript
+    spconf.sty                   the ICASSP class file (not on CTAN, must ship)
+    fig1a_duration.pdf           Figure 1(a)
+    fig1b_intervention.pdf       Figure 1(b)
+
+`IEEEbib.bst` is deliberately NOT shipped: Draft 16 has no `\\bibliography{}`/`\\bibliographystyle`,
+its references are an inline `thebibliography`, so BibTeX never runs (asserted below). The companion
+markdown (`PAPER_COMPANION.md`, `PAPER_EXPANDED_RESULTS.md`, ...) is not shipped either; it lives in
+the repository and is not needed to compile.
+
+Before writing the zip, the bundle is unpacked into a scratch directory and compiled there with
+Times-compatible metrics (see `pagecheck_times.py`), so the zip is never published unless exactly
+those four files build on their own.
 
 Run: OPENBLAS_CORETYPE=Haswell .venv/bin/python scripts/research/paper_figs/build_draft16_zip.py
 """
@@ -24,79 +36,65 @@ import pagecheck_times as PC  # noqa: E402  (reuse the validated Times-metric co
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 ICASSP = os.path.join(ROOT, "icassp")
-TOP = "icassp_operating_point_draft16_camera_ready_delivery"
 OUT = os.path.join(ICASSP, "icassp_operating_point_draft16_camera_ready.zip")
-
-# zip member -> repository source
-MEMBERS = {
-    "icassp_operating_point.tex": "icassp/icassp_operating_point.tex",
-    "sections/draft16_1.tex": "icassp/sections/draft16_1.tex",
-    "sections/draft16_2.tex": "icassp/sections/draft16_2.tex",
-    "sections/draft16_3.tex": "icassp/sections/draft16_3.tex",
-    "sections/draft16_4.tex": "icassp/sections/draft16_4.tex",
-    "figs/fig1a_duration.pdf": "icassp/figs/fig1a_duration.pdf",
-    "figs/fig1b_intervention.pdf": "icassp/figs/fig1b_intervention.pdf",
-    "spconf.sty": "icassp/spconf.sty",
-    "IEEEbib.bst": "icassp/IEEEbib.bst",
-    "README.md": "icassp/draft16_delivery_notes/DELIVERY_README.md",
-    "README_OVERLEAF.md": "icassp/README_OVERLEAF.md",
-    "PAPER_COMPANION.md": "icassp/PAPER_COMPANION.md",
-    "PAPER_EXPANDED_RESULTS.md": "icassp/PAPER_EXPANDED_RESULTS.md",
-    # `.gitignore` inherits an upstream `*.txt` rule, so the source is tracked as .md and
-    # emitted into the bundle under the name Gabriel delivered.
-    "VERSION.txt": "icassp/draft16_delivery_notes/VERSION.md",
-    "docs/fourth_review_response_manuscript.md": "docs/fourth_review_response_manuscript.md",
-    "paper-operating-point-recovery/README.md": "icassp/paper-operating-point-recovery/README.md",
-}
+MEMBERS = ["icassp_operating_point.tex", "spconf.sty",
+           "fig1a_duration.pdf", "fig1b_intervention.pdf"]
 
 
-def build_preview_pdf(dest):
-    """Compile the manuscript with Times-compatible metrics and write the PDF to `dest`."""
-    tmp = tempfile.mkdtemp(prefix="draft16_preview_")
-    for f in ("spconf.sty", "IEEEbib.bst"):
-        shutil.copy(os.path.join(ICASSP, f), tmp)
-    shutil.copytree(os.path.join(ICASSP, "figs"), os.path.join(tmp, "figs"))
-    shutil.copytree(os.path.join(ICASSP, "sections"), os.path.join(tmp, "sections"))
-    shutil.copy(os.path.join(ICASSP, "icassp_operating_point.tex"),
-                os.path.join(tmp, "icassp_operating_point.tex"))
-    patched = False
-    for rel in ["icassp_operating_point.tex"] + [f"sections/{f}" for f in sorted(os.listdir(os.path.join(tmp, "sections")))]:
-        fp = os.path.join(tmp, rel)
-        src = open(fp, encoding="utf-8").read()
-        if PC.ANCHOR_RE.search(src):
-            open(fp, "w", encoding="utf-8").write(
-                PC.ANCHOR_RE.sub(lambda m: m.group(0) + "\n" + PC.PATCH, src, count=1))
-            patched = True
-            break
-    assert patched, "package line not found; update pagecheck_times.ANCHOR_RE"
-    r = subprocess.run([PC.TECTONIC, "-X", "compile", "icassp_operating_point.tex", "--outdir", "."],
+def check_sources():
+    tex = open(os.path.join(ICASSP, "icassp_operating_point.tex"), encoding="utf-8").read()
+    assert tex.count("\\documentclass") == 1, "expected exactly one \\documentclass"
+    assert tex.count("\\begin{document}") == 1 and tex.count("\\end{document}") == 1, \
+        "the manuscript must be one complete document"
+    assert "\\input{" not in tex, "the manuscript must be flat: no \\input of section files"
+    assert "\\bibliographystyle" not in tex and "\\bibliography{" not in tex, \
+        "Draft 16 gained a BibTeX bibliography; IEEEbib.bst must then be shipped again"
+    assert "{figs/" not in tex, "graphics paths must be flat (no figs/ directory in the bundle)"
+    for name in MEMBERS:
+        assert os.path.exists(os.path.join(ICASSP, name)), f"missing bundle member: {name}"
+
+
+def compile_bundle(tmp):
+    """Compile the unpacked bundle in place; returns the PDF path."""
+    src = open(os.path.join(tmp, "icassp_operating_point.tex"), encoding="utf-8").read()
+    assert PC.ANCHOR_RE.search(src), "package line not found; update pagecheck_times.ANCHOR_RE"
+    open(os.path.join(tmp, "check.tex"), "w", encoding="utf-8").write(
+        PC.ANCHOR_RE.sub(lambda m: m.group(0) + "\n" + PC.PATCH, src, count=1))
+    r = subprocess.run([PC.TECTONIC, "-X", "compile", "check.tex", "--outdir", "."],
                        cwd=tmp, capture_output=True, text=True)
     if r.returncode:
-        print(r.stderr[-2000:])
+        print(r.stderr[-2500:])
         sys.exit(1)
-    shutil.copy(os.path.join(tmp, "icassp_operating_point.pdf"), dest)
-    shutil.rmtree(tmp, ignore_errors=True)
+    return os.path.join(tmp, "check.pdf")
 
 
 def main():
-    for src in MEMBERS.values():
-        p = os.path.join(ROOT, src)
-        assert os.path.exists(p), f"missing source: {src}"
+    check_sources()
 
-    tmp = tempfile.mkdtemp(prefix="draft16_zip_")
-    pdf = os.path.join(tmp, "icassp_operating_point.pdf")
-    build_preview_pdf(pdf)
+    tmp = tempfile.mkdtemp(prefix="draft16_bundle_")
+    for name in MEMBERS:
+        shutil.copy(os.path.join(ICASSP, name), tmp)
+    pdf = compile_bundle(tmp)
+
+    import pypdfium2 as pdfium
+    doc = pdfium.PdfDocument(pdf)
+    pages = len(doc)
+    page_of = lambda s: next((i + 1 for i in range(pages)
+                              if s in doc[i].get_textpage().get_text_range()), None)
+    fig_page, ref_page = page_of("Duration dependence and the symmetric"), page_of("REFERENCES")
     shutil.copy(pdf, os.path.join(ICASSP, "icassp_operating_point.pdf"))
 
     with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED) as z:
-        for member, src in MEMBERS.items():
-            z.write(os.path.join(ROOT, src), f"{TOP}/{member}")
-        z.write(pdf, f"{TOP}/icassp_operating_point.pdf")
+        for name in MEMBERS:
+            z.write(os.path.join(ICASSP, name), name)
     shutil.rmtree(tmp, ignore_errors=True)
 
+    print(f"bundle compiles standalone: {pages} pages, Fig. 1 on page {fig_page}, "
+          f"REFERENCES on page {ref_page}")
     with zipfile.ZipFile(OUT) as z:
         names = sorted(z.namelist())
-        print(f"{OUT}  ({os.path.getsize(OUT)} bytes, {len(names)} members)")
+        assert not any("/" in n for n in names), "the bundle must have no subdirectories"
+        print(f"{OUT}  ({os.path.getsize(OUT)} bytes, {len(names)} files, no subdirectories)")
         for n in names:
             print(f"  {z.getinfo(n).file_size:>9}  {n}")
 
