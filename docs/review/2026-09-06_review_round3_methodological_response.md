@@ -235,3 +235,11 @@ re-use the same prompts and are robustness checks, not new samples."
 | 5 — soften the CLAP-only claim | wording | Yes (wording); human evidence **no** | 0 | reviewer's phrasing; optional KL/PANNs view (0 cr) |
 | 6 — ρ clause, URL, page budget | presentation | Yes | 0 | clause; URL allowed; Draft 14 fits 4 pages |
 | provenance — J upper bound 0.188 → 0.187 | camera-ready | Yes | 0 | two occurrences |
+
+## Addendum (2026-09-06 21:0x) — item 1(b) executed
+
+Gabriel authorised a 4-cr top-up (GO 18:00 MVD); `r3-denseraw` ran (1.3248 cr, Completed) and was scored on CPU
+(`configs/research/r3_denseraw_result.json`, `docs/review3_denseraw_results.md`). Pre-specified reading **(ii) DEGRADATION**:
+`O(d)` within ±0.02 at both durations, `G′` ≈ −0.17 to −0.22 for both dense arms. The raw-vs-EMA explanation is falsified
+and must be deleted from Sec. 3.2 / 4.2 / 5 (edits E1–E4); the dense 2×2 stays a negative with `ΔJ_dense ≈ 0`. Item 1(c):
+`Δ_O = −0.019 [−0.050, +0.013]` is the caveat magnitude for the individual pruned J values (no correction applied).

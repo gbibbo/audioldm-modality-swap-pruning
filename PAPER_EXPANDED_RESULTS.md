@@ -42,7 +42,7 @@ The dense AudioLDM-M-Full baseline was fine-tuned for 20,000 steps at each durat
 | train@3.84 s | -0.182 [-0.207,-0.157] | -0.235 [-0.271,-0.199] | -0.051 [-0.090,-0.013] |
 | train@10.24 s | -0.166 [-0.190,-0.141] | -0.223 [-0.255,-0.191] | -0.057 [-0.091,-0.023] |
 
-Delta J_dense = -0.005 [-0.034,+0.024]. The full-parameter short fine-tunes degrade the EMA dense baseline. This diagnostic therefore cannot replace the unavailable dense checkpoint after the released million-step recovery. The follow-up audit attributes the mismatch to the pre-declared raw-weight-versus-EMA issue together with limited AudioCaps headroom, not optimizer divergence.
+Delta J_dense = -0.005 [-0.034,+0.024]. The full-parameter short fine-tunes degrade the EMA dense baseline. This diagnostic therefore cannot replace the unavailable dense checkpoint after the released million-step recovery. A raw-weight baseline generated from the released dense checkpoint on the same prompts scores within +-0.02 CLAP of its EMA weights (O = +0.001 [-0.017,+0.020] at 3.84 s, -0.017 [-0.044,+0.010] at 10.24 s; `configs/research/r3_denseraw_result.json`), so the drop is not a weight-convention artifact: the 20,000-step recipe itself degrades a dense model that had already converged on AudioCaps. Against the raw baseline the fine-tunes lose -0.183 [-0.206,-0.160] / -0.220 [-0.258,-0.181] (train@3.84 s) and -0.168 [-0.190,-0.144] / -0.206 [-0.235,-0.177] (train@10.24 s). The training loss is stable, so this is not optimizer divergence.
 
 ## Domain transfer
 

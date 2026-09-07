@@ -100,3 +100,13 @@ Checked before recommending any manuscript change:
 headroom) and must be reported as a limitation, not as evidence for or against dense recovery. No full adversarial
 re-run is warranted (and none is affordable). This supersedes the earlier "‎/auditar recommended" flag for the parts
 checked here.
+
+## Addendum (2026-09-06 21:0x, REVIEW3-DENSERAW-RESULT) — explanation (a) above is falsified by measurement
+
+The raw dense baseline was generated (job `r3-denseraw`, 192 × {3.84, 10.24} s, CRN-paired) and scored:
+`O(d) = CLAP(dense_raw) − CLAP(dense_EMA) = +0.001 [−0.017, +0.020]` at 3.84 s and `−0.017 [−0.044, +0.010]` at 10.24 s.
+The raw-vs-EMA convention therefore moves CLAP by ≤ 0.02 and **cannot account for the −0.2 drop**; against the raw baseline
+the dense fine-tunes still lose `−0.18 / −0.22` (short) and `−0.17 / −0.21` (native). Pre-specified reading **DEGRADATION**
+(`docs/review3_denseraw.md` §4): the recipe itself degrades the AudioCaps-converged dense model; explanation (b) "no
+headroom" stands alone. Item 1 (ΔJ_pruned) is unaffected. Full result: `docs/review3_denseraw_results.md`,
+`configs/research/r3_denseraw_result.json`.

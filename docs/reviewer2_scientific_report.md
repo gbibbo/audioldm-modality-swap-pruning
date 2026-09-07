@@ -164,3 +164,15 @@ gains express only where the base model works.
 | 5 | severity-1 heterogeneity | post-hoc (NEW) | diff +0.124 [+0.058, +0.194]; pooled +0.112 [+0.076, +0.149] | **addressed**: report both subsets |
 | 6 | hip-hop anchors 64→127 | post-hoc (NEW) | ρ_dense 0.106 / 0.119 (n=127); A_dense +0.11 | **addressed**: full coverage, ≈11–12% of dense gap |
 | 7 | out-of-distribution hypothesis | XSEV-DENSE-192 *[reported]* + Point 1 | dense dur. response +0.142 ≈ real +0.150 | formulated; discriminating datum = ΔJ_pruned < 0 |
+
+---
+
+## Addendum (2026-09-06 21:0x) — Point 2 correction from REVIEW3-DENSERAW
+
+The "raw-weight-vs-EMA effect" offered above as part of the explanation of the dense 2×2 drop was tested by generating the
+released checkpoint's raw weights on the same 192 prompts (`r3-denseraw`, 1.32 cr): `O(3.84) = +0.001 [−0.017, +0.020]`,
+`O(10.24) = −0.017 [−0.044, +0.010]`, `Δ_O = −0.019 [−0.050, +0.013]`. Raw and EMA weights score the same; the fine-tunes
+lose `−0.183 [−0.206, −0.160]` / `−0.220 [−0.258, −0.181]` (short) and `−0.168 [−0.190, −0.144]` / `−0.206 [−0.235, −0.177]`
+(native) against the **raw** baseline as well. Reading **DEGRADATION**: the 20 000-step recipe degrades the
+AudioCaps-converged dense model; the weight convention is not the cause and must not be cited as one in the manuscript
+(edits E1–E4 in `docs/review3_denseraw_results.md`). ΔJ_dense and Point 1 are unchanged.

@@ -813,3 +813,12 @@ with 1b and is optional (answered at 0 cr by the split-half). Recommendation: 1b
 3300/6600/600 s as the primary bound. Studio ≈ 2–3 h × 0.27 ≈ 0.6–0.8 cr (the idle guard protects the watchdog process, so the
 Studio stays up until the job settles + 45 min unless Gabriel stops it). Total ≈ 2.3–3.0 cr, worst ≈ 3.4 < 4. `total_spent` at
 launch 135.5623 cr. Settled cost to be recorded in the RESULT entry.
+
+### 2026-09-06 (MVD 21:0x) | REVIEW3-DENSERAW settled
+
+`r3-denseraw` Completed **1.3248 cr** (77.2 running-min; cap 2.6 / 180; estimate was 1.7–2.15). `total_spent` **136.9389 cr** at
+scoring (135.5623 at launch → **+1.38 cr** for job + Studio). Of Gabriel's 4-cr pool ≈ **2.6 cr remain unspent**. Measured dense
+**inference-only** per-WAV rate on the T4: (1.3248 − 0.145) / 388 ≈ **0.0030 cr/WAV** at mixed latent 96/256 (the 0.0041–0.0052
+used for the estimate came from r2 jobs whose eval share was entangled with training; use 0.0030 for dense inference, 0.0022 for
+pruned). Reading DEGRADATION (ledger REVIEW3-DENSERAW-RESULT). Nothing else launched; the Studio keeps billing ≈ 0.27 cr/h until
+stopped or idle-guarded.

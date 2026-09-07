@@ -1,0 +1,192 @@
+{
+ "artifact": "r3_denseraw_result",
+ "protocol_doc": "docs/review3_denseraw.md",
+ "protocol_doc_sha256": "807309e37362b532aedd10a85f671e6d6dd8244685c4daeaa44bd277d056f9ef",
+ "class": "pre-specified follow-up (docs/review3_denseraw.md); cannot change any frozen verdict",
+ "bootstrap": {
+  "B": 10000,
+  "seed_namespace": "REVIEW3|BOOTSTRAP|2026-09-06",
+  "unit": "prompt",
+  "ci": "percentile 95%"
+ },
+ "SESOI": 0.025,
+ "levels": {
+  "dense_raw_3.84": 0.20811239449540153,
+  "dense_raw_10.24": 0.3365407280119446,
+  "dense_raw_floor_3.84": -0.021554748402735413,
+  "dense_raw_floor_10.24": -0.01746433689110442,
+  "dense_ema_3.84": 0.20678750597774828,
+  "dense_ema_10.24": 0.35384638224786613,
+  "n_dense_raw": {
+   "3.84": 192,
+   "10.24": 192
+  }
+ },
+ "O": {
+  "3.84": {
+   "point": 0.0013248885176532592,
+   "lo": -0.016869193668389928,
+   "hi": 0.01979019564363017,
+   "n": 192
+  },
+  "10.24": {
+   "point": -0.01730565423592149,
+   "lo": -0.04415120672638295,
+   "hi": 0.01029083346693369,
+   "n": 192
+  }
+ },
+ "O_reading": {
+  "3.84": "WITHIN SESOI",
+  "10.24": "UNRESOLVED"
+ },
+ "dO": {
+  "point": -0.018630542753574748,
+  "lo": -0.0497489763097595,
+  "hi": 0.013268556208762066,
+  "n": 192
+ },
+ "dO_reading": "UNRESOLVED",
+ "G_prime_vs_dense_raw": {
+  "denseft_short": {
+   "3.84": {
+    "point": -0.1832269050889105,
+    "lo": -0.20610729798803126,
+    "hi": -0.16021848617092477,
+    "n": 192
+   },
+   "10.24": {
+    "point": -0.21976025344749145,
+    "lo": -0.25779393750215496,
+    "hi": -0.1807274977571112,
+    "n": 170
+   }
+  },
+  "denseft_native": {
+   "3.84": {
+    "point": -0.1675093316589482,
+    "lo": -0.19017140019198756,
+    "hi": -0.1442788694126648,
+    "n": 192
+   },
+   "10.24": {
+    "point": -0.20582662758048778,
+    "lo": -0.23524530122692036,
+    "hi": -0.17689952294070582,
+    "n": 192
+   }
+  }
+ },
+ "G_vs_dense_ema_recomputed": {
+  "denseft_short": {
+   "3.84": {
+    "point": -0.18190201657125726,
+    "lo": -0.20637333064114502,
+    "hi": -0.15731734518788773,
+    "n": 192
+   },
+   "10.24": {
+    "point": -0.23465901740059694,
+    "lo": -0.2703743281400324,
+    "hi": -0.1984085221101037,
+    "n": 170
+   }
+  },
+  "denseft_native": {
+   "3.84": {
+    "point": -0.16618444314129496,
+    "lo": -0.1913067029294325,
+    "hi": -0.14177264786740124,
+    "n": 192
+   },
+   "10.24": {
+    "point": -0.2231322818164093,
+    "lo": -0.2549196308671526,
+    "hi": -0.19094382901021165,
+    "n": 192
+   }
+  }
+ },
+ "J_prime": {
+  "denseft_short": {
+   "point": -0.0344450247610974,
+   "lo": -0.07072742650230579,
+   "hi": 0.002172527713427192,
+   "n": 170
+  },
+  "denseft_native": {
+   "point": -0.038317295921539575,
+   "lo": -0.06916372508688558,
+   "hi": -0.007524318331221974,
+   "n": 192
+  }
+ },
+ "dJ_prime_dense": {
+  "point": -0.005005570301128661,
+  "lo": -0.033383148778024514,
+  "hi": 0.024574807525804147,
+  "n": 170
+ },
+ "reading": "DEGRADATION",
+ "reading_rule": "CONVENTION: all four G'(d) CIs inside +-SESOI; DEGRADATION: all four hi95(G'(d)) < 0 and |O(d)| < |G(d)|/2 at both d; else MIXED (docs/review3_denseraw.md section 4)",
+ "guard_dJ_dense_vs_EXT2x2": {
+  "here": -0.005005570301128661,
+  "EXT2x2": -0.005005570301128661,
+  "abs_diff": 0.0
+ },
+ "inputs": {
+  "artifacts/icassp_gate0/_score_tmp/r3_denseraw_groups_in.json": "1069b72ada6593578c921d9f02e3fb0ba7b4b1e80a0dab1cef1eed843e52f352",
+  "artifacts/icassp_gate0/_score_tmp/r3_denseraw_groups_out.json": "32a1d1a4ed6735df402e64f8a7ba3e40b9afbf816d82d88e585da42f7420ed22",
+  "artifacts/icassp_gate0/_score_tmp/r2_denseft_s_groups_out.json": "49a72c6d0e1bf9bbbf123b469f58b295cb74d87399a09307a6f48c07d29589cb",
+  "artifacts/icassp_gate0/_score_tmp/r2_denseft_n_groups_out.json": "465072ada1a1a2ca099bc845c7af72596c8ad2b5e489819879bc7784484d708e",
+  "artifacts/icassp_gate0/_score_tmp/xsev_dense192_groups_out.json": "e8029325ed4626f9cbe77e018180d5ab727f7dd771118f81eae7a59967a04e08",
+  "configs/research/r2_EXT2x2_result.json": "0988b8fe8f8fd1bfc6b668c543e076602791083109809f037465d5f6f68c9434"
+ },
+ "generation_provenance": {
+  "dense_raw__ac_short": {
+   "n": 192,
+   "manifest_present": true,
+   "gen_manifest_sha256": "9589aaae600ddfda2c8e11dcfbe8ffc347fd84e0fbb2ed7b1332d28679ecb78c",
+   "checkpoint": "dense_raw:936914a388905e1f",
+   "git_sha": "c186572e4766ba592400cff57d389c3b5773dad9",
+   "devices": [
+    "cuda"
+   ],
+   "frames": 61472
+  },
+  "dense_raw__ac_native": {
+   "n": 192,
+   "manifest_present": true,
+   "gen_manifest_sha256": "c3c94671e22c63f7c86f3062f5e34ba52a6f4d684779d089971f639f585520c0",
+   "checkpoint": "dense_raw:936914a388905e1f",
+   "git_sha": "c186572e4766ba592400cff57d389c3b5773dad9",
+   "devices": [
+    "cuda"
+   ],
+   "frames": 163872
+  },
+  "device_check_sha_equal": [
+   false,
+   false,
+   false,
+   false
+  ]
+ },
+ "device_check": {
+  "max_abs_delta_clap": 1.850724220275879e-05,
+  "delta_per_clip": [
+   -3.5762786865234375e-06,
+   3.874301910400391e-06,
+   -4.112720489501953e-06,
+   -1.850724220275879e-05
+  ],
+  "sha256_equal": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "rule": "descriptive (the frozen bit-identical rule has failed at ~4e-6 on every job; reported as written)"
+ },
+ "artifact_sha256": "ba3631e41bb63a2af2e1d661a2765c3d3a274d10d3b16147be99dc5adc9eadb1"
+}
