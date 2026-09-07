@@ -1,15 +1,5 @@
 # ICASSP 2027 Overleaf package
 
-Main file is `icassp_operating_point.tex`.
+Main file is `icassp_operating_point.tex`. Draft 16 is modular under `sections/draft16_*.tex`.
 
-This is Draft 14. It uses the ICASSP `spconf.sty` layout, 9 pt body text, two columns and a references-only fifth page.
-
-## Figure placeholders
-
-The manuscript intentionally does not include generated graphs in this version. Figure 1 reserves the intended final space with two empty boxes. Detailed TeX comments immediately above the figure in `sections/draft14_2.tex` specify the required plots, data relationships, uncertainty and annotations.
-
-The final plotting step should replace each box with the generated vector figure while preserving the same approximate panel footprint of 0.49 textwidth by 4.80 cm. Do not delete the specification comments until the final artwork has been independently checked against the committed result artifacts.
-
-## Compile
-
-Upload `icassp_operating_point.tex`, `spconf.sty`, `IEEEbib.bst` and the `sections/` directory to Overleaf. The current placeholder draft requires no external figure file.
+Figure 1 is now generated. The two reserved boxes were replaced by `figs/fig1a_duration.pdf` and `figs/fig1b_intervention.pdf`, built from the committed result artifacts by `scripts/research/paper_figs/make_draft16_fig1.py` and following the specification comments in `sections/draft16_2.tex`, which are kept. Each panel is exactly 0.49\textwidth by 4.80 cm, so the `figure*` footprint and the four-page technical budget are unchanged. The two `\includegraphics` lines are the only edit made to the Draft 16 sources.
