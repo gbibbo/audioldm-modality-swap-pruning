@@ -1,9 +1,5 @@
 # ICASSP 2027 Overleaf package
 
-Main file: `icassp_operating_point.tex`.
+Main file is `icassp_operating_point.tex`. Draft 16 is modular under `sections/draft16_*.tex`.
 
-This is **Draft 15**, prepared after the third methodological review. The source is modularized under `sections/draft15_*.tex` and uses the official `spconf.sty` format.
-
-The two rectangles in Fig. 1 are intentional placeholders. They reserve the exact footprint planned for the final two-panel figure. Detailed plotting instructions are embedded as comments in `sections/draft15_2.tex`. The final plots should replace the boxes without changing the surrounding layout.
-
-The locally compiled placeholder build occupies four technical pages plus a fifth references-only page.
+The two empty figure boxes are intentional. They reserve the final two-panel Figure 1 footprint. Replace them only with plots generated from the committed per-prompt artifacts, following the specification comments in `sections/draft16_2.tex`. Keep the same `figure*` footprint to preserve the four-page technical budget.

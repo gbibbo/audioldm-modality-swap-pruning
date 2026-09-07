@@ -21,3 +21,6 @@ The study evaluates released pruned and recovered AudioLDM-M checkpoints and ask
 - `docs/review/2026-09-06_review_round3_methodological_response.md` records the third-review methodological audit.
 
 The final paper figure is intentionally not generated in the editorial draft. The exact two-panel plotting specification is embedded in the LaTeX source so that it can be rendered later from the committed per-prompt artifacts without changing the page layout.
+
+
+Camera-ready companion landing page: [`paper-operating-point-recovery/`](paper-operating-point-recovery/).

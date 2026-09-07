@@ -4,7 +4,7 @@ This page accompanies **Recovery Gain Is Operating-Point Dependent in Pruned Tex
 
 The manuscript is self-contained. The repository keeps the numerical and provenance layer needed to audit individual contrasts, inspect follow-up protocols, and reproduce the figures.
 
-## Draft 15 map
+## Draft 16 map
 
 | Paper section | Main question | Repository evidence |
 |---|---|---|
@@ -18,8 +18,8 @@ The manuscript is self-contained. The repository keeps the numerical and provena
 
 ## Figure 1
 
-The paper intentionally ships with placeholders during editorial review. The exact plotting specification is embedded in `icassp/sections/draft15_2.tex`. Panel (a) shows the released severity-2 duration sweep with the 15.36 s point connected only to its matched n=96 10.24 s subset. Panel (b) shows the symmetric 20k intervention and the directional specialization contrast.
+The paper intentionally ships with placeholders during editorial review. The exact plotting specification is embedded in `icassp/sections/draft16_2.tex`. Panel (a) shows the released severity-2 duration sweep with the 15.36 s point connected only to its matched n=96 10.24 s subset. Panel (b) shows the symmetric 20k intervention and the directional specialization contrast.
 
 ## Numerical audit
 
-The paper keeps only values required to understand the claims. The denser numerical layer is in `PAPER_EXPANDED_RESULTS.md` and the committed JSON artifacts. In particular, Draft 15 corrects the primary CLAP interaction interval to `+0.159 [+0.131,+0.187]` and reports the dense raw-vs-EMA control, severity-2 split-half stability, and the hip-hop duration interaction.
+The paper keeps only values required to understand the claims. The denser numerical layer is in `PAPER_EXPANDED_RESULTS.md` and the committed JSON artifacts. In particular, Draft 16 corrects the primary CLAP interaction interval to `+0.159 [+0.131,+0.187]` and reports the dense raw-vs-EMA control, severity-2 split-half stability, and the hip-hop duration interaction.

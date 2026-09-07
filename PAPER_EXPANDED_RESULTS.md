@@ -1,4 +1,4 @@
-# Expanded results for Draft 15
+# Expanded results for Draft 16
 
 This file retains numerical detail that is useful for audit but too dense for the four technical pages. Intervals are 95% prompt-level percentile-bootstrap intervals unless stated otherwise.
 
@@ -16,6 +16,8 @@ Primary endpoint interaction: **J = +0.159 [+0.131,+0.187]**.
 Matched n=96 extension: R(15.36)-R(10.24) = +0.021 [-0.023,+0.067]. The supported reading is no clear increase beyond 10.24 s, not a demonstrated plateau.
 
 ## Symmetric 20k training-duration intervention
+
+Both intervention arms fine-tune the full U-Net with AdamW for 20,000 optimizer updates, using a constant learning rate of $10^{-4}$, betas $(0.9,0.999)$, weight decay 0.01, no scheduler and effective batch size 2. No lower-learning-rate dense run was performed, so an overly aggressive update for an already converged dense model remains an untested explanation for the dense degradation.
 
 | Training duration | R(3.84 s) | R(10.24 s) | J |
 |---|---:|---:|---:|
