@@ -9,4 +9,4 @@ This file maps the third review to Draft 15. It is not manuscript prose.
 5. **Short-generation wording.** Replaced any broad claim that short generation is healthy with the narrower statement that, under CLAP, base-model degradation does not account for the interaction. The paper explicitly notes that this is not perceptual evidence.
 6. **Minor points.** Added an explanation of uncertainty in rho_dense, retained the two-column figure footprint, corrected the primary J CI upper bound from 0.188 to 0.187, and verified a five-page build with page 5 containing references only.
 
-Figure policy remains unchanged from Draft 14: no synthetic graphs are generated. The final plotting specification is embedded in `sections/draft15_2.tex`.
+Figure policy remains unchanged from Draft 14: no synthetic graphs are generated. The final plotting specification is embedded in `icassp/sections/draft15_2.tex`.
